@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Acme\SyliusExamplePlugin\DependencyInjection;
+namespace Tests\Setono\SyliusCookieConsentPlugin\DependencyInjection;
 
-use Acme\SyliusExamplePlugin\DependencyInjection\AcmeSyliusExampleExtension;
+use Setono\SyliusCookieConsentPlugin\DependencyInjection\SetonoSyliusCookieConsentExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyDependencyInjectionTest
  */
-final class AcmeSyliusExampleExtensionTest extends AbstractExtensionTestCase
+final class SetonoSyliusCookieConsentExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions(): array
     {
         return [
-            new AcmeSyliusExampleExtension(),
+            new SetonoSyliusCookieConsentExtension(),
         ];
     }
 
@@ -33,6 +33,6 @@ final class AcmeSyliusExampleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
-        $this->assertContainerBuilderHasParameter('acme_sylius_example.option', 'option_value');
+        $this->assertContainerBuilderHasParameter('setono_sylius_cookie_consent.option', 'option_value');
     }
 }

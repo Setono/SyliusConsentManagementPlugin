@@ -1,4 +1,4 @@
-# Setono Sylius Plugin Skeleton
+# Setono SyliusCookieConsentPlugin
 
 [![Latest Version][ico-version]][link-packagist]
 [![Latest Unstable Version][ico-unstable-version]][link-packagist]
@@ -14,7 +14,7 @@ Enjoy!
 
 ## Quickstart
 
-1. Run `composer create-project setono/sylius-plugin-skeleton:dev-master ProjectName`.
+1. Run `composer create-project setono/sylius-cookie-consent-plugin:dev-master ProjectName`.
 
 2. From the plugin skeleton root directory, run the following commands:
 
@@ -34,12 +34,12 @@ Enjoy!
 
 To be able to setup a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
 
-[ico-version]: https://poser.pugx.org/setono/sylius-plugin-skeleton/v/stable
-[ico-unstable-version]: https://poser.pugx.org/setono/sylius-plugin-skeleton/v/unstable
-[ico-license]: https://poser.pugx.org/setono/sylius-plugin-skeleton/license
-[ico-github-actions]: https://github.com/Setono/SyliusPluginSkeleton/workflows/build/badge.svg
-[ico-code-coverage]: https://codecov.io/gh/Setono/SyliusPluginSkeleton/branch/master/graph/badge.svg
+[ico-version]: https://poser.pugx.org/setono/sylius-cookie-consent-plugin/v/stable
+[ico-unstable-version]: https://poser.pugx.org/setono/sylius-cookie-consent-plugin/v/unstable
+[ico-license]: https://poser.pugx.org/setono/sylius-cookie-consent-plugin/license
+[ico-github-actions]: https://github.com/Setono/SyliusCookieConsentPlugin/workflows/build/badge.svg
+[ico-code-coverage]: https://codecov.io/gh/Setono/SyliusCookieConsentPlugin/branch/master/graph/badge.svg
 
-[link-packagist]: https://packagist.org/packages/setono/sylius-plugin-skeleton
-[link-github-actions]: https://github.com/Setono/SyliusPluginSkeleton/actions
-[link-code-coverage]: https://codecov.io/gh/Setono/SyliusPluginSkeleton
+[link-packagist]: https://packagist.org/packages/setono/sylius-cookie-consent-plugin
+[link-github-actions]: https://github.com/Setono/SyliusCookieConsentPlugin/actions
+[link-code-coverage]: https://codecov.io/gh/Setono/SyliusCookieConsentPlugin
