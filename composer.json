@@ -9,9 +9,11 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-json": "*",
         "symfony/config": "^4.4 || ^5.0",
         "symfony/dependency-injection": "^4.4 || ^5.0",
-        "symfony/http-kernel": "^4.4 || ^5.1.5"
+        "symfony/http-kernel": "^4.4 || ^5.1.5",
+        "symfony/uid": "^5.0"
     },
     "require-dev": {
         "api-platform/core": "^2.5",
