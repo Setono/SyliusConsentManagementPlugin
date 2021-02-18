@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusCookieConsentPlugin\Controller\Action;
 
-final class UpdateConsentCommand
+final class ConsentCommand
 {
     public bool $preferences = false;
 

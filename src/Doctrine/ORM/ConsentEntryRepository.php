@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusCookieConsentPlugin\Doctrine\ORM;
 
 use Setono\SyliusCookieConsentPlugin\Model\Consent;
+use Setono\SyliusCookieConsentPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusCookieConsentPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Webmozart\Assert\Assert;
@@ -22,6 +23,20 @@ class ConsentEntryRepository extends EntityRepository implements ConsentEntryRep
         ;
 
         Assert::nullOrIsInstanceOf($result, Consent::class);
+
+        return $result;
+    }
+
+    public function findOneFromClientId(string $clientId): ?ConsentEntryInterface
+    {
+        $result = $this->createQueryBuilder('o')
+            ->andWhere('o.clientId = :clientId')
+            ->setParameter('clientId', $clientId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        Assert::nullOrIsInstanceOf($result, ConsentEntryInterface::class);
 
         return $result;
     }

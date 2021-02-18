@@ -1,0 +1,6 @@
+setono_sylius_cookie_consent:
+    form:
+        consent:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing

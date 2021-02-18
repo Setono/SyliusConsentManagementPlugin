@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale|slice(0, 2) }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{% block title %}{{ sylius.channel.name }}{% endblock %}</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    {% block metatags %}
+    {% endblock %}
+
+    {% block stylesheets %}
+        {{ sylius_template_event('sylius.shop.layout.stylesheets') }}
+
+        <style>
+            .sscc-consent-container {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background: #fff;
+                padding: 10px;
+                z-index: 999;
+                box-shadow: 0 20px 50px 20px rgba(0,0,0,0.5);
+            }
+
+            .sscc-consent-container .field {
+                margin-bottom: 10px;
+            }
+        </style>
+    {% endblock %}
+
+    {{ sylius_template_event('sylius.shop.layout.head') }}
+    <script>
+        const ssccContext = {
+            clientId: '{{ sscc_client_id() }}',
+            preferences: {{ sscc_preferences_granted() ? 1 : 0 }},
+            statistics: {{ sscc_statistics_granted() ? 1 : 0 }},
+            marketing: {{ sscc_marketing_granted() ? 1 : 0 }},
+        };
+    </script>
+</head>
+
+<body class="pushable">
+{{ sylius_template_event('sylius.shop.layout.before_body') }}
+<div class="pusher">
+    {% block top %}
+        <div id="menu" class="ui large sticky inverted stackable menu">
+            {{ sylius_template_event('sylius.shop.layout.topbar') }}
+        </div>
+    {% endblock %}
+
+    <div class="ui container">
+        {% block header %}
+            <header>
+                {{ sylius_template_event('sylius.shop.layout.header') }}
+            </header>
+        {% endblock %}
+
+        {% include '@SyliusShop/_flashes.html.twig' %}
+
+        {{ sylius_template_event('sylius.shop.layout.before_content') }}
+
+        {% block content %}
+        {% endblock %}
+
+        {{ sylius_template_event('sylius.shop.layout.after_content') }}
+    </div>
+
+    {% block footer %}
+        {% include '@SyliusShop/_footer.html.twig' %}
+        {{ render(path('setono_sylius_cookie_consent_shop_partial_consent_widget')) }}
+    {% endblock %}
+</div>
+
+{% block javascripts %}
+    {{ sylius_template_event('sylius.shop.layout.javascripts') }}
+    <script src="{{ asset('bundles/setonosyliuscookieconsentplugin/js/consent-widget.js') }}" async></script>
+{% endblock %}
+
+{% include '@SyliusUi/Modal/_confirmation.html.twig' %}
+{{ sylius_template_event('sylius.shop.layout.after_body') }}
+</body>
+</html>

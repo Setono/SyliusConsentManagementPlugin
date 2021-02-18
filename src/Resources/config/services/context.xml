@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusCookieConsentPlugin\Context\ConsentContextInterface"
+                 alias="setono_sylius_cookie_consent.context.consent"/>
+
+        <service id="setono_sylius_cookie_consent.context.consent"
+                 class="Setono\SyliusCookieConsentPlugin\Context\DefaultConsentContext">
+            <argument type="service" id="setono_sylius_cookie_consent.client_id"/>
+        </service>
+
+        <service id="setono_sylius_cookie_consent.context.consent.orm_based"
+                 class="Setono\SyliusCookieConsentPlugin\Context\ORMBasedConsentContext"
+                 decorates="setono_sylius_cookie_consent.context.consent" decoration-priority="64">
+            <argument type="service" id="setono_sylius_cookie_consent.context.consent.orm_based.inner"/>
+            <argument type="service" id="setono_sylius_cookie_consent.repository.consent_entry"/>
+        </service>
+
+        <service id="setono_sylius_cookie_consent.context.consent.cached"
+                 class="Setono\SyliusCookieConsentPlugin\Context\CachedConsentContext"
+                 decorates="setono_sylius_cookie_consent.context.consent" decoration-priority="128">
+            <argument type="service" id="setono_sylius_cookie_consent.context.consent.cached.inner"/>
+        </service>
+    </services>
+</container>

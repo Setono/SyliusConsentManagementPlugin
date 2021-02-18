@@ -4,10 +4,14 @@
     <services>
         <defaults public="true"/>
 
-        <service id="setono_sylius_cookie_consent.controller.action.consent_block"
-                 class="Setono\SyliusCookieConsentPlugin\Controller\Action\ConsentBlockAction">
+        <service id="setono_sylius_cookie_consent.controller.action.consent_widget"
+                 class="Setono\SyliusCookieConsentPlugin\Controller\Action\ConsentWidgetAction">
             <argument type="service" id="form.factory"/>
             <argument type="service" id="twig"/>
+            <argument type="service" id="setono_sylius_cookie_consent.repository.consent_entry"/>
+            <argument type="service" id="setono_sylius_cookie_consent.client_id"/>
+            <argument type="service" id="setono_sylius_cookie_consent.factory.consent_entry"/>
+            <argument type="service" id="setono_sylius_cookie_consent.manager.consent_entry"/>
         </service>
     </services>
 </container>

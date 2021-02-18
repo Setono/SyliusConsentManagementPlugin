@@ -1,0 +1,12 @@
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+<div class="sscc-consent-container">
+    {{ form_start(form, {'method': 'POST', 'action': path('setono_sylius_cookie_consent_shop_ajax_consent_widget')}) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.preferences) }}
+        {{ form_row(form.statistics) }}
+        {{ form_row(form.marketing) }}
+
+        <button type="submit" class="ui primary button">Save</button>
+    {{ form_end(form) }}
+</div>
