@@ -34,14 +34,8 @@
     {% endblock %}
 
     {{ sylius_template_event('sylius.shop.layout.head') }}
-    <script>
-        const ssccContext = {
-            clientId: '{{ sscc_client_id() }}',
-            preferences: {{ sscc_preferences_granted() ? 1 : 0 }},
-            statistics: {{ sscc_statistics_granted() ? 1 : 0 }},
-            marketing: {{ sscc_marketing_granted() ? 1 : 0 }},
-        };
-    </script>
+
+    {{ sscc_consent_tag() }}
 </head>
 
 <body class="pushable">
@@ -63,7 +57,6 @@
         {% include '@SyliusShop/_flashes.html.twig' %}
 
         {{ sylius_template_event('sylius.shop.layout.before_content') }}
-
         {% block content %}
         {% endblock %}
 
@@ -79,6 +72,15 @@
 {% block javascripts %}
     {{ sylius_template_event('sylius.shop.layout.javascripts') }}
     <script src="{{ asset('bundles/setonosyliuscookieconsentplugin/js/consent-widget.js') }}" async></script>
+    <script type="text/plain" data-consent="preferences">
+        console.log('Preferences granted');
+    </script>
+    <script type="text/plain" data-consent="statistics">
+        console.log('Statistics granted');
+    </script>
+    <script type="text/plain" data-consent="marketing">
+        console.log('Marketing granted');
+    </script>
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

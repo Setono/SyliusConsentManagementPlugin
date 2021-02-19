@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusCookieConsentPlugin\Model;
 
-final class Consent
+final class Consent implements \JsonSerializable
 {
     private string $clientId;
 
@@ -40,5 +40,15 @@ final class Consent
     public function isMarketingGranted(): bool
     {
         return $this->marketing;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'clientId' => $this->clientId,
+            'preferences' => $this->preferences,
+            'statistics' => $this->statistics,
+            'marketing' => $this->marketing,
+        ];
     }
 }

@@ -18,6 +18,10 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?string $ip = null;
 
+    protected ?string $url = null;
+
+    protected ?string $userAgent = null;
+
     protected bool $preferences = false;
 
     protected bool $statistics = false;
@@ -47,6 +51,26 @@ class ConsentEntry implements ConsentEntryInterface
     public function setIp(string $ip): void
     {
         $this->ip = $ip;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
+
+    public function getUserAgent(): ?string
+    {
+        return $this->userAgent;
+    }
+
+    public function setUserAgent(string $userAgent): void
+    {
+        $this->userAgent = $userAgent;
     }
 
     public function isPreferences(): bool
@@ -81,7 +105,13 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function populateFromRequest(Request $request): void
     {
-        $this->ip = $request->getClientIp();
+        $this->ip = (string) $request->getClientIp();
+        $this->url = $request->getUri();
+
+        $userAgent = $request->headers->get('user-agent');
+        if (is_string($userAgent)) {
+            $this->userAgent = $userAgent;
+        }
     }
 
     public function populateFromConsentCommand(ConsentCommand $consentCommand): void

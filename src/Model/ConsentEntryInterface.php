@@ -17,9 +17,26 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
 
     public function setClientId(string $clientId): void;
 
+    /**
+     * The IP of the user
+     */
     public function getIp(): ?string;
 
     public function setIp(string $ip): void;
+
+    /**
+     * The URL where the user consented
+     */
+    public function getUrl(): ?string;
+
+    public function setUrl(string $url): void;
+
+    /**
+     * The user agent of the user
+     */
+    public function getUserAgent(): ?string;
+
+    public function setUserAgent(string $userAgent): void;
 
     public function isPreferences(): bool;
 
