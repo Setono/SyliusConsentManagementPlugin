@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin;
+namespace Setono\SyliusConsentManagementPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 
-final class SetonoSyliusCookieConsentPlugin extends AbstractResourceBundle
+final class SetonoSyliusConsentManagementPlugin extends AbstractResourceBundle
 {
     use SyliusPluginTrait;
 

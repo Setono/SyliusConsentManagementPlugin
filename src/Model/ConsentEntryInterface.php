@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Model;
+namespace Setono\SyliusConsentManagementPlugin\Model;
 
-use Setono\SyliusCookieConsentPlugin\Controller\Action\ConsentCommand;
+use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Symfony\Component\HttpFoundation\Request;

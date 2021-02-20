@@ -2,9 +2,9 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="setono_sylius_cookie_consent.twig.extension"
-                 class="Setono\SyliusCookieConsentPlugin\Twig\Extension">
-            <argument type="service" id="setono_sylius_cookie_consent.context.consent"/>
+        <service id="setono_sylius_consent_management.twig.extension"
+                 class="Setono\SyliusConsentManagementPlugin\Twig\Extension">
+            <argument type="service" id="setono_sylius_consent_management.context.consent"/>
             <tag name="twig.extension"/>
         </service>
     </services>

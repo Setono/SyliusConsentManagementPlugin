@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Twig;
+namespace Setono\SyliusConsentManagementPlugin\Twig;
 
-use Setono\SyliusCookieConsentPlugin\Context\ConsentContextInterface;
+use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFunction;
@@ -28,17 +28,17 @@ final class Extension extends AbstractExtension implements GlobalsInterface
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('sscc_consent_tag', [$this, 'consentTag'], ['is_safe' => ['html']]),
-            new TwigFunction('sscc_client_id', [$this, 'clientId']),
-            new TwigFunction('sscc_preferences_granted', [$this, 'preferencesGranted']),
-            new TwigFunction('sscc_statistics_granted', [$this, 'statisticsGranted']),
-            new TwigFunction('sscc_marketing_granted', [$this, 'marketingGranted']),
+            new TwigFunction('sscm_consent_tag', [$this, 'consentTag'], ['is_safe' => ['html']]),
+            new TwigFunction('sscm_client_id', [$this, 'clientId']),
+            new TwigFunction('sscm_preferences_granted', [$this, 'preferencesGranted']),
+            new TwigFunction('sscm_statistics_granted', [$this, 'statisticsGranted']),
+            new TwigFunction('sscm_marketing_granted', [$this, 'marketingGranted']),
         ];
     }
 
     public function consentTag(): string
     {
-        return sprintf('<script>const ssccConsent = %s</script>', json_encode($this->consentContext->get(), \JSON_THROW_ON_ERROR));
+        return sprintf('<script>const sscmConsent = %s</script>', json_encode($this->consentContext->get(), \JSON_THROW_ON_ERROR));
     }
 
     public function clientId(): string

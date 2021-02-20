@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Doctrine\ORM;
+namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
 
-use Setono\SyliusCookieConsentPlugin\Model\Consent;
-use Setono\SyliusCookieConsentPlugin\Model\ConsentEntryInterface;
-use Setono\SyliusCookieConsentPlugin\Repository\ConsentEntryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Webmozart\Assert\Assert;
 
@@ -15,7 +15,7 @@ class ConsentEntryRepository extends EntityRepository implements ConsentEntryRep
     public function findConsentFromClientId(string $clientId): ?Consent
     {
         $result = $this->createQueryBuilder('o')
-            ->select('NEW Setono\SyliusCookieConsentPlugin\Model\Consent(o.clientId, o.preferences, o.statistics, o.marketing)')
+            ->select('NEW Setono\SyliusConsentManagementPlugin\Model\Consent(o.clientId, o.preferences, o.statistics, o.marketing)')
             ->andWhere('o.clientId = :clientId')
             ->setParameter('clientId', $clientId)
             ->getQuery()

@@ -1,6 +1,6 @@
 <?php
 
-use Tests\Setono\SyliusCookieConsentPlugin\Application\Kernel;
+use Tests\Setono\SyliusConsentManagementPlugin\Application\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

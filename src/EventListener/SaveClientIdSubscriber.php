@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\EventListener;
+namespace Setono\SyliusConsentManagementPlugin\EventListener;
 
-use Setono\SyliusCookieConsentPlugin\ClientId\ClientIdInterface;
+use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;

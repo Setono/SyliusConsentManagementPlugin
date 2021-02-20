@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Controller\Action;
+namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Setono\SyliusCookieConsentPlugin\ClientId\ClientIdInterface;
-use Setono\SyliusCookieConsentPlugin\Form\Type\ConsentType;
-use Setono\SyliusCookieConsentPlugin\Model\ConsentEntryInterface;
-use Setono\SyliusCookieConsentPlugin\Repository\ConsentEntryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
+use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -85,7 +85,7 @@ final class ConsentWidgetAction
             return $response;
         }
 
-        return new Response($this->twig->render('@SetonoSyliusCookieConsentPlugin/shop/consent.html.twig', [
+        return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
             'form' => $form->createView(),
         ]), $form->isSubmitted() ? 400 : 200); // we know the status code should be 400 if the the form was submitted because if the form was valid another response would have been sent above
     }

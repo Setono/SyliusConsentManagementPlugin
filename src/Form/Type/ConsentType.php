@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Form\Type;
+namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
-use Setono\SyliusCookieConsentPlugin\Controller\Action\ConsentCommand;
+use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,15 +16,15 @@ final class ConsentType extends AbstractType
     {
         $builder
             ->add('preferences', CheckboxType::class, [
-                'label' => 'setono_sylius_cookie_consent.form.consent.preferences',
+                'label' => 'setono_sylius_consent_management.form.consent.preferences',
                 'required' => false,
             ])
             ->add('statistics', CheckboxType::class, [
-                'label' => 'setono_sylius_cookie_consent.form.consent.statistics',
+                'label' => 'setono_sylius_consent_management.form.consent.statistics',
                 'required' => false,
             ])
             ->add('marketing', CheckboxType::class, [
-                'label' => 'setono_sylius_cookie_consent.form.consent.marketing',
+                'label' => 'setono_sylius_consent_management.form.consent.marketing',
                 'required' => false,
             ])
         ;
@@ -39,6 +39,6 @@ final class ConsentType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'setono_sylius_cookie_consent_consent';
+        return 'setono_sylius_consent_management_consent';
     }
 }

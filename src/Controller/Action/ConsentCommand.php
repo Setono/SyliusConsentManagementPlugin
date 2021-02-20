@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Controller\Action;
+namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 final class ConsentCommand
 {

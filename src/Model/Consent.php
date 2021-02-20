@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Model;
+namespace Setono\SyliusConsentManagementPlugin\Model;
 
 final class Consent implements \JsonSerializable
 {

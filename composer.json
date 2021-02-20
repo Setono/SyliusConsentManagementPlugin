@@ -1,5 +1,5 @@
 {
-    "name": "setono/sylius-cookie-consent-plugin",
+    "name": "setono/sylius-consent-management-plugin",
     "type": "symfony-bundle",
     "description": "Setono example plugin for Sylius.",
     "keywords": [
@@ -52,12 +52,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Setono\\SyliusCookieConsentPlugin\\": "src/"
+            "Setono\\SyliusConsentManagementPlugin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Setono\\SyliusCookieConsentPlugin\\": "tests/"
+            "Tests\\Setono\\SyliusConsentManagementPlugin\\": "tests/"
         },
         "classmap": [
             "tests/Application/Kernel.php"
@@ -70,7 +70,7 @@
             "psalm"
         ],
         "check-style": "ecs check src/ tests/",
-        "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/ApplicationTests_Setono_SyliusCookieConsentPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
+        "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/ApplicationTests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
         "fix-style": "ecs check src/ tests/ --fix",
         "phpunit": "phpunit"
     }

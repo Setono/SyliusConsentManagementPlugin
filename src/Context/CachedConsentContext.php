@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusCookieConsentPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
 
 final class CachedConsentContext implements ConsentContextInterface
 {

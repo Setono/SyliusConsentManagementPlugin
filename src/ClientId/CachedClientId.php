@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\ClientId;
+namespace Setono\SyliusConsentManagementPlugin\ClientId;
 
 final class CachedClientId implements ClientIdInterface
 {

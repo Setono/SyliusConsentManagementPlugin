@@ -1,4 +1,4 @@
-setono_sylius_cookie_consent:
+setono_sylius_consent_management:
     form:
         consent:
             preferences: Preferences

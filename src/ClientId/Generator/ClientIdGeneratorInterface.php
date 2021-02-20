@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\ClientId\Generator;
+namespace Setono\SyliusConsentManagementPlugin\ClientId\Generator;
 
 interface ClientIdGeneratorInterface
 {

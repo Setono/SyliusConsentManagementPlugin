@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\DependencyInjection;
+namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
-use Setono\SyliusCookieConsentPlugin\Doctrine\ORM\ConsentEntryRepository;
-use Setono\SyliusCookieConsentPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -18,7 +18,7 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('setono_sylius_cookie_consent');
+        $treeBuilder = new TreeBuilder('setono_sylius_consent_management');
 
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();

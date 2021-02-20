@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Repository;
+namespace Setono\SyliusConsentManagementPlugin\Repository;
 
-use Setono\SyliusCookieConsentPlugin\Model\Consent;
-use Setono\SyliusCookieConsentPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 interface ConsentEntryRepositoryInterface extends RepositoryInterface

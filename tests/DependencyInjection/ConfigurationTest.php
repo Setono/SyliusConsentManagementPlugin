@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusCookieConsentPlugin\DependencyInjection;
+namespace Tests\Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
-use Setono\SyliusCookieConsentPlugin\DependencyInjection\Configuration;
+use Setono\SyliusConsentManagementPlugin\DependencyInjection\Configuration;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyConfigTest
@@ -29,7 +29,7 @@ final class ConfigurationTest extends TestCase
             [
                 [], // no values at all
             ],
-            'The child node "option" at path "setono_sylius_cookie_consent" must be configured.'
+            'The child node "option" at path "setono_sylius_consent_management" must be configured.'
         );
     }
 

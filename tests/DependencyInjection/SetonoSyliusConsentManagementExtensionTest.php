@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusCookieConsentPlugin\DependencyInjection;
+namespace Tests\Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
-use Setono\SyliusCookieConsentPlugin\DependencyInjection\SetonoSyliusCookieConsentExtension;
+use Setono\SyliusConsentManagementPlugin\DependencyInjection\SetonoSyliusConsentManagementExtension;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyDependencyInjectionTest
  */
-final class SetonoSyliusCookieConsentExtensionTest extends AbstractExtensionTestCase
+final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions(): array
     {
         return [
-            new SetonoSyliusCookieConsentExtension(),
+            new SetonoSyliusConsentManagementExtension(),
         ];
     }
 
@@ -33,6 +33,6 @@ final class SetonoSyliusCookieConsentExtensionTest extends AbstractExtensionTest
     {
         $this->load();
 
-        $this->assertContainerBuilderHasParameter('setono_sylius_cookie_consent.option', 'option_value');
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.option', 'option_value');
     }
 }

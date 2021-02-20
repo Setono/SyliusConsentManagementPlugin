@@ -8,7 +8,7 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="SetonoSyliusCookieConsentPlugin Test Suite">
+        <testsuite name="SetonoSyliusConsentManagementPlugin Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

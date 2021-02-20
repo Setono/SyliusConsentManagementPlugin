@@ -1,5 +1,5 @@
 (function (d, c) {
-  const formName = 'setono_sylius_cookie_consent_consent';
+  const formName = 'setono_sylius_consent_management_consent';
 
   if (d.readyState === 'loading') {
     d.addEventListener('DOMContentLoaded', onLoad);
@@ -9,7 +9,7 @@
 
   function onLoad() {
     addListeners();
-    d.dispatchEvent(createEvent('ssccInitialConsent'));
+    d.dispatchEvent(createEvent('sscmInitialConsent'));
     consentWidget();
   }
 
@@ -26,7 +26,7 @@
       c.statistics = data.has(formName + '[statistics]');
       c.marketing = data.has(formName + '[marketing]');
 
-      d.dispatchEvent(createEvent('ssccConsentUpdated'));
+      d.dispatchEvent(createEvent('sscmConsentUpdated'));
 
       const req = new XMLHttpRequest();
 
@@ -55,8 +55,8 @@
   }
 
   function addListeners() {
-    d.addEventListener('ssccInitialConsent', runScriptTags);
-    d.addEventListener('ssccConsentUpdated', runScriptTags);
+    d.addEventListener('sscmInitialConsent', runScriptTags);
+    d.addEventListener('sscmConsentUpdated', runScriptTags);
   }
 
   function runScriptTags() {
@@ -91,8 +91,8 @@
   }
 
   function hideConsentContainer() {
-    for (let el of d.querySelectorAll('.sscc-consent-container')) {
+    for (let el of d.querySelectorAll('.sscm-consent-container')) {
       el.style.display = 'none';
     }
   }
-})(document, ssccConsent);
+})(document, sscmConsent);

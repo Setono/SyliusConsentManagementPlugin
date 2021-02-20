@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\ClientId;
+namespace Setono\SyliusConsentManagementPlugin\ClientId;
 
-use Setono\SyliusCookieConsentPlugin\ClientId\Generator\ClientIdGeneratorInterface;
+use Setono\SyliusConsentManagementPlugin\ClientId\Generator\ClientIdGeneratorInterface;
 
 final class GeneratedClientId implements ClientIdInterface
 {

@@ -6,34 +6,34 @@
         Do not edit this value on a production environment since this will
         mean you have to start over with the consent proces for all your visitors
         -->
-        <parameter key="setono_sylius_cookie_consent.cookie.client_id">sscc_client_id</parameter>
+        <parameter key="setono_sylius_consent_management.cookie.client_id">sscm_client_id</parameter>
     </parameters>
     <services>
         <!-- Generator -->
-        <service id="setono_sylius_cookie_consent.client_id.generator"
-                 class="Setono\SyliusCookieConsentPlugin\ClientId\Generator\ClientIdGenerator"/>
+        <service id="setono_sylius_consent_management.client_id.generator"
+                 class="Setono\SyliusConsentManagementPlugin\ClientId\Generator\ClientIdGenerator"/>
 
         <!-- Client id -->
-        <service id="Setono\SyliusCookieConsentPlugin\ClientId\ClientIdInterface"
-                 alias="setono_sylius_cookie_consent.client_id"/>
+        <service id="Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface"
+                 alias="setono_sylius_consent_management.client_id"/>
 
-        <service id="setono_sylius_cookie_consent.client_id"
-                 class="Setono\SyliusCookieConsentPlugin\ClientId\GeneratedClientId">
-            <argument type="service" id="setono_sylius_cookie_consent.client_id.generator"/>
+        <service id="setono_sylius_consent_management.client_id"
+                 class="Setono\SyliusConsentManagementPlugin\ClientId\GeneratedClientId">
+            <argument type="service" id="setono_sylius_consent_management.client_id.generator"/>
         </service>
 
-        <service id="setono_sylius_cookie_consent.client_id.cookie_based"
-                 class="Setono\SyliusCookieConsentPlugin\ClientId\CookieBasedClientId"
-                 decorates="setono_sylius_cookie_consent.client_id" decoration-priority="64">
-            <argument type="service" id="setono_sylius_cookie_consent.client_id.cookie_based.inner"/>
+        <service id="setono_sylius_consent_management.client_id.cookie_based"
+                 class="Setono\SyliusConsentManagementPlugin\ClientId\CookieBasedClientId"
+                 decorates="setono_sylius_consent_management.client_id" decoration-priority="64">
+            <argument type="service" id="setono_sylius_consent_management.client_id.cookie_based.inner"/>
             <argument type="service" id="request_stack"/>
-            <argument>%setono_sylius_cookie_consent.cookie.client_id%</argument>
+            <argument>%setono_sylius_consent_management.cookie.client_id%</argument>
         </service>
 
-        <service id="setono_sylius_cookie_consent.client_id.cached"
-                 class="Setono\SyliusCookieConsentPlugin\ClientId\CachedClientId"
-                 decorates="setono_sylius_cookie_consent.client_id" decoration-priority="128">
-            <argument type="service" id="setono_sylius_cookie_consent.client_id.cached.inner"/>
+        <service id="setono_sylius_consent_management.client_id.cached"
+                 class="Setono\SyliusConsentManagementPlugin\ClientId\CachedClientId"
+                 decorates="setono_sylius_consent_management.client_id" decoration-priority="128">
+            <argument type="service" id="setono_sylius_consent_management.client_id.cached.inner"/>
         </service>
     </services>
 </container>

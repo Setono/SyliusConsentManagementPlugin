@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusCookieConsentPlugin\ClientId\ClientIdInterface;
-use Setono\SyliusCookieConsentPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
 
 final class DefaultConsentContext implements ConsentContextInterface
 {

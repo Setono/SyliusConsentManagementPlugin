@@ -6,8 +6,8 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <mapped-superclass name="Setono\SyliusCookieConsentPlugin\Model\ConsentEntry"
-                       table="setono_sylius_cookie_consent__consent_entry">
+    <mapped-superclass name="Setono\SyliusConsentManagementPlugin\Model\ConsentEntry"
+                       table="setono_sylius_consent_management__consent_entry">
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
         </id>

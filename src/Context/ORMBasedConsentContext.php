@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusCookieConsentPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusCookieConsentPlugin\Model\Consent;
-use Setono\SyliusCookieConsentPlugin\Repository\ConsentEntryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
 final class ORMBasedConsentContext implements ConsentContextInterface
 {
