@@ -11,6 +11,7 @@ use Setono\SyliusCookieConsentPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusCookieConsentPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -30,13 +31,16 @@ final class ConsentWidgetAction
 
     private EntityManagerInterface $consentEntryManager;
 
+    private string $cookieName;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
         ConsentEntryRepositoryInterface $consentEntryRepository,
         ClientIdInterface $clientId,
         FactoryInterface $consentEntryFactory,
-        EntityManagerInterface $consentEntryManager
+        EntityManagerInterface $consentEntryManager,
+        string $cookieName
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -44,10 +48,15 @@ final class ConsentWidgetAction
         $this->clientId = $clientId;
         $this->consentEntryFactory = $consentEntryFactory;
         $this->consentEntryManager = $consentEntryManager;
+        $this->cookieName = $cookieName;
     }
 
     public function __invoke(Request $request): Response
     {
+        if ($request->cookies->has($this->cookieName)) {
+            return new Response();
+        }
+
         $form = $this->formFactory->create(ConsentType::class);
 
         $form->handleRequest($request);
@@ -70,7 +79,10 @@ final class ConsentWidgetAction
 
             $this->consentEntryManager->flush();
 
-            return new Response('', 204);
+            $response = new Response('', 204);
+            $response->headers->setCookie(Cookie::create($this->cookieName, '1', new \DateTime('+360 days')));
+
+            return $response;
         }
 
         return new Response($this->twig->render('@SetonoSyliusCookieConsentPlugin/shop/consent.html.twig', [

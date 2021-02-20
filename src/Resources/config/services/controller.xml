@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <!--
+        Do not edit this value on a production environment since this will
+        cause the consent widget to be shown again to all users although they consented once before
+        -->
+        <parameter key="setono_sylius_cookie_consent.cookie.consent_widget">sscc_consent_widget</parameter>
+    </parameters>
     <services>
         <defaults public="true"/>
 
@@ -12,6 +19,7 @@
             <argument type="service" id="setono_sylius_cookie_consent.client_id"/>
             <argument type="service" id="setono_sylius_cookie_consent.factory.consent_entry"/>
             <argument type="service" id="setono_sylius_cookie_consent.manager.consent_entry"/>
+            <argument>%setono_sylius_cookie_consent.cookie.consent_widget%</argument>
         </service>
     </services>
 </container>
