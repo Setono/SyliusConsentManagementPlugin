@@ -17,9 +17,17 @@
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
         </service>
 
+        <service id="setono_sylius_consent_management.context.consent.request_based"
+                 class="Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext"
+                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="128">
+            <argument type="service" id="setono_sylius_consent_management.context.consent.request_based.inner"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="setono_sylius_consent_management.client_id"/>
+        </service>
+
         <service id="setono_sylius_consent_management.context.consent.cached"
                  class="Setono\SyliusConsentManagementPlugin\Context\CachedConsentContext"
-                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="128">
+                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="256">
             <argument type="service" id="setono_sylius_consent_management.context.consent.cached.inner"/>
         </service>
     </services>
