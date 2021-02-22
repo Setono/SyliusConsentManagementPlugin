@@ -5,19 +5,13 @@
                   xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Setono\SyliusConsentManagementPlugin\Model\ConsentEntry"
-                       table="setono_sylius_consent_management__consent_entry">
+    <mapped-superclass name="Setono\SyliusConsentManagementPlugin\Model\Service"
+                       table="setono_sylius_consent_management__service">
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="clientId" column="client_id" type="string"/>
-        <field name="ip" type="string"/>
-        <field name="url" type="string"/>
-        <field name="userAgent" type="string"/>
-        <field name="preferences" type="boolean"/>
-        <field name="statistics" type="boolean"/>
-        <field name="marketing" type="boolean"/>
+        <field name="category" type="string"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -26,9 +20,5 @@
         <field name="updatedAt" type="datetime" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
-
-        <indexes>
-            <index columns="client_id"/>
-        </indexes>
     </mapped-superclass>
 </doctrine-mapping>

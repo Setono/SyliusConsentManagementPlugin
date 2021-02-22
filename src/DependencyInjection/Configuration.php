@@ -6,10 +6,13 @@ namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Service;
+use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Resource\Factory\TranslatableFactory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -63,6 +66,38 @@ final class Configuration implements ConfigurationInterface
                                         ->scalarNode('repository')->defaultValue(ConsentEntryRepository::class)->cannotBeEmpty()->end()
                                         ->scalarNode('form')->defaultValue(DefaultResourceType::class)->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('service')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(Service::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->cannotBeEmpty()->end()
+                                        ->scalarNode('factory')->defaultValue(TranslatableFactory::class)->end()
+                                        ->scalarNode('form')->defaultValue(DefaultResourceType::class)->cannotBeEmpty()->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('translation')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->variableNode('options')->end()
+                                        ->arrayNode('classes')
+                                            ->addDefaultsIfNotSet()
+                                            ->children()
+                                                ->scalarNode('model')->defaultValue(ServiceTranslation::class)->cannotBeEmpty()->end()
+                                                ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                                ->scalarNode('repository')->cannotBeEmpty()->end()
+                                                ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                                ->scalarNode('form')->defaultValue(DefaultResourceType::class)->cannotBeEmpty()->end()
+                                            ->end()
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
