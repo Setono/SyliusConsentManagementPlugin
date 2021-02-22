@@ -7,6 +7,9 @@
         {{ form_row(form.statistics) }}
         {{ form_row(form.marketing) }}
 
-        <button type="submit" class="ui primary button">Save</button>
+        {{ 'setono_sylius_consent_management.ui.widget.introduction'|trans({'%channel%' : sylius.channel.name}) }}
+
+        <button type="button" class="ui button sscm-btn-more-information">{{ 'setono_sylius_consent_management.ui.widget.more_information'|trans }}</button>
+        <button type="submit" class="ui primary button">{{ 'setono_sylius_consent_management.ui.widget.accept'|trans }}</button>
     {{ form_end(form) }}
 </div>

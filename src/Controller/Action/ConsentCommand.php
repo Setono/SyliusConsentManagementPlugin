@@ -6,9 +6,9 @@ namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 final class ConsentCommand
 {
-    public bool $preferences = false;
+    public bool $preferences = true;
 
-    public bool $statistics = false;
+    public bool $statistics = true;
 
-    public bool $marketing = false;
+    public bool $marketing = true;
 }

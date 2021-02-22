@@ -17,6 +17,7 @@ setono_sylius_consent_management_admin_service:
         section: admin
         alias: setono_sylius_consent_management.service
         templates: SyliusAdminBundle:Crud
+        redirect: index
         permission: true
         grid: setono_sylius_consent_management_admin_service
         vars:

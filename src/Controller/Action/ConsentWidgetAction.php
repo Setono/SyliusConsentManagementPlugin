@@ -57,7 +57,7 @@ final class ConsentWidgetAction
             return new Response();
         }
 
-        $form = $this->formFactory->create(ConsentType::class);
+        $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
