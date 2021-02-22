@@ -10,6 +10,12 @@ use Sylius\Component\Resource\Model\TranslatableInterface;
 
 interface ServiceInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface
 {
+    public const CATEGORY_PREFERENCES = 'preferences';
+
+    public const CATEGORY_STATISTICS = 'statistics';
+
+    public const CATEGORY_MARKETING = 'marketing';
+
     public function getId(): ?int;
 
     public function getCategory(): ?string;

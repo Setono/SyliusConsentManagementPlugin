@@ -4,3 +4,27 @@ setono_sylius_consent_management:
             preferences: Preferences
             statistics: Statistics
             marketing: Marketing
+        service:
+            categories:
+                marketing: Marketing
+                preferences: Preferences
+                statistics: Statistics
+            category: Category
+            category_placeholder: Select an appropiate category...
+            description: Description
+            name: Name
+            translations: Translations
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Consent entries
+                    header: Consent management
+                    services: Services
+    ui:
+        consent_entries: Consent entries
+        consent_entry_header: Consent entries
+        consent_entry_subheader: List of consent entries
+        service_header: Services
+        service_subheader: Manage your service that needs consent
+        services: Services

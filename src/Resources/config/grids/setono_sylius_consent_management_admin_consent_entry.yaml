@@ -1,0 +1,11 @@
+sylius_grid:
+    grids:
+        setono_sylius_consent_management_admin_consent_entry:
+            driver:
+                options:
+                    class: "%setono_sylius_consent_management.model.consent_entry.class%"
+            fields:
+                ip:
+                    type: string
+                    label: setono_sylius_consent_management.ui.ip
+

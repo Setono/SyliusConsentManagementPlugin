@@ -7,4 +7,4 @@ setono_sylius_consent_management_shop:
 
 setono_sylius_consent_management_admin:
     resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes/admin.yaml"
-    prefix: /admin
+    prefix: /admin/consent-management

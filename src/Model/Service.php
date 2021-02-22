@@ -26,6 +26,15 @@ class Service implements ServiceInterface
         $this->initializeTranslationsCollection();
     }
 
+    public static function getCategories(): array
+    {
+        return [
+            self::CATEGORY_PREFERENCES => self::CATEGORY_PREFERENCES,
+            self::CATEGORY_STATISTICS => self::CATEGORY_STATISTICS,
+            self::CATEGORY_MARKETING => self::CATEGORY_MARKETING,
+        ];
+    }
+
     public function getId(): ?int
     {
         return $this->id;

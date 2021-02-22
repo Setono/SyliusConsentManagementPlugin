@@ -1,1 +1,2 @@
-setono_sylius_consent_management:
+imports:
+    - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }

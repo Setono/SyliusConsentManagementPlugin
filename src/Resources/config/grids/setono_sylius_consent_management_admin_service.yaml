@@ -1,0 +1,18 @@
+sylius_grid:
+    grids:
+        setono_sylius_consent_management_admin_service:
+            driver:
+                options:
+                    class: "%setono_sylius_consent_management.model.service.class%"
+            fields:
+                name:
+                    type: string
+                    label: setono_sylius_consent_management.ui.name
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
+
