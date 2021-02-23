@@ -8,6 +8,11 @@ sylius_grid:
                 name:
                     type: string
                     label: setono_sylius_consent_management.ui.name
+                category:
+                    type: twig
+                    label: setono_sylius_consent_management.ui.category
+                    options:
+                        template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/category.html.twig"
             actions:
                 main:
                     create:

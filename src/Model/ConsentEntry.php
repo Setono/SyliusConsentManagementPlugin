@@ -106,7 +106,11 @@ class ConsentEntry implements ConsentEntryInterface
     public function populateFromRequest(Request $request): void
     {
         $this->ip = (string) $request->getClientIp();
+
         $this->url = $request->getUri();
+        if ($request->isXmlHttpRequest() && $request->headers->has('referer')) {
+            $this->url = $request->headers->get('referer');
+        }
 
         $userAgent = $request->headers->get('user-agent');
         if (is_string($userAgent)) {

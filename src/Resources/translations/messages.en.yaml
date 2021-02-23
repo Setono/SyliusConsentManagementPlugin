@@ -22,6 +22,11 @@ setono_sylius_consent_management:
                     header: Consent management
                     services: Services
     ui:
+        categories:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing
+        category: Category
         client_id: Client id
         consent_entries: Consent entries
         consent_entry_header: Consent entries
@@ -36,5 +41,6 @@ setono_sylius_consent_management:
         user_agent: User agent
         widget:
             accept: Accept
+            accept_secondary: Save and accept
             introduction: "%channel% use cookies to give you the best possible experience on our store"
             more_information: More information

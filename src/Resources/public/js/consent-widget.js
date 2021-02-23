@@ -50,6 +50,7 @@
       };
       req.open('POST', form.action);
       req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       req.send(data);
     });
   }
@@ -57,6 +58,17 @@
   function addListeners() {
     d.addEventListener('sscmInitialConsent', runScriptTags);
     d.addEventListener('sscmConsentUpdated', runScriptTags);
+
+    d.querySelector('.sscm-btn-more-information').addEventListener('click', (e) => {
+      // show the detailed information about services
+      d.querySelector('.sscm-more-information').style.display = '';
+
+      // change the text on the submit button
+      const submitBtn = d.querySelector('.sscm-btn-submit');
+      submitBtn.innerHTML = submitBtn.getAttribute('data-secondary-caption').valueOf();
+
+      e.currentTarget.remove();
+    });
   }
 
   function runScriptTags() {

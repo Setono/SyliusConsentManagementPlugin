@@ -19,7 +19,7 @@ final class ServiceType extends AbstractResourceType
                 'label' => 'setono_sylius_consent_management.form.service.category',
                 'placeholder' => 'setono_sylius_consent_management.form.service.category_placeholder',
                 'choices' => Service::getCategories(),
-                'choice_label' => static function (string $choice, string $key, $value): string {
+                'choice_label' => static function (string $choice, string $key, string $value): string {
                     return 'setono_sylius_consent_management.form.service.categories.' . $key;
                 },
             ])

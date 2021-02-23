@@ -16,6 +16,7 @@
             <argument type="service" id="form.factory"/>
             <argument type="service" id="twig"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
+            <argument type="service" id="setono_sylius_consent_management.repository.service"/>
             <argument type="service" id="setono_sylius_consent_management.client_id"/>
             <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.manager.consent_entry"/>

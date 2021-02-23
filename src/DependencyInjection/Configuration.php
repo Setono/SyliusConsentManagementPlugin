@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
@@ -81,7 +82,7 @@ final class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('model')->defaultValue(Service::class)->cannotBeEmpty()->end()
                                         ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
-                                        ->scalarNode('repository')->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(ServiceRepository::class)->cannotBeEmpty()->end()
                                         ->scalarNode('factory')->defaultValue(TranslatableFactory::class)->end()
                                         ->scalarNode('form')->defaultValue(ServiceType::class)->cannotBeEmpty()->end()
                                     ->end()

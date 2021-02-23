@@ -9,6 +9,7 @@ use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -25,6 +26,8 @@ final class ConsentWidgetAction
 
     private ConsentEntryRepositoryInterface $consentEntryRepository;
 
+    private ServiceRepositoryInterface $serviceRepository;
+
     private ClientIdInterface $clientId;
 
     private FactoryInterface $consentEntryFactory;
@@ -37,6 +40,7 @@ final class ConsentWidgetAction
         FormFactoryInterface $formFactory,
         Environment $twig,
         ConsentEntryRepositoryInterface $consentEntryRepository,
+        ServiceRepositoryInterface $serviceRepository,
         ClientIdInterface $clientId,
         FactoryInterface $consentEntryFactory,
         EntityManagerInterface $consentEntryManager,
@@ -45,6 +49,7 @@ final class ConsentWidgetAction
         $this->formFactory = $formFactory;
         $this->twig = $twig;
         $this->consentEntryRepository = $consentEntryRepository;
+        $this->serviceRepository = $serviceRepository;
         $this->clientId = $clientId;
         $this->consentEntryFactory = $consentEntryFactory;
         $this->consentEntryManager = $consentEntryManager;
@@ -87,6 +92,7 @@ final class ConsentWidgetAction
 
         return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
             'form' => $form->createView(),
+            'services' => $this->serviceRepository->findAllIndexedByCategory(),
         ]), $form->isSubmitted() ? 400 : 200); // we know the status code should be 400 if the the form was submitted because if the form was valid another response would have been sent above
     }
 }
