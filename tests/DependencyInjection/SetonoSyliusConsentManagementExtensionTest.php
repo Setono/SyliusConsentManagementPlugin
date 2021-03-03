@@ -18,21 +18,4 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
             new SetonoSyliusConsentManagementExtension(),
         ];
     }
-
-    protected function getMinimalConfiguration(): array
-    {
-        return [
-            'option' => 'option_value',
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function after_loading_the_correct_parameter_has_been_set(): void
-    {
-        $this->load();
-
-        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.option', 'option_value');
-    }
 }

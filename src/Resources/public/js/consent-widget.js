@@ -14,6 +14,10 @@
   }
 
   function consentWidget() {
+    if(!(formName in d.forms)) {
+      return;
+    }
+
     const form = d.forms[formName];
 
     form.addEventListener('submit', (e) => {
@@ -59,29 +63,32 @@
     d.addEventListener('sscmInitialConsent', runScriptTags);
     d.addEventListener('sscmConsentUpdated', runScriptTags);
 
-    d.querySelector('.sscm-btn-more-information').addEventListener('click', (e) => {
-      // show the detailed information about services
-      d.querySelector('.sscm-more-information').style.display = '';
+    const moreInfoBtn = d.querySelector('.sscm-btn-more-information');
 
-      // change the text on the submit button
-      const submitBtn = d.querySelector('.sscm-btn-submit');
-      submitBtn.innerHTML = submitBtn.getAttribute('data-secondary-caption').valueOf();
+    if(null !== moreInfoBtn) {
+      moreInfoBtn.addEventListener('click', (e) => {
+        // show the detailed information about services
+        const moreInfo = d.querySelector('.sscm-more-information');
+        if(null !== moreInfo) {
+          moreInfo.style.display = '';
+        }
 
-      e.currentTarget.remove();
-    });
+        // change the text on the submit button
+        const submitBtn = d.querySelector('.sscm-btn-submit');
+        if(null !== submitBtn) {
+          submitBtn.innerHTML = submitBtn.getAttribute('data-secondary-caption').valueOf();
+        }
+
+        e.currentTarget.remove();
+      });
+    }
   }
 
   function runScriptTags() {
-    const keys = ['preferences', 'statistics', 'marketing'];
-
     d.querySelectorAll('script[data-consent]').forEach((script) => {
       let consent = script.getAttribute('data-consent').valueOf();
-      if(!keys.includes(consent)) {
-        console.error('The consent "%s" is not valid. Use one of [%s]', consent, keys.join(', '));
-        return;
-      }
 
-      if(!c[consent]) {
+      if(!c.hasOwnProperty(consent) || c[consent] !== true) {
         return;
       }
 
@@ -103,8 +110,11 @@
   }
 
   function hideConsentContainer() {
-    for (let el of d.querySelectorAll('.sscm-consent-container')) {
-      el.style.display = 'none';
+    const consentContainer = d.querySelector('.sscm-consent-container');
+    if(null === consentContainer) {
+      return;
     }
+
+    consentContainer.style.display = 'none';
   }
 })(document, sscmConsent);

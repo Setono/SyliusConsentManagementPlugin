@@ -34,7 +34,6 @@ final class CookieBasedClientId implements ClientIdInterface
 
         $cookie = $request->cookies->get($this->cookieName);
         if (!is_string($cookie)) {
-            // todo log this
             return $this->decorated->get();
         }
 

@@ -19,30 +19,4 @@ final class ConfigurationTest extends TestCase
     {
         return new Configuration();
     }
-
-    /**
-     * @test
-     */
-    public function values_are_invalid_if_required_value_is_not_provided(): void
-    {
-        $this->assertConfigurationIsInvalid(
-            [
-                [], // no values at all
-            ],
-            'The child node "option" at path "setono_sylius_consent_management" must be configured.'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function processed_value_contains_required_value(): void
-    {
-        $this->assertProcessedConfigurationEquals([
-            ['option' => 'first value'],
-            ['option' => 'last value'],
-        ], [
-            'option' => 'last value',
-        ]);
-    }
 }
