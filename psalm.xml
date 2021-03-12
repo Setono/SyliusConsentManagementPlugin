@@ -16,4 +16,8 @@
             <containerXml>tests/Application/var/cache/test/ApplicationTests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml</containerXml>
         </pluginClass>
     </plugins>
+    <forbiddenFunctions>
+        <function name="dd"/>
+        <function name="dump"/>
+    </forbiddenFunctions>
 </psalm>
