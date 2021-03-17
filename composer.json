@@ -7,7 +7,6 @@
         "sylius-plugin"
     ],
     "license": "MIT",
-    "minimum-stability": "dev",
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
@@ -65,6 +64,7 @@
             "tests/Application/Kernel.php"
         ]
     },
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "analyse": [
