@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?int $id = null;
 
-    protected ?string $clientId = null;
+    protected ?ClientId $clientId = null;
 
     protected ?string $ip = null;
 
@@ -33,12 +34,12 @@ class ConsentEntry implements ConsentEntryInterface
         return $this->id;
     }
 
-    public function getClientId(): ?string
+    public function getClientId(): ?ClientId
     {
         return $this->clientId;
     }
 
-    public function setClientId(string $clientId): void
+    public function setClientId(ClientId $clientId): void
     {
         $this->clientId = $clientId;
     }

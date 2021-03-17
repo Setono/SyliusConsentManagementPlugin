@@ -17,7 +17,7 @@
             <argument type="service" id="twig"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.repository.service"/>
-            <argument type="service" id="setono_sylius_consent_management.client_id"/>
+            <argument type="service" id="setono_client_id.provider.default_client_id"/>
             <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.manager.consent_entry"/>
             <argument>%setono_sylius_consent_management.cookie.consent_widget%</argument>

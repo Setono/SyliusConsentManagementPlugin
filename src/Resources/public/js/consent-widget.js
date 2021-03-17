@@ -92,10 +92,23 @@
         return;
       }
 
-      script.removeAttribute('type');
-      script.removeAttribute('data-consent');
-      eval(script.textContent);
+      if(script.hasAttribute('src')) {
+        loadExternalScript(script.getAttribute('src'));
+        script.remove();
+      } else {
+        script.removeAttribute('type');
+        script.removeAttribute('data-consent');
+
+        eval(script.textContent);
+      }
     });
+  }
+
+  function loadExternalScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+
+    document.head.appendChild(script);
   }
 
   function createEvent(name)

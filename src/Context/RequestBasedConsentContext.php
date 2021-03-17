@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
+use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Consent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -14,13 +14,16 @@ final class RequestBasedConsentContext implements ConsentContextInterface
 
     private RequestStack $requestStack;
 
-    private ClientIdInterface $clientId;
+    private ClientIdProviderInterface $clientIdProvider;
 
-    public function __construct(ConsentContextInterface $decorated, RequestStack $requestStack, ClientIdInterface $clientId)
-    {
+    public function __construct(
+        ConsentContextInterface $decorated,
+        RequestStack $requestStack,
+        ClientIdProviderInterface $clientIdProvider
+    ) {
         $this->decorated = $decorated;
         $this->requestStack = $requestStack;
-        $this->clientId = $clientId;
+        $this->clientIdProvider = $clientIdProvider;
     }
 
     public function get(): Consent
@@ -46,6 +49,6 @@ final class RequestBasedConsentContext implements ConsentContextInterface
             $preferences = $statistics = $marketing = true;
         }
 
-        return new Consent($this->clientId->get(), $preferences, $statistics, $marketing);
+        return new Consent($this->clientIdProvider->get(), $preferences, $statistics, $marketing);
     }
 }

@@ -57,4 +57,5 @@ return [
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class => ['all' => true],
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
+    Setono\ClientIdBundle\SetonoClientIdBundle::class => ['all' => true],
 ];

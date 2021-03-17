@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Setono\SyliusConsentManagementPlugin\ClientId\ClientIdInterface;
+use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
@@ -28,7 +28,7 @@ final class ConsentWidgetAction
 
     private ServiceRepositoryInterface $serviceRepository;
 
-    private ClientIdInterface $clientId;
+    private ClientIdProviderInterface $clientIdProvider;
 
     private FactoryInterface $consentEntryFactory;
 
@@ -41,7 +41,7 @@ final class ConsentWidgetAction
         Environment $twig,
         ConsentEntryRepositoryInterface $consentEntryRepository,
         ServiceRepositoryInterface $serviceRepository,
-        ClientIdInterface $clientId,
+        ClientIdProviderInterface $clientIdProvider,
         FactoryInterface $consentEntryFactory,
         EntityManagerInterface $consentEntryManager,
         string $cookieName
@@ -50,7 +50,7 @@ final class ConsentWidgetAction
         $this->twig = $twig;
         $this->consentEntryRepository = $consentEntryRepository;
         $this->serviceRepository = $serviceRepository;
-        $this->clientId = $clientId;
+        $this->clientIdProvider = $clientIdProvider;
         $this->consentEntryFactory = $consentEntryFactory;
         $this->consentEntryManager = $consentEntryManager;
         $this->cookieName = $cookieName;
@@ -66,7 +66,7 @@ final class ConsentWidgetAction
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $clientId = $this->clientId->get();
+            $clientId = $this->clientIdProvider->get();
             $consentEntry = $this->consentEntryRepository->findOneFromClientId($clientId);
             if (null === $consentEntry) {
                 /** @var ConsentEntryInterface $consentEntry */

@@ -16,6 +16,9 @@
             <containerXml>tests/Application/var/cache/test/ApplicationTests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml</containerXml>
         </pluginClass>
     </plugins>
+    <issueHandlers>
+        <PluginIssue name="QueryBuilderSetParameter" errorLevel="info" />
+    </issueHandlers>
     <forbiddenFunctions>
         <function name="dd"/>
         <function name="dump"/>

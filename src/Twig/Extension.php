@@ -9,6 +9,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFunction;
 
+// todo create runtime extension, see https://symfony.com/doc/current/templating/twig_extension.html#creating-lazy-loaded-twig-extensions
 final class Extension extends AbstractExtension implements GlobalsInterface
 {
     private ConsentContextInterface $consentContext;
@@ -33,6 +34,8 @@ final class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('sscm_preferences_granted', [$this, 'preferencesGranted']),
             new TwigFunction('sscm_statistics_granted', [$this, 'statisticsGranted']),
             new TwigFunction('sscm_marketing_granted', [$this, 'marketingGranted']),
+            new TwigFunction('sscm_script_tag', [$this, 'scriptTag'], ['is_safe' => ['html']]),
+            new TwigFunction('sscm_script_tag_attributes', [$this, 'scriptTagAttributes'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -43,7 +46,7 @@ final class Extension extends AbstractExtension implements GlobalsInterface
 
     public function clientId(): string
     {
-        return $this->consentContext->get()->getClientId();
+        return $this->consentContext->get()->getClientId()->toString();
     }
 
     public function preferencesGranted(): bool
@@ -59,5 +62,23 @@ final class Extension extends AbstractExtension implements GlobalsInterface
     public function marketingGranted(): bool
     {
         return $this->consentContext->get()->isMarketingGranted();
+    }
+
+    public function scriptTag(string $src, string $consent, bool $async = true): string
+    {
+        if ($this->consentContext->get()->isConsentGranted($consent)) {
+            return sprintf('<script src="%s"%s></script>', $src, $async ? ' async' : '');
+        }
+
+        return sprintf('<script type="text/plain" data-consent="%s" src="%s"%s></script>', $consent, $src, $async ? ' async' : '');
+    }
+
+    public function scriptTagAttributes(string $consent): string
+    {
+        if ($this->consentContext->get()->isConsentGranted($consent)) {
+            return '';
+        }
+
+        return sprintf(' type="text/plain" data-consent="%s"', $consent);
     }
 }

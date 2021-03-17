@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
@@ -13,9 +14,9 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
 {
     public function getId(): ?int;
 
-    public function getClientId(): ?string;
+    public function getClientId(): ?ClientId;
 
-    public function setClientId(string $clientId): void;
+    public function setClientId(ClientId $clientId): void;
 
     /**
      * The IP of the user

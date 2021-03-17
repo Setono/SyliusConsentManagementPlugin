@@ -74,14 +74,19 @@
 {% block javascripts %}
     {{ sylius_template_event('sylius.shop.layout.javascripts') }}
     <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>
-    <script type="text/plain" data-consent="preferences">
-        console.log('Preferences granted');
+
+    {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}
+    {{ sscm_script_tag(asset('js/statistics.js'), 'statistics') }}
+    {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
+
+    <script{{ sscm_script_tag_attributes('preferences') }}>
+        console.info('Inline script: Preferences granted');
     </script>
-    <script type="text/plain" data-consent="statistics">
-        console.log('Statistics granted');
+    <script{{ sscm_script_tag_attributes('statistics') }}>
+        console.info('Inline script: Statistics granted');
     </script>
-    <script type="text/plain" data-consent="marketing">
-        console.log('Marketing granted');
+    <script{{ sscm_script_tag_attributes('marketing') }}>
+        console.info('Inline script: Marketing granted');
     </script>
 {% endblock %}
 

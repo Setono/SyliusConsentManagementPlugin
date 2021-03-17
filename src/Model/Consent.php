@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Setono\ClientId\ClientId;
+use Webmozart\Assert\Assert;
+
 final class Consent implements \JsonSerializable
 {
-    private string $clientId;
+    private ClientId $clientId;
 
     private bool $preferences;
 
@@ -14,7 +17,7 @@ final class Consent implements \JsonSerializable
 
     private bool $marketing;
 
-    public function __construct(string $clientId, bool $preferences, bool $statistics, bool $marketing)
+    public function __construct(ClientId $clientId, bool $preferences, bool $statistics, bool $marketing)
     {
         $this->clientId = $clientId;
         $this->preferences = $preferences;
@@ -22,7 +25,7 @@ final class Consent implements \JsonSerializable
         $this->marketing = $marketing;
     }
 
-    public function getClientId(): string
+    public function getClientId(): ClientId
     {
         return $this->clientId;
     }
@@ -42,10 +45,20 @@ final class Consent implements \JsonSerializable
         return $this->marketing;
     }
 
+    public function isConsentGranted(string $consent): bool
+    {
+        Assert::oneOf($consent, ['marketing', 'statistics', 'preferences']);
+
+        $res = $this->{$consent};
+        Assert::boolean($res);
+
+        return $res;
+    }
+
     public function jsonSerialize(): array
     {
         return [
-            'clientId' => $this->clientId,
+            'clientId' => $this->clientId->toString(),
             'preferences' => $this->preferences,
             'statistics' => $this->statistics,
             'marketing' => $this->marketing,

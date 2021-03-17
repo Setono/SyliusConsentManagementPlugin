@@ -11,7 +11,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="clientId" column="client_id" type="string"/>
+        <field name="clientId" column="client_id" type="client_id"/>
         <field name="ip" type="string"/>
         <field name="url" type="string"/>
         <field name="userAgent" type="string"/>
