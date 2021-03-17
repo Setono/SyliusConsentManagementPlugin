@@ -9,7 +9,7 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4",
+        "php": ">=7.4",
         "ext-json": "*",
         "doctrine/orm": "^2.7",
         "setono/client-id-bundle": "dev-master",
