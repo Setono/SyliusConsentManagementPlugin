@@ -1,0 +1,46 @@
+setono_sylius_consent_management:
+    form:
+        consent:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing
+        service:
+            categories:
+                marketing: Marketing
+                preferences: Preferences
+                statistics: Statistics
+            category: Category
+            category_placeholder: Select an appropiate category...
+            description: Description
+            name: Name
+            translations: Translations
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Consent entries
+                    header: Consent management
+                    services: Services
+    ui:
+        categories:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing
+        category: Category
+        client_id: Client id
+        consent_entries: Consent entries
+        consent_entry_header: Consent entries
+        consent_entry_subheader: List of consent entries
+        ip: IP address
+        name: Name
+        search: Search for a client id or an IP address
+        service_header: Services
+        service_subheader: Manage your service that needs consent
+        services: Services
+        url: URL
+        user_agent: User agent
+        widget:
+            accept: Accept
+            accept_secondary: Save and accept
+            introduction: "%channel% use cookies to give you the best possible experience on our store"
+            more_information: More information

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface"
+                 alias="setono_sylius_consent_management.context.consent"/>
+
+        <service id="setono_sylius_consent_management.context.consent"
+                 class="Setono\SyliusConsentManagementPlugin\Context\DefaultConsentContext">
+            <argument type="service" id="setono_client_id.provider.default_client_id"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.context.consent.orm_based"
+                 class="Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext"
+                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="256">
+            <argument type="service" id="setono_sylius_consent_management.context.consent.orm_based.inner"/>
+            <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.context.consent.request_based"
+                 class="Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext"
+                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="128">
+            <argument type="service" id="setono_sylius_consent_management.context.consent.request_based.inner"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="setono_client_id.provider.default_client_id"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.context.consent.cached"
+                 class="Setono\SyliusConsentManagementPlugin\Context\CachedConsentContext"
+                 decorates="setono_sylius_consent_management.context.consent" decoration-priority="64">
+            <argument type="service" id="setono_sylius_consent_management.context.consent.cached.inner"/>
+        </service>
+    </services>
+</container>

@@ -1,2 +1,2 @@
-setono_sylius_cookie_consent:
-    option: Option value
+imports:
+    - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }

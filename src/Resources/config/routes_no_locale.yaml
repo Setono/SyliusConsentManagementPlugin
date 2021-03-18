@@ -2,9 +2,9 @@
 # localized URLs (see https://docs.sylius.com/en/latest/cookbook/shop/disabling-localised-urls.html).
 # To accommodate this in your plugin, provide a routes file for non localized stores and tell this in the README.md
 
-setono_sylius_cookie_consent_shop:
-    resource: "@SetonoSyliusCookieConsentPlugin/Resources/config/routes/shop.yaml"
+setono_sylius_consent_management_shop:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes/shop.yaml"
 
-setono_sylius_cookie_consent_admin:
-    resource: "@SetonoSyliusCookieConsentPlugin/Resources/config/routes/admin.yaml"
-    prefix: /admin
+setono_sylius_consent_management_admin:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes/admin.yaml"
+    prefix: /admin/consent-management

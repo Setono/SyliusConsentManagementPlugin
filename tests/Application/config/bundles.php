@@ -28,6 +28,7 @@ return [
     Sylius\Bundle\UiBundle\SyliusUiBundle::class => ['all' => true],
     Sylius\Bundle\ReviewBundle\SyliusReviewBundle::class => ['all' => true],
     Sylius\Bundle\CoreBundle\SyliusCoreBundle::class => ['all' => true],
+    Setono\SyliusConsentManagementPlugin\SetonoSyliusConsentManagementPlugin::class => ['all' => true],
     Sylius\Bundle\ResourceBundle\SyliusResourceBundle::class => ['all' => true],
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
     winzou\Bundle\StateMachineBundle\winzouStateMachineBundle::class => ['all' => true],
@@ -49,7 +50,6 @@ return [
     Sylius\Bundle\ShopBundle\SyliusShopBundle::class => ['all' => true],
     FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
     Sylius\Bundle\AdminApiBundle\SyliusAdminApiBundle::class => ['all' => true],
-    Setono\SyliusCookieConsentPlugin\SetonoSyliusCookieConsentPlugin::class => ['all' => true],
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
@@ -57,4 +57,5 @@ return [
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class => ['all' => true],
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
+    Setono\ClientIdBundle\SetonoClientIdBundle::class => ['all' => true],
 ];

@@ -1,0 +1,26 @@
+sylius_grid:
+    grids:
+        setono_sylius_consent_management_admin_consent_entry:
+            driver:
+                options:
+                    class: "%setono_sylius_consent_management.model.consent_entry.class%"
+            limits: [50, 100, 250, 500, 1000]
+            fields:
+                clientId:
+                    type: string
+                    label: setono_sylius_consent_management.ui.client_id
+                url:
+                    type: string
+                    label: setono_sylius_consent_management.ui.url
+                ip:
+                    type: string
+                    label: setono_sylius_consent_management.ui.ip
+                userAgent:
+                    type: string
+                    label: setono_sylius_consent_management.ui.user_agent
+            filters:
+                search:
+                    type: string
+                    label: setono_sylius_consent_management.ui.search
+                    options:
+                        fields: [ clientId, ip ]

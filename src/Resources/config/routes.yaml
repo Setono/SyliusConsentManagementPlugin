@@ -1,9 +1,9 @@
-setono_sylius_cookie_consent_shop:
-    resource: "@SetonoSyliusCookieConsentPlugin/Resources/config/routes/shop.yaml"
+setono_sylius_consent_management_shop:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes/shop.yaml"
     prefix: /{_locale}
     requirements:
         _locale: ^[A-Za-z]{2,4}(_([A-Za-z]{4}|[0-9]{3}))?(_([A-Za-z]{2}|[0-9]{3}))?$
 
-setono_sylius_cookie_consent_admin:
-    resource: "@SetonoSyliusCookieConsentPlugin/Resources/config/routes/admin.yaml"
-    prefix: /admin
+setono_sylius_consent_management_admin:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes/admin.yaml"
+    prefix: /admin/consent-management

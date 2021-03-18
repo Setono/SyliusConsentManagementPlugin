@@ -2,11 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusCookieConsentPlugin\DependencyInjection;
+namespace Tests\Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
-use Setono\SyliusCookieConsentPlugin\DependencyInjection\Configuration;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
+use Setono\SyliusConsentManagementPlugin\DependencyInjection\Configuration;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
+use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Service;
+use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
+use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
+use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Resource\Factory\TranslatableFactory;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyConfigTest
@@ -23,26 +34,38 @@ final class ConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function values_are_invalid_if_required_value_is_not_provided(): void
-    {
-        $this->assertConfigurationIsInvalid(
-            [
-                [], // no values at all
-            ],
-            'The child node "option" at path "setono_sylius_cookie_consent" must be configured.'
-        );
-    }
-
-    /**
-     * @test
-     */
     public function processed_value_contains_required_value(): void
     {
-        $this->assertProcessedConfigurationEquals([
-            ['option' => 'first value'],
-            ['option' => 'last value'],
-        ], [
-            'option' => 'last value',
+        $this->assertProcessedConfigurationEquals([], [
+            'driver' => 'doctrine/orm',
+            'resources' => [
+                'consent_entry' => [
+                    'classes' => [
+                        'model' => ConsentEntry::class,
+                        'controller' => ResourceController::class,
+                        'repository' => ConsentEntryRepository::class,
+                        'form' => DefaultResourceType::class,
+                        'factory' => Factory::class,
+                    ],
+                ],
+                'service' => [
+                    'classes' => [
+                        'model' => Service::class,
+                        'controller' => ResourceController::class,
+                        'repository' => ServiceRepository::class,
+                        'form' => ServiceType::class,
+                        'factory' => TranslatableFactory::class,
+                    ],
+                    'translation' => [
+                        'classes' => [
+                            'model' => ServiceTranslation::class,
+                            'controller' => ResourceController::class,
+                            'form' => ServiceTranslationType::class,
+                            'factory' => Factory::class,
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 }
