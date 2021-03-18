@@ -22,7 +22,6 @@
         "symfony/http-foundation": "^4.4 || ^5.0.7",
         "symfony/http-kernel": "^4.4 || ^5.1.5",
         "symfony/options-resolver": "^4.4 || ^5.0",
-        "symfony/uid": "^5.0",
         "twig/twig": "^2.14",
         "webmozart/assert": "^1.9"
     },
