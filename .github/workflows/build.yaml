@@ -127,6 +127,8 @@ jobs:
             
             -   name: "Static analysis"
                 run: "composer analyse"
+                env:
+                    APP_DEBUG: 1
 
     unit-tests:
         name: "Unit tests"
