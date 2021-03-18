@@ -18,4 +18,19 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
             new SetonoSyliusConsentManagementExtension(),
         ];
     }
+
+    /**
+     * @test
+     */
+    public function container_has_parameters(): void
+    {
+        $this->load();
+
+        /** @var array<string, mixed> $resources */
+        $resources = $this->container->getParameter('sylius.resources');
+
+        self::assertArrayHasKey('setono_sylius_consent_management.consent_entry', $resources);
+        self::assertArrayHasKey('setono_sylius_consent_management.service', $resources);
+        self::assertArrayHasKey('setono_sylius_consent_management.service_translation', $resources);
+    }
 }

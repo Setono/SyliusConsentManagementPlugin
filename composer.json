@@ -34,6 +34,7 @@
         "matthiasnoback/symfony-config-test": "^4.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.2",
         "phpunit/phpunit": "^9.5",
+        "psalm/plugin-phpunit": "^0.15.1",
         "psalm/plugin-symfony": "^2.1",
         "roave/security-advisories": "dev-master",
         "setono/code-quality-pack": "^1.5.2",
@@ -44,7 +45,8 @@
         "symfony/maker-bundle": "^1.15",
         "symfony/property-info": "^4.4 || ^5.0",
         "symfony/serializer": "^4.4 || ^5.0",
-        "symfony/web-profiler-bundle": "^5.0"
+        "symfony/web-profiler-bundle": "^5.0",
+        "weirdan/doctrine-psalm-plugin": "^1.0"
     },
     "config": {
         "sort-packages": true
