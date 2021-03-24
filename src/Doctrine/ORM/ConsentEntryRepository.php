@@ -16,7 +16,7 @@ class ConsentEntryRepository extends EntityRepository implements ConsentEntryRep
     public function findConsentFromClientId(ClientId $clientId): ?Consent
     {
         $result = $this->createQueryBuilder('o')
-            ->select('NEW Setono\SyliusConsentManagementPlugin\Model\Consent(o.clientId, o.preferences, o.statistics, o.marketing)')
+            ->select('NEW Setono\SyliusConsentManagementPlugin\Model\Consent(NEW Setono\ClientId\ClientId(o.clientId), o.preferences, o.statistics, o.marketing)')
             ->andWhere('o.clientId = :clientId')
             ->setParameter('clientId', $clientId)
             ->getQuery()

@@ -11,9 +11,9 @@ final class DefaultConsentContext implements ConsentContextInterface
 {
     private ClientIdProviderInterface $clientIdProvider;
 
-    public function __construct(ClientIdProviderInterface $clientId)
+    public function __construct(ClientIdProviderInterface $clientIdProvider)
     {
-        $this->clientIdProvider = $clientId;
+        $this->clientIdProvider = $clientIdProvider;
     }
 
     public function get(): Consent
