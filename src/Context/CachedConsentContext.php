@@ -6,6 +6,9 @@ namespace Setono\SyliusConsentManagementPlugin\Context;
 
 use Setono\SyliusConsentManagementPlugin\Model\Consent;
 
+/**
+ * This class will cache the consent for the request life cycle directly in memory
+ */
 final class CachedConsentContext implements ConsentContextInterface
 {
     private ?Consent $consent = null;
