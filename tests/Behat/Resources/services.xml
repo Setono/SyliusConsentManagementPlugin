@@ -4,17 +4,24 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <defaults public="true"/>
-<!--        <service id="acme_sylius_example.context.ui.shop.welcome"-->
-<!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Context\Ui\Shop\WelcomeContext">-->
-<!--            <argument type="service" id="acme_sylius_example.page.shop.static_welcome"/>-->
-<!--            <argument type="service" id="acme_sylius_example.page.shop.dynamic_welcome"/>-->
-<!--        </service>-->
 
-<!--        <service id="acme_sylius_example.page.shop.static_welcome"-->
-<!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Page\Shop\StaticWelcomePage"-->
-<!--                 parent="sylius.behat.symfony_page" public="false"/>-->
-<!--        <service id="acme_sylius_example.page.shop.dynamic_welcome"-->
-<!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Page\Shop\DynamicWelcomePage"-->
-<!--                 parent="sylius.behat.symfony_page" public="false"/>-->
+        <service id="setono_sylius_consent_management.behat.context.setup.service_context"
+                 class="Tests\Setono\SyliusConsentManagementPlugin\Behat\Context\Setup\ServiceContext">
+            <argument type="service" id="setono_sylius_consent_management.repository.service"/>
+            <argument type="service" id="setono_sylius_consent_management.factory.service"/>
+        </service>
+
+        <!--        <service id="acme_sylius_example.context.ui.shop.welcome"-->
+        <!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Context\Ui\Shop\WelcomeContext">-->
+        <!--            <argument type="service" id="acme_sylius_example.page.shop.static_welcome"/>-->
+        <!--            <argument type="service" id="acme_sylius_example.page.shop.dynamic_welcome"/>-->
+        <!--        </service>-->
+
+        <!--        <service id="acme_sylius_example.page.shop.static_welcome"-->
+        <!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Page\Shop\StaticWelcomePage"-->
+        <!--                 parent="sylius.behat.symfony_page" public="false"/>-->
+        <!--        <service id="acme_sylius_example.page.shop.dynamic_welcome"-->
+        <!--                 class="Tests\Acme\SyliusExamplePlugin\Behat\Page\Shop\DynamicWelcomePage"-->
+        <!--                 parent="sylius.behat.symfony_page" public="false"/>-->
     </services>
 </container>
