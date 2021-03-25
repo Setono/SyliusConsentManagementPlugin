@@ -20,6 +20,7 @@ use Setono\ClientIdBundle\Doctrine\Type\ClientIdType;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Model\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Service;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository
@@ -50,6 +51,7 @@ final class ConsentEntryRepositoryTest extends TestCase
 
             $classes = [
                 $this->entityManager->getClassMetadata(ConsentEntry::class),
+                $this->entityManager->getClassMetadata(Service::class),
             ];
 
             foreach ($classes as $class) {

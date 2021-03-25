@@ -17,6 +17,7 @@ use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use PHPUnit\Framework\TestCase;
 use Setono\ClientIdBundle\Doctrine\Type\ClientIdType;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 
@@ -48,6 +49,7 @@ final class ServiceRepositoryTest extends TestCase
             ], $config);
 
             $classes = [
+                $this->entityManager->getClassMetadata(ConsentEntry::class),
                 $this->entityManager->getClassMetadata(Service::class),
             ];
 
