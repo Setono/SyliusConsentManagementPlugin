@@ -15,15 +15,16 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use PHPUnit\Framework\TestCase;
+use Setono\ClientId\ClientId;
 use Setono\ClientIdBundle\Doctrine\Type\ClientIdType;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
-use Setono\SyliusConsentManagementPlugin\Model\Service;
-use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository
  */
-final class ServiceRepositoryTest extends TestCase
+final class ConsentEntryRepositoryTest extends TestCase
 {
     private bool $databaseCreated = false;
 
@@ -48,7 +49,7 @@ final class ServiceRepositoryTest extends TestCase
             ], $config);
 
             $classes = [
-                $this->entityManager->getClassMetadata(Service::class),
+                $this->entityManager->getClassMetadata(ConsentEntry::class),
             ];
 
             foreach ($classes as $class) {
@@ -70,25 +71,12 @@ final class ServiceRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function it_finds_all_indexed_by_category(): void
+    public function it_finds_consent_from_client_id(): void
     {
-        $repository = new ServiceRepository($this->entityManager, $this->entityManager->getClassMetadata(Service::class));
-        $result = $repository->findAllIndexedByCategory();
+        $repository = new ConsentEntryRepository($this->entityManager, $this->entityManager->getClassMetadata(ConsentEntry::class));
+        $result = $repository->findConsentFromClientId(new ClientId('client_id_1'));
 
-        self::assertArrayHasKey('preferences', $result);
-        self::assertCount(3, $result['preferences']);
-
-        self::assertArrayHasKey('statistics', $result);
-        self::assertCount(4, $result['statistics']);
-
-        self::assertArrayHasKey('marketing', $result);
-        self::assertCount(5, $result['marketing']);
-
-        foreach ($result as $services) {
-            foreach ($services as $service) {
-                self::assertInstanceOf(Service::class, $service);
-                self::assertInstanceOf(ServiceInterface::class, $service);
-            }
-        }
+        self::assertInstanceOf(Consent::class, $result);
+        self::assertSame('client_id_1', $result->getClientId()->toString());
     }
 }

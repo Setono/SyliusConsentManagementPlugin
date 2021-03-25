@@ -6,11 +6,12 @@ Feature: Consenting to all services
 
   Background:
     Given the store operates on a single channel in "United States"
+    And the store uses multiple services, at least one in each category
 
   @ui @javascript
   Scenario: Consenting to all services
-    Given the store uses a service named "Sylius Analytics"
     When I visit this channel's homepage
-    Then I should see a consent dialog
-    And I should be able to click an accept button
-    And the "Sylius Analytics" should run
+    And I see the consent dialog
+    And I click the accept button
+    Then the consent dialog should disappear
+    And all services should run

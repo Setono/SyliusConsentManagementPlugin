@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Behat\Context\Setup;
@@ -11,6 +12,7 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 final class ServiceContext implements Context
 {
     private ServiceRepositoryInterface $serviceRepository;
+
     private FactoryInterface $serviceFactory;
 
     public function __construct(ServiceRepositoryInterface $serviceRepository, FactoryInterface $serviceFactory)
@@ -20,29 +22,53 @@ final class ServiceContext implements Context
     }
 
     /**
-     * @Given the store uses a service named :name
+     * @Given the store uses multiple services, at least one in each category
      */
-    public function storeUsesAService(string $name): void
+    public function storeUsesMultipleServices(): void
     {
-        $redirect = $this->createService($name);
-
-        $this->saveRedirect($redirect);
+        foreach (self::services() as $data) {
+            $obj = $this->createService($data[0], $data[1]);
+            $this->saveService($obj);
+        }
     }
 
-    private function createService(string $name): ServiceInterface
+    private function createService(string $name, string $category): ServiceInterface
     {
         /** @var ServiceInterface $service */
         $service = $this->serviceFactory->createNew();
 
         $service->setName($name);
         $service->setDescription('Lipsum');
-        $service->setCategory(ServiceInterface::CATEGORY_PREFERENCES);
+        $service->setCategory($category);
 
         return $service;
     }
 
-    private function saveRedirect(ServiceInterface $service): void
+    private function saveService(ServiceInterface $service): void
     {
         $this->serviceRepository->add($service);
+    }
+
+    /**
+     * @return iterable<array<string>>
+     */
+    private static function services(): iterable
+    {
+        $i = 0;
+
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
     }
 }
