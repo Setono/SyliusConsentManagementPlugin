@@ -58,4 +58,5 @@ return [
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class => ['all' => true],
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
     Setono\ClientIdBundle\SetonoClientIdBundle::class => ['all' => true],
+    FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true, 'test_cached' => true],
 ];
