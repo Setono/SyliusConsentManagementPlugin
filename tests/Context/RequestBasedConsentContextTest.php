@@ -18,6 +18,30 @@ final class RequestBasedConsentContextTest extends TestCase
     /**
      * @test
      */
+    public function it_returns_decorated_if_master_request_is_null(): void
+    {
+        $context = new RequestBasedConsentContext(
+            self::getConsentContext(), new RequestStack(), self::getClientIdProvider()
+        );
+
+        self::assertSame('decorated_client_id', $context->get()->getClientId()->toString());
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_decorated_if_request_uri_does_not_contain_consent(): void
+    {
+        $context = new RequestBasedConsentContext(
+            self::getConsentContext(), self::getRequestStack('other_param=123'), self::getClientIdProvider()
+        );
+
+        self::assertSame('decorated_client_id', $context->get()->getClientId()->toString());
+    }
+
+    /**
+     * @test
+     */
     public function it_grants_all(): void
     {
         $context = new RequestBasedConsentContext(
@@ -100,7 +124,7 @@ final class RequestBasedConsentContextTest extends TestCase
         $clientIdProvider = new class() implements ClientIdProviderInterface {
             public function get(): ClientId
             {
-                return new ClientId('client_id');
+                return new ClientId('decorated_client_id');
             }
         };
 

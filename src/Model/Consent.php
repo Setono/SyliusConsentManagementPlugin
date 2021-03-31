@@ -49,8 +49,8 @@ final class Consent implements \JsonSerializable
     {
         Assert::oneOf($consent, ['marketing', 'statistics', 'preferences']);
 
+        /** @var bool $res */
         $res = $this->{$consent};
-        Assert::boolean($res);
 
         return $res;
     }

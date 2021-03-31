@@ -23,6 +23,11 @@
     </plugins>
     <issueHandlers>
         <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <file name="tests/Model/ConsentEntryTest.php"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
     </issueHandlers>
     <forbiddenFunctions>
         <function name="dd"/>
