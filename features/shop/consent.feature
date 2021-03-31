@@ -1,6 +1,6 @@
 @consent
 Feature: Consenting to services
-  In order to have control my privacy settings
+  In order to have control of my privacy settings
   As a Visitor
   I want to be able to consent to the services that I want to run
 
