@@ -34,6 +34,28 @@ class HomePage extends BaseHomePage
     public function clickAcceptButton(): void
     {
         $this->getElement('button_accept')->click();
+
+        Assert::true(
+            $this->getSession()->wait(10000, "document.cookie.indexOf('sscm_consent_widget=1') >= 0"),
+            'The clicking on the accept button did not result in a cookie being set'
+        );
+    }
+
+    public function clickMoreInformationButton(): void
+    {
+        $this->getElement('button_more_information')->click();
+    }
+
+    public function uncheckAll(): void
+    {
+        $this->getElement('checkbox_preferences')->uncheck();
+        $this->getElement('checkbox_marketing')->uncheck();
+        $this->getElement('checkbox_statistics')->uncheck();
+    }
+
+    public function checkMarketing(): void
+    {
+        $this->getElement('checkbox_marketing')->check();
     }
 
     public function isPreferencesGranted(): bool
@@ -54,8 +76,15 @@ class HomePage extends BaseHomePage
     protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
+            // elements regarding the consent dialog
             'consent_dialog' => '.sscm-consent-container',
             'button_accept' => '.sscm-btn-submit',
+            'button_more_information' => '.sscm-btn-more-information',
+            'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferences',
+            'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketing',
+            'checkbox_statistics' => '#setono_sylius_consent_management_consent_statistics',
+
+            // divs added when consenting
             'preferences_element' => 'div.sscm-preferences-granted',
             'marketing_element' => 'div.sscm-marketing-granted',
             'statistics_element' => 'div.sscm-statistics-granted',

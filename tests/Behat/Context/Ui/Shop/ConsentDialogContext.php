@@ -27,11 +27,36 @@ final class ConsentDialogContext implements Context
     }
 
     /**
+     * @Then the consent dialog should not be visible
+     */
+    public function theConsentDialogShouldNotBeVisible(): void
+    {
+        Assert::false($this->homePage->hasConsentDialog(), 'There was a consent dialog in the HTML');
+    }
+
+    /**
      * @When I click the accept button
      */
-    public function iShouldBeAbleToClickAnAcceptButton(): void
+    public function iClickAcceptButton(): void
     {
         $this->homePage->clickAcceptButton();
+    }
+
+    /**
+     * @When I click the more information button
+     */
+    public function iClickMoreInformationButton(): void
+    {
+        $this->homePage->clickMoreInformationButton();
+    }
+
+    /**
+     * @When I only check marketing services
+     */
+    public function iOnlyCheckMarketing(): void
+    {
+        $this->homePage->uncheckAll();
+        $this->homePage->checkMarketing();
     }
 
     /**
@@ -50,5 +75,15 @@ final class ConsentDialogContext implements Context
         Assert::true($this->homePage->isPreferencesGranted(), 'The preference consent was not granted');
         Assert::true($this->homePage->isMarketingGranted(), 'The marketing consent was not granted');
         Assert::true($this->homePage->isStatisticsGranted(), 'The statistics consent was not granted');
+    }
+
+    /**
+     * @Then only marketing services should run
+     */
+    public function onlyMarketingServicesShouldRun(): void
+    {
+        Assert::false($this->homePage->isPreferencesGranted(), 'The preference consent was granted');
+        Assert::true($this->homePage->isMarketingGranted(), 'The marketing consent was not granted');
+        Assert::false($this->homePage->isStatisticsGranted(), 'The statistics consent was granted');
     }
 }

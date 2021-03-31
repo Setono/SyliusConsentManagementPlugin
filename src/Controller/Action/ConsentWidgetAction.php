@@ -85,7 +85,7 @@ final class ConsentWidgetAction
             $this->consentEntryManager->flush();
 
             $response = new Response('', 204);
-            $response->headers->setCookie(Cookie::create($this->cookieName, '1', new \DateTime('+360 days')));
+            $response->headers->setCookie(Cookie::create($this->cookieName, '1', new \DateTime('+360 days'), '/', null, null, false));
 
             return $response;
         }
