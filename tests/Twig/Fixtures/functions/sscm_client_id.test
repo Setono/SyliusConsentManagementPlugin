@@ -1,0 +1,8 @@
+--TEST--
+"sscm_client_id" function
+--TEMPLATE--
+{{ sscm_client_id() }}
+--DATA--
+return []
+--EXPECT--
+client_id

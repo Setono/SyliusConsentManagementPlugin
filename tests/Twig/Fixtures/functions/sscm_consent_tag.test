@@ -1,0 +1,8 @@
+--TEST--
+"sscm_consent_tag" function
+--TEMPLATE--
+{{ sscm_consent_tag() }}
+--DATA--
+return []
+--EXPECT--
+<script>const sscmConsent = {"clientId":"client_id","preferences":true,"statistics":false,"marketing":false}</script>

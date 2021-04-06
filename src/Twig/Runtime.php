@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface
@@ -15,11 +14,6 @@ final class Runtime implements RuntimeExtensionInterface
     public function __construct(ConsentContextInterface $consentContext)
     {
         $this->consentContext = $consentContext;
-    }
-
-    public function getConsentContext(): Consent
-    {
-        return $this->consentContext->get();
     }
 
     public function consentTag(): string

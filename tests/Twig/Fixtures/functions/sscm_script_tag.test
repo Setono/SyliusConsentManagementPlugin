@@ -1,0 +1,12 @@
+--TEST--
+"sscm_script_tag" function
+--TEMPLATE--
+{{ sscm_script_tag('js/analytics.js', 'marketing') }}
+{{ sscm_script_tag('js/analytics.js', 'preferences') }}
+{{ sscm_script_tag('js/analytics.js', 'statistics') }}
+--DATA--
+return []
+--EXPECT--
+<script type="text/plain" data-consent="marketing" src="js/analytics.js" async></script>
+<script src="js/analytics.js" async></script>
+<script type="text/plain" data-consent="statistics" src="js/analytics.js" async></script>
