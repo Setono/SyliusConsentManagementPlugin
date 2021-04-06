@@ -20,6 +20,7 @@ use Setono\ClientIdBundle\Doctrine\Type\ClientIdType;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Model\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 
 /**
@@ -79,6 +80,18 @@ final class ConsentEntryRepositoryTest extends TestCase
         $result = $repository->findConsentFromClientId(new ClientId('client_id_1'));
 
         self::assertInstanceOf(Consent::class, $result);
+        self::assertSame('client_id_1', $result->getClientId()->toString());
+    }
+
+    /**
+     * @test
+     */
+    public function it_finds_one_from_client_id(): void
+    {
+        $repository = new ConsentEntryRepository($this->entityManager, $this->entityManager->getClassMetadata(ConsentEntry::class));
+        $result = $repository->findOneFromClientId(new ClientId('client_id_1'));
+
+        self::assertInstanceOf(ConsentEntryInterface::class, $result);
         self::assertSame('client_id_1', $result->getClientId()->toString());
     }
 }
