@@ -1,0 +1,8 @@
+--TEST--
+"sscm_statistics_granted" function
+--TEMPLATE--
+{{ sscm_statistics_granted() ? 'true' : 'false' }}
+--DATA--
+return []
+--EXPECT--
+false

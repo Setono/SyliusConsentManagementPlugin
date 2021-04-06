@@ -1,0 +1,8 @@
+--TEST--
+"sscm_marketing_granted" function
+--TEMPLATE--
+{{ sscm_marketing_granted() ? 'true' : 'false' }}
+--DATA--
+return []
+--EXPECT--
+false

@@ -4,8 +4,13 @@
     <services>
         <service id="setono_sylius_consent_management.twig.extension"
                  class="Setono\SyliusConsentManagementPlugin\Twig\Extension">
-            <argument type="service" id="setono_sylius_consent_management.context.consent"/>
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.twig.runtime"
+                 class="Setono\SyliusConsentManagementPlugin\Twig\Runtime">
+            <argument type="service" id="setono_sylius_consent_management.context.consent"/>
+            <tag name="twig.runtime"/>
         </service>
     </services>
 </container>
