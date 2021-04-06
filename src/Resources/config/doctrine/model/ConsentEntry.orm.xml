@@ -27,8 +27,8 @@
             <gedmo:timestampable on="update"/>
         </field>
 
-        <indexes>
-            <index columns="client_id"/>
-        </indexes>
+        <unique-constraints>
+            <unique-constraint columns="client_id"/>
+        </unique-constraints>
     </mapped-superclass>
 </doctrine-mapping>
