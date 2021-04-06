@@ -24,7 +24,6 @@ final class ExtensionTest extends IntegrationTestCase
         $runtimeLoader = new class() implements RuntimeLoaderInterface {
             public function load($class): Runtime
             {
-                Assert::string($class);
                 Assert::same($class, Runtime::class);
 
                 $consentContext = new class() implements ConsentContextInterface {
