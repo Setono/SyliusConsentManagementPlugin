@@ -2,7 +2,10 @@
 
 [![Build Status][ico-github-actions]][link-github-actions]
 
-This plugin is based on the guidelines in this document: https://gdpr.eu/cookies
+This plugin will create a consent dialog that every user will see. The user is given the option to accept all 'services'
+or edit their choice by clicking a 'More information' button.
+
+Inspiration to some choices made in this plugin is based on the guidelines in this document: https://gdpr.eu/cookies.
 
 ## Development
 
