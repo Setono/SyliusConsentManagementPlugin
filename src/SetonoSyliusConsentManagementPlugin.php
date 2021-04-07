@@ -8,6 +8,11 @@ use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 
+/**
+ * This class is covered by Behat
+ *
+ * @codeCoverageIgnore
+ */
 final class SetonoSyliusConsentManagementPlugin extends AbstractResourceBundle
 {
     use SyliusPluginTrait;

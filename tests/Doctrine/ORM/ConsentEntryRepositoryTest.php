@@ -92,6 +92,6 @@ final class ConsentEntryRepositoryTest extends TestCase
         $result = $repository->findOneFromClientId(new ClientId('client_id_1'));
 
         self::assertInstanceOf(ConsentEntryInterface::class, $result);
-        self::assertSame('client_id_1', $result->getClientId()->toString());
+        self::assertSame('client_id_1', (string) $result->getClientId());
     }
 }
