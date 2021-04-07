@@ -1,4 +1,9 @@
-(function (d, c) {
+(function (w, d) {
+  if(typeof sscmConsent !== "object") {
+    console.error('The constant "sscmConsent" is not present or has a wrong value. Did you forget to include {{ sscm_consent_tag() }} in the <head> of your document?');
+    return;
+  }
+
   const formName = 'setono_sylius_consent_management_consent';
 
   if (d.readyState === 'loading') {
@@ -26,9 +31,9 @@
 
       const data = new URLSearchParams(new FormData(e.currentTarget));
 
-      c.preferences = data.has(formName + '[preferences]');
-      c.statistics = data.has(formName + '[statistics]');
-      c.marketing = data.has(formName + '[marketing]');
+      sscmConsent.preferences = data.has(formName + '[preferences]');
+      sscmConsent.statistics = data.has(formName + '[statistics]');
+      sscmConsent.marketing = data.has(formName + '[marketing]');
 
       d.dispatchEvent(createEvent('sscmConsentUpdated'));
 
@@ -61,7 +66,9 @@
 
   function addListeners() {
     d.addEventListener('sscmInitialConsent', runScriptTags);
+    d.addEventListener('sscmInitialConsent', fireDatalayerEvents);
     d.addEventListener('sscmConsentUpdated', runScriptTags);
+    d.addEventListener('sscmConsentUpdated', fireDatalayerEvents);
 
     const moreInfoBtn = d.querySelector('.sscm-btn-more-information');
 
@@ -84,11 +91,32 @@
     }
   }
 
+  function fireDatalayerEvents(e) {
+    if(!w.hasOwnProperty('dataLayer')) {
+      return;
+    }
+    const dataLayer = w['dataLayer'];
+
+    const consent = e.detail.consent;
+
+    if(consent.marketing) {
+      dataLayer.push({event: 'marketingGranted'});
+    }
+
+    if(consent.preferences) {
+      dataLayer.push({event: 'preferencesGranted'});
+    }
+
+    if(consent.statistics) {
+      dataLayer.push({event: 'statisticsGranted'});
+    }
+  }
+
   function runScriptTags() {
     d.querySelectorAll('script[data-consent]').forEach((script) => {
       let consent = script.getAttribute('data-consent').valueOf();
 
-      if(!c.hasOwnProperty(consent) || c[consent] !== true) {
+      if(!sscmConsent.hasOwnProperty(consent) || sscmConsent[consent] !== true) {
         return;
       }
 
@@ -99,7 +127,7 @@
         script.removeAttribute('type');
         script.removeAttribute('data-consent');
 
-        eval(script.textContent);
+        window.eval(script.textContent); // should be called on the window to evaluate the script in the scope of window instead of local scope
       }
     });
   }
@@ -117,7 +145,7 @@
       bubbles: true,
       cancelable: false,
       detail: {
-        consent: c
+        consent: sscmConsent
       }
     });
   }
@@ -130,4 +158,4 @@
 
     consentContainer.style.display = 'none';
   }
-})(document, sscmConsent);
+})(window, document);

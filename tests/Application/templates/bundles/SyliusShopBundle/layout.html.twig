@@ -37,6 +37,14 @@
 
     {{ sylius_template_event('sylius.shop.layout.head') }}
 
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KJHCKT9');</script>
+    <!-- End Google Tag Manager -->
+
     {{ sscm_consent_tag() }}
 </head>
 
@@ -73,13 +81,7 @@
 
 {% block javascripts %}
     {{ sylius_template_event('sylius.shop.layout.javascripts') }}
-    <script>
-        function addElement(consent) {
-            const ele = document.createElement('div');
-            ele.classList.add('sscm-' + consent + '-granted');
-            document.body.appendChild(ele);
-        }
-    </script>
+
     <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>
 
     {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}
@@ -87,16 +89,16 @@
     {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
 
     <script{{ sscm_script_tag_attributes('preferences') }}>
+        var inlinePreferencesGranted = true;
         console.info('Inline script: Preferences granted');
-        addElement('preferences');
     </script>
     <script{{ sscm_script_tag_attributes('statistics') }}>
+        var inlineStatisticsGranted = true;
         console.info('Inline script: Statistics granted');
-        addElement('statistics');
     </script>
     <script{{ sscm_script_tag_attributes('marketing') }}>
+        var inlineMarketingGranted = true;
         console.info('Inline script: Marketing granted');
-        addElement('marketing');
     </script>
 {% endblock %}
 

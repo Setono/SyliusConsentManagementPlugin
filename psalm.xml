@@ -23,6 +23,11 @@
     </plugins>
     <issueHandlers>
         <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>
+        <DocblockTypeContradiction>
+            <errorLevel type="suppress">
+                <file name="tests/Behat/Page/Shop/HomePage.php"/>
+            </errorLevel>
+        </DocblockTypeContradiction>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <file name="tests/Model/ConsentEntryTest.php"/>

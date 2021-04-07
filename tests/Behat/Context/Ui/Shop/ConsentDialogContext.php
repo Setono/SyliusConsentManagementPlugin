@@ -78,6 +78,16 @@ final class ConsentDialogContext implements Context
     }
 
     /**
+     * @Then all google tag manager services should run
+     */
+    public function allGoogleTagManagerServicesShouldRun(): void
+    {
+        Assert::true($this->homePage->isGoogleTagManagerPreferencesGranted(), 'The google tag manager preference consent was not granted');
+        Assert::true($this->homePage->isGoogleTagManagerMarketingGranted(), 'The google tag manager marketing consent was not granted');
+        Assert::true($this->homePage->isGoogleTagManagerStatisticsGranted(), 'The google tag manager statistics consent was not granted');
+    }
+
+    /**
      * @Then only marketing services should run
      */
     public function onlyMarketingServicesShouldRun(): void
@@ -85,5 +95,15 @@ final class ConsentDialogContext implements Context
         Assert::false($this->homePage->isPreferencesGranted(), 'The preference consent was granted');
         Assert::true($this->homePage->isMarketingGranted(), 'The marketing consent was not granted');
         Assert::false($this->homePage->isStatisticsGranted(), 'The statistics consent was granted');
+    }
+
+    /**
+     * @Then only marketing related google tag manager services should run
+     */
+    public function onlyMarketingRelatedGoogleTagManagerServicesShouldRun(): void
+    {
+        Assert::false($this->homePage->isGoogleTagManagerPreferencesGranted(), 'The google tag manager preference consent was granted');
+        Assert::true($this->homePage->isGoogleTagManagerMarketingGranted(), 'The google tag manager marketing consent was not granted');
+        Assert::false($this->homePage->isGoogleTagManagerStatisticsGranted(), 'The google tag manager statistics consent was granted');
     }
 }

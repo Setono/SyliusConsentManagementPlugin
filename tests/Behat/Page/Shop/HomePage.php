@@ -60,17 +60,40 @@ class HomePage extends BaseHomePage
 
     public function isPreferencesGranted(): bool
     {
-        return $this->hasElement('preferences_element');
+        return $this->javascriptVariableIsTrue('scriptFilePreferencesGranted')
+            && $this->javascriptVariableIsTrue('inlinePreferencesGranted');
     }
 
     public function isMarketingGranted(): bool
     {
-        return $this->hasElement('marketing_element');
+        return $this->javascriptVariableIsTrue('scriptFileMarketingGranted')
+            && $this->javascriptVariableIsTrue('inlineMarketingGranted');
     }
 
     public function isStatisticsGranted(): bool
     {
-        return $this->hasElement('statistics_element');
+        return $this->javascriptVariableIsTrue('scriptFileStatisticsGranted')
+            && $this->javascriptVariableIsTrue('inlineStatisticsGranted');
+    }
+
+    public function isGoogleTagManagerPreferencesGranted(): bool
+    {
+        return $this->javascriptVariableIsTrue('googleTagManagerPreferences');
+    }
+
+    public function isGoogleTagManagerMarketingGranted(): bool
+    {
+        return $this->javascriptVariableIsTrue('googleTagManagerMarketing');
+    }
+
+    public function isGoogleTagManagerStatisticsGranted(): bool
+    {
+        return $this->javascriptVariableIsTrue('googleTagManagerStatistics');
+    }
+
+    protected function javascriptVariableIsTrue(string $variable): bool
+    {
+        return $this->getSession()->wait(10000, "window.hasOwnProperty('$variable') && true === window['$variable'];");
     }
 
     protected function getDefinedElements(): array
@@ -83,11 +106,6 @@ class HomePage extends BaseHomePage
             'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferences',
             'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketing',
             'checkbox_statistics' => '#setono_sylius_consent_management_consent_statistics',
-
-            // divs added when consenting
-            'preferences_element' => 'div.sscm-preferences-granted',
-            'marketing_element' => 'div.sscm-marketing-granted',
-            'statistics_element' => 'div.sscm-statistics-granted',
         ]);
     }
 }
