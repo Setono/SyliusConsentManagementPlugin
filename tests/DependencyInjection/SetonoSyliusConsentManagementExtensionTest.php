@@ -30,6 +30,7 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
         $resources = $this->container->getParameter('sylius.resources');
 
         self::assertArrayHasKey('setono_sylius_consent_management.consent_entry', $resources);
+        self::assertArrayHasKey('setono_sylius_consent_management.cookie', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service_translation', $resources);
     }

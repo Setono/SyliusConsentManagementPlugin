@@ -13,7 +13,7 @@
 
         <field name="category" type="string"/>
 
-        <one-to-many field="cookies" target-entity="\Setono\SyliusConsentManagementPlugin\Model\CookieInterface" mapped-by="service" orphan-removal="true"/>
+        <one-to-many field="cookies" target-entity="Setono\SyliusConsentManagementPlugin\Model\CookieInterface" mapped-by="service" orphan-removal="true"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

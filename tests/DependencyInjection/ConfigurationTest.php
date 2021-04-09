@@ -12,6 +12,7 @@ use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
@@ -44,6 +45,14 @@ final class ConfigurationTest extends TestCase
                         'model' => ConsentEntry::class,
                         'controller' => ResourceController::class,
                         'repository' => ConsentEntryRepository::class,
+                        'form' => DefaultResourceType::class,
+                        'factory' => Factory::class,
+                    ],
+                ],
+                'cookie' => [
+                    'classes' => [
+                        'model' => Cookie::class,
+                        'controller' => ResourceController::class,
                         'form' => DefaultResourceType::class,
                         'factory' => Factory::class,
                     ],
