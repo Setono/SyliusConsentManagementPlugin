@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
 use Sylius\Component\Resource\Model\TranslationInterface;
@@ -21,9 +23,17 @@ class Service implements ServiceInterface
 
     protected ?string $category = null;
 
+    /**
+     * @var Collection|CookieInterface[]
+     *
+     * @psalm-var Collection<array-key, CookieInterface>
+     */
+    protected Collection $cookies;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
+        $this->cookies = new ArrayCollection();
     }
 
     public static function getCategories(): array
@@ -84,5 +94,31 @@ class Service implements ServiceInterface
     protected function createTranslation(): ServiceTranslationInterface
     {
         return new ServiceTranslation();
+    }
+
+    public function getCookies(): Collection
+    {
+        return $this->cookies;
+    }
+
+    public function addCookie(CookieInterface $cookie): void
+    {
+        if (!$this->hasCookie($cookie)) {
+            $cookie->setService($this);
+            $this->cookies->add($cookie);
+        }
+    }
+
+    public function removeCookie(CookieInterface $cookie): void
+    {
+        if ($this->hasCookie($cookie)) {
+            $cookie->setService(null);
+            $this->cookies->removeElement($cookie);
+        }
+    }
+
+    public function hasCookie(CookieInterface $cookie): bool
+    {
+        return $this->cookies->contains($cookie);
     }
 }

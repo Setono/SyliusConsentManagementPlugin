@@ -2,7 +2,7 @@ setono_sylius_consent_management_admin_consent_entry:
     resource: |
         section: admin
         alias: setono_sylius_consent_management.consent_entry
-        templates: SyliusAdminBundle:Crud
+        templates: '@SyliusAdmin/Crud'
         permission: true
         only: ['index']
         grid: setono_sylius_consent_management_admin_consent_entry
@@ -12,11 +12,25 @@ setono_sylius_consent_management_admin_consent_entry:
                 subheader: setono_sylius_consent_management.ui.consent_entry_subheader
     type: sylius.resource
 
+setono_sylius_consent_management_admin_cookie:
+    resource: |
+        section: admin
+        alias: setono_sylius_consent_management.cookie
+        templates: '@SyliusAdmin/Crud'
+        redirect: index
+        permission: true
+        grid: setono_sylius_consent_management_admin_cookie
+        vars:
+            all:
+                header: setono_sylius_consent_management.ui.cookie_header
+                subheader: setono_sylius_consent_management.ui.cookie_subheader
+    type: sylius.resource
+
 setono_sylius_consent_management_admin_service:
     resource: |
         section: admin
         alias: setono_sylius_consent_management.service
-        templates: SyliusAdminBundle:Crud
+        templates: '@SyliusAdmin/Crud'
         redirect: index
         permission: true
         grid: setono_sylius_consent_management_admin_service

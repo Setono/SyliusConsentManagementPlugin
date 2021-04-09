@@ -19,6 +19,7 @@ setono_sylius_consent_management:
             main:
                 consent_management:
                     consent_entries: Consent entries
+                    cookies: Cookies
                     header: Consent management
                     services: Services
     ui:
@@ -31,6 +32,9 @@ setono_sylius_consent_management:
         consent_entries: Consent entries
         consent_entry_header: Consent entries
         consent_entry_subheader: List of consent entries
+        cookie_header: Cookies
+        cookie_subheader: Manage cookies
+        cookies: Cookies
         ip: IP address
         name: Name
         search: Search for a client id or an IP address

@@ -9,6 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
@@ -66,6 +67,22 @@ final class Configuration implements ConfigurationInterface
                                         ->scalarNode('model')->defaultValue(ConsentEntry::class)->cannotBeEmpty()->end()
                                         ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
                                         ->scalarNode('repository')->defaultValue(ConsentEntryRepository::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('form')->defaultValue(DefaultResourceType::class)->end()
+                                        ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('cookie')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(Cookie::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->cannotBeEmpty()->end()
                                         ->scalarNode('form')->defaultValue(DefaultResourceType::class)->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->end()
                                     ->end()
