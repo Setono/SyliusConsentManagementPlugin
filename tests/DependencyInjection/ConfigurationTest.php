@@ -8,7 +8,9 @@ use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
 use Setono\SyliusConsentManagementPlugin\DependencyInjection\Configuration;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
@@ -53,7 +55,8 @@ final class ConfigurationTest extends TestCase
                     'classes' => [
                         'model' => Cookie::class,
                         'controller' => ResourceController::class,
-                        'form' => DefaultResourceType::class,
+                        'repository' => CookieRepository::class,
+                        'form' => CookieType::class,
                         'factory' => Factory::class,
                     ],
                 ],

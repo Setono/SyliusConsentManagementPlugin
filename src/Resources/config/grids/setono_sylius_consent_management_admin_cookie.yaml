@@ -12,9 +12,6 @@ sylius_grid:
                     type: string
                     label: setono_sylius_consent_management.ui.url
             actions:
-                main:
-                    create:
-                        type: create
                 item:
                     update:
                         type: update

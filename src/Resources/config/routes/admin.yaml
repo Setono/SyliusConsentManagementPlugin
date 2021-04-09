@@ -24,6 +24,9 @@ setono_sylius_consent_management_admin_cookie:
             all:
                 header: setono_sylius_consent_management.ui.cookie_header
                 subheader: setono_sylius_consent_management.ui.cookie_subheader
+            update:
+                templates:
+                    form: "@SetonoSyliusConsentManagementPlugin/admin/cookie/_form.html.twig"
     type: sylius.resource
 
 setono_sylius_consent_management_admin_service:
