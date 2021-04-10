@@ -14,11 +14,13 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @var array{driver: string, resources: array<string, mixed>} $config
+         * @var array{sample_rate: float, driver: string, resources: array<string, mixed>} $config
          * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $container->setParameter('setono_sylius_consent_management.sample_rate', $config['sample_rate']);
 
         $this->registerResources('setono_sylius_consent_management', $config['driver'], $config['resources'], $container);
 

@@ -9,6 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
 {
@@ -16,10 +17,23 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private CookieFactoryInterface $cookieFactory;
 
-    public function __construct(CookieRepositoryInterface $cookieRepository, CookieFactoryInterface $cookieFactory)
-    {
+    /**
+     * The sample rate can be between 0.0001 and 1. This means that it can be set to collect cookie samples
+     * between every 10,000th visit and every visit
+     */
+    private float $sampleRate;
+
+    public function __construct(
+        CookieRepositoryInterface $cookieRepository,
+        CookieFactoryInterface $cookieFactory,
+        float $sampleRate
+    ) {
+        Assert::greaterThanEq($sampleRate, 0.0001);
+        Assert::lessThanEq($sampleRate, 1);
+
         $this->cookieRepository = $cookieRepository;
         $this->cookieFactory = $cookieFactory;
+        $this->sampleRate = $sampleRate;
     }
 
     public static function getSubscribedEvents(): array
@@ -48,5 +62,10 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
             $obj = $this->cookieFactory->createWithData($name, $request->getUri());
             $this->cookieRepository->add($obj);
         }
+    }
+
+    private function collectSample(): bool
+    {
+        return random_int(1, 10000) / 10000 >= $this->sampleRate;
     }
 }

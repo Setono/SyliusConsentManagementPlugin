@@ -35,11 +35,19 @@ final class Configuration implements ConfigurationInterface
         /**
          * @psalm-suppress MixedMethodCall
          * @psalm-suppress PossiblyUndefinedMethod
+         * @psalm-suppress PossiblyNullReference
          */
         $rootNode
             ->children()
                 ->scalarNode('driver')
                     ->defaultValue(SyliusResourceBundle::DRIVER_DOCTRINE_ORM)
+                ->end()
+                ->floatNode('sample_rate')
+                    ->defaultValue(0.01)
+                    ->info('The rate at which cookies should be collected from requests. The default is every 100th request')
+                    ->example(0.1)
+                    ->min(0.0001)
+                    ->max(1)
         ;
 
         $this->addResourcesSection($rootNode);

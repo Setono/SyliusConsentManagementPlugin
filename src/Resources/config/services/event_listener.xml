@@ -6,6 +6,7 @@
                  class="Setono\SyliusConsentManagementPlugin\EventListener\SampleCookiesSubscriber">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
+            <argument>%setono_sylius_consent_management.sample_rate%</argument>
 
             <tag name="kernel.event_subscriber"/>
         </service>
