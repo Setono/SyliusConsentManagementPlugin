@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
@@ -32,11 +35,19 @@ final class Configuration implements ConfigurationInterface
         /**
          * @psalm-suppress MixedMethodCall
          * @psalm-suppress PossiblyUndefinedMethod
+         * @psalm-suppress PossiblyNullReference
          */
         $rootNode
             ->children()
                 ->scalarNode('driver')
                     ->defaultValue(SyliusResourceBundle::DRIVER_DOCTRINE_ORM)
+                ->end()
+                ->floatNode('sample_rate')
+                    ->defaultValue(0.01)
+                    ->info('The rate at which cookies should be collected from requests. The default is every 100th request')
+                    ->example(0.1)
+                    ->min(0.0001)
+                    ->max(1)
         ;
 
         $this->addResourcesSection($rootNode);
@@ -67,6 +78,22 @@ final class Configuration implements ConfigurationInterface
                                         ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
                                         ->scalarNode('repository')->defaultValue(ConsentEntryRepository::class)->cannotBeEmpty()->end()
                                         ->scalarNode('form')->defaultValue(DefaultResourceType::class)->end()
+                                        ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('cookie')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(Cookie::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(CookieRepository::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('form')->defaultValue(CookieType::class)->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->end()
                                     ->end()
                                 ->end()
