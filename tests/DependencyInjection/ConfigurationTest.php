@@ -78,6 +78,7 @@ final class ConfigurationTest extends TestCase
                     ],
                 ],
             ],
+            'sample_rate' => 0.01,
         ]);
     }
 }
