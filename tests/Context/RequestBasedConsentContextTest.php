@@ -7,7 +7,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Context;
 use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Context\DefaultConsentContext;
 use Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), new RequestStack(), self::getClientIdProvider()
         );
 
-        self::assertSame('decorated_client_id', $context->get()->getClientId()->toString());
+        self::assertSame('decorated_client_id', $context->getConsent()->getClientId()->toString());
     }
 
     /**
@@ -36,7 +36,7 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('other_param=123'), self::getClientIdProvider()
         );
 
-        self::assertSame('decorated_client_id', $context->get()->getClientId()->toString());
+        self::assertSame('decorated_client_id', $context->getConsent()->getClientId()->toString());
     }
 
     /**
@@ -48,11 +48,11 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('_consent=1'), self::getClientIdProvider()
         );
 
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
-        self::assertTrue($consent->isMarketingGranted());
-        self::assertTrue($consent->isPreferencesGranted());
-        self::assertTrue($consent->isStatisticsGranted());
+        self::assertTrue($consent->isMarketingConsentGranted());
+        self::assertTrue($consent->isPreferencesConsentGranted());
+        self::assertTrue($consent->isStatisticsConsentGranted());
     }
 
     /**
@@ -64,11 +64,11 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('_consent=0'), self::getClientIdProvider()
         );
 
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
-        self::assertFalse($consent->isMarketingGranted());
-        self::assertFalse($consent->isPreferencesGranted());
-        self::assertFalse($consent->isStatisticsGranted());
+        self::assertFalse($consent->isMarketingConsentGranted());
+        self::assertFalse($consent->isPreferencesConsentGranted());
+        self::assertFalse($consent->isStatisticsConsentGranted());
     }
 
     /**
@@ -80,11 +80,11 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('_consent[marketing]=1'), self::getClientIdProvider()
         );
 
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
-        self::assertTrue($consent->isMarketingGranted());
-        self::assertFalse($consent->isPreferencesGranted());
-        self::assertFalse($consent->isStatisticsGranted());
+        self::assertTrue($consent->isMarketingConsentGranted());
+        self::assertFalse($consent->isPreferencesConsentGranted());
+        self::assertFalse($consent->isStatisticsConsentGranted());
     }
 
     /**
@@ -96,11 +96,11 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('_consent[preferences]=1'), self::getClientIdProvider()
         );
 
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
-        self::assertFalse($consent->isMarketingGranted());
-        self::assertTrue($consent->isPreferencesGranted());
-        self::assertFalse($consent->isStatisticsGranted());
+        self::assertFalse($consent->isMarketingConsentGranted());
+        self::assertTrue($consent->isPreferencesConsentGranted());
+        self::assertFalse($consent->isStatisticsConsentGranted());
     }
 
     /**
@@ -112,11 +112,11 @@ final class RequestBasedConsentContextTest extends TestCase
             self::getConsentContext(), self::getRequestStack('_consent[statistics]=1'), self::getClientIdProvider()
         );
 
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
-        self::assertFalse($consent->isMarketingGranted());
-        self::assertFalse($consent->isPreferencesGranted());
-        self::assertTrue($consent->isStatisticsGranted());
+        self::assertFalse($consent->isMarketingConsentGranted());
+        self::assertFalse($consent->isPreferencesConsentGranted());
+        self::assertTrue($consent->isStatisticsConsentGranted());
     }
 
     private static function getConsentContext(): ConsentContextInterface

@@ -7,6 +7,6 @@
 --DATA--
 return []
 --EXPECT--
-<script type="text/plain" data-consent="marketing" src="js/analytics.js" async></script>
 <script src="js/analytics.js" async></script>
+<script type="text/plain" data-consent="preferences" src="js/analytics.js" async></script>
 <script type="text/plain" data-consent="statistics" src="js/analytics.js" async></script>

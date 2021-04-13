@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
 use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -36,29 +37,29 @@ final class RequestBasedConsentContext implements ConsentContextInterface
         $this->clientIdProvider = $clientIdProvider;
     }
 
-    public function get(): Consent
+    public function getConsent(): Consent
     {
         $request = $this->requestStack->getMasterRequest();
         if (null === $request) {
-            return $this->decorated->get();
+            return $this->decorated->getConsent();
         }
 
         if (!$request->query->has('_consent')) {
-            return $this->decorated->get();
+            return $this->decorated->getConsent();
         }
 
-        $preferences = $statistics = $marketing = false;
+        $marketing = $preferences = $statistics = false;
 
         /** @var mixed $consentQuery */
         $consentQuery = $request->query->get('_consent');
         if (is_array($consentQuery)) {
+            $marketing = isset($consentQuery['marketing']) && is_string($consentQuery['marketing']) && 1 === (int) $consentQuery['marketing'];
             $preferences = isset($consentQuery['preferences']) && is_string($consentQuery['preferences']) && 1 === (int) $consentQuery['preferences'];
             $statistics = isset($consentQuery['statistics']) && is_string($consentQuery['statistics']) && 1 === (int) $consentQuery['statistics'];
-            $marketing = isset($consentQuery['marketing']) && is_string($consentQuery['marketing']) && 1 === (int) $consentQuery['marketing'];
         } elseif (is_string($consentQuery)) {
-            $preferences = $statistics = $marketing = 1 === (int) $consentQuery;
+            $marketing = $preferences = $statistics = 1 === (int) $consentQuery;
         }
 
-        return new Consent($this->clientIdProvider->get(), $preferences, $statistics, $marketing);
+        return new Consent($this->clientIdProvider->get(), $marketing, $preferences, $statistics);
     }
 }

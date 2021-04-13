@@ -26,6 +26,6 @@ final class DefaultConsentContextTest extends TestCase
             }
         });
 
-        self::assertSame('client_id', $context->get()->getClientId()->toString());
+        self::assertSame('client_id', $context->getConsent()->getClientId()->toString());
     }
 }

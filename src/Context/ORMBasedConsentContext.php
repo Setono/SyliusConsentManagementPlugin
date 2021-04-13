@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
 final class ORMBasedConsentContext implements ConsentContextInterface
@@ -19,9 +20,9 @@ final class ORMBasedConsentContext implements ConsentContextInterface
         $this->consentEntryRepository = $consentEntryRepository;
     }
 
-    public function get(): Consent
+    public function getConsent(): Consent
     {
-        $currentConsent = $this->decorated->get();
+        $currentConsent = $this->decorated->getConsent();
 
         $consent = $this->consentEntryRepository->findConsentFromClientId($currentConsent->getClientId());
         if (null === $consent) {

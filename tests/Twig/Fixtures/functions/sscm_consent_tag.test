@@ -5,4 +5,4 @@
 --DATA--
 return []
 --EXPECT--
-<script>const sscmConsent = {"clientId":"client_id","preferences":true,"statistics":false,"marketing":false}</script>
+<script>const sscmConsent = {"clientId":"client_id","marketingGranted":true,"preferencesGranted":false,"statisticsGranted":false}</script>

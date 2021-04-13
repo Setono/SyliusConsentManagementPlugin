@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
 
 use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
@@ -16,7 +16,7 @@ class ConsentEntryRepository extends EntityRepository implements ConsentEntryRep
     public function findConsentFromClientId(ClientId $clientId): ?Consent
     {
         $result = $this->createQueryBuilder('o')
-            ->select('NEW Setono\SyliusConsentManagementPlugin\Model\Consent(o.clientId, o.preferences, o.statistics, o.marketing)')
+            ->select('NEW Setono\Consent\Consent(o.clientId, o.marketing, o.preferences, o.statistics)')
             ->andWhere('o.clientId = :clientId')
             ->setParameter('clientId', $clientId)
             ->getQuery()
