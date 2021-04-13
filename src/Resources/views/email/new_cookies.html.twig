@@ -1,0 +1,13 @@
+{% block subject %}
+    {{ 'setono_sylius_consent_management.email.new_cookies.subject'|trans() }}
+{% endblock %}
+
+{% block body %}
+    <p>New cookies has been discovered on your store:</p>
+    <ul>
+    {% for cookie in cookies %}
+        <li>{{ cookie.name }}</li>
+    {% endfor %}
+    </ul>
+    <p>It's important to add these cookies to relevant services to be GDPR compliant.</p>
+{% endblock %}

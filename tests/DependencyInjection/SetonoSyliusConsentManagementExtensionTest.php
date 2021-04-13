@@ -19,12 +19,26 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
         ];
     }
 
+    protected function getMinimalConfiguration(): array
+    {
+        return [
+            'notify' => [
+                'johndoe@example.com',
+            ],
+        ];
+    }
+
     /**
      * @test
      */
     public function container_has_parameters(): void
     {
         $this->load();
+
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sample_rate', 0.01);
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.notify', [
+            'johndoe@example.com',
+        ]);
 
         /** @var array<string, mixed> $resources */
         $resources = $this->container->getParameter('sylius.resources');
