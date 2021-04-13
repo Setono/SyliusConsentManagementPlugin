@@ -31,9 +31,9 @@
 
       const data = new URLSearchParams(new FormData(e.currentTarget));
 
-      sscmConsent.preferences = data.has(formName + '[preferences]');
-      sscmConsent.statistics = data.has(formName + '[statistics]');
-      sscmConsent.marketing = data.has(formName + '[marketing]');
+      sscmConsent.preferencesGranted = data.has(formName + '[preferencesGranted]');
+      sscmConsent.statisticsGranted = data.has(formName + '[statisticsGranted]');
+      sscmConsent.marketingGranted = data.has(formName + '[marketingGranted]');
 
       d.dispatchEvent(createEvent('sscmConsentUpdated'));
 
@@ -99,22 +99,22 @@
 
     const consent = e.detail.consent;
 
-    if(consent.marketing) {
+    if(consent.marketingGranted) {
       dataLayer.push({event: 'marketingGranted'});
     }
 
-    if(consent.preferences) {
+    if(consent.preferencesGranted) {
       dataLayer.push({event: 'preferencesGranted'});
     }
 
-    if(consent.statistics) {
+    if(consent.statisticsGranted) {
       dataLayer.push({event: 'statisticsGranted'});
     }
   }
 
   function runScriptTags() {
     d.querySelectorAll('script[data-consent]').forEach((script) => {
-      let consent = script.getAttribute('data-consent').valueOf();
+      let consent = script.getAttribute('data-consent').valueOf() + 'Granted';
 
       if(!sscmConsent.hasOwnProperty(consent) || sscmConsent[consent] !== true) {
         return;
