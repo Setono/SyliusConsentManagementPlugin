@@ -23,11 +23,11 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?string $userAgent = null;
 
-    protected bool $preferences = false;
+    protected bool $marketingGranted = false;
 
-    protected bool $statistics = false;
+    protected bool $preferencesGranted = false;
 
-    protected bool $marketing = false;
+    protected bool $statisticsGranted = false;
 
     public function getId(): ?int
     {
@@ -74,34 +74,34 @@ class ConsentEntry implements ConsentEntryInterface
         $this->userAgent = $userAgent;
     }
 
-    public function isPreferences(): bool
+    public function isPreferencesGranted(): bool
     {
-        return $this->preferences;
+        return $this->preferencesGranted;
     }
 
-    public function setPreferences(bool $preferences): void
+    public function setPreferencesGranted(bool $preferencesGranted): void
     {
-        $this->preferences = $preferences;
+        $this->preferencesGranted = $preferencesGranted;
     }
 
-    public function isStatistics(): bool
+    public function isStatisticsGranted(): bool
     {
-        return $this->statistics;
+        return $this->statisticsGranted;
     }
 
-    public function setStatistics(bool $statistics): void
+    public function setStatisticsGranted(bool $statisticsGranted): void
     {
-        $this->statistics = $statistics;
+        $this->statisticsGranted = $statisticsGranted;
     }
 
-    public function isMarketing(): bool
+    public function isMarketingGranted(): bool
     {
-        return $this->marketing;
+        return $this->marketingGranted;
     }
 
-    public function setMarketing(bool $marketing): void
+    public function setMarketingGranted(bool $marketingGranted): void
     {
-        $this->marketing = $marketing;
+        $this->marketingGranted = $marketingGranted;
     }
 
     public function populateFromRequest(Request $request): void
@@ -121,8 +121,8 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function populateFromConsentCommand(ConsentCommand $consentCommand): void
     {
-        $this->preferences = $consentCommand->preferences;
-        $this->statistics = $consentCommand->statistics;
-        $this->marketing = $consentCommand->marketing;
+        $this->preferencesGranted = $consentCommand->preferencesGranted;
+        $this->statisticsGranted = $consentCommand->statisticsGranted;
+        $this->marketingGranted = $consentCommand->marketingGranted;
     }
 }
