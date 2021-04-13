@@ -4,6 +4,22 @@
     return;
   }
 
+  const options = Object.assign({
+    'moreInformationClickHandler': function(e) {
+      d.querySelector('.sscm-consent-container').style.display = 'none';
+      $('.sscm-consent-modal')
+        .modal({
+          keyboardShortcuts: false,
+          closable: false
+        })
+        .modal('show')
+      ;
+    },
+    'closeModal': function(e) {
+      $('.sscm-consent-modal').modal('hide');
+    }
+  }, w.hasOwnProperty('sscmOptions') ? w['sscmOptions'] : {});
+
   const formName = 'setono_sylius_consent_management_consent';
 
   if (d.readyState === 'loading') {
@@ -27,6 +43,7 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      hideConsentModal();
       hideConsentContainer();
 
       const data = new URLSearchParams(new FormData(e.currentTarget));
@@ -74,19 +91,7 @@
 
     if(null !== moreInfoBtn) {
       moreInfoBtn.addEventListener('click', (e) => {
-        // show the detailed information about services
-        const moreInfo = d.querySelector('.sscm-more-information');
-        if(null !== moreInfo) {
-          moreInfo.style.display = '';
-        }
-
-        // change the text on the submit button
-        const submitBtn = d.querySelector('.sscm-btn-submit');
-        if(null !== submitBtn) {
-          submitBtn.innerHTML = submitBtn.getAttribute('data-secondary-caption').valueOf();
-        }
-
-        e.currentTarget.remove();
+        options.moreInformationClickHandler(e);
       });
     }
   }
@@ -157,5 +162,9 @@
     }
 
     consentContainer.style.display = 'none';
+  }
+
+  function hideConsentModal() {
+    options.closeModal();
   }
 })(window, document);

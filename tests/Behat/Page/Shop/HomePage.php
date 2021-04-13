@@ -20,10 +20,31 @@ class HomePage extends BaseHomePage
         return $this->getElement('consent_dialog')->isVisible();
     }
 
+    public function hasConsentModal(): bool
+    {
+        return $this->hasElement('consent_modal');
+    }
+
+    public function isConsentModalVisible(): bool
+    {
+        return $this->getElement('consent_modal')->isVisible();
+    }
+
     public function consentDialogHides(): bool
     {
         $res = $this->getDocument()->waitFor(5, function () {
             return $this->hasConsentDialog() && !$this->isConsentDialogVisible();
+        });
+
+        Assert::boolean($res);
+
+        return $res;
+    }
+
+    public function consentModalHides(): bool
+    {
+        $res = $this->getDocument()->waitFor(5, function () {
+            return $this->hasConsentModal() && !$this->isConsentModalVisible();
         });
 
         Assert::boolean($res);
@@ -101,7 +122,8 @@ class HomePage extends BaseHomePage
         return array_merge(parent::getDefinedElements(), [
             // elements regarding the consent dialog
             'consent_dialog' => '.sscm-consent-container',
-            'button_accept' => '.sscm-btn-submit',
+            'consent_modal' => '.sscm-consent-modal',
+            'button_accept' => '[data-test-sscm-btn-submit]',
             'button_more_information' => '.sscm-btn-more-information',
             'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferencesGranted',
             'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketingGranted',

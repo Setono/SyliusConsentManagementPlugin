@@ -20,10 +20,19 @@ final class ConsentDialogContext implements Context
     /**
      * @When I see the consent dialog
      */
-    public function iShouldSeeAConsentDialog(): void
+    public function iSeeTheConsentDialog(): void
     {
         Assert::true($this->homePage->hasConsentDialog(), 'No consent dialog in the HTML');
         Assert::true($this->homePage->isConsentDialogVisible(), 'The consent dialog is not visible');
+    }
+
+    /**
+     * @When I see the consent modal
+     */
+    public function iSeeTheConsentModal(): void
+    {
+        Assert::true($this->homePage->hasConsentModal(), 'No consent modal in the HTML');
+        Assert::true($this->homePage->isConsentModalVisible(), 'The consent modal is not visible');
     }
 
     /**
@@ -65,6 +74,14 @@ final class ConsentDialogContext implements Context
     public function theConsentDialogShouldDisappear(): void
     {
         Assert::true($this->homePage->consentDialogHides(), 'The consent dialog did not disappear');
+    }
+
+    /**
+     * @Then the consent modal should disappear
+     */
+    public function theConsentModalShouldDisappear(): void
+    {
+        Assert::true($this->homePage->consentModalHides(), 'The consent modal did not disappear');
     }
 
     /**
