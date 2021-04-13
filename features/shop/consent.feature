@@ -21,9 +21,10 @@ Feature: Consenting to services
     When I visit this channel's homepage
     And I see the consent dialog
     And I click the more information button
+    And I see the consent modal
     And I only check marketing services
     And I click the accept button
-    Then the consent dialog should disappear
+    Then the consent modal should disappear
     And only marketing services should run
 
   @ui @javascript
