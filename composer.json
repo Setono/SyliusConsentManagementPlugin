@@ -13,6 +13,7 @@
         "doctrine/collections": "^1.6",
         "doctrine/orm": "^2.7",
         "knplabs/knp-menu": "^3.1",
+        "psr/event-dispatcher": "^1.0",
         "setono/client-id-bundle": "^0.1",
         "setono/client-id-contracts": "^0.1",
         "setono/consent-contracts": "^0.1",

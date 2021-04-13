@@ -37,9 +37,26 @@ final class ConfigurationTest extends TestCase
     /**
      * @test
      */
+    public function values_are_invalid_if_required_value_is_not_provided(): void
+    {
+        $this->assertConfigurationIsInvalid(
+            [
+                [], // no values at all
+            ],
+            'The child node "notify" at path "setono_sylius_consent_management" must be configured.'
+        );
+    }
+
+    /**
+     * @test
+     */
     public function processed_value_contains_required_value(): void
     {
-        $this->assertProcessedConfigurationEquals([], [
+        $this->assertProcessedConfigurationEquals([
+            [
+                'notify' => ['johndoe@example.com'],
+            ],
+        ], [
             'driver' => 'doctrine/orm',
             'resources' => [
                 'consent_entry' => [
@@ -79,6 +96,9 @@ final class ConfigurationTest extends TestCase
                 ],
             ],
             'sample_rate' => 0.01,
+            'notify' => [
+                'johndoe@example.com',
+            ],
         ]);
     }
 }

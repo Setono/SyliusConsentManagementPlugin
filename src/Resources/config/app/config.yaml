@@ -2,3 +2,9 @@ imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/grids/setono_sylius_consent_management_admin_consent_entry.yaml" }
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/grids/setono_sylius_consent_management_admin_cookie.yaml" }
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/grids/setono_sylius_consent_management_admin_service.yaml" }
+
+sylius_mailer:
+    emails:
+        new_cookies:
+            subject: setono_sylius_consent_management.emails.new_cookies.subject
+            template: "@SetonoSyliusConsentManagementPlugin/email/new_cookies.html.twig"

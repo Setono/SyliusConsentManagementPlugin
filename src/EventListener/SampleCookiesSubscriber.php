@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\EventListener;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,6 +19,8 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private CookieFactoryInterface $cookieFactory;
 
+    private EventDispatcherInterface $eventDispatcher;
+
     /**
      * The sample rate can be between 0.0001 and 1. This means that it can be set to collect cookie samples
      * between every 10,000th visit and every visit
@@ -26,6 +30,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
     public function __construct(
         CookieRepositoryInterface $cookieRepository,
         CookieFactoryInterface $cookieFactory,
+        EventDispatcherInterface $eventDispatcher,
         float $sampleRate
     ) {
         Assert::greaterThanEq($sampleRate, 0.0001);
@@ -33,6 +38,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
         $this->cookieRepository = $cookieRepository;
         $this->cookieFactory = $cookieFactory;
+        $this->eventDispatcher = $eventDispatcher;
         $this->sampleRate = $sampleRate;
     }
 
@@ -50,6 +56,8 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         }
         $request = $event->getRequest();
 
+        $cookies = [];
+
         /**
          * @var string $name
          * @var mixed $value
@@ -61,6 +69,12 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
             $obj = $this->cookieFactory->createWithData($name, $request->getUri());
             $this->cookieRepository->add($obj);
+
+            $cookies[] = $obj;
+        }
+
+        if (count($cookies) > 0) {
+            $this->eventDispatcher->dispatch(new CookiesCreatedEvent($cookies));
         }
     }
 
