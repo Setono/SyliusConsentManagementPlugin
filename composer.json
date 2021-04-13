@@ -15,7 +15,7 @@
         "knplabs/knp-menu": "^3.1",
         "setono/client-id-bundle": "^0.1",
         "setono/client-id-contracts": "^0.1",
-        "setono/consent-contracts": "dev-master",
+        "setono/consent-contracts": "^0.1",
         "sylius/resource-bundle": "^1.6",
         "symfony/config": "^4.4 || ^5.0",
         "symfony/dependency-injection": "^4.4 || ^5.0",
