@@ -15,9 +15,9 @@
         <field name="ip" type="string"/>
         <field name="url" type="string"/>
         <field name="userAgent" type="string"/>
-        <field name="preferences" type="boolean"/>
-        <field name="statistics" type="boolean"/>
-        <field name="marketing" type="boolean"/>
+        <field name="preferencesGranted" type="boolean"/>
+        <field name="statisticsGranted" type="boolean"/>
+        <field name="marketingGranted" type="boolean"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

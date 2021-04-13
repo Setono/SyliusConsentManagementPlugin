@@ -27,18 +27,18 @@ final class ConsentEntryTest extends TestCase
         $consentEntry->setUserAgent('user agent');
         $consentEntry->setUrl('https://example.com');
         $consentEntry->setIp('192.168.1.1');
-        $consentEntry->setMarketing(true);
-        $consentEntry->setStatistics(true);
-        $consentEntry->setPreferences(true);
+        $consentEntry->setMarketingGranted(true);
+        $consentEntry->setStatisticsGranted(true);
+        $consentEntry->setPreferencesGranted(true);
 
         self::assertNull($consentEntry->getId());
         self::assertSame($clientId, $consentEntry->getClientId());
         self::assertSame('user agent', $consentEntry->getUserAgent());
         self::assertSame('https://example.com', $consentEntry->getUrl());
         self::assertSame('192.168.1.1', $consentEntry->getIp());
-        self::assertTrue($consentEntry->isMarketing());
-        self::assertTrue($consentEntry->isStatistics());
-        self::assertTrue($consentEntry->isPreferences());
+        self::assertTrue($consentEntry->isMarketingGranted());
+        self::assertTrue($consentEntry->isStatisticsGranted());
+        self::assertTrue($consentEntry->isPreferencesGranted());
     }
 
     /**
@@ -106,8 +106,8 @@ final class ConsentEntryTest extends TestCase
         $consentEntry = new ConsentEntry();
         $consentEntry->populateFromConsentCommand(new ConsentCommand());
 
-        self::assertTrue($consentEntry->isMarketing());
-        self::assertTrue($consentEntry->isStatistics());
-        self::assertTrue($consentEntry->isPreferences());
+        self::assertTrue($consentEntry->isMarketingGranted());
+        self::assertTrue($consentEntry->isStatisticsGranted());
+        self::assertTrue($consentEntry->isPreferencesGranted());
     }
 }

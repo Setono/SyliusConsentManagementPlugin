@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -27,7 +27,7 @@ final class ExtensionTest extends IntegrationTestCase
                 Assert::same($class, Runtime::class);
 
                 $consentContext = new class() implements ConsentContextInterface {
-                    public function get(): Consent
+                    public function getConsent(): Consent
                     {
                         return new Consent(new ClientId('client_id'), true, false, false);
                     }

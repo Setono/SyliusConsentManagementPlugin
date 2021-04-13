@@ -15,15 +15,15 @@ final class ConsentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('preferences', CheckboxType::class, [
+            ->add('preferencesGranted', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.consent.preferences',
                 'required' => false,
             ])
-            ->add('statistics', CheckboxType::class, [
+            ->add('statisticsGranted', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.consent.statistics',
                 'required' => false,
             ])
-            ->add('marketing', CheckboxType::class, [
+            ->add('marketingGranted', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.consent.marketing',
                 'required' => false,
             ])

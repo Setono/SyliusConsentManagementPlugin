@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 
 /**
  * This class will cache the consent for the request life cycle directly in memory
@@ -20,10 +21,10 @@ final class CachedConsentContext implements ConsentContextInterface
         $this->decorated = $decorated;
     }
 
-    public function get(): Consent
+    public function getConsent(): Consent
     {
         if (null === $this->consent) {
-            $this->consent = $this->decorated->get();
+            $this->consent = $this->decorated->getConsent();
         }
 
         return $this->consent;

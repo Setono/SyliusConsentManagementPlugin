@@ -9,10 +9,10 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\ClientId\ClientId;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Context\DefaultConsentContext;
 use Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
 /**
@@ -28,7 +28,7 @@ final class ORMBasedConsentContextTest extends TestCase
     public function it_returns_decorated_consent_if_no_consent_has_been_saved(): void
     {
         $context = new ORMBasedConsentContext(self::getConsentContext(), $this->getRepository());
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
         self::assertSame('client_id', $consent->getClientId()->toString());
     }
@@ -42,7 +42,7 @@ final class ORMBasedConsentContextTest extends TestCase
             self::getConsentContext(),
             $this->getRepository(new Consent(new ClientId('saved_client_id'), false, false, false))
         );
-        $consent = $context->get();
+        $consent = $context->getConsent();
 
         self::assertSame('saved_client_id', $consent->getClientId()->toString());
     }

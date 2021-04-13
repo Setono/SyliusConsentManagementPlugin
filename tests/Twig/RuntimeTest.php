@@ -6,8 +6,8 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 
 /**
@@ -22,7 +22,7 @@ final class RuntimeTest extends TestCase
     {
         $consentContext = self::getConsentContext();
         $runtime = new Runtime($consentContext);
-        self::assertSame('<script>const sscmConsent = {"clientId":"client_id","preferences":true,"statistics":true,"marketing":true}</script>', $runtime->consentTag());
+        self::assertSame('<script>const sscmConsent = {"clientId":"client_id","marketingGranted":true,"preferencesGranted":true,"statisticsGranted":true}</script>', $runtime->consentTag());
     }
 
     /**
@@ -85,7 +85,7 @@ final class RuntimeTest extends TestCase
      */
     public function it_generates_text_script_tag(): void
     {
-        $consentContext = self::getConsentContext(true, false, true);
+        $consentContext = self::getConsentContext(false);
         $runtime = new Runtime($consentContext);
 
         self::assertSame('<script type="text/plain" data-consent="marketing" src="js/test.js" async></script>', $runtime->scriptTag('js/test.js', 'marketing'));
@@ -107,31 +107,31 @@ final class RuntimeTest extends TestCase
      */
     public function it_generates_text_script_tag_attributes(): void
     {
-        $consentContext = self::getConsentContext(true, false, true);
+        $consentContext = self::getConsentContext(false);
         $runtime = new Runtime($consentContext);
 
         self::assertSame(' type="text/plain" data-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
     }
 
-    private static function getConsentContext(bool $preferences = true, bool $marketing = true, bool $statistics = true): ConsentContextInterface
+    private static function getConsentContext(bool $marketing = true, bool $preferences = true, bool $statistics = true): ConsentContextInterface
     {
-        return new class($preferences, $marketing, $statistics) implements ConsentContextInterface {
-            private bool $preferences;
-
+        return new class($marketing, $preferences, $statistics) implements ConsentContextInterface {
             private bool $marketing;
+
+            private bool $preferences;
 
             private bool $statistics;
 
-            public function __construct(bool $preferences, bool $marketing, bool $statistics)
+            public function __construct(bool $marketing, bool $preferences, bool $statistics)
             {
-                $this->preferences = $preferences;
                 $this->marketing = $marketing;
+                $this->preferences = $preferences;
                 $this->statistics = $statistics;
             }
 
-            public function get(): Consent
+            public function getConsent(): Consent
             {
-                return new Consent(new ClientId('client_id'), $this->preferences, $this->statistics, $this->marketing);
+                return new Consent(new ClientId('client_id'), $this->marketing, $this->preferences, $this->statistics);
             }
         };
     }

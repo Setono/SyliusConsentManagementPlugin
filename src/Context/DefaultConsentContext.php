@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
 use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\SyliusConsentManagementPlugin\Model\Consent;
+use Setono\Consent\Consent;
+use Setono\Consent\Context\ConsentContextInterface;
 
 final class DefaultConsentContext implements ConsentContextInterface
 {
@@ -16,7 +17,7 @@ final class DefaultConsentContext implements ConsentContextInterface
         $this->clientIdProvider = $clientIdProvider;
     }
 
-    public function get(): Consent
+    public function getConsent(): Consent
     {
         return new Consent($this->clientIdProvider->get(), false, false, false);
     }

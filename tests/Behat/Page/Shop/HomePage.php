@@ -103,9 +103,9 @@ class HomePage extends BaseHomePage
             'consent_dialog' => '.sscm-consent-container',
             'button_accept' => '.sscm-btn-submit',
             'button_more_information' => '.sscm-btn-more-information',
-            'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferences',
-            'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketing',
-            'checkbox_statistics' => '#setono_sylius_consent_management_consent_statistics',
+            'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferencesGranted',
+            'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketingGranted',
+            'checkbox_statistics' => '#setono_sylius_consent_management_consent_statisticsGranted',
         ]);
     }
 }
