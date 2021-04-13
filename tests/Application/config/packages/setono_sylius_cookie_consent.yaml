@@ -3,4 +3,4 @@ imports:
 
 setono_sylius_consent_management:
     notify:
-        - "johndoe@example.com"
+        - "johndoe@setono.com"
