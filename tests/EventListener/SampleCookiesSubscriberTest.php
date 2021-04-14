@@ -16,7 +16,7 @@ use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent as BaseRequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -28,6 +28,11 @@ final class SampleCookiesSubscriberTest extends TestCase
     use ProphecyTrait;
 
     public static int $randomInt = 0;
+
+    protected function setUp(): void
+    {
+        self::$randomInt = 0;
+    }
 
     /**
      * @test
@@ -48,21 +53,73 @@ final class SampleCookiesSubscriberTest extends TestCase
         $subscriber->sample($event);
     }
 
-    private function getSubscriber(): SampleCookiesSubscriber
+    /**
+     * @test
+     */
+    public function it_does_not_sample_on_sub_request(): void
+    {
+        $event = $this->getRequestEvent(HttpKernelInterface::SUB_REQUEST);
+
+        $subscriber = $this->getSubscriber(false, false);
+        $subscriber->sample($event);
+
+        self::assertFalse($event->getRequestCalled);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_sample_if_sample_rate_is_not_met(): void
+    {
+        self::$randomInt = 10000;
+
+        $event = $this->getRequestEvent();
+
+        $subscriber = $this->getSubscriber(false, false, 0.5);
+        $subscriber->sample($event);
+
+        self::assertTrue($event->getRequestCalled);
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_exception_if_sample_rate_is_out_of_upper_bound(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->getSubscriber(false, false, 1.1);
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_exception_if_sample_rate_is_out_of_lower_bound(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->getSubscriber(false, false, 0.00001);
+    }
+
+    private function getSubscriber(bool $callRepository = true, bool $callEventDispatcher = true, float $sampleRate = 1): SampleCookiesSubscriber
     {
         $repository = $this->prophesize(CookieRepositoryInterface::class);
-        $repository->findOneByName(Argument::type('string'))->willReturn(null, new Cookie());
-        $repository->add(Argument::type(Cookie::class))->shouldBeCalledOnce();
+        if ($callRepository) {
+            $repository->findOneByName(Argument::type('string'))->willReturn(null, new Cookie());
+            $repository->add(Argument::type(Cookie::class))->shouldBeCalledOnce();
+        }
 
         $factory = new CookieFactory(new Factory(Cookie::class));
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(Argument::type(CookiesCreatedEvent::class))->shouldBeCalled();
+        if ($callEventDispatcher) {
+            $eventDispatcher->dispatch(Argument::type(CookiesCreatedEvent::class))->shouldBeCalled();
+        } else {
+            $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+        }
 
-        return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), 1);
+        return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $sampleRate);
     }
 
-    private function getRequestEvent(): RequestEvent
+    private function getRequestEvent(int $requestType = HttpKernelInterface::MASTER_REQUEST): RequestEvent
     {
         $kernel = new class() implements HttpKernelInterface {
             public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
@@ -76,7 +133,19 @@ final class SampleCookiesSubscriberTest extends TestCase
             'cookie2' => 'value2',
         ]);
 
-        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($kernel, $request, $requestType);
+    }
+}
+
+class RequestEvent extends BaseRequestEvent
+{
+    public bool $getRequestCalled = false;
+
+    public function getRequest()
+    {
+        $this->getRequestCalled = true;
+
+        return parent::getRequest();
     }
 }
 
