@@ -9,6 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\EventListener\NewCookiesNotifierSubscriber;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\EventListener\NewCookiesNotifierSubscriber
@@ -27,5 +28,15 @@ final class NewCookiesNotifierSubscriberTest extends TestCase
 
         $subscriber = new NewCookiesNotifierSubscriber($emailManager->reveal());
         $subscriber->notify(new CookiesCreatedEvent([]));
+
+        self::assertInstanceOf(EventSubscriberInterface::class, $subscriber);
+    }
+
+    /**
+     * @test
+     */
+    public function it_subscribes(): void
+    {
+        self::assertSame([CookiesCreatedEvent::class => 'notify'], NewCookiesNotifierSubscriber::getSubscribedEvents());
     }
 }

@@ -56,6 +56,10 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         }
         $request = $event->getRequest();
 
+        if (!$this->collectSample()) {
+            return;
+        }
+
         $cookies = [];
 
         /**
@@ -80,6 +84,6 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private function collectSample(): bool
     {
-        return random_int(1, 10000) / 10000 >= $this->sampleRate;
+        return random_int(1, 10000) / 10000 <= $this->sampleRate;
     }
 }
