@@ -1,0 +1,26 @@
+{
+    "name": "@setono/sylius-consent-management-plugin",
+    "description": "Consent management for your Sylius store",
+    "license": "MIT",
+    "private": true,
+    "version": "0.1.0",
+    "scripts": {
+        "build": "babel src -d dist",
+        "test": "babel src -d dist && jest",
+        "lint": "eslint src test"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.1",
+        "@babel/core": "^7.12.3",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/preset-env": "^7.12.7",
+        "@symfony/stimulus-testing": "^1.1.0",
+        "stimulus": "^2.0.0"
+    },
+    "jest": {
+        "testRegex": "test/.*\\.test.js",
+        "setupFilesAfterEnv": [
+            "./test/setup.js"
+        ]
+    }
+}
