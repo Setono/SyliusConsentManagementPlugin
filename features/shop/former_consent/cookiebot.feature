@@ -8,7 +8,7 @@ Feature: Handling former consents from Cookiebot
     Given the store operates on a single channel in "United States"
     And the visitor has consented to all services through Cookiebot before
 
-  @ui
+  @ui @javascript
   Scenario: Running all services
     When I visit this channel's homepage
     Then the consent dialog should not be visible

@@ -11,5 +11,6 @@ default:
                 - sylius.behat.context.ui.channel
                 - Behat\MinkExtension\Context\MinkContext
 
+                - setono_sylius_consent_management.behat.context.setup.former_consent_management_platforms
                 - setono_sylius_consent_management.behat.context.setup.service_context
                 - setono_sylius_consent_management.behat.context.ui.shop.consent_dialog_context
