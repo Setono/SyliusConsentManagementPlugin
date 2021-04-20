@@ -57,7 +57,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => ['onRequest', 192],
-            KernelEvents::RESPONSE => 'onResponse', // todo add a priority
+            KernelEvents::RESPONSE => 'onResponse',
         ];
     }
 
