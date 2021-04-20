@@ -6,13 +6,14 @@ namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -39,7 +40,9 @@ final class ConsentWidgetAction
 
     private EntityManagerInterface $consentEntryManager;
 
-    private string $cookieName;
+    private ConsentWidgetInterface $consentWidget;
+
+    private ConsentWidgetCookieManagerInterface $consentWidgetCookieManager;
 
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -49,7 +52,8 @@ final class ConsentWidgetAction
         ClientIdProviderInterface $clientIdProvider,
         FactoryInterface $consentEntryFactory,
         EntityManagerInterface $consentEntryManager,
-        string $cookieName
+        ConsentWidgetInterface $consentWidget,
+        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -58,12 +62,13 @@ final class ConsentWidgetAction
         $this->clientIdProvider = $clientIdProvider;
         $this->consentEntryFactory = $consentEntryFactory;
         $this->consentEntryManager = $consentEntryManager;
-        $this->cookieName = $cookieName;
+        $this->consentWidget = $consentWidget;
+        $this->consentWidgetCookieManager = $consentWidgetCookieManager;
     }
 
     public function __invoke(Request $request): Response
     {
-        if ($request->cookies->has($this->cookieName)) {
+        if ($this->consentWidget->isShown()) {
             return new Response();
         }
 
@@ -90,7 +95,7 @@ final class ConsentWidgetAction
             $this->consentEntryManager->flush();
 
             $response = new Response('', 204);
-            $response->headers->setCookie(Cookie::create($this->cookieName, '1', new \DateTime('+360 days'), '/', null, null, false));
+            $this->consentWidgetCookieManager->write($response);
 
             return $response;
         }

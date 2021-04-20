@@ -31,6 +31,7 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <file name="tests/Model/ConsentEntryTest.php"/>
+                <file name="tests/Cookie/ConsentWidgetCookieManagerTest.php"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>
