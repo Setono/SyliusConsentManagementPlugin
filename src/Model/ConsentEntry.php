@@ -74,6 +74,16 @@ class ConsentEntry implements ConsentEntryInterface
         $this->userAgent = $userAgent;
     }
 
+    public function isMarketingGranted(): bool
+    {
+        return $this->marketingGranted;
+    }
+
+    public function setMarketingGranted(bool $marketingGranted): void
+    {
+        $this->marketingGranted = $marketingGranted;
+    }
+
     public function isPreferencesGranted(): bool
     {
         return $this->preferencesGranted;
@@ -94,16 +104,6 @@ class ConsentEntry implements ConsentEntryInterface
         $this->statisticsGranted = $statisticsGranted;
     }
 
-    public function isMarketingGranted(): bool
-    {
-        return $this->marketingGranted;
-    }
-
-    public function setMarketingGranted(bool $marketingGranted): void
-    {
-        $this->marketingGranted = $marketingGranted;
-    }
-
     public function populateFromRequest(Request $request): void
     {
         $this->ip = (string) $request->getClientIp();
@@ -121,8 +121,27 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function populateFromConsentCommand(ConsentCommand $consentCommand): void
     {
+        $this->marketingGranted = $consentCommand->marketingGranted;
         $this->preferencesGranted = $consentCommand->preferencesGranted;
         $this->statisticsGranted = $consentCommand->statisticsGranted;
-        $this->marketingGranted = $consentCommand->marketingGranted;
+    }
+
+    public function populateFromFormerConsent(FormerConsent $formerConsent): void
+    {
+        $this->marketingGranted = $formerConsent->marketingGranted;
+        $this->preferencesGranted = $formerConsent->preferencesGranted;
+        $this->statisticsGranted = $formerConsent->statisticsGranted;
+
+        if (null !== $formerConsent->url) {
+            $this->url = $formerConsent->url;
+        }
+
+        if (null !== $formerConsent->userAgent) {
+            $this->userAgent = $formerConsent->userAgent;
+        }
+
+        if (null !== $formerConsent->ip) {
+            $this->ip = $formerConsent->ip;
+        }
     }
 }

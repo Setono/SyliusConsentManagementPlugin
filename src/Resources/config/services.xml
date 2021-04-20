@@ -4,11 +4,14 @@
     <imports>
         <import resource="services/context.xml"/>
         <import resource="services/controller.xml"/>
+        <import resource="services/cookie.xml"/>
         <import resource="services/email_manager.xml"/>
         <import resource="services/event_listener.xml"/>
         <import resource="services/factory.xml"/>
         <import resource="services/form.xml"/>
         <import resource="services/menu.xml"/>
+        <import resource="services/platform.xml"/>
         <import resource="services/twig.xml"/>
+        <import resource="services/widget.xml"/>
     </imports>
 </container>

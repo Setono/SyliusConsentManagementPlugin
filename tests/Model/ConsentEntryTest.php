@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Model\FormerConsent;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -169,5 +170,26 @@ final class ConsentEntryTest extends TestCase
         self::assertTrue($consentEntry->isMarketingGranted());
         self::assertTrue($consentEntry->isStatisticsGranted());
         self::assertTrue($consentEntry->isPreferencesGranted());
+    }
+
+    /**
+     * @test
+     */
+    public function it_populates_from_former_consent(): void
+    {
+        $formerConsent = new FormerConsent(true, true, true);
+        $formerConsent->url = 'https://example.com';
+        $formerConsent->userAgent = 'Chr0me';
+        $formerConsent->ip = '127.0.0.1';
+
+        $consentEntry = new ConsentEntry();
+        $consentEntry->populateFromFormerConsent($formerConsent);
+
+        self::assertTrue($consentEntry->isMarketingGranted());
+        self::assertTrue($consentEntry->isStatisticsGranted());
+        self::assertTrue($consentEntry->isPreferencesGranted());
+        self::assertSame('https://example.com', $consentEntry->getUrl());
+        self::assertSame('Chr0me', $consentEntry->getUserAgent());
+        self::assertSame('127.0.0.1', $consentEntry->getIp());
     }
 }
