@@ -48,10 +48,10 @@
         "sylius/sylius": "~1.9.2",
         "symfony/debug-bundle": "^5.2",
         "symfony/dotenv": "^5.2",
-        "symfony/intl": "^4.4 || ^5.2",
+        "symfony/intl": "^5.2",
         "symfony/maker-bundle": "^1.15",
-        "symfony/property-info": "^4.4 || ^5.2",
-        "symfony/serializer": "^4.4 || ^5.2",
+        "symfony/property-info": "^5.2",
+        "symfony/serializer": "^5.2",
         "symfony/web-profiler-bundle": "^5.2",
         "weirdan/doctrine-psalm-plugin": "^1.0"
     },
