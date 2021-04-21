@@ -40,6 +40,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "^4.2",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
+        "payum/payum-bundle": "^2.4.2",
         "psalm/plugin-phpunit": "^0.15.1",
         "psalm/plugin-symfony": "^2.1",
         "roave/security-advisories": "dev-latest",
