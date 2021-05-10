@@ -1,8 +1,14 @@
-/tests                      export-ignore
-/.github                    export-ignore
-/.gitattributes             export-ignore
-/.gitignore                 export-ignore
-/easy-coding-standard.yml   export-ignore
-/phpunit.xml.dist           export-ignore
-/psalm.xml                  export-ignore
-/README.md                  export-ignore
+/etc                                export-ignore
+/node_modules
+/tests                              export-ignore
+/.github                            export-ignore
+/.editorconfig                      export-ignore
+/.gitattributes                     export-ignore
+/.gitignore                         export-ignore
+/behat.yml.dist                     export-ignore
+/composer-require-checker.json      export-ignore
+/ecs.php                            export-ignore
+/infection.json.dist                export-ignore
+/phpunit.xml.dist                   export-ignore
+/psalm.xml                          export-ignore
+/README.md                          export-ignore
