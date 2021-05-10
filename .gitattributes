@@ -1,5 +1,6 @@
 /etc                                export-ignore
-/node_modules
+/features                           export-ignore
+/node_modules                       export-ignore
 /tests                              export-ignore
 /.github                            export-ignore
 /.editorconfig                      export-ignore
