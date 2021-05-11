@@ -82,9 +82,9 @@
             "@ensure-test-container-exists",
             "psalm"
         ],
-        "check-style": "ecs check src/ tests/",
+        "check-style": "ecs check",
         "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/Tests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
-        "fix-style": "ecs check src/ tests/ --fix",
+        "fix-style": "ecs check --fix",
         "phpunit": "phpunit"
     }
 }
