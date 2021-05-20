@@ -13,7 +13,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Http\FirewallMapInterface;
 use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
@@ -24,7 +23,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private EventDispatcherInterface $eventDispatcher;
 
-    private FirewallMapInterface $firewallMap;
+    private FirewallMap $firewallMap;
 
     /** @var array<array-key, string> */
     private array $firewalls;
@@ -42,7 +41,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         CookieRepositoryInterface $cookieRepository,
         CookieFactoryInterface $cookieFactory,
         EventDispatcherInterface $eventDispatcher,
-        FirewallMapInterface $firewallMap,
+        FirewallMap $firewallMap,
         array $firewalls,
         float $sampleRate
     ) {
@@ -100,10 +99,6 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
     private function collectSample(Request $request): bool
     {
         $sampleRateResult = random_int(1, 10000) / 10000 <= $this->sampleRate;
-
-        if (!$this->firewallMap instanceof FirewallMap) {
-            return $sampleRateResult;
-        }
 
         $firewallConfig = $this->firewallMap->getFirewallConfig($request);
         if (null === $firewallConfig) {
