@@ -6,7 +6,7 @@
         "sylius",
         "sylius-plugin"
     ],
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
