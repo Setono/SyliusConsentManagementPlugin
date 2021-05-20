@@ -35,7 +35,8 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
     {
         $this->load();
 
-        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sample_rate', 0.01);
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sampling.rate', 0.01);
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sampling.firewalls', ['shop']);
         $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.notify', [
             'johndoe@example.com',
         ]);

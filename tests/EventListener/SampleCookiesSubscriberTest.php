@@ -14,6 +14,8 @@ use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Sylius\Component\Resource\Factory\Factory;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent as BaseRequestEvent;
@@ -84,6 +86,19 @@ final class SampleCookiesSubscriberTest extends TestCase
     /**
      * @test
      */
+    public function it_samples_if_sample_rate_is_met_and_firewall_constraint_is_met(): void
+    {
+        $event = $this->getRequestEvent();
+
+        $subscriber = $this->getSubscriber(true, true, 1, true);
+        $subscriber->sample($event);
+
+        self::assertTrue($event->getRequestCalled);
+    }
+
+    /**
+     * @test
+     */
     public function it_throws_exception_if_sample_rate_is_out_of_upper_bound(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -99,8 +114,16 @@ final class SampleCookiesSubscriberTest extends TestCase
         $this->getSubscriber(false, false, 0.00001);
     }
 
-    private function getSubscriber(bool $callRepository = true, bool $callEventDispatcher = true, float $sampleRate = 1): SampleCookiesSubscriber
-    {
+    /**
+     * @param array<array-key, string> $firewalls
+     */
+    private function getSubscriber(
+        bool $callRepository = true,
+        bool $callEventDispatcher = true,
+        float $sampleRate = 1,
+        bool $callFirewallConfig = false,
+        array $firewalls = ['shop']
+    ): SampleCookiesSubscriber {
         $repository = $this->prophesize(CookieRepositoryInterface::class);
         if ($callRepository) {
             $repository->findOneByName(Argument::type('string'))->willReturn(null, new Cookie());
@@ -116,7 +139,13 @@ final class SampleCookiesSubscriberTest extends TestCase
             $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
         }
 
-        return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $sampleRate);
+        $firewallMap = $this->prophesize(FirewallMap::class);
+        if ($callFirewallConfig) {
+            $firewallConfig = new FirewallConfig('shop', 'user_checker');
+            $firewallMap->getFirewallConfig(Argument::type(Request::class))->willReturn($firewallConfig);
+        }
+
+        return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $firewallMap->reveal(), $firewalls, $sampleRate);
     }
 
     private function getRequestEvent(int $requestType = HttpKernelInterface::MASTER_REQUEST): RequestEvent

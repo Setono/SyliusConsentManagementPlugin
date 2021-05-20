@@ -95,7 +95,12 @@ final class ConfigurationTest extends TestCase
                     ],
                 ],
             ],
-            'sample_rate' => 0.01,
+            'sampling' => [
+                'rate' => 0.01,
+                'firewalls' => [
+                    'shop'
+                ]
+            ],
             'notify' => [
                 'johndoe@example.com',
             ],
