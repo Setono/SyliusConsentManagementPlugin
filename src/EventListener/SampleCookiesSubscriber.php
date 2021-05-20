@@ -8,9 +8,12 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
@@ -21,16 +24,26 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private EventDispatcherInterface $eventDispatcher;
 
+    private FirewallMapInterface $firewallMap;
+
+    /** @var array<array-key, string> */
+    private array $firewalls;
+
     /**
      * The sample rate can be between 0.0001 and 1. This means that it can be set to collect cookie samples
      * between every 10,000th visit and every visit
      */
     private float $sampleRate;
 
+    /**
+     * @param array<array-key, string> $firewalls
+     */
     public function __construct(
         CookieRepositoryInterface $cookieRepository,
         CookieFactoryInterface $cookieFactory,
         EventDispatcherInterface $eventDispatcher,
+        FirewallMapInterface $firewallMap,
+        array $firewalls,
         float $sampleRate
     ) {
         Assert::greaterThanEq($sampleRate, 0.0001);
@@ -40,6 +53,8 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         $this->cookieFactory = $cookieFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->sampleRate = $sampleRate;
+        $this->firewallMap = $firewallMap;
+        $this->firewalls = $firewalls;
     }
 
     public static function getSubscribedEvents(): array
@@ -56,7 +71,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         }
         $request = $event->getRequest();
 
-        if (!$this->collectSample()) {
+        if (!$this->collectSample($request)) {
             return;
         }
 
@@ -82,8 +97,19 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function collectSample(): bool
+    private function collectSample(Request $request): bool
     {
-        return random_int(1, 10000) / 10000 <= $this->sampleRate;
+        $sampleRateResult = random_int(1, 10000) / 10000 <= $this->sampleRate;
+
+        if (!$this->firewallMap instanceof FirewallMap) {
+            return $sampleRateResult;
+        }
+
+        $firewallConfig = $this->firewallMap->getFirewallConfig($request);
+        if (null === $firewallConfig) {
+            return $sampleRateResult;
+        }
+
+        return in_array($firewallConfig->getName(), $this->firewalls, true) && $sampleRateResult;
     }
 }

@@ -27,7 +27,9 @@
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument>%setono_sylius_consent_management.sample_rate%</argument>
+            <argument type="service" id="security.firewall.map"/>
+            <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
+            <argument>%setono_sylius_consent_management.sampling.rate%</argument>
 
             <tag name="kernel.event_subscriber"/>
         </service>

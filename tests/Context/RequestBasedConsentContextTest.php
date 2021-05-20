@@ -21,7 +21,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_returns_decorated_if_master_request_is_null(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), new RequestStack(), self::getClientIdProvider()
+            self::getConsentContext(),
+            new RequestStack(),
+            self::getClientIdProvider()
         );
 
         self::assertSame('decorated_client_id', $context->getConsent()->getClientId()->toString());
@@ -33,7 +35,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_returns_decorated_if_request_uri_does_not_contain_consent(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('other_param=123'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('other_param=123'),
+            self::getClientIdProvider()
         );
 
         self::assertSame('decorated_client_id', $context->getConsent()->getClientId()->toString());
@@ -45,7 +49,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_grants_all(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('_consent=1'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('_consent=1'),
+            self::getClientIdProvider()
         );
 
         $consent = $context->getConsent();
@@ -61,7 +67,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_denies_all(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('_consent=0'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('_consent=0'),
+            self::getClientIdProvider()
         );
 
         $consent = $context->getConsent();
@@ -77,7 +85,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_grants_marketing(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('_consent[marketing]=1'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('_consent[marketing]=1'),
+            self::getClientIdProvider()
         );
 
         $consent = $context->getConsent();
@@ -93,7 +103,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_grants_preferences(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('_consent[preferences]=1'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('_consent[preferences]=1'),
+            self::getClientIdProvider()
         );
 
         $consent = $context->getConsent();
@@ -109,7 +121,9 @@ final class RequestBasedConsentContextTest extends TestCase
     public function it_grants_statistics(): void
     {
         $context = new RequestBasedConsentContext(
-            self::getConsentContext(), self::getRequestStack('_consent[statistics]=1'), self::getClientIdProvider()
+            self::getConsentContext(),
+            self::getRequestStack('_consent[statistics]=1'),
+            self::getClientIdProvider()
         );
 
         $consent = $context->getConsent();

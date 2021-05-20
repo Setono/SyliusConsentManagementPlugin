@@ -38,6 +38,7 @@ final class Configuration implements ConfigurationInterface
          * @psalm-suppress PossiblyNullReference
          */
         $rootNode
+            ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('driver')
                     ->defaultValue(SyliusResourceBundle::DRIVER_DOCTRINE_ORM)
@@ -48,12 +49,20 @@ final class Configuration implements ConfigurationInterface
                     ->info('A list of emails to notify when a new cookie is discovered')
                     ->scalarPrototype()->end()
                 ->end()
-                ->floatNode('sample_rate')
-                    ->defaultValue(0.01)
-                    ->info('The rate at which cookies should be collected from requests. The default is every 100th request')
-                    ->example(0.1)
-                    ->min(0.0001)
-                    ->max(1)
+                ->arrayNode('sampling')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->floatNode('rate')
+                            ->defaultValue(0.01)
+                            ->info('The rate at which cookies should be sampled/collected from requests. The default is every 100th request')
+                            ->example(0.1)
+                            ->min(0.0001)
+                            ->max(1)
+                        ->end()
+                        ->arrayNode('firewalls')
+                            ->defaultValue(['shop'])
+                            ->info("A list of firewall to sample. The default is to only sample the 'shop' firewall. This means you won't sample API requests and admin requests by default.")
+                            ->scalarPrototype()->end()
         ;
 
         $this->addResourcesSection($rootNode);
