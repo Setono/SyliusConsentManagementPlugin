@@ -35,7 +35,7 @@
         "doctrine/data-fixtures": "^1.5",
         "egulias/email-validator": "^2.1.25",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
-        "infection/infection": "^0.21.5",
+        "infection/infection": "^0.23.0",
         "lexik/jwt-authentication-bundle": "^2.11",
         "matthiasnoback/symfony-config-test": "^4.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.2",
