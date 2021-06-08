@@ -54,7 +54,7 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->integerNode('pages')
                             ->defaultValue(100)
-                            ->info('The number of pages to crawl per channel when running setono:sylius-consent-management:crawl')
+                            ->info('The number of pages to crawl per channel when running setono:sylius-consent-management:crawl. Notice that all pages will be crawled twice. Once without consent and once with consent.')
                             ->example(500)
                             ->min(1)
                         ->end()

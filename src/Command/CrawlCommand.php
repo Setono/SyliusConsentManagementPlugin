@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Command;
 
+use GuzzleHttp\Psr7\Uri;
+use Setono\SyliusConsentManagementPlugin\Crawler\Crawler;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -35,15 +37,21 @@ final class CrawlCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title(sprintf('Crawling %d pages on each of your channels looking for cookies 🍪🍪🍪', $this->pagesToCrawl));
 
+        $crawler = new Crawler(new Uri('https://www.2trendy.dk'), 5);
+        $crawler->start();
+
+        return Command::SUCCESS;
         $client = Client::createChromeClient();
 
-        $client->request('GET', 'https://google.com'); // Yes, this website is 100% written in JavaScript
+        $client->request('GET', 'https://www.2trendy.dk');
+        dump($client->getCookieJar()->all());
 
         $filename = getcwd() . '/screen.png';
 
         $client->takeScreenshot($filename);
         $io->writeln(sprintf('Screenshot saved to %s', $filename));
 
+        return Command::SUCCESS;
         /** @var ChannelInterface[] $channels */
         $channels = $this->channelRepository->findAll();
 

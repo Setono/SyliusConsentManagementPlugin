@@ -14,7 +14,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @var array{sampling: array{rate: float, firewalls: array<array-key, string>}, notify: array<array-key, string>, driver: string, resources: array<string, mixed>} $config
+         * @var array{crawling: array{pages: int}, sampling: array{rate: float, firewalls: array<array-key, string>}, notify: array<array-key, string>, driver: string, resources: array<string, mixed>} $config
          * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
