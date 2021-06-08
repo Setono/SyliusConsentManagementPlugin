@@ -26,12 +26,14 @@
         "symfony/http-foundation": "^4.4 || ^5.0.7",
         "symfony/http-kernel": "^4.4 || ^5.1.5",
         "symfony/options-resolver": "^4.4 || ^5.0",
+        "symfony/panther": "^1.0",
         "symfony/security-bundle": "^4.4 || ^5.0",
         "twig/twig": "^2.14",
         "webmozart/assert": "^1.9"
     },
     "require-dev": {
         "api-platform/core": "^2.5",
+        "dbrekelmans/bdi": "^0.3.0",
         "doctrine/data-fixtures": "^1.5",
         "egulias/email-validator": "^2.1.25",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",

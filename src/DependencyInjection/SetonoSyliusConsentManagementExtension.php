@@ -20,6 +20,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
+        $container->setParameter('setono_sylius_consent_management.crawling.pages', $config['crawling']['pages']);
         $container->setParameter('setono_sylius_consent_management.sampling.rate', $config['sampling']['rate']);
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
         $container->setParameter('setono_sylius_consent_management.notify', $config['notify']);
