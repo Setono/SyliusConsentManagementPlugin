@@ -70,6 +70,10 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $cookies = self::getCookiesFromRequest($request);
 
+        if (count($cookies) === 0) {
+            return;
+        }
+
         $formerConsent = null;
 
         foreach ($this->platformRegistry->all() as $platform) {
