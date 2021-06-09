@@ -8,7 +8,7 @@ final class ConsentWidget implements ConsentWidgetInterface
 {
     private bool $shown = false;
 
-    public function isShown(): bool
+    public function hasBeenShown(): bool
     {
         return $this->shown;
     }

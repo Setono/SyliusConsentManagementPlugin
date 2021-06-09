@@ -63,7 +63,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function onRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest() || $this->consentWidget->isShown()) {
+        if (!$event->isMasterRequest() || $this->consentWidget->hasBeenShown()) {
             return;
         }
 

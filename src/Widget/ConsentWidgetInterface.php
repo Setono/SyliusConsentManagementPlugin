@@ -9,7 +9,7 @@ interface ConsentWidgetInterface
     /**
      * Returns true if the consent widget has been shown before
      */
-    public function isShown(): bool;
+    public function hasBeenShown(): bool;
 
     public function setShown(bool $shown = true): void;
 }
