@@ -10,6 +10,6 @@
             "branch": "master"
         }
     },
-    "minMsi": 51.11,
-    "minCoveredMsi": 51.11
+    "minMsi": 50.59,
+    "minCoveredMsi": 50.59
 }
