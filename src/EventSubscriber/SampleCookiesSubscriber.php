@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\EventListener;
+namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;

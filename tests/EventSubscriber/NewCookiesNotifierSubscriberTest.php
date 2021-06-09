@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\EventListener;
+namespace Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
-use Setono\SyliusConsentManagementPlugin\EventListener\NewCookiesNotifierSubscriber;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\NewCookiesNotifierSubscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\EventListener\NewCookiesNotifierSubscriber
+ * @covers \Setono\SyliusConsentManagementPlugin\EventSubscriber\NewCookiesNotifierSubscriber
  */
 final class NewCookiesNotifierSubscriberTest extends TestCase
 {

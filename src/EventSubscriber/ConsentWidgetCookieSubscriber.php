@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\EventListener;
+namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;

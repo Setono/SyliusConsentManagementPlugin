@@ -2,16 +2,16 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="setono_sylius_consent_management.event_listener.consent_widget_cookie_subscriber"
-                 class="Setono\SyliusConsentManagementPlugin\EventListener\ConsentWidgetCookieSubscriber">
+        <service id="setono_sylius_consent_management.event_subscriber.consent_widget_cookie"
+                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\ConsentWidgetCookieSubscriber">
             <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
             <argument type="service" id="setono_sylius_consent_management.cookie.consent_widget_cookie_manager"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_listener.former_consent_platform_subscriber"
-                 class="Setono\SyliusConsentManagementPlugin\EventListener\FormerConsentPlatformSubscriber">
+        <service id="setono_sylius_consent_management.event_subscriber.former_consent_platform"
+                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\FormerConsentPlatformSubscriber">
             <argument type="service" id="setono_sylius_consent_management.platform.registry"/>
             <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
             <argument type="service" id="setono_client_id.provider.default_client_id"/>
@@ -22,8 +22,8 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_listener.sample_cookies_subscriber"
-                 class="Setono\SyliusConsentManagementPlugin\EventListener\SampleCookiesSubscriber">
+        <service id="setono_sylius_consent_management.event_subscriber.sample_cookies"
+                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
             <argument type="service" id="event_dispatcher"/>
@@ -34,8 +34,8 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_listener.new_cookies_notifier_subscriber"
-                 class="Setono\SyliusConsentManagementPlugin\EventListener\NewCookiesNotifierSubscriber">
+        <service id="setono_sylius_consent_management.event_subscriber.new_cookies_notifier"
+                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\NewCookiesNotifierSubscriber">
             <argument type="service" id="setono_sylius_consent_management.email_manager.cookie"/>
 
             <tag name="kernel.event_subscriber"/>

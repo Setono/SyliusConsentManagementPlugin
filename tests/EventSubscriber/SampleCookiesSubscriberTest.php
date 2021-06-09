@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\EventListener;
+namespace Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
-use Setono\SyliusConsentManagementPlugin\EventListener\SampleCookiesSubscriber;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\EventListener\SampleCookiesSubscriber
+ * @covers \Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber
  */
 final class SampleCookiesSubscriberTest extends TestCase
 {
@@ -182,9 +182,9 @@ class RequestEvent extends BaseRequestEvent
  * Hack to override the 'random_int' function
  */
 
-namespace Setono\SyliusConsentManagementPlugin\EventListener;
+namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
-use Tests\Setono\SyliusConsentManagementPlugin\EventListener\SampleCookiesSubscriberTest;
+use Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriberTest;
 
 function random_int(int $min, int $max): int
 {
