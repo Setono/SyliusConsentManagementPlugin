@@ -60,6 +60,6 @@ final class RequestBasedConsentContext implements ConsentContextInterface
             $marketing = $preferences = $statistics = 1 === (int) $consentQuery;
         }
 
-        return new Consent($this->clientIdProvider->get(), $marketing, $preferences, $statistics);
+        return new Consent($this->clientIdProvider->getClientId(), $marketing, $preferences, $statistics);
     }
 }

@@ -19,6 +19,6 @@ final class DefaultConsentContext implements ConsentContextInterface
 
     public function getConsent(): Consent
     {
-        return new Consent($this->clientIdProvider->get(), false, false, false);
+        return new Consent($this->clientIdProvider->getClientId(), false, false, false);
     }
 }

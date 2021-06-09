@@ -96,7 +96,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         $this->consentWidget->setShown(true);
         $this->setConsentWidgetCookie = true;
 
-        $clientId = $this->clientIdProvider->get();
+        $clientId = $this->clientIdProvider->getClientId();
         if (null !== $this->consentEntryRepository->findOneFromClientId($clientId)) {
             return;
         }

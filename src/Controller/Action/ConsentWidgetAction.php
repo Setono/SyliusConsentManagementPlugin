@@ -76,7 +76,7 @@ final class ConsentWidgetAction
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $clientId = $this->clientIdProvider->get();
+            $clientId = $this->clientIdProvider->getClientId();
             $consentEntry = $this->consentEntryRepository->findOneFromClientId($clientId);
             if (null === $consentEntry) {
                 /** @var ConsentEntryInterface $consentEntry */

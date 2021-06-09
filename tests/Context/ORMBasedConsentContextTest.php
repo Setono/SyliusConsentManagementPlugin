@@ -50,7 +50,7 @@ final class ORMBasedConsentContextTest extends TestCase
     private static function getConsentContext(): ConsentContextInterface
     {
         $clientIdProvider = new class() implements ClientIdProviderInterface {
-            public function get(): ClientId
+            public function getClientId(): ClientId
             {
                 return new ClientId('client_id');
             }

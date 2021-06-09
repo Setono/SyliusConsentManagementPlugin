@@ -20,7 +20,7 @@ final class DefaultConsentContextTest extends TestCase
     public function it_returns_default_consent(): void
     {
         $context = new DefaultConsentContext(new class() implements ClientIdProviderInterface {
-            public function get(): ClientId
+            public function getClientId(): ClientId
             {
                 return new ClientId('client_id');
             }
