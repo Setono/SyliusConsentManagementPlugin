@@ -3,8 +3,8 @@
 <div class="sscm-consent-container">
     {{ 'setono_sylius_consent_management.ui.widget.introduction'|trans({'%channel%' : sylius.channel.name}) }}
 
-    <button type="button" class="ui button sscm-btn-more-information">{{ 'setono_sylius_consent_management.ui.widget.more_information'|trans }}</button>
-    <button type="submit" class="ui primary button" form="{{ form.vars.id }}" {{ sylius_test_html_attribute('sscm-btn-submit') }}>{{ 'setono_sylius_consent_management.ui.widget.accept'|trans }}</button>
+    {{ form_widget(form.buttonMoreInformation, { 'attr': { 'class': 'ui button ' ~ form.buttonMoreInformation.vars.attr.class } }) }}
+    {{ form_widget(form.buttonAccept, sylius_test_form_attribute('sscm-btn-submit')|merge({ 'attr': { 'class': 'ui primary button', 'form': form.vars.id } })) }}
 </div>
 <div class="ui modal sscm-consent-modal">
     <div class="content">
@@ -48,8 +48,8 @@
                 </div>
             </div>
 
-            <button type="submit" class="ui primary button"  {{ sylius_test_html_attribute('sscm-btn-submit') }}>{{ 'setono_sylius_consent_management.ui.widget.save'|trans }}</button>
-            {{ form_end(form) }}
+            {{ form_widget(form.buttonSave, sylius_test_form_attribute('sscm-btn-submit')|merge({ 'attr': { 'class': 'ui primary button' } })) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </div>
     </div>
 </div>

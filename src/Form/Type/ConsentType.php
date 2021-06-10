@@ -6,7 +6,9 @@ namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
 use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,6 +28,18 @@ final class ConsentType extends AbstractType
             ->add('marketingGranted', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.consent.marketing',
                 'required' => false,
+            ])
+            ->add('buttonMoreInformation', ButtonType::class, [
+                'label' => 'setono_sylius_consent_management.form.consent.buttons.more_information',
+                'attr' => [
+                    'class' => 'sscm-btn-more-information'
+                ]
+            ])
+            ->add('buttonAccept', SubmitType::class, [
+                'label' => 'setono_sylius_consent_management.form.consent.buttons.accept',
+            ])
+            ->add('buttonSave', SubmitType::class, [
+                'label' => 'setono_sylius_consent_management.form.consent.buttons.save',
             ])
         ;
     }
