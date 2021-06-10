@@ -24,7 +24,7 @@ Add the bundle to `bundles.php` if not done automatically. Be sure to add this l
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
 ```
 
-create the file `config/packages/setono_sylius_cookie_consent.yaml` and add the following:
+Create the file `config/packages/setono_sylius_cookie_consent.yaml` and add the following:
 
 ```yaml
 imports:
@@ -49,21 +49,36 @@ php bin/console doctrine:migration:difference
 php bin/console doctrine:migration:migrate
 ```
 
+### Import the routes
+
+Create the file `config/routes/setono_sylius_cookie_consent.yaml` and add the following:
+
+```yaml
+setono_sylius_consent_management:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml"
+```
+
 ### Update the layout
 
-From the test layout, you can copy important parts, such as: 
+From the test layout, you can copy those important parts 
 
 ```html
 <head>
+    <!-- ... -->
     {{ sscm_consent_tag() }}
+    <!-- ... -->
 </head>
+
+{% block footer %}
+    <!-- ... -->
+    {{ render(path('setono_sylius_consent_management_shop_partial_consent_widget')) }}
+    <!-- ... -->
+{% endblock %}
     
 {% block javascripts %}
+    <!-- ... -->
     <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>
-
-    {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}
-    {{ sscm_script_tag(asset('js/statistics.js'), 'statistics') }}
-    {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
+    <!-- ... -->
 {% endblock %}
 ```
 
