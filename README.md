@@ -45,7 +45,7 @@ php bin/console sylius:theme:assets:install
 ### Add migration
 
 ```shell
-php bin/console doctrine:migration:difference
+php bin/console doctrine:migration:diff
 php bin/console doctrine:migration:migrate
 ```
 
