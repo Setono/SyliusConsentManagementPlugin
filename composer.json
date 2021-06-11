@@ -30,6 +30,7 @@
         "twig/twig": "^2.14",
         "webmozart/assert": "^1.9",
 
+        "symfony/framework-bundle": "~5.2.0",
         "symfony/asset": "~5.2.0",
         "symfony/twig-bridge": "~5.2.0",
         "symfony/twig-bundle": "~5.2.0"
@@ -57,7 +58,7 @@
         "symfony/maker-bundle": "^1.31",
         "symfony/property-info": "^5.3",
         "symfony/serializer": "^5.3",
-        "symfony/web-profiler-bundle": "^5.3",
+        "symfony/web-profiler-bundle": "^5.2",
         "weirdan/doctrine-psalm-plugin": "^1.0"
     },
     "config": {
