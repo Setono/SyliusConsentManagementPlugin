@@ -200,9 +200,6 @@ jobs:
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
 
-            -   name: "Composer show"
-                run: "composer show"
-
             -   name: "Lint container"
                 run: "(cd tests/Application && bin/console lint:container) || true"
 
