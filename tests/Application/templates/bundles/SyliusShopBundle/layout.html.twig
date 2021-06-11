@@ -82,11 +82,11 @@
 {% block javascripts %}
     {{ sylius_template_event('sylius.shop.layout.javascripts') }}
 
-{#    <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>#}
+    <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>
 
-{#    {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}#}
-{#    {{ sscm_script_tag(asset('js/statistics.js'), 'statistics') }}#}
-{#    {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}#}
+    {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}
+    {{ sscm_script_tag(asset('js/statistics.js'), 'statistics') }}
+    {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
 
     <script{{ sscm_script_tag_attributes('preferences') }}>
         var inlinePreferencesGranted = true;
