@@ -17,6 +17,8 @@ interface ServiceInterface extends ResourceInterface, TimestampableInterface, Tr
 
     public const CATEGORY_MARKETING = 'marketing';
 
+    public function __toString(): string;
+
     public function getId(): ?int;
 
     public function getCategory(): ?string;

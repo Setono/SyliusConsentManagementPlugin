@@ -9,8 +9,15 @@ sylius_grid:
                     type: string
                     label: setono_sylius_consent_management.ui.name
                 url:
-                    type: string
+                    type: twig
                     label: setono_sylius_consent_management.ui.url
+                    options:
+                        template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/url.html.twig"
+                service:
+                    type: twig
+                    label: setono_sylius_consent_management.ui.service
+                    options:
+                        template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/service.html.twig"
             actions:
                 item:
                     update:

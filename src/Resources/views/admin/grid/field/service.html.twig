@@ -1,0 +1,5 @@
+{% if data is null %}
+    <span class="ui red label"><i class="exclamation circle icon"></i> {{ 'setono_sylius_consent_management.ui.missing'|trans }}</span>
+{% else %}
+    {{ data }}
+{% endif %}

@@ -43,9 +43,12 @@ setono_sylius_consent_management:
         cookies: Cookies
         ip: IP address
         name: Name
-        preferences: Preferences
         marketing: Marketing
+        missing: Missing
+        open_in_new_tab: Open in new tab
+        preferences: Preferences
         search: Search for a client id or an IP address
+        service: Service
         service_header: Services
         service_subheader: Manage your service that needs consent
         services: Services
