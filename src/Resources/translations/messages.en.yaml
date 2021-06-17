@@ -8,6 +8,7 @@ setono_sylius_consent_management:
             preferences: Preferences
             statistics: Statistics
         cookie:
+            necessary: Necessary
             service: Service
             service_placeholder: Choose a service...
         service:

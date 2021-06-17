@@ -25,4 +25,11 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface
     public function getService(): ?ServiceInterface;
 
     public function setService(?ServiceInterface $service): void;
+
+    /**
+     * Returns true if the cookie is a necessary cookie
+     */
+    public function isNecessary(): bool;
+
+    public function setNecessary(bool $necessary): void;
 }

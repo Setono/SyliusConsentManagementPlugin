@@ -13,6 +13,7 @@
 
         <field name="name" column="name" type="string"/>
         <field name="url" type="string"/>
+        <field name="necessary" type="boolean"/>
 
         <many-to-one target-entity="Setono\SyliusConsentManagementPlugin\Model\ServiceInterface" field="service" inversed-by="cookies">
             <join-column name="service_id" referenced-column-name="id" on-delete="CASCADE" />

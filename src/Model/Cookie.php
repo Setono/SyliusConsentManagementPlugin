@@ -18,6 +18,8 @@ class Cookie implements CookieInterface
 
     protected ?ServiceInterface $service = null;
 
+    protected bool $necessary = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,5 +53,19 @@ class Cookie implements CookieInterface
     public function setService(?ServiceInterface $service): void
     {
         $this->service = $service;
+    }
+
+    public function isNecessary(): bool
+    {
+        return $this->necessary;
+    }
+
+    public function setNecessary(bool $necessary): void
+    {
+        $this->necessary = $necessary;
+
+        if (true === $necessary) {
+            $this->setService(null);
+        }
     }
 }
