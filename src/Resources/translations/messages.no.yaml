@@ -1,0 +1,62 @@
+setono_sylius_consent_management:
+    email:
+        new_cookies:
+            subject: "VIKTIG: Nye informasjonskapsler oppdaget i butikken din"
+    form:
+        consent:
+            marketing: Markedsføring
+            preferences: Preferanser
+            statistics: Statistikk
+        cookie:
+            service: Tjeneste
+            service_placeholder: Velg en tjeneste...
+        service:
+            categories:
+                marketing: Markedsføring
+                preferences: Preferanser
+                statistics: Statistikk
+            category: Kategori
+            category_placeholder: Velg en passende kategori...
+            description: Beskrivelse
+            name: Navn
+            translations: Oversettelser
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Samtykker
+                    cookies: Informasjonskapsler
+                    header: Samtykkeadministrasjon
+                    services: Tjenester
+    ui:
+        categories:
+            marketing: Markedsføring
+            preferences: Preferanser
+            statistics: Statistikk
+        category: Kategori
+        client_id: Klient id
+        consent_entries: Samtykker
+        consent_entry_header: Samtykker
+        consent_entry_subheader: Liste over samtykker
+        cookie_header: Informasjonskapsler
+        cookie_subheader: Administrer informasjonskapsler
+        cookies: Informasjonskapsler
+        ip: IP addresse
+        name: Navn
+        marketing: Markedsføring
+        missing: Savnet
+        open_in_new_tab: Åpne i ny fane
+        preferences: Preferanser
+        search: Søk etter en klient id eller en IP-adresse
+        service: Tjeneste
+        service_header: Tjenester
+        service_subheader: Administrer tjenesten din som trenger samtykke
+        services: Tjenester
+        statistics: Statistikk
+        url: URL
+        user_agent: User agent
+        widget:
+            accept: Aksepterer
+            introduction: "%channel% bruker informasjonskapsler for å gi deg den best mulige opplevelsen i butikken vår"
+            more_information: Mer informasjon
+            save: Lagre
