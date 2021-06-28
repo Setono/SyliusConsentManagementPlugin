@@ -1,0 +1,62 @@
+setono_sylius_consent_management:
+    email:
+        new_cookies:
+            subject: "VIGTIGT: Nye cookies opdaget på din webshop"
+    form:
+        consent:
+            marketing: Marketing
+            preferences: Indstillinger/funktionelle
+            statistics: Statistiske
+        cookie:
+            service: Tjeneste
+            service_placeholder: Vælg en tjeneste...
+        service:
+            categories:
+                marketing: Marketing
+                preferences: Indstillinger/funktionelle
+                statistics: Statistiske
+            category: Kategori
+            category_placeholder: Vælg en passende kategori...
+            description: Beskrivelse
+            name: Navn
+            translations: Oversættelser
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Samtykker
+                    cookies: Cookies
+                    header: Samtykkehåndtering
+                    services: Tjenester
+    ui:
+        categories:
+            marketing: Marketing
+            preferences: Indstillinger/funktionelle
+            statistics: Statistiske
+        category: Kategori
+        client_id: Klient id
+        consent_entries: Samtykker
+        consent_entry_header: Samtykker
+        consent_entry_subheader: Liste over samtykker
+        cookie_header: Cookies
+        cookie_subheader: Håndter cookies
+        cookies: Cookies
+        ip: IP-addresse
+        name: Navn
+        marketing: Marketing
+        missing: Missing
+        open_in_new_tab: Åbn i ny tab
+        preferences: Indstillinger/funktionelle
+        search: Søg efter et klient id eller IP-adresse
+        service: Tjeneste
+        service_header: Tjenester
+        service_subheader: Manage your service that needs consent
+        services: Tjeneste
+        statistics: Statistiske
+        url: URL
+        user_agent: Brugeragent (browser)
+        widget:
+            accept: Accepter
+            introduction: "%channel% bruger cookies for at give dig den bedst mulige oplevelse på vores webshop"
+            more_information: Mere information
+            save: Gem
