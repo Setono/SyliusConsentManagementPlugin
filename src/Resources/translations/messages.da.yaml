@@ -44,8 +44,8 @@ setono_sylius_consent_management:
         ip: IP-addresse
         name: Navn
         marketing: Marketing
-        missing: Missing
-        open_in_new_tab: Åbn i ny tab
+        missing: Mangler
+        open_in_new_tab: Åbn i ny fane
         preferences: Indstillinger/funktionelle
         search: Søg efter et klient id eller IP-adresse
         service: Tjeneste
