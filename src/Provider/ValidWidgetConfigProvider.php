@@ -9,7 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepositoryInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 
-final class WidgetConfigProvider implements WidgetConfigProviderInterface
+final class ValidWidgetConfigProvider implements ValidWidgetConfigProviderInterface
 {
     private WidgetConfigRepositoryInterface $widgetConfigRepository;
 
