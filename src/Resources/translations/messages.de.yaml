@@ -1,0 +1,62 @@
+setono_sylius_consent_management:
+    email:
+        new_cookies:
+            subject: "IMPORTANT: New cookies discovered in your store"
+    form:
+        consent:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing
+        cookie:
+            service: Service
+            service_placeholder: Choose a service...
+        service:
+            categories:
+                marketing: Marketing
+                preferences: Preferences
+                statistics: Statistics
+            category: Category
+            category_placeholder: Select an appropiate category...
+            description: Description
+            name: Name
+            translations: Translations
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Consent entries
+                    cookies: Cookies
+                    header: Consent management
+                    services: Services
+    ui:
+        categories:
+            preferences: Preferences
+            statistics: Statistics
+            marketing: Marketing
+        category: Category
+        client_id: Client id
+        consent_entries: Consent entries
+        consent_entry_header: Consent entries
+        consent_entry_subheader: List of consent entries
+        cookie_header: Cookies
+        cookie_subheader: Manage cookies
+        cookies: Cookies
+        ip: IP address
+        name: Name
+        marketing: Marketing
+        missing: Missing
+        open_in_new_tab: Open in new tab
+        preferences: Preferences
+        search: Search for a client id or an IP address
+        service: Service
+        service_header: Services
+        service_subheader: Manage your service that needs consent
+        services: Services
+        statistics: Statistics
+        url: URL
+        user_agent: User agent
+        widget:
+            accept: Accept
+            introduction: "%channel% use cookies to give you the best possible experience on our store"
+            more_information: More information
+            save: Save
