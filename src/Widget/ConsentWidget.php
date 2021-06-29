@@ -6,15 +6,15 @@ namespace Setono\SyliusConsentManagementPlugin\Widget;
 
 final class ConsentWidget implements ConsentWidgetInterface
 {
-    private bool $shown = false;
+    private bool $show = true;
 
-    public function hasBeenShown(): bool
+    public function show(): bool
     {
-        return $this->shown;
+        return $this->show;
     }
 
-    public function setShown(bool $shown = true): void
+    public function setShow(bool $show = false): void
     {
-        $this->shown = $shown;
+        $this->show = $show;
     }
 }

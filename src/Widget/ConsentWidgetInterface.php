@@ -7,9 +7,9 @@ namespace Setono\SyliusConsentManagementPlugin\Widget;
 interface ConsentWidgetInterface
 {
     /**
-     * Returns true if the consent widget has been shown before
+     * Returns true if the consent dialog should be shown
      */
-    public function hasBeenShown(): bool;
+    public function show(): bool;
 
-    public function setShown(bool $shown = true): void;
+    public function setShow(bool $show = false): void;
 }

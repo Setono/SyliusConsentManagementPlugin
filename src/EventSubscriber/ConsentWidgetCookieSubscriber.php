@@ -43,6 +43,6 @@ final class ConsentWidgetCookieSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->consentWidget->setShown(true);
+        $this->consentWidget->setShow(false);
     }
 }
