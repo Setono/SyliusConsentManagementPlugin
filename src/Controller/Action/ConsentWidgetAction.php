@@ -68,7 +68,7 @@ final class ConsentWidgetAction
 
     public function __invoke(Request $request): Response
     {
-        if ($this->consentWidget->hasBeenShown()) {
+        if (!$this->consentWidget->show()) {
             return new Response();
         }
 

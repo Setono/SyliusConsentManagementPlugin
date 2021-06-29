@@ -63,7 +63,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function onRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest() || $this->consentWidget->hasBeenShown()) {
+        if (!$event->isMasterRequest() || !$this->consentWidget->show()) {
             return;
         }
 
@@ -93,7 +93,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->consentWidget->setShown(true);
+        $this->consentWidget->setShow(false);
         $this->setConsentWidgetCookie = true;
 
         $clientId = $this->clientIdProvider->getClientId();
