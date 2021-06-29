@@ -1,62 +1,62 @@
 setono_sylius_consent_management:
     email:
         new_cookies:
-            subject: "IMPORTANT: New cookies discovered in your store"
+            subject: "BELANGRIJK: nieuwe cookies ontdekt in uw winkel"
     form:
         consent:
             marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
+            preferences: Voorkeuren
+            statistics: Statistieken
         cookie:
-            service: Service
-            service_placeholder: Choose a service...
+            service: Dienst
+            service_placeholder: Kies een dienst...
         service:
             categories:
                 marketing: Marketing
-                preferences: Preferences
-                statistics: Statistics
-            category: Category
-            category_placeholder: Select an appropiate category...
-            description: Description
-            name: Name
-            translations: Translations
+                preferences: Voorkeuren
+                statistics: Statistieken
+            category: Categorie
+            category_placeholder: Selecteer een geschikte categorie...
+            description: Omschrijving
+            name: Naam
+            translations: Vertalingen
     menu:
         admin:
             main:
                 consent_management:
-                    consent_entries: Consent entries
+                    consent_entries: Toestemmingsinvoer
                     cookies: Cookies
-                    header: Consent management
-                    services: Services
+                    header: Toestemmingsbeheer
+                    services: Diensten
     ui:
         categories:
             marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
-        category: Category
-        client_id: Client id
-        consent_entries: Consent entries
-        consent_entry_header: Consent entries
-        consent_entry_subheader: List of consent entries
+            preferences: Voorkeuren
+            statistics: Statistieken
+        category: Categorie
+        client_id: Cliënt id
+        consent_entries: Toestemmingsinvoer
+        consent_entry_header: Toestemmingsinvoer
+        consent_entry_subheader: Lijst met toestemmingsvermeldingen
         cookie_header: Cookies
-        cookie_subheader: Manage cookies
+        cookie_subheader: Cookies beheren
         cookies: Cookies
-        ip: IP address
-        name: Name
+        ip: IP-adres
+        name: Naam
         marketing: Marketing
-        missing: Missing
-        open_in_new_tab: Open in new tab
-        preferences: Preferences
-        search: Search for a client id or an IP address
-        service: Service
-        service_header: Services
-        service_subheader: Manage your service that needs consent
-        services: Services
-        statistics: Statistics
+        missing: Missend
+        open_in_new_tab: Openen in nieuw tabblad
+        preferences: Voorkeuren
+        search: Zoek naar een Cliënt id of een IP-adres
+        service: Dienst
+        service_header: Diensten
+        service_subheader: Beheer uw service waarvoor toestemming nodig is
+        services: Diensten
+        statistics: Statistieken
         url: URL
-        user_agent: User agent
+        user_agent: User-agent (browser)
         widget:
-            accept: Accept
-            introduction: "%channel% use cookies to give you the best possible experience on our store"
-            more_information: More information
-            save: Save
+            accept: Aanvaarden
+            introduction: "%channel% gebruik cookies om je de best mogelijke ervaring in onze winkel te geven"
+            more_information: Meer informatie
+            save: Sparen
