@@ -14,8 +14,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 final class Runtime implements RuntimeExtensionInterface
 {
     private ConsentContextInterface $consentContext;
+
     private WidgetConfigProviderInterface $widgetConfigProvider;
+
     private ChannelContextInterface $channelContext;
+
     private LocaleContextInterface $localeContext;
 
     public function __construct(
@@ -76,7 +79,8 @@ final class Runtime implements RuntimeExtensionInterface
     public function widgetConfig(): WidgetConfigInterface
     {
         return $this->widgetConfigProvider->getWidgetConfig(
-            $this->channelContext->getChannel(), $this->localeContext->getLocaleCode()
+            $this->channelContext->getChannel(),
+            $this->localeContext->getLocaleCode()
         );
     }
 }

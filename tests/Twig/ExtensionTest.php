@@ -40,24 +40,21 @@ final class ExtensionTest extends IntegrationTestCase
                     }
                 };
 
-                $widgetConfigProvider = new class implements WidgetConfigProviderInterface
-                {
+                $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
                     public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
                     {
                         return new WidgetConfig();
                     }
                 };
 
-                $channelContext = new class implements ChannelContextInterface
-                {
+                $channelContext = new class() implements ChannelContextInterface {
                     public function getChannel(): ChannelInterface
                     {
                         return new Channel();
                     }
                 };
 
-                $localeContext = new class implements LocaleContextInterface
-                {
+                $localeContext = new class() implements LocaleContextInterface {
                     public function getLocaleCode(): string
                     {
                         return 'en_US';

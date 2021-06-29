@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
 
-use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;

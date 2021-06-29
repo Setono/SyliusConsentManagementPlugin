@@ -14,6 +14,7 @@ use Webmozart\Assert\Assert;
 final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 {
     private FactoryInterface $decorated;
+
     private RepositoryInterface $localeRepository;
 
     public function __construct(FactoryInterface $decorated, RepositoryInterface $localeRepository)
@@ -32,7 +33,7 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 
     public function createFromChannelAndLocale(ChannelInterface $channel, string $localeCode): WidgetConfigInterface
     {
-        /** @var LocaleInterface|null|object $locale */
+        /** @var LocaleInterface|object|null $locale */
         $locale = $this->localeRepository->findOneBy([
             'code' => $localeCode
         ]);

@@ -13,11 +13,9 @@ use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
-use Sylius\Component\Locale\Context\LocaleNotFoundException;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Twig\Runtime
@@ -119,24 +117,21 @@ final class RuntimeTest extends TestCase
             $consentContext = self::getConsentContext();
         }
 
-        $widgetConfigProvider = new class implements WidgetConfigProviderInterface
-        {
+        $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
             public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
             {
                 return new WidgetConfig();
             }
         };
 
-        $channelContext = new class implements ChannelContextInterface
-        {
+        $channelContext = new class() implements ChannelContextInterface {
             public function getChannel(): ChannelInterface
             {
                 return new Channel();
             }
         };
 
-        $localeContext = new class implements LocaleContextInterface
-        {
+        $localeContext = new class() implements LocaleContextInterface {
             public function getLocaleCode(): string
             {
                 return 'en_US';

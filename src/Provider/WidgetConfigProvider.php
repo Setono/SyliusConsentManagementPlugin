@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Provider;
@@ -21,6 +22,7 @@ final class WidgetConfigProvider implements WidgetConfigProviderInterface
         $this->widgetConfigRepository = $widgetConfigRepository;
         $this->widgetConfigFactory = $widgetConfigFactory;
     }
+
     public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
     {
         $widgetConfig = $this->widgetConfigRepository->findOneByChannelAndLocale($channel, $locale);
