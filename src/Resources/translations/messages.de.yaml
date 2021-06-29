@@ -4,9 +4,9 @@ setono_sylius_consent_management:
             subject: "IMPORTANT: New cookies discovered in your store"
     form:
         consent:
+            marketing: Marketing
             preferences: Preferences
             statistics: Statistics
-            marketing: Marketing
         cookie:
             service: Service
             service_placeholder: Choose a service...
@@ -30,9 +30,9 @@ setono_sylius_consent_management:
                     services: Services
     ui:
         categories:
+            marketing: Marketing
             preferences: Preferences
             statistics: Statistics
-            marketing: Marketing
         category: Category
         client_id: Client id
         consent_entries: Consent entries
