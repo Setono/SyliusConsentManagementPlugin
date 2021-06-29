@@ -14,9 +14,9 @@ class ServiceRepository extends EntityRepository implements ServiceRepositoryInt
     public function findAllIndexedByCategory(): array
     {
         $result = [
+            'marketing' => [],
             'preferences' => [],
             'statistics' => [],
-            'marketing' => [],
         ];
 
         $services = $this->findAll();
