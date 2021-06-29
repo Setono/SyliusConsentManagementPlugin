@@ -1,62 +1,62 @@
 setono_sylius_consent_management:
     email:
         new_cookies:
-            subject: "IMPORTANT: New cookies discovered in your store"
+            subject: "WICHTIG: Neue Cookies in Ihrem Shop entdeckt"
     form:
         consent:
             marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
+            preferences: Einstellungen
+            statistics: Statistiken
         cookie:
-            service: Service
-            service_placeholder: Choose a service...
+            service: Dienstleistung
+            service_placeholder: Wählen Sie einen Dienst...
         service:
             categories:
                 marketing: Marketing
-                preferences: Preferences
-                statistics: Statistics
-            category: Category
-            category_placeholder: Select an appropiate category...
-            description: Description
+                preferences: Einstellungen
+                statistics: Statistiken
+            category: Kategorie
+            category_placeholder: Wählen Sie eine passende Kategorie aus...
+            description: Beschreibung
             name: Name
-            translations: Translations
+            translations: Übersetzungen
     menu:
         admin:
             main:
                 consent_management:
-                    consent_entries: Consent entries
+                    consent_entries: Einwilligungseinträge
                     cookies: Cookies
-                    header: Consent management
-                    services: Services
+                    header: Einwilligungsmanagement
+                    services: Dienstleistungen
     ui:
         categories:
             marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
-        category: Category
-        client_id: Client id
-        consent_entries: Consent entries
-        consent_entry_header: Consent entries
-        consent_entry_subheader: List of consent entries
+            preferences: Einstellungen
+            statistics: Statistiken
+        category: Kategorie
+        client_id: Klientin id
+        consent_entries: Einwilligungseinträge
+        consent_entry_header: Einwilligungseinträge
+        consent_entry_subheader: Liste der Einwilligungseinträge
         cookie_header: Cookies
-        cookie_subheader: Manage cookies
+        cookie_subheader: Cookies verwalten
         cookies: Cookies
-        ip: IP address
+        ip: IP Addresse
         name: Name
         marketing: Marketing
-        missing: Missing
-        open_in_new_tab: Open in new tab
-        preferences: Preferences
-        search: Search for a client id or an IP address
-        service: Service
-        service_header: Services
-        service_subheader: Manage your service that needs consent
-        services: Services
-        statistics: Statistics
+        missing: Fehlt
+        open_in_new_tab: In neuem Tab öffnen
+        preferences: Einstellungen
+        search: Suchen Sie nach einer Klientin id oder einer IP-Adresse
+        service: Dienst
+        service_header: Dienstleistungen
+        service_subheader: Verwalten Sie Ihren Dienst, der eine Zustimmung benötigt
+        services: Dienstleistungen
+        statistics: Statistiken
         url: URL
-        user_agent: User agent
+        user_agent: User-Agent (browser)
         widget:
-            accept: Accept
-            introduction: "%channel% use cookies to give you the best possible experience on our store"
-            more_information: More information
-            save: Save
+            accept: Akzeptieren
+            introduction: "%channel% verwende Cookies, um Ihnen das bestmögliche Erlebnis in unserem Shop zu bieten"
+            more_information: Mehr Informationen
+            save: Speichern
