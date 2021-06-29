@@ -36,6 +36,14 @@ final class AdminMenuBuilder
             ->setLabel('setono_sylius_consent_management.menu.admin.main.consent_management.cookies')
             ->setLabelAttribute('icon', 'user secret')
         ;
+
+        $header
+            ->addChild('widget_config', [
+                'route' => 'setono_sylius_consent_management_admin_widget_config_index',
+            ])
+            ->setLabel('setono_sylius_consent_management.menu.admin.main.consent_management.widget_configuration')
+            ->setLabelAttribute('icon', 'cog')
+        ;
     }
 
     private function getHeader(ItemInterface $menu): ItemInterface

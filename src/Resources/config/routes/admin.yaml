@@ -45,3 +45,20 @@ setono_sylius_consent_management_admin_service:
                 templates:
                     form: "@SetonoSyliusConsentManagementPlugin/admin/service/_form.html.twig"
     type: sylius.resource
+
+setono_sylius_consent_management_admin_widget_config:
+    resource: |
+        section: admin
+        alias: setono_sylius_consent_management.widget_config
+        templates: "@SyliusAdmin\\Crud"
+        redirect: index
+        permission: true
+        grid: setono_sylius_consent_management_admin_widget_config
+        vars:
+            all:
+                header: setono_sylius_consent_management.ui.widget_config_header
+                subheader: setono_sylius_consent_management.ui.widget_config_subheader
+            update:
+                templates:
+                    form: "@SetonoSyliusConsentManagementPlugin/admin/widget_config/_form.html.twig"
+    type: sylius.resource

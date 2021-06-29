@@ -10,13 +10,16 @@ use Setono\SyliusConsentManagementPlugin\DependencyInjection\Configuration;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
+use Setono\SyliusConsentManagementPlugin\Form\Type\WidgetConfigType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
+use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Component\Resource\Factory\Factory;
@@ -92,6 +95,15 @@ final class ConfigurationTest extends TestCase
                             'form' => ServiceTranslationType::class,
                             'factory' => Factory::class,
                         ],
+                    ],
+                ],
+                'widget_config' => [
+                    'classes' => [
+                        'model' => WidgetConfig::class,
+                        'controller' => ResourceController::class,
+                        'repository' => WidgetConfigRepository::class,
+                        'form' => WidgetConfigType::class,
+                        'factory' => Factory::class,
                     ],
                 ],
             ],

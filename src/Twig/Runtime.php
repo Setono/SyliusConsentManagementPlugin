@@ -5,15 +5,32 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\Context\ConsentContextInterface;
+use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\ValidWidgetConfigProviderInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface
 {
     private ConsentContextInterface $consentContext;
 
-    public function __construct(ConsentContextInterface $consentContext)
-    {
+    private ValidWidgetConfigProviderInterface $widgetConfigProvider;
+
+    private ChannelContextInterface $channelContext;
+
+    private LocaleContextInterface $localeContext;
+
+    public function __construct(
+        ConsentContextInterface $consentContext,
+        ValidWidgetConfigProviderInterface $widgetConfigProvider,
+        ChannelContextInterface $channelContext,
+        LocaleContextInterface $localeContext
+    ) {
         $this->consentContext = $consentContext;
+        $this->widgetConfigProvider = $widgetConfigProvider;
+        $this->channelContext = $channelContext;
+        $this->localeContext = $localeContext;
     }
 
     public function consentTag(): string
@@ -57,5 +74,13 @@ final class Runtime implements RuntimeExtensionInterface
         }
 
         return sprintf(' type="text/plain" data-consent="%s"', $consent);
+    }
+
+    public function widgetConfig(): WidgetConfigInterface
+    {
+        return $this->widgetConfigProvider->getWidgetConfig(
+            $this->channelContext->getChannel(),
+            $this->localeContext->getLocaleCode()
+        );
     }
 }

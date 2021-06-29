@@ -30,6 +30,7 @@ setono_sylius_consent_management:
                     cookies: Cookies
                     header: Consent management
                     services: Services
+                    widget_configuration: Widget configuration
     ui:
         categories:
             marketing: Marketing
@@ -62,3 +63,6 @@ setono_sylius_consent_management:
             introduction: "%channel% use cookies to give you the best possible experience on our store"
             more_information: More information
             save: Save
+        widget_configs: Widget configurations
+        widget_config_header: Widget configuration
+        widget_config_subheader: Manage the configuration of widgets on your different channels

@@ -30,6 +30,7 @@ setono_sylius_consent_management:
                     cookies: Cookies
                     header: Einwilligungsmanagement
                     services: Dienstleistungen
+                    widget_configuration: Widget configuration # todo translate
     ui:
         categories:
             marketing: Marketing
@@ -62,3 +63,6 @@ setono_sylius_consent_management:
             introduction: "%channel% verwende Cookies, um Ihnen das bestmögliche Erlebnis in unserem Shop zu bieten"
             more_information: Mehr Informationen
             save: Speichern
+        widget_configs: Widget configurations # todo translate
+        widget_config_header: Widget configuration # todo translate
+        widget_config_subheader: Manage the configuration of widgets on your different channels # todo translate
