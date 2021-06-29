@@ -9,3 +9,12 @@ sylius_mailer:
         new_cookies:
             subject: setono_sylius_consent_management.emails.new_cookies.subject
             template: "@SetonoSyliusConsentManagementPlugin/email/new_cookies.html.twig"
+            
+    
+sylius_ui:
+    events:
+        setono_sylius_consent_management.admin.widget_config.index:
+            blocks:
+                index_header:
+                    template: "@SetonoSyliusConsentManagementPlugin/admin/widget_config/index_header.html.twig"
+                    priority: 15

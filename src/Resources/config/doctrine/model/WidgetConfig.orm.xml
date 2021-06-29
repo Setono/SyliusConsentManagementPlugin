@@ -26,5 +26,9 @@
         <field name="updatedAt" type="datetime" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
+
+        <unique-constraints>
+            <unique-constraint columns="channel_id,locale_id"/>
+        </unique-constraints>
     </mapped-superclass>
 </doctrine-mapping>

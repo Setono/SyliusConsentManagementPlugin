@@ -6,12 +6,19 @@ sylius_grid:
                     class: "%setono_sylius_consent_management.model.widget_config.class%"
             fields:
                 channel:
-                    type: string
+                    type: twig
                     label: sylius.ui.channel
+                    options:
+                        template: "@SyliusAdmin/Order/Grid/Field/channel.html.twig"
                 locale:
-                    type: string
+                    type: twig
                     label: sylius.ui.locale
+                    options:
+                        template: "@SyliusAdmin/Locale/Grid/Field/name.html.twig"
             actions:
+                main:
+                    create:
+                        type: create
                 item:
                     update:
                         type: update
