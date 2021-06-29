@@ -1,62 +1,62 @@
 setono_sylius_consent_management:
     email:
         new_cookies:
-            subject: "IMPORTANT: New cookies discovered in your store"
+            subject: "VIKTIGT: Nya cookies upptäcktes i din butik"
     form:
         consent:
-            marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
+            marketing: Marknadsföring
+            preferences: Inställningar
+            statistics: Statistik
         cookie:
-            service: Service
-            service_placeholder: Choose a service...
+            service: Tjänst
+            service_placeholder: Välj en tjänst...
         service:
             categories:
-                marketing: Marketing
-                preferences: Preferences
-                statistics: Statistics
-            category: Category
-            category_placeholder: Select an appropiate category...
-            description: Description
-            name: Name
-            translations: Translations
+                marketing: Marknadsföring
+                preferences: Inställningar
+                statistics: Statistik
+            category: Kategori
+            category_placeholder: Välj en lämplig kategori...
+            description: Beskrivning
+            name: Namn
+            translations: Översättningar
     menu:
         admin:
             main:
                 consent_management:
-                    consent_entries: Consent entries
+                    consent_entries: Samtycksposter
                     cookies: Cookies
-                    header: Consent management
-                    services: Services
+                    header: Samtyckehantering
+                    services: Tjänster
     ui:
         categories:
-            marketing: Marketing
-            preferences: Preferences
-            statistics: Statistics
-        category: Category
-        client_id: Client id
-        consent_entries: Consent entries
-        consent_entry_header: Consent entries
-        consent_entry_subheader: List of consent entries
+            marketing: Marknadsföring
+            preferences: Inställningar
+            statistics: Statistik
+        category: Kategori
+        client_id: Klient id
+        consent_entries: Samtycksposter
+        consent_entry_header: Samtycksposter
+        consent_entry_subheader: Lista över samtycke
         cookie_header: Cookies
-        cookie_subheader: Manage cookies
+        cookie_subheader: Hantera cookies
         cookies: Cookies
-        ip: IP address
-        name: Name
-        marketing: Marketing
-        missing: Missing
-        open_in_new_tab: Open in new tab
-        preferences: Preferences
-        search: Search for a client id or an IP address
-        service: Service
-        service_header: Services
-        service_subheader: Manage your service that needs consent
-        services: Services
-        statistics: Statistics
+        ip: IP-adress
+        name: Namn
+        marketing: Marknadsföring
+        missing: Saknas
+        open_in_new_tab: Öppna i ny flik
+        preferences: Inställningar
+        search: Sök efter ett klient-ID eller en IP-adress
+        service: Tjänst
+        service_header: Tjänster
+        service_subheader: Hantera din tjänst som behöver samtycke
+        services: Tjänster
+        statistics: Statistik
         url: URL
-        user_agent: User agent
+        user_agent: Användaragent (browser)
         widget:
-            accept: Accept
-            introduction: "%channel% use cookies to give you the best possible experience on our store"
-            more_information: More information
-            save: Save
+            accept: Acceptera
+            introduction: "%channel% använder cookies för att ge dig bästa möjliga upplevelse i vår butik"
+            more_information: Mer information
+            save: Spara
