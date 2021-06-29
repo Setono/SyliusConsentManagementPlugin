@@ -14,10 +14,17 @@ sylius_grid:
                     options:
                         template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/url.html.twig"
                 service:
+                    path: .
                     type: twig
                     label: setono_sylius_consent_management.ui.service
                     options:
                         template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/service.html.twig"
+            filters:
+                search:
+                    type: string
+                    label: sylius.ui.search
+                    options:
+                        fields: [ name ]
             actions:
                 item:
                     update:

@@ -8,6 +8,8 @@ setono_sylius_consent_management:
             preferences: Indstillinger/funktionelle
             statistics: Statistiske
         cookie:
+            necessary: Nødvendig
+            necessary_help: Når du markerer en cookie som nødvendig behøver du ikke vælge en service
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
         service:
