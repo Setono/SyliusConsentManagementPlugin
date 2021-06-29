@@ -63,3 +63,6 @@ setono_sylius_consent_management:
             introduction: "%channel% bruger cookies for at give dig den bedst mulige oplevelse på vores webshop"
             more_information: Mere information
             save: Gem
+        widget_configs: Widget configurations # todo translate
+        widget_config_header: Widget configuration # todo translate
+        widget_config_subheader: Manage the configuration of widgets on your different channels # todo translate

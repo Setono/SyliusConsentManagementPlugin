@@ -63,3 +63,6 @@ setono_sylius_consent_management:
             introduction: "%channel% gebruik cookies om je de best mogelijke ervaring in onze winkel te geven"
             more_information: Meer informatie
             save: Sparen
+        widget_configs: Widget configurations # todo translate
+        widget_config_header: Widget configuration # todo translate
+        widget_config_subheader: Manage the configuration of widgets on your different channels # todo translate
