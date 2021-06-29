@@ -30,5 +30,9 @@
         <indexes>
             <index columns="name"/>
         </indexes>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
     </mapped-superclass>
 </doctrine-mapping>
