@@ -7,8 +7,15 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 use Setono\ClientId\ClientId;
 use Setono\Consent\Consent;
 use Setono\Consent\Context\ConsentContextInterface;
+use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
+use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Model\Channel;
+use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Test\IntegrationTestCase;
 use Webmozart\Assert\Assert;
@@ -33,7 +40,31 @@ final class ExtensionTest extends IntegrationTestCase
                     }
                 };
 
-                return new Runtime($consentContext);
+                $widgetConfigProvider = new class implements WidgetConfigProviderInterface
+                {
+                    public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
+                    {
+                        return new WidgetConfig();
+                    }
+                };
+
+                $channelContext = new class implements ChannelContextInterface
+                {
+                    public function getChannel(): ChannelInterface
+                    {
+                        return new Channel();
+                    }
+                };
+
+                $localeContext = new class implements LocaleContextInterface
+                {
+                    public function getLocaleCode(): string
+                    {
+                        return 'en_US';
+                    }
+                };
+
+                return new Runtime($consentContext, $widgetConfigProvider, $channelContext, $localeContext);
             }
         };
 

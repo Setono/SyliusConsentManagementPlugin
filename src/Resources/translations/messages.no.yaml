@@ -30,6 +30,7 @@ setono_sylius_consent_management:
                     cookies: Informasjonskapsler
                     header: Samtykkeadministrasjon
                     services: Tjenester
+                    widget_configuration: Widget configuration # todo translate
     ui:
         categories:
             marketing: Markedsføring

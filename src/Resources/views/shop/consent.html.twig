@@ -1,6 +1,7 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+{% set widget_config = sscm_widget_config() %}
 
-<div class="sscm-consent-container">
+<div class="sscm-consent-container" data-id="{{ widget_config.id }}">
     {{ 'setono_sylius_consent_management.ui.widget.introduction'|trans({'%channel%' : sylius.channel.name}) }}
 
     <button type="button" class="ui button sscm-btn-more-information">{{ 'setono_sylius_consent_management.ui.widget.more_information'|trans }}</button>

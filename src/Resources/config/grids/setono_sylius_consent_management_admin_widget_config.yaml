@@ -1,0 +1,18 @@
+sylius_grid:
+    grids:
+        setono_sylius_consent_management_admin_widget_config:
+            driver:
+                options:
+                    class: "%setono_sylius_consent_management.model.widget_config.class%"
+            fields:
+                channel:
+                    type: string
+                    label: sylius.ui.channel
+                locale:
+                    type: string
+                    label: sylius.ui.locale
+            actions:
+                item:
+                    update:
+                        type: update
+

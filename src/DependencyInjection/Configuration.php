@@ -7,13 +7,16 @@ namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
+use Setono\SyliusConsentManagementPlugin\Form\Type\WidgetConfigType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
+use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -142,6 +145,22 @@ final class Configuration implements ConfigurationInterface
                                                 ->scalarNode('form')->defaultValue(ServiceTranslationType::class)->cannotBeEmpty()->end()
                                             ->end()
                                         ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('widget_config')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(WidgetConfig::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(WidgetConfigRepository::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('form')->defaultValue(WidgetConfigType::class)->end()
+                                        ->scalarNode('factory')->defaultValue(Factory::class)->end()
                                     ->end()
                                 ->end()
                             ->end()

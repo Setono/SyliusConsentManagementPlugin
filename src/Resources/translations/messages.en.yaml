@@ -30,6 +30,7 @@ setono_sylius_consent_management:
                     cookies: Cookies
                     header: Consent management
                     services: Services
+                    widget_configuration: Widget configuration
     ui:
         categories:
             marketing: Marketing
