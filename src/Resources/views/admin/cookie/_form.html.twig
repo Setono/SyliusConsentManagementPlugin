@@ -4,6 +4,13 @@
 <div class="ui two column stackable grid">
     <div class="column">
         <div class="ui segment">
+            <div class="ui icon info message">
+                <i class="info circle icon"></i>
+                <div class="content">
+                    <p>{{ 'setono_sylius_consent_management.form.cookie.necessary_help'|trans }}</p>
+                </div>
+            </div>
+
             {{ form_row(form.necessary) }}
             {{ form_row(form.service) }}
         </div>

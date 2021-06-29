@@ -29,12 +29,14 @@ final class CookieType extends AbstractResourceType
         $builder
             ->add('necessary', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.necessary',
+                'required' => false,
             ])
             ->add('service', EntityType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.service',
                 'placeholder' => 'setono_sylius_consent_management.form.cookie.service_placeholder',
                 'class' => $this->serviceClass,
                 'choice_label' => 'name',
+                'required' => false,
             ])
         ;
     }

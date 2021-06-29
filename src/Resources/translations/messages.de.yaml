@@ -8,6 +8,8 @@ setono_sylius_consent_management:
             preferences: Einstellungen
             statistics: Statistiken
         cookie:
+            necessary: Notwendig
+            necessary_help: Wenn Sie ein Cookie als notwendig markieren, müssen Sie keinen Dienst auswählen
             service: Dienstleistung
             service_placeholder: Wählen Sie einen Dienst...
         service:
