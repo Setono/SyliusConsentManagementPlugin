@@ -67,6 +67,8 @@ final class ServiceTest extends TestCase
     public function it_is_stringable(): void
     {
         $service = new Service();
+        $service->setCurrentLocale('en_US');
+
         self::assertSame('', (string) $service);
     }
 
