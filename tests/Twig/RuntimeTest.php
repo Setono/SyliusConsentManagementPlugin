@@ -111,6 +111,15 @@ final class RuntimeTest extends TestCase
         self::assertSame(' type="text/plain" data-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
     }
 
+    /**
+     * @test
+     */
+    public function it_returns_widget_config(): void
+    {
+        $runtime = self::getRuntime(self::getConsentContext());
+        self::assertInstanceOf(WidgetConfigInterface::class, $runtime->widgetConfig());
+    }
+
     private static function getRuntime(ConsentContextInterface $consentContext = null): Runtime
     {
         if (null === $consentContext) {
