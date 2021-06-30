@@ -16,4 +16,8 @@ interface WidgetConfigInterface extends ResourceInterface, ChannelAwareInterface
     public function getLocale(): ?LocaleInterface;
 
     public function setLocale(LocaleInterface $locale): void;
+
+    public function getUsageDescription(): ?string;
+
+    public function setUsageDescription(string $usageDescription): void;
 }

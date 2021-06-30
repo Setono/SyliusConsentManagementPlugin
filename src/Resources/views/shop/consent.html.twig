@@ -1,8 +1,9 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+{# @var \Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface widget_config #}
 {% set widget_config = sscm_widget_config() %}
 
 <div class="sscm-consent-container">
-    {{ 'setono_sylius_consent_management.ui.widget.introduction'|trans({'%channel%' : sylius.channel.name}) }}
+    {{ widget_config.usageDescription }}
 
     <button type="button" class="ui button sscm-btn-more-information">{{ 'setono_sylius_consent_management.ui.widget.more_information'|trans }}</button>
     <button type="submit" class="ui primary button" form="{{ form.vars.id }}" {{ sylius_test_html_attribute('sscm-btn-submit') }}>{{ 'setono_sylius_consent_management.ui.widget.accept'|trans }}</button>

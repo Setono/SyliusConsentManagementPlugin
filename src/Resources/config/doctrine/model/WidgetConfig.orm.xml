@@ -19,6 +19,8 @@
             <join-column name="locale_id" referenced-column-name="id" nullable="false" />
         </many-to-one>
 
+        <field name="usageDescription" type="text"/>
+
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
         </field>
