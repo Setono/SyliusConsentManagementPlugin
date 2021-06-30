@@ -40,5 +40,13 @@
 
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="setono_sylius_consent_management.event_subscriber.check_if_visitor_is_a_bot"
+                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\CheckIfVisitorIsABotSubscriber">
+            <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
+            <argument type="service" id="cache.app"/>
+
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
