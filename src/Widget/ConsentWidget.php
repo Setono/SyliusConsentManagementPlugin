@@ -13,7 +13,7 @@ final class ConsentWidget implements ConsentWidgetInterface
         return $this->show;
     }
 
-    public function setShow(bool $show = false): void
+    public function setShow(bool $show): void
     {
         $this->show = $show;
     }

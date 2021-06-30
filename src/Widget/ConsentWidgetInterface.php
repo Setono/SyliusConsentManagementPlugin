@@ -11,5 +11,5 @@ interface ConsentWidgetInterface
      */
     public function show(): bool;
 
-    public function setShow(bool $show = false): void;
+    public function setShow(bool $show): void;
 }
