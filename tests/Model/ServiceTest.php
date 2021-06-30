@@ -64,6 +64,15 @@ final class ServiceTest extends TestCase
     /**
      * @test
      */
+    public function it_is_stringable(): void
+    {
+        $service = new Service();
+        self::assertSame('', (string) $service);
+    }
+
+    /**
+     * @test
+     */
     public function it_is_extendable(): void
     {
         $service = new class() extends Service {
