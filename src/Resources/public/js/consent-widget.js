@@ -1,170 +1,70 @@
-(function (w, d) {
-  if(typeof sscmConsent !== "object") {
-    console.error('The constant "sscmConsent" is not present or has a wrong value. Did you forget to include {{ sscm_consent_tag() }} in the <head> of your document?');
-    return;
-  }
+"use strict";
 
-  const options = Object.assign({
-    'moreInformationClickHandler': function(e) {
-      d.querySelector('.sscm-consent-container').style.display = 'none';
-      $('.sscm-consent-modal')
-        .modal({
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var ConsentWidget = /*#__PURE__*/function () {
+  function ConsentWidget(document, options) {
+    _classCallCheck(this, ConsentWidget);
+
+    _defineProperty(this, "document", void 0);
+
+    _defineProperty(this, "options", void 0);
+
+    _defineProperty(this, "defaults", {
+      'closeModal': function closeModal(e) {
+        $('.sscm-consent-modal').modal('hide');
+      },
+      'dialogSelector': '.sscm-consent-dialog',
+      'formName': 'setono_sylius_consent_management_consent',
+      'modalSelector': '.sscm-consent-modal',
+      'moreInformationButtonSelector': '.sscm-btn-more-information',
+      'moreInformationClickHandler': function moreInformationClickHandler(e, d) {
+        d.querySelector('.sscm-consent-container').style.display = 'none';
+        $('.sscm-consent-modal').modal({
           keyboardShortcuts: false,
           closable: false
-        })
-        .modal('show')
-      ;
-    },
-    'closeModal': function(e) {
-      $('.sscm-consent-modal').modal('hide');
-    }
-  }, w.hasOwnProperty('sscmOptions') ? w['sscmOptions'] : {});
-
-  const formName = 'setono_sylius_consent_management_consent';
-
-  if (d.readyState === 'loading') {
-    d.addEventListener('DOMContentLoaded', onLoad);
-  } else {
-    onLoad();
-  }
-
-  function onLoad() {
-    addListeners();
-    d.dispatchEvent(createEvent('sscmInitialConsent'));
-    consentWidget();
-  }
-
-  function consentWidget() {
-    if(!(formName in d.forms)) {
-      return;
-    }
-
-    const form = d.forms[formName];
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      hideConsentModal();
-      hideConsentContainer();
-
-      const data = new URLSearchParams(new FormData(e.currentTarget));
-
-      sscmConsent.preferencesGranted = data.has(formName + '[preferencesGranted]');
-      sscmConsent.statisticsGranted = data.has(formName + '[statisticsGranted]');
-      sscmConsent.marketingGranted = data.has(formName + '[marketingGranted]');
-
-      d.dispatchEvent(createEvent('sscmConsentUpdated'));
-
-      const req = new XMLHttpRequest();
-
-      req.onreadystatechange = () => {
-        try {
-          if (req.readyState !== XMLHttpRequest.DONE) {
-            return;
-          }
-
-          if (req.status === 400) {
-            // todo replace the consent form with the response text to show errors
-            return;
-          }
-
-          if (req.status !== 204) {
-            alert('An error occurred'); // todo make this better
-          }
-        } catch (e) {
-          alert('An error occurred: ' + e.description); // todo make this better
-        }
-      };
-      req.open('POST', form.action);
-      req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      req.send(data);
-    });
-  }
-
-  function addListeners() {
-    d.addEventListener('sscmInitialConsent', runScriptTags);
-    d.addEventListener('sscmInitialConsent', fireDatalayerEvents);
-    d.addEventListener('sscmConsentUpdated', runScriptTags);
-    d.addEventListener('sscmConsentUpdated', fireDatalayerEvents);
-
-    const moreInfoBtn = d.querySelector('.sscm-btn-more-information');
-
-    if(null !== moreInfoBtn) {
-      moreInfoBtn.addEventListener('click', (e) => {
-        options.moreInformationClickHandler(e);
-      });
-    }
-  }
-
-  function fireDatalayerEvents(e) {
-    if(!w.hasOwnProperty('dataLayer')) {
-      return;
-    }
-    const dataLayer = w['dataLayer'];
-
-    const consent = e.detail.consent;
-
-    if(consent.marketingGranted) {
-      dataLayer.push({event: 'marketingGranted'});
-    }
-
-    if(consent.preferencesGranted) {
-      dataLayer.push({event: 'preferencesGranted'});
-    }
-
-    if(consent.statisticsGranted) {
-      dataLayer.push({event: 'statisticsGranted'});
-    }
-  }
-
-  function runScriptTags() {
-    d.querySelectorAll('script[data-consent]').forEach((script) => {
-      let consent = script.getAttribute('data-consent').valueOf() + 'Granted';
-
-      if(!sscmConsent.hasOwnProperty(consent) || sscmConsent[consent] !== true) {
-        return;
-      }
-
-      if(script.hasAttribute('src')) {
-        loadExternalScript(script.getAttribute('src'));
-        script.remove();
-      } else {
-        script.removeAttribute('type');
-        script.removeAttribute('data-consent');
-
-        window.eval(script.textContent); // should be called on the window to evaluate the script in the scope of window instead of local scope
+        }).modal('show');
       }
     });
+
+    this.document = document;
+    this.options = Object.assign(this.defaults, options);
+    this.init();
   }
 
-  function loadExternalScript(src) {
-    const script = document.createElement('script');
-    script.src = src;
+  _createClass(ConsentWidget, [{
+    key: "init",
+    value: function init() {
+      var _this = this;
 
-    document.head.appendChild(script);
-  }
+      this.document.addEventListener('sscm:initial-consent', runScriptTags);
+      this.document.addEventListener('sscm:initial-consent', fireDatalayerEvents);
+      this.document.addEventListener('sscm:consent-updated', runScriptTags);
+      this.document.addEventListener('sscm:consent-updated', fireDatalayerEvents);
+      var moreInfoBtn = this.document.querySelector(this.options.moreInformationButtonSelector);
 
-  function createEvent(name)
-  {
-    return new CustomEvent(name, {
-      bubbles: true,
-      cancelable: false,
-      detail: {
-        consent: sscmConsent
+      if (null !== moreInfoBtn) {
+        moreInfoBtn.addEventListener('click', function (e) {
+          _this.options.moreInformationClickHandler(e);
+        });
       }
-    });
-  }
-
-  function hideConsentContainer() {
-    const consentContainer = d.querySelector('.sscm-consent-container');
-    if(null === consentContainer) {
-      return;
     }
+  }]);
 
-    consentContainer.style.display = 'none';
-  }
+  return ConsentWidget;
+}();
 
-  function hideConsentModal() {
-    options.closeModal();
-  }
-})(window, document);
+var _default = new ConsentWidget(document, window.sscmConsentWidget);
+
+exports.default = _default;

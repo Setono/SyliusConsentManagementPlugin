@@ -1,18 +1,16 @@
-export class ConsentWidget {
+class ConsentWidget {
     document;
-    dialogSelector;
-    modalSelector;
     options;
     defaults = {
-        'closeModal': function(e) {
+        'closeModal': function (e) {
             $('.sscm-consent-modal').modal('hide');
         },
         'dialogSelector': '.sscm-consent-dialog',
         'formName': 'setono_sylius_consent_management_consent',
         'modalSelector': '.sscm-consent-modal',
         'moreInformationButtonSelector': '.sscm-btn-more-information',
-        'moreInformationClickHandler': function(e) {
-            this.document.querySelector('.sscm-consent-container').style.display = 'none';
+        'moreInformationClickHandler': function (e, d) {
+            d.querySelector('.sscm-consent-container').style.display = 'none';
             $('.sscm-consent-modal')
                 .modal({
                     keyboardShortcuts: false,
@@ -23,10 +21,8 @@ export class ConsentWidget {
         }
     };
 
-    constructor(document, modalSelector, options) {
+    constructor(document, options) {
         this.document = document;
-        this.dialogSelector = dialogSelector;
-        this.modalSelector = modalSelector;
         this.options = Object.assign(this.defaults, options);
 
         this.init();
@@ -40,10 +36,12 @@ export class ConsentWidget {
 
         const moreInfoBtn = this.document.querySelector(this.options.moreInformationButtonSelector);
 
-        if(null !== moreInfoBtn) {
+        if (null !== moreInfoBtn) {
             moreInfoBtn.addEventListener('click', (e) => {
                 this.options.moreInformationClickHandler(e);
             });
         }
     }
 }
+
+export default new ConsentWidget(document, window.sscmConsentWidget);
