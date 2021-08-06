@@ -16,6 +16,7 @@ class Service implements ServiceInterface
 
     use TranslatableTrait {
         __construct as private initializeTranslationsCollection;
+
         getTranslation as private doGetTranslation;
     }
 

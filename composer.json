@@ -47,7 +47,7 @@
         "psalm/plugin-phpunit": "^0.16.0",
         "psalm/plugin-symfony": "^2.1",
         "roave/security-advisories": "dev-latest",
-        "setono/code-quality-pack": "^2.1.1",
+        "setono/code-quality-pack": "^2.1.2",
         "setono/sylius-behat-pack": "^0.2.1",
         "sylius/sylius": "~1.9.4",
         "symfony/debug-bundle": "^5.3",
