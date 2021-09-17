@@ -47,12 +47,13 @@ final class Runtime implements RuntimeExtensionInterface
     {
         return $this->consentContext->getConsent()->isStatisticsConsentGranted();
     }
-    public function scriptTag(string $src, array $consents): string
+
+    public function scriptTag(string $src, string ...$consents): string
     {
         return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode('|', $consents), $src);
     }
 
-    public function scriptTagAttributes(array $consents): string
+    public function scriptTagAttributes(string ...$consents): string
     {
         return sprintf(' type="text/plain" data-sscm-consent="%s"', implode('|', $consents));
     }
