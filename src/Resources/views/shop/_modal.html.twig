@@ -1,0 +1,36 @@
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+<div id="sscm-w-modal">
+    <div id="sscm-wm-box" tabindex="0">
+        {{ form_start(form, {'attr': {'id': form.vars.id, 'novalidate': 'novalidate'}}) }}
+        <div id="sscm-wmb-top">
+            <div id="sscm-wmbt-title">{{ 'setono_sylius_consent_management.ui.widget.settings'|trans }}</div>
+            <button type="submit" class="sscm-button-green" id="sscm-wmbt-save" {{ sylius_test_html_attribute('sscm-btn-submit') }}>{{ 'setono_sylius_consent_management.ui.widget.save'|trans }}</button>
+        </div>
+        <div id="sscm-wmb-services">
+            {% for type in ['preferences', 'marketing', 'statistics'] %}
+                <div class="sscm-wmbs-entry">
+                    <div class="sscm-wmbse-title">
+                        {{- form_widget(
+                            form[type ~ 'Granted'],
+                            {'attr': {'class': 'sscm-wmbset-input', 'autocomplete': 'off'}}
+                        ) -}}
+                        {{- form_label(
+                            form[type ~ 'Granted'],
+                            ('setono_sylius_consent_management.ui.' ~ type)|trans,
+                        {'label_attr': {'class': 'sscm-wmbset-label'}}
+                        ) -}}
+                    </div>
+                    {% if services[type]|length > 0 %}
+                        <div class="sscm-wmbse-desc">
+                            {%- for service in services[type] -%}
+                                <p><strong>{{ service.name }}</strong><br>{{ service.description }}</p>
+                            {%- endfor -%}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
