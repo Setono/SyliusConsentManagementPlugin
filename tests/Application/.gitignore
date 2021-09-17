@@ -1,5 +1,9 @@
 /public/assets
+/public/build
 /public/css
+/public/js
+# We have our test JS file in this folder
+!/public/js/
 /public/media/*
 !/public/media/image/
 /public/media/image/*
