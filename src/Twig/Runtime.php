@@ -52,7 +52,7 @@ final class Runtime implements RuntimeExtensionInterface
     {
         foreach ($consents as $consent) {
             if (!$this->isGranted($consent)) {
-                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode('|', $consents), $src);
+                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode(',', $consents), $src);
             }
         }
 
@@ -63,7 +63,7 @@ final class Runtime implements RuntimeExtensionInterface
     {
         foreach ($consents as $consent) {
             if (!$this->isGranted($consent)) {
-                return sprintf(' type="text/plain" data-sscm-consent="%s"', implode('|', $consents));
+                return sprintf(' type="text/plain" data-sscm-consent="%s"', implode(',', $consents));
             }
         }
 

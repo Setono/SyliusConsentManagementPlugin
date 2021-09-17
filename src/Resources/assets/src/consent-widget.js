@@ -787,7 +787,7 @@ const sscm = {
    *  @param {HTMLScriptElement} elmScript
    */
   subscribeScript(elmScript) {
-    const consentNeeded = elmScript.dataset.sscmConsent.split('|');
+    const consentNeeded = elmScript.dataset.sscmConsent.split(',');
     if (consentNeeded.length === 0 || consentNeeded.some((c) => !sscmConsentTypes.includes(c))) {
       // eslint-disable-next-line no-console
       console.error('Setono Sylius Consent Management Plugin', new Error('Incorrect data-sscm-consent on script tag'));
