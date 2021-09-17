@@ -50,12 +50,24 @@ final class Runtime implements RuntimeExtensionInterface
 
     public function scriptTag(string $src, string ...$consents): string
     {
-        return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode('|', $consents), $src);
+        foreach ($consents as $consent) {
+            if (!$this->isGranted($consent)) {
+                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode('|', $consents), $src);
+            }
+        }
+
+        return sprintf('<script src="%s"></script>', $src);
     }
 
     public function scriptTagAttributes(string ...$consents): string
     {
-        return sprintf(' type="text/plain" data-sscm-consent="%s"', implode('|', $consents));
+        foreach ($consents as $consent) {
+            if (!$this->isGranted($consent)) {
+                return sprintf(' type="text/plain" data-sscm-consent="%s"', implode('|', $consents));
+            }
+        }
+
+        return '';
     }
 
     public function widgetConfig(): WidgetConfigInterface
@@ -64,5 +76,10 @@ final class Runtime implements RuntimeExtensionInterface
             $this->channelContext->getChannel(),
             $this->localeContext->getLocaleCode()
         );
+    }
+
+    private function isGranted(string $consent): bool
+    {
+        return $this->consentContext->getConsent()->isConsentGranted($consent);
     }
 }

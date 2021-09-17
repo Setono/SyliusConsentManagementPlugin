@@ -59,7 +59,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime();
 
-        self::assertSame('<script src="js/test.js" async></script>', $runtime->scriptTag('js/test.js', 'marketing'));
+        self::assertSame('<script src="js/test.js"></script>', $runtime->scriptTag('js/test.js', 'marketing'));
     }
 
     /**
@@ -69,7 +69,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime(self::getConsentContext(false));
 
-        self::assertSame('<script type="text/plain" data-consent="marketing" src="js/test.js" async></script>', $runtime->scriptTag('js/test.js', 'marketing'));
+        self::assertSame('<script type="text/plain" data-sscm-consent="marketing" data-sscm-src="js/test.js"></script>', $runtime->scriptTag('js/test.js', 'marketing'));
     }
 
     /**
@@ -89,7 +89,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime(self::getConsentContext(false));
 
-        self::assertSame(' type="text/plain" data-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
+        self::assertSame(' type="text/plain" data-sscm-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
     }
 
     /**
