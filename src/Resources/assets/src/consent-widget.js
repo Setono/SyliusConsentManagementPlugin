@@ -821,7 +821,6 @@ const sscm = {
    */
   loadScript(elmScript) {
     const script = document.createElement('script');
-    script.setAttribute('type', 'application/javascript');
     if (elmScript.dataset.sscmSrc) {
       script.setAttribute('src', elmScript.dataset.sscmSrc);
     } else {
