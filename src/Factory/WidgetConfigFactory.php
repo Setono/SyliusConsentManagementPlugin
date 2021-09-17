@@ -42,7 +42,7 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
     {
         /** @var LocaleInterface|object|null $locale */
         $locale = $this->localeRepository->findOneBy([
-            'code' => $localeCode
+            'code' => $localeCode,
         ]);
         Assert::isInstanceOf($locale, LocaleInterface::class);
 

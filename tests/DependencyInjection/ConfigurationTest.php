@@ -110,8 +110,8 @@ final class ConfigurationTest extends TestCase
             'sampling' => [
                 'rate' => 0.01,
                 'firewalls' => [
-                    'shop'
-                ]
+                    'shop',
+                ],
             ],
             'notify' => [
                 'johndoe@example.com',
