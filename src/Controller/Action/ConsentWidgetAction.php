@@ -74,10 +74,10 @@ final class ConsentWidgetAction
     public function __invoke(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
-            if ($this->consentWidget->hasBeenShown()) {
+            if (!$this->consentWidget->show()) {
                 return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
                     'decided' => true,
-                    'consent' => json_encode($this->consentContext->getConsent()),
+                    'consent' => json_encode($this->consentContext->getConsent(), \JSON_THROW_ON_ERROR),
                 ]), 200);
             }
 
