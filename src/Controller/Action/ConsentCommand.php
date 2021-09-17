@@ -8,18 +8,25 @@ use Setono\Consent\Consent;
 
 final class ConsentCommand
 {
-    public bool $marketingGranted = true;
+    public bool $marketingGranted;
 
-    public bool $preferencesGranted = true;
+    public bool $preferencesGranted;
 
-    public bool $statisticsGranted = true;
+    public bool $statisticsGranted;
 
-    public function __construct(?Consent $consent = null)
+    public function __construct(bool $marketingGranted = true, bool $preferencesGranted = true, bool $statisticsGranted = true)
     {
-        if (isset($consent)) {
-            $this->marketingGranted = $consent->isMarketingConsentGranted();
-            $this->preferencesGranted = $consent->isPreferencesConsentGranted();
-            $this->statisticsGranted = $consent->isStatisticsConsentGranted();
-        }
+        $this->marketingGranted = $marketingGranted;
+        $this->preferencesGranted = $preferencesGranted;
+        $this->statisticsGranted = $statisticsGranted;
+    }
+
+    public static function fromConsent(Consent $consent): self
+    {
+        return new self(
+            $consent->isMarketingConsentGranted(),
+            $consent->isPreferencesConsentGranted(),
+            $consent->isStatisticsConsentGranted()
+        );
     }
 }

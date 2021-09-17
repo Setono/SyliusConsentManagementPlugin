@@ -92,7 +92,7 @@ final class ConsentWidgetAction
         }
 
         if ($request->getContent() === 'lazy') {
-            $form = $this->formFactory->create(ConsentType::class, new ConsentCommand($this->consentContext->getConsent()));
+            $form = $this->formFactory->create(ConsentType::class, ConsentCommand::fromConsent($this->consentContext->getConsent()));
 
             return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/_modal.html.twig', [
                     'form' => $form->createView(),
