@@ -14,25 +14,6 @@
 
     {% block stylesheets %}
         {{ sylius_template_event('sylius.shop.layout.stylesheets') }}
-
-        <style>
-            .sscm-consent-container {
-                width: 100%;
-                position: fixed;
-                top: 0;
-                left: 0;
-                background: #fff;
-                padding: 10px;
-                z-index: 999;
-                box-shadow: 0 20px 50px 20px rgba(0,0,0,0.5);
-                max-height: 200px;
-                overflow-y: auto;
-            }
-
-            .sscm-consent-container .field {
-                margin-bottom: 10px;
-            }
-        </style>
     {% endblock %}
 
     {{ sylius_template_event('sylius.shop.layout.head') }}
@@ -44,8 +25,6 @@
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-KJHCKT9');</script>
     <!-- End Google Tag Manager -->
-
-    {{ sscm_consent_tag() }}
 </head>
 
 <body class="pushable">
