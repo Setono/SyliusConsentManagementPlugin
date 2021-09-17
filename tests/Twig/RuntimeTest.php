@@ -25,25 +25,6 @@ final class RuntimeTest extends TestCase
     /**
      * @test
      */
-    public function it_generates_consent_tag(): void
-    {
-        $runtime = self::getRuntime();
-        self::assertSame('<script>const sscmConsent = {"clientId":"client_id","marketingGranted":true,"preferencesGranted":true,"statisticsGranted":true}</script>', $runtime->consentTag());
-    }
-
-    /**
-     * @test
-     */
-    public function it_returns_client_id(): void
-    {
-        $runtime = self::getRuntime();
-
-        self::assertSame('client_id', $runtime->clientId());
-    }
-
-    /**
-     * @test
-     */
     public function it_returns_preferences_consent_status(): void
     {
         $runtime = self::getRuntime();
