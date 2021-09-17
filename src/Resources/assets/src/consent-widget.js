@@ -166,52 +166,54 @@ const sscm = {
       }, { passive: true });
 
       window.addEventListener('storage', (e) => {
-        if (e.key === 'sscmComs' && e.newValue) {
-          const storageData = JSON.parse(atob(e.newValue));
-          // eslint-disable-next-line default-case
-          switch (storageData[0]) {
-            case 'saving':
-              sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
-                .then(() => sscm.setPopup('save'))
-                .then(sscm.showPopup));
-              break;
-            case 'success':
-              sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
-                .then(() => sscm.submitSuccess(storageData[1], storageData[2], false)));
-              break;
-            case 'error':
-              sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
-                .then(() => sscm.submitError(false)));
-              break;
-            case 'open':
-              sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.hidePopup()])
-                .then(sscm.openModal));
-              break;
-            case 'close':
-              sscm.doAction(() => Promise.all([sscm.closeModal()])
-                .then(sscm.showIcon));
-              break;
-            case 'change':
-              // eslint-disable-next-line no-case-declarations
-              const input = document.getElementById(storageData[1]);
-              if (input) {
-                // eslint-disable-next-line prefer-destructuring
-                input.checked = storageData[2];
-              }
-              break;
-            case 'lazy':
-              if (sscm.lazy) {
-                sscm.lazy = false;
-                sscm.doAction(() => new Promise((resolve) => {
-                  requestAnimationFrame(() => {
-                    sscm.elmWidget.insertAdjacentHTML('beforeend', storageData[1]);
-                    resolve();
-                  });
-                })
-                  .then(sscm.setup));
-              }
-              break;
-          }
+        if(e.key !== 'sscmComs' || null === e.newValue || '' === e.newValue) {
+          return;
+        }
+
+        const storageData = JSON.parse(atob(e.newValue));
+        // eslint-disable-next-line default-case
+        switch (storageData[0]) {
+          case 'saving':
+            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+              .then(() => sscm.setPopup('save'))
+              .then(sscm.showPopup));
+            break;
+          case 'success':
+            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+              .then(() => sscm.submitSuccess(storageData[1], storageData[2], false)));
+            break;
+          case 'error':
+            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+              .then(() => sscm.submitError(false)));
+            break;
+          case 'open':
+            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.hidePopup()])
+              .then(sscm.openModal));
+            break;
+          case 'close':
+            sscm.doAction(() => Promise.all([sscm.closeModal()])
+              .then(sscm.showIcon));
+            break;
+          case 'change':
+            // eslint-disable-next-line no-case-declarations
+            const input = document.getElementById(storageData[1]);
+            if (input) {
+              // eslint-disable-next-line prefer-destructuring
+              input.checked = storageData[2];
+            }
+            break;
+          case 'lazy':
+            if (sscm.lazy) {
+              sscm.lazy = false;
+              sscm.doAction(() => new Promise((resolve) => {
+                requestAnimationFrame(() => {
+                  sscm.elmWidget.insertAdjacentHTML('beforeend', storageData[1]);
+                  resolve();
+                });
+              })
+                .then(sscm.setup));
+            }
+            break;
         }
       }, { passive: true });
 
