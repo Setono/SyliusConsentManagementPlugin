@@ -154,7 +154,7 @@ const sscm = {
           sscm.doAction(() => sscm.hideBanner()
             .then(sscm.openModal)
             .then(() => {
-              localStorage.setItem('sscmComs', btoa(JSON.stringify(['open'])));
+              localStorage.setItem('sscmComs', JSON.stringify(['open']));
               localStorage.removeItem('sscmComs');
             }));
         }, { passive: true });
@@ -170,7 +170,7 @@ const sscm = {
           return;
         }
 
-        const storageData = JSON.parse(atob(e.newValue));
+        const storageData = JSON.parse(e.newValue);
         // eslint-disable-next-line default-case
         switch (storageData[0]) {
           case 'saving':
@@ -286,7 +286,7 @@ const sscm = {
 
       xhr.onload = () => {
         if (xhr.status === 200) {
-          localStorage.setItem('sscmComs', btoa(JSON.stringify(['lazy', xhr.responseText])));
+          localStorage.setItem('sscmComs', JSON.stringify(['lazy', xhr.responseText]));
           localStorage.removeItem('sscmComs');
 
           requestAnimationFrame(() => {
@@ -341,7 +341,7 @@ const sscm = {
 
     sscm.widgetForm.addEventListener('change', (e) => {
       if (e.target.nodeName === 'INPUT') {
-        localStorage.setItem('sscmComs', btoa(JSON.stringify(['change', e.target.id, e.target.checked])));
+        localStorage.setItem('sscmComs', JSON.stringify(['change', e.target.id, e.target.checked]));
         localStorage.removeItem('sscmComs');
       }
     }, { passive: true });
@@ -383,7 +383,7 @@ const sscm = {
       sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
         .then(sscm.showIcon)
         .then(() => {
-          localStorage.setItem('sscmComs', btoa(JSON.stringify(['close'])));
+          localStorage.setItem('sscmComs', JSON.stringify(['close']));
           localStorage.removeItem('sscmComs');
         }));
       return; // Consent did not change.
@@ -413,7 +413,7 @@ const sscm = {
       .then(() => sscm.setPopup('save'))
       .then(sscm.showPopup)
       .then(() => new Promise((resolve) => {
-        localStorage.setItem('sscmComs', btoa(JSON.stringify(['saving'])));
+        localStorage.setItem('sscmComs', JSON.stringify(['saving']));
         localStorage.removeItem('sscmComs');
 
         xhr.send(new URLSearchParams(formData));
@@ -469,7 +469,7 @@ const sscm = {
       sscm.doAction(() => sscm.setPopup('reload')
         .then(() => {
           if (initiator) {
-            localStorage.setItem('sscmComs', btoa(JSON.stringify(['success', selectedConsent, changedConsent])));
+            localStorage.setItem('sscmComs', JSON.stringify(['success', selectedConsent, changedConsent]));
             localStorage.removeItem('sscmComs');
           }
         }));
@@ -477,7 +477,7 @@ const sscm = {
       sscm.doAction(() => sscm.hidePopup().then(sscm.showIcon)
         .then(() => {
           if (initiator) {
-            localStorage.setItem('sscmComs', btoa(JSON.stringify(['success', selectedConsent, changedConsent])));
+            localStorage.setItem('sscmComs', JSON.stringify(['success', selectedConsent, changedConsent]));
             localStorage.removeItem('sscmComs');
           }
         }));
@@ -497,7 +497,7 @@ const sscm = {
     sscm.doAction(() => sscm.setPopup('error')
       .then(() => {
         if (initiator) {
-          localStorage.setItem('sscmComs', btoa(JSON.stringify(['error'])));
+          localStorage.setItem('sscmComs', JSON.stringify(['error']));
           localStorage.removeItem('sscmComs');
         }
       }));
