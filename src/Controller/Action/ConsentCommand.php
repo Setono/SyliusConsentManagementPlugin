@@ -14,7 +14,8 @@ final class ConsentCommand
 
     public bool $statisticsGranted = true;
 
-    public function __construct(?Consent $consent = null) {
+    public function __construct(?Consent $consent = null)
+    {
         if (isset($consent)) {
             $this->marketingGranted = $consent->isMarketingConsentGranted();
             $this->preferencesGranted = $consent->isPreferencesConsentGranted();
