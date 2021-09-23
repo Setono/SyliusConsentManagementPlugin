@@ -46,8 +46,6 @@ const sscm = {
   /**
    * @type {Object}
    * @property {?sscmAnimationCallback} hideBanner
-   * @property {?sscmAnimationCallback} showIcon
-   * @property {?sscmAnimationCallback} hideIcon
    * @property {?sscmAnimationCallback} openModal
    * @property {?sscmAnimationCallback} closeModal
    * @property {?sscmAnimationCallback} showPopup
@@ -55,8 +53,6 @@ const sscm = {
    */
   options: {
     hideBanner: null,
-    showIcon: null,
-    hideIcon: null,
     openModal: null,
     closeModal: null,
     showPopup: null,
@@ -112,10 +108,6 @@ const sscm = {
    * your code is done, #2 is the element in question.
    * @param {sscmAnimationCallback} [options.hideBanner] Optional callback which is called when the info banner is
    * hidden.
-   * @param {sscmAnimationCallback} [options.showIcon] Optional callback which is called when the 'access settings'
-   * icon is shown.
-   * @param {sscmAnimationCallback} [options.hideIcon] Optional callback which is called when the 'access settings'
-   * icon is hidden.
    * @param {sscmAnimationCallback} [options.openModal] Optional callback which is called when the settings modal is
    * shown.
    * @param {sscmAnimationCallback} [options.closeModal] Optional callback which is called when the settings modal is
@@ -132,8 +124,6 @@ const sscm = {
       sscm.options = { ...sscm.options, ...options };
 
       sscm.elmWidget = document.getElementById('sscm-widget');
-      sscm.elmIcon = document.getElementById('sscm-w-icon');
-      sscm.elmIconButton = document.getElementById('sscm-wi-button');
 
       sscm.decided = sscm.elmWidget.dataset.sscmDecided === '1';
 
@@ -160,11 +150,6 @@ const sscm = {
         }, { passive: true });
       }
 
-      sscm.elmIconButton.addEventListener('click', () => {
-        sscm.doAction(() => sscm.hideIcon()
-          .then(sscm.openModal));
-      }, { passive: true });
-
       window.addEventListener('storage', (e) => {
         if(e.key !== 'sscmComs' || null === e.newValue || '' === e.newValue) {
           return;
@@ -174,25 +159,24 @@ const sscm = {
         // eslint-disable-next-line default-case
         switch (storageData[0]) {
           case 'saving':
-            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
               .then(() => sscm.setPopup('save'))
               .then(sscm.showPopup));
             break;
           case 'success':
-            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
               .then(() => sscm.submitSuccess(storageData[1], storageData[2], false)));
             break;
           case 'error':
-            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.closeModal()])
+            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
               .then(() => sscm.submitError(false)));
             break;
           case 'open':
-            sscm.doAction(() => Promise.all([sscm.hideIcon(), sscm.hideBanner(), sscm.hidePopup()])
+            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.hidePopup()])
               .then(sscm.openModal));
             break;
           case 'close':
-            sscm.doAction(() => Promise.all([sscm.closeModal()])
-              .then(sscm.showIcon));
+            sscm.doAction(() => sscm.closeModal());
             break;
           case 'change':
             // eslint-disable-next-line no-case-declarations
@@ -245,10 +229,8 @@ const sscm = {
     if (!sscm.error) {
       if (sscm.lazy) {
         sscm.actionPromise = sscm.actionPromise
-          .then(() => sscm.setIcon('spin'))
           .then(sscm.loadLazyElements)
           .then(actions)
-          .then(() => sscm.setIcon('cookie'))
           .catch(sscm.actionError);
       } else {
         sscm.actionPromise = sscm.actionPromise
@@ -266,9 +248,9 @@ const sscm = {
     sscm.error = true;
     // eslint-disable-next-line no-console
     console.error('Setono Sylius Consent Management Plugin', err);
-    Promise.all([sscm.hidePopup(), sscm.hideBanner(), sscm.closeModal()])
-      .then(() => sscm.setIcon('warn'))
-      .then(sscm.showIcon);
+    sscm.hidePopup();
+    sscm.hideBanner();
+    sscm.closeModal();
   },
 
   /**
@@ -327,8 +309,7 @@ const sscm = {
     sscm.elmPopupReload = document.getElementById('sscm-wpbb-reload');
 
     sscm.elmPopupClose.addEventListener('click', () => {
-      sscm.doAction(() => sscm.hidePopup()
-        .then(sscm.showIcon));
+      sscm.doAction(() => sscm.hidePopup());
     }, { passive: true });
 
     sscm.elmPopupReload.addEventListener('click', () => {
@@ -381,7 +362,6 @@ const sscm = {
 
     if (sscm.decided && changedConsent.length === 0) {
       sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
-        .then(sscm.showIcon)
         .then(() => {
           localStorage.setItem('sscmComs', JSON.stringify(['close']));
           localStorage.removeItem('sscmComs');
@@ -474,7 +454,7 @@ const sscm = {
           }
         }));
     } else {
-      sscm.doAction(() => sscm.hidePopup().then(sscm.showIcon)
+      sscm.doAction(() => sscm.hidePopup()
         .then(() => {
           if (initiator) {
             localStorage.setItem('sscmComs', JSON.stringify(['success', selectedConsent, changedConsent]));
@@ -566,60 +546,6 @@ const sscm = {
           sscm.elmWidget.dataset.sscmShow = '';
           if (sscm.options.hideBanner) {
             sscm.options.hideBanner(resolve, sscm.elmBanner);
-          } else {
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  },
-
-  /**
-   * @return {Promise}
-   */
-  showIcon() {
-    return new Promise((resolve) => {
-      if (sscm.elmWidget.dataset.sscmShow !== 'icon') {
-        requestAnimationFrame(() => {
-          sscm.elmWidget.dataset.sscmShow = 'icon';
-          if (sscm.options.showIcon) {
-            sscm.options.showIcon(resolve, sscm.elmIcon);
-          } else {
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  },
-
-  /**
-   * Internal function: Sets which image to show on the icon button.
-   * @param {'cookie','spin','warn'} icon
-   * @return {Promise}
-   */
-  setIcon(icon) {
-    return new Promise((resolve) => {
-      requestAnimationFrame(() => {
-        sscm.elmIconButton.dataset.sscmIcon = icon;
-        resolve();
-      });
-    });
-  },
-
-  /**
-   * @return {Promise}
-   */
-  hideIcon() {
-    return new Promise((resolve) => {
-      if (sscm.elmWidget.dataset.sscmShow === 'icon') {
-        requestAnimationFrame(() => {
-          sscm.elmWidget.dataset.sscmShow = '';
-          if (sscm.options.hideIcon) {
-            sscm.options.hideIcon(resolve, sscm.elmIcon);
           } else {
             resolve();
           }
