@@ -48,15 +48,11 @@ const sscm = {
    * @property {?sscmAnimationCallback} hideBanner
    * @property {?sscmAnimationCallback} openModal
    * @property {?sscmAnimationCallback} closeModal
-   * @property {?sscmAnimationCallback} showPopup
-   * @property {?sscmAnimationCallback} hidePopup
    */
   options: {
     hideBanner: null,
     openModal: null,
     closeModal: null,
-    showPopup: null,
-    hidePopup: null,
   },
 
   /**
@@ -106,8 +102,6 @@ const sscm = {
    * shown.
    * @param {sscmAnimationCallback} [options.closeModal] Optional callback which is called when the settings modal is
    * hidden.
-   * @param {sscmAnimationCallback} [options.showPopup] Optional callback which is called when the info popup is shown.
-   * @param {sscmAnimationCallback} [options.hidePopup] Optional callback which is called when the info popup is hidden.
    */
   init(options = {}) {
     try {
@@ -151,9 +145,10 @@ const sscm = {
         // eslint-disable-next-line default-case
         switch (storageData[0]) {
           case 'saving':
-            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
-              .then(() => sscm.setPopup('save'))
-              .then(sscm.showPopup));
+            sscm.doAction(function() {
+              sscm.hideBanner();
+              sscm.closeModal();
+            });
             break;
           case 'success':
             sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
@@ -164,7 +159,7 @@ const sscm = {
               .then(() => sscm.submitError(false)));
             break;
           case 'open':
-            sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.hidePopup()])
+            sscm.doAction(() => Promise.all([sscm.hideBanner()])
               .then(sscm.openModal));
             break;
           case 'close':
@@ -201,8 +196,8 @@ const sscm = {
   },
 
   /**
-   * Internal function: Wrapper function used when doing "animations" such as showing or hiding modal, popup and son
-   * on. It handles catching errors
+   * Internal function: Wrapper function used when doing "animations" such as showing or hiding modal, and so on.
+   * It handles catching errors
    * @param {Function<Promise>} actions
    */
   doAction(actions) {
@@ -221,13 +216,12 @@ const sscm = {
     sscm.error = true;
     // eslint-disable-next-line no-console
     console.error('Setono Sylius Consent Management Plugin', err);
-    sscm.hidePopup();
     sscm.hideBanner();
     sscm.closeModal();
   },
 
   /**
-   * Internal function: Handles setup of the modal and popup (adds event listeners)
+   * Internal function: Handles setup of the modal (adds event listeners)
    */
   setup() {
     if (!document.forms[sscmFormName]) {
@@ -237,20 +231,6 @@ const sscm = {
     sscm.widgetForm = document.forms[sscmFormName];
 
     sscm.elmModal = document.getElementById('sscm-w-modal');
-    sscm.elmPopup = document.getElementById('sscm-w-popup');
-    sscm.elmPopupText = document.getElementById('sscm-wpb-text');
-    sscm.elmPopupClose = document.getElementById('sscm-wpbb-close');
-    sscm.elmPopupReload = document.getElementById('sscm-wpbb-reload');
-
-    sscm.elmPopupClose.addEventListener('click', () => {
-      sscm.doAction(() => sscm.hidePopup());
-    }, { passive: true });
-
-    sscm.elmPopupReload.addEventListener('click', () => {
-      sscm.doAction(() => sscm.reloadPage()
-        .then(() => sscm.setPopup('wait'))
-        .finally(() => window.location.reload()));
-    }, { passive: true });
 
     sscm.widgetForm.addEventListener('submit', sscm.consentSubmit, { passive: false });
 
@@ -324,8 +304,6 @@ const sscm = {
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
     sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
-      .then(() => sscm.setPopup('save'))
-      .then(sscm.showPopup)
       .then(() => new Promise((resolve) => {
         localStorage.setItem('sscmComs', JSON.stringify(['saving']));
         localStorage.removeItem('sscmComs');
@@ -347,8 +325,6 @@ const sscm = {
       sscm.widgetForm.querySelector(`input[name="${sscmFormName}[${c}Granted]"]`).checked = sscm.consent[c];
     });
 
-    let reload = false;
-
     sscm.fireDatalayerEvents();
 
     Object.keys(sscm.subscribers).forEach((subId) => {
@@ -357,20 +333,12 @@ const sscm = {
 
         // eslint-disable-next-line default-case
         switch (typeof sscm.subscribers[subId].target) {
-          case 'function':
-            if (sscm.subscribers[subId].target(consentGranted) && !reload && sscm.subscribers[subId].init) {
-              reload = true;
-            }
-            break;
-
           case 'object':
             if (consentGranted) {
               if (!sscm.subscribers[subId].init) {
                 sscm.loadScript(sscm.subscribers[subId].target);
                 sscm.subscribers[subId].init = true;
               }
-            } else if (!reload && sscm.subscribers[subId].init) {
-              reload = true;
             }
             break;
         }
@@ -378,24 +346,6 @@ const sscm = {
     });
 
     document.dispatchEvent(sscm.createEvent('sscmConsentUpdated'));
-
-    if (reload && sscm.decided) {
-      sscm.doAction(() => sscm.setPopup('reload')
-        .then(() => {
-          if (initiator) {
-            localStorage.setItem('sscmComs', JSON.stringify(['success', selectedConsent, changedConsent]));
-            localStorage.removeItem('sscmComs');
-          }
-        }));
-    } else {
-      sscm.doAction(() => sscm.hidePopup()
-        .then(() => {
-          if (initiator) {
-            localStorage.setItem('sscmComs', JSON.stringify(['success', selectedConsent, changedConsent]));
-            localStorage.removeItem('sscmComs');
-          }
-        }));
-    }
 
     sscm.decided = true;
   },
@@ -408,13 +358,6 @@ const sscm = {
     sscmConsentTypes.forEach((c) => {
       sscm.widgetForm.querySelector(`input[name="${sscmFormName}[${c}Granted]"]`).checked = sscm.consent[c];
     });
-    sscm.doAction(() => sscm.setPopup('error')
-      .then(() => {
-        if (initiator) {
-          localStorage.setItem('sscmComs', JSON.stringify(['error']));
-          localStorage.removeItem('sscmComs');
-        }
-      }));
   },
 
   /**
@@ -452,22 +395,6 @@ const sscm = {
       // eslint-disable-next-line no-console
       console.error('Setono Sylius Consent Management Plugin', err);
     }
-  },
-
-  /**
-   * @return {Promise}
-   */
-  reloadPage() {
-    return new Promise((resolve, reject) => {
-      if (sscm.elmPopup && sscm.elmWidget.dataset.sscmShow === 'popup') {
-        requestAnimationFrame(() => {
-          sscm.elmWidget.dataset.sscmShow = 'reload';
-          resolve();
-        });
-      } else {
-        reject(new Error('Internal error #1'));
-      }
-    });
   },
 
   /**
@@ -530,92 +457,6 @@ const sscm = {
         });
       } else {
         resolve();
-      }
-    });
-  },
-
-  /**
-   * @return {Promise}
-   */
-  showPopup() {
-    return new Promise((resolve, reject) => {
-      if (sscm.elmPopup) {
-        if (sscm.elmWidget.dataset.sscmShow !== 'popup') {
-          requestAnimationFrame(() => {
-            sscm.elmWidget.dataset.sscmShow = 'popup';
-            if (sscm.options.showPopup) {
-              sscm.options.showPopup(resolve, sscm.elmPopup);
-            } else {
-              resolve();
-            }
-          });
-        } else {
-          resolve();
-        }
-      } else {
-        reject(new Error('Internal error #3'));
-      }
-    });
-  },
-
-  /**
-   * @return {Promise}
-   */
-  hidePopup() {
-    return new Promise((resolve) => {
-      if (sscm.elmPopup && sscm.elmWidget.dataset.sscmShow === 'popup') {
-        requestAnimationFrame(() => {
-          sscm.elmWidget.dataset.sscmShow = '';
-          if (sscm.options.hidePopup) {
-            sscm.options.hidePopup(resolve, sscm.elmPopup);
-          } else {
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  },
-
-  /**
-   * Internal function: Sets which text to show in the popup.
-   * @param {'save','reload','error','wait'} state
-   * @return {Promise}
-   */
-  setPopup(state) {
-    return new Promise((resolve, reject) => {
-      if (sscm.elmPopup) {
-        requestAnimationFrame(() => {
-          switch (state) {
-            case 'save':
-              sscm.elmPopupText.dataset.sscmText = 'save';
-              sscm.elmPopupClose.disabled = true;
-              sscm.elmPopupReload.disabled = true;
-              break;
-            case 'reload':
-              sscm.elmPopupText.dataset.sscmText = 'reload';
-              sscm.elmPopupClose.disabled = false;
-              sscm.elmPopupReload.disabled = false;
-              break;
-            case 'error':
-              sscm.elmPopupText.dataset.sscmText = 'error';
-              sscm.elmPopupClose.disabled = false;
-              sscm.elmPopupReload.disabled = false;
-              break;
-            case 'wait':
-              sscm.elmPopupText.dataset.sscmText = 'wait';
-              sscm.elmPopupClose.disabled = true;
-              sscm.elmPopupReload.disabled = true;
-              break;
-            default:
-              reject(new Error('Internal error #4'));
-              return;
-          }
-          resolve();
-        });
-      } else {
-        reject(new Error('Internal error #5'));
       }
     });
   },
