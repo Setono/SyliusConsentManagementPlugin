@@ -171,14 +171,6 @@ const sscm = {
           case 'close':
             sscm.doAction(() => sscm.closeModal());
             break;
-          case 'change':
-            // eslint-disable-next-line no-case-declarations
-            const input = document.getElementById(storageData[1]);
-            if (input) {
-              // eslint-disable-next-line prefer-destructuring
-              input.checked = storageData[2];
-            }
-            break;
         }
       }, { passive: true });
 
@@ -231,20 +223,13 @@ const sscm = {
    */
   setup() {
     if (!document.forms[sscmFormName]) {
-      throw (new Error('The sscm consent form is missing.'));
+      throw new Error('The sscm consent form is missing.');
     }
-
-    sscm.widgetForm = document.forms[sscmFormName];
 
     sscm.elmModal = document.getElementById('sscm-w-modal');
 
+    sscm.widgetForm = document.forms[sscmFormName];
     sscm.widgetForm.addEventListener('submit', sscm.consentSubmit, { passive: false });
-
-    sscm.widgetForm.addEventListener('change', (e) => {
-      if (e.target.nodeName === 'INPUT') {
-        sscm.setStorage(['change', e.target.id, e.target.checked]);
-      }
-    }, { passive: true });
   },
 
   /**
