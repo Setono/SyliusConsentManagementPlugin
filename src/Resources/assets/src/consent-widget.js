@@ -2,23 +2,23 @@
 
 /**
  * Type defining the valid consent strings. Only used for JSDoc and IDE autocomplete
- * @typedef {'preferences'|'statistics'|'marketing'} sscmConsentAvailable
+ * @typedef {'preferences'|'statistics'|'marketing'} consentAvailable
  */
 
 /**
  * Type defining a key/value pair where the keys are any valid consent string and the value is a boolean, which shows
  * if that consent has been granted (true) or not (false). Only used for JSDoc and IDE autocomplete
- * @typedef {Object<sscmConsentAvailable, boolean>} sscmConsentGranted
+ * @typedef {Object<consentAvailable, boolean>} sscmConsentGranted
  * */
 
 /**
- * @callback sscmAnimationCallback
+ * @callback animationCallback
  * @param {CallableFunction} resolve
  * @param {HTMLElement} element
  */
 
 /**
- * @callback sscmConsentCallback
+ * @callback consentCallback
  * @param {boolean} consent Is true when all the required consents are granted by the user.
  * @return {boolean} If the callback returns true, sscm will request the user to reload the page for changes to take
  * effect. This is only honored on subsequent calls to the callback after first init.
@@ -31,30 +31,25 @@
 let initResolve;
 
 /**
- * Defines the form name used in the Sylius plugin.
- * @type {string}
- */
-const sscmFormName = 'setono_sylius_consent_management_consent';
-
-/**
  * Array with all the consent types.
- * @type {Array<sscmConsentAvailable>}
+ * @type {Array<consentAvailable>}
  */
-const sscmConsentTypes = ['preferences', 'statistics', 'marketing'];
+const consentTypes = ['preferences', 'statistics', 'marketing'];
 
 /**
  * The key used to when setting items in local storage (which is used to communicate with other tabs)
  *
  * @type {string}
  */
-const localStorageKey = 'sscmComs';
+const localStorageKey = 'sscm_tab_communication';
 
 const sscm = {
   /**
    * @type {Object}
-   * @property {?sscmAnimationCallback} hideBanner
-   * @property {?sscmAnimationCallback} openModal
-   * @property {?sscmAnimationCallback} closeModal
+   * @property {?animationCallback} callbacks.hideBanner
+   * @property {?animationCallback} callbacks.openModal
+   * @property {?animationCallback} callbacks.closeModal
+   * @property {string} callbacks.formName
    */
   options: {
     callbacks: {
@@ -62,6 +57,7 @@ const sscm = {
       openModal: null,
       closeModal: null,
     },
+    formName: 'setono_sylius_consent_management_consent',
   },
 
   /**
@@ -78,11 +74,11 @@ const sscm = {
   error: false,
 
   /** @type {sscmConsentGranted} */
-  consent: Object.fromEntries(sscmConsentTypes.map((c) => [c, false])),
+  consent: Object.fromEntries(consentTypes.map((c) => [c, false])),
 
   /**
    * Stores all the consent subscribers, be it script tags or callbacks.
-   * @type {Object<number, {needs: Array<sscmConsentAvailable>, init: boolean, target: sscmConsentCallback|HTMLScriptElement}>}
+   * @type {Object<number, {needs: Array<consentAvailable>, init: boolean, target: consentCallback|HTMLScriptElement}>}
    */
   subscribers: {},
 
@@ -101,16 +97,15 @@ const sscm = {
   actionPromise: Promise.resolve(),
 
   /**
-   * Run this function to initialise the consent system.
+   * Run this function to initialise the consent system
+   *
    * @param {Object} options All the callback options are called when the specific event happens. Such as when the
    * banner is hidden. The callbacks are called with two arguments: #1 is a resolve callback, which you must run when
-   * your code is done, #2 is the element in question.
-   * @param {sscmAnimationCallback} [options.callbacks.hideBanner] Optional callback which is called when the info banner is
-   * hidden.
-   * @param {sscmAnimationCallback} [options.callbacks.openModal] Optional callback which is called when the settings modal is
-   * shown.
-   * @param {sscmAnimationCallback} [options.callbacks.closeModal] Optional callback which is called when the settings modal is
-   * hidden.
+   * your code is done, #2 is the element in question
+   * @param {animationCallback} [options.callbacks.hideBanner] Optional callback which is called when the info banner is hidden
+   * @param {animationCallback} [options.callbacks.openModal] Optional callback which is called when the settings modal is shown
+   * @param {animationCallback} [options.callbacks.closeModal] Optional callback which is called when the settings modal is hidden
+   * @param {string} [options.formName] Defines the form name used in the Sylius plugin
    */
   init(options = {}) {
     try {
@@ -126,7 +121,7 @@ const sscm = {
 
       if (sscm.decided) {
         const consent = JSON.parse(sscm.elmWidget.dataset.sscmConsent);
-        sscmConsentTypes.forEach((c) => {
+        consentTypes.forEach((c) => {
           sscm.consent[c] = consent[`${c}Granted`] === true;
         });
       } else {
@@ -218,13 +213,13 @@ const sscm = {
    * Internal function: Handles setup of the modal (adds event listeners)
    */
   setup() {
-    if (!document.forms[sscmFormName]) {
-      throw new Error(`The consent form ("${sscmFormName}") is missing`);
+    if (!document.forms[sscm.options.formName]) {
+      throw new Error(`The consent form ("${sscm.options.formName}") is missing`);
     }
 
     sscm.elmModal = document.getElementById('sscm-w-modal');
 
-    sscm.widgetForm = document.forms[sscmFormName];
+    sscm.widgetForm = document.forms[sscm.options.formName];
     sscm.widgetForm.addEventListener('submit', sscm.consentSubmit, { passive: false });
   },
 
@@ -249,12 +244,12 @@ const sscm = {
     const formData = new FormData(sscm.widgetForm);
 
     /** @type {sscmConsentGranted} */
-    const selectedConsent = Object.fromEntries(sscmConsentTypes.map((c) => [c, formData.has(`${sscmFormName}[${c}Granted]`)]));
+    const selectedConsent = Object.fromEntries(consentTypes.map((c) => [c, formData.has(`${sscm.options.formName}[${c}Granted]`)]));
 
-    /** @type {Array<sscmConsentAvailable>} */
+    /** @type {Array<consentAvailable>} */
     const changedConsent = [];
 
-    sscmConsentTypes.forEach((c) => {
+    consentTypes.forEach((c) => {
       if (sscm.consent[c] !== selectedConsent[c]) {
         changedConsent.push(c);
       }
@@ -298,13 +293,13 @@ const sscm = {
   /**
    * Internal function: Handles successful submits of the consent choices.
    * @param {sscmConsentGranted} selectedConsent
-   * @param {Array<sscmConsentAvailable>} changedConsent
+   * @param {Array<consentAvailable>} changedConsent
    * @param {boolean} initiator=true If set to false other tabs won't be informed about the success via localStorage.
    */
   submitSuccess(selectedConsent, changedConsent, initiator = true) {
-    sscmConsentTypes.forEach((c) => {
+    consentTypes.forEach((c) => {
       sscm.consent[c] = selectedConsent[c];
-      sscm.widgetForm.querySelector(`input[name="${sscmFormName}[${c}Granted]"]`).checked = sscm.consent[c];
+      sscm.widgetForm.querySelector(`input[name="${sscm.options.formName}[${c}Granted]"]`).checked = sscm.consent[c];
     });
 
     sscm.fireDatalayerEvents();
@@ -336,8 +331,8 @@ const sscm = {
    * Internal function: Handles errors when trying to submit the consent choices.
    */
   submitError() {
-    sscmConsentTypes.forEach((c) => {
-      sscm.widgetForm.querySelector(`input[name="${sscmFormName}[${c}Granted]"]`).checked = sscm.consent[c];
+    consentTypes.forEach((c) => {
+      sscm.widgetForm.querySelector(`input[name="${sscm.options.formName}[${c}Granted]"]`).checked = sscm.consent[c];
     });
   },
 
@@ -365,7 +360,7 @@ const sscm = {
     }
 
     try {
-      sscmConsentTypes.forEach((v) => {
+      consentTypes.forEach((v) => {
         if (sscm.consent[v]) {
           window.dataLayer.push({ event: `${v}Granted` });
         } else if (sscm.decided) {
@@ -444,14 +439,14 @@ const sscm = {
 
   /**
    * Subscribes callbacks that are run when changes to consent happens.
-   *  @param {Array<sscmConsentAvailable>} consentNeeded This array contains the consents that the subscriber needs
+   *  @param {Array<consentAvailable>} consentNeeded This array contains the consents that the subscriber needs
    *  granted by the user.
-   *  @param {sscmConsentCallback} consentCallback The callback is called right away if sscm is ready (init() has run)
+   *  @param {consentCallback} consentCallback The callback is called right away if sscm is ready (init() has run)
    *  or when sscm is ready later. After this the callback is called each time consent changes (only happens if the
    *  consent changes affects any of the selected consent types).
    */
   subscribeCallback(consentNeeded, consentCallback) {
-    if (typeof consentNeeded !== 'object' || consentNeeded.length === 0 || consentNeeded.some((c) => !sscmConsentTypes.includes(c)) || typeof consentCallback !== 'function') {
+    if (typeof consentNeeded !== 'object' || consentNeeded.length === 0 || consentNeeded.some((c) => !consentTypes.includes(c)) || typeof consentCallback !== 'function') {
       // eslint-disable-next-line no-console
       console.error('Setono Sylius Consent Management Plugin', new Error('Incorrect arguments supplied to sscmSubscribe'));
       return;
@@ -472,7 +467,7 @@ const sscm = {
    */
   subscribeScript(elmScript) {
     const consentNeeded = elmScript.dataset.sscmConsent.split(',');
-    if (consentNeeded.length === 0 || consentNeeded.some((c) => !sscmConsentTypes.includes(c))) {
+    if (consentNeeded.length === 0 || consentNeeded.some((c) => !consentTypes.includes(c))) {
       // eslint-disable-next-line no-console
       console.error('Setono Sylius Consent Management Plugin', new Error('Incorrect data-sscm-consent on script tag'));
       return;
@@ -490,11 +485,11 @@ const sscm = {
   /**
    * Internal function: Returns true if all the consent types listed in the consentNeeded array are set to true in
    * sscm.consent. Invalid entries in consentNeeded are ignored.
-   * @param {Array<sscmConsentAvailable>} consentNeeded
+   * @param {Array<consentAvailable>} consentNeeded
    * @return {boolean}
    */
   isConsentGranted(consentNeeded) {
-    return sscmConsentTypes.every((v) => !consentNeeded.includes(v) || sscm.consent[v]);
+    return consentTypes.every((v) => !consentNeeded.includes(v) || sscm.consent[v]);
   },
 
   /**
@@ -518,13 +513,13 @@ const sscm = {
   /**
    * This function returns the current status of the selected consent types. Use when you need to check consent at
    * runtime of your scripts.
-   * @param {Array<sscmConsentAvailable>} consentNeeded This array contains the consent types that needs to be granted
+   * @param {Array<consentAvailable>} consentNeeded This array contains the consent types that needs to be granted
    * for the function to return true.
    * @return {boolean} Only returns true if all consent types in 'consentNeeded' have been granted, otherwise returns
    * false in all other cases (also if consentNeeded has an incorrect value).
    */
   consentGranted(consentNeeded) {
-    if (typeof consentNeeded !== 'object' || consentNeeded.length === 0 || consentNeeded.some((c) => !sscmConsentTypes.includes(c))) {
+    if (typeof consentNeeded !== 'object' || consentNeeded.length === 0 || consentNeeded.some((c) => !consentTypes.includes(c))) {
       // eslint-disable-next-line no-console
       console.error('Setono Sylius Consent Management Plugin', new Error('Incorrect arguments supplied to sscmSubscribe'));
       return false;
@@ -538,8 +533,6 @@ const sscm = {
   },
 };
 
-export const sscmInit = sscm.init;
-
-export const sscmSubscribe = sscm.subscribeCallback;
-
-export const sscmGranted = sscm.consentGranted;
+export const init = sscm.init;
+export const subscribeCallback = sscm.subscribeCallback;
+export const consentGranted = sscm.consentGranted;
