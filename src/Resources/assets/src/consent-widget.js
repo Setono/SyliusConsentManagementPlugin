@@ -150,12 +150,6 @@ const sscm = {
         const storageData = JSON.parse(e.newValue);
         // eslint-disable-next-line default-case
         switch (storageData[0]) {
-          case 'saving':
-            sscm.doAction(function() {
-              sscm.hideBanner();
-              sscm.closeModal();
-            });
-            break;
           case 'success':
             sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
               .then(() => sscm.submitSuccess(storageData[1], storageData[2], false)));
@@ -294,8 +288,6 @@ const sscm = {
 
     sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
       .then(() => new Promise((resolve) => {
-        sscm.setStorage(['saving']);
-
         xhr.send(new URLSearchParams(formData));
         setTimeout(resolve, 1000);
       })));
