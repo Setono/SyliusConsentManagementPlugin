@@ -137,8 +137,7 @@ const sscm = {
           sscm.doAction(() => sscm.hideBanner()
             .then(sscm.openModal)
             .then(() => {
-              localStorage.setItem(localStorageKey, JSON.stringify(['open']));
-              localStorage.removeItem(localStorageKey);
+              this.setStorage(['open']);
             }));
         }, { passive: true });
       }
@@ -243,8 +242,7 @@ const sscm = {
 
     sscm.widgetForm.addEventListener('change', (e) => {
       if (e.target.nodeName === 'INPUT') {
-        localStorage.setItem(localStorageKey, JSON.stringify(['change', e.target.id, e.target.checked]));
-        localStorage.removeItem(localStorageKey);
+        this.setStorage(['change', e.target.id, e.target.checked]);
       }
     }, { passive: true });
   },
@@ -284,8 +282,7 @@ const sscm = {
     if (sscm.decided && changedConsent.length === 0) {
       sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
         .then(() => {
-          localStorage.setItem(localStorageKey, JSON.stringify(['close']));
-          localStorage.removeItem(localStorageKey);
+          this.setStorage(['close']);
         }));
       return; // Consent did not change.
     }
@@ -312,8 +309,7 @@ const sscm = {
 
     sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
       .then(() => new Promise((resolve) => {
-        localStorage.setItem(localStorageKey, JSON.stringify(['saving']));
-        localStorage.removeItem(localStorageKey);
+        this.setStorage(['saving']);
 
         xhr.send(new URLSearchParams(formData));
         setTimeout(resolve, 1000);
@@ -555,6 +551,11 @@ const sscm = {
       return false;
     }
     return sscm.isConsentGranted(consentNeeded);
+  },
+
+  setStorage(val) {
+    localStorage.setItem(localStorageKey, JSON.stringify(val));
+    localStorage.removeItem(localStorageKey);
   },
 };
 
