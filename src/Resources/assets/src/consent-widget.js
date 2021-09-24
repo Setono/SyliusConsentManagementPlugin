@@ -137,7 +137,7 @@ const sscm = {
           sscm.doAction(() => sscm.hideBanner()
             .then(sscm.openModal)
             .then(() => {
-              this.setStorage(['open']);
+              sscm.setStorage(['open']);
             }));
         }, { passive: true });
       }
@@ -242,7 +242,7 @@ const sscm = {
 
     sscm.widgetForm.addEventListener('change', (e) => {
       if (e.target.nodeName === 'INPUT') {
-        this.setStorage(['change', e.target.id, e.target.checked]);
+        sscm.setStorage(['change', e.target.id, e.target.checked]);
       }
     }, { passive: true });
   },
@@ -282,7 +282,7 @@ const sscm = {
     if (sscm.decided && changedConsent.length === 0) {
       sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
         .then(() => {
-          this.setStorage(['close']);
+          sscm.setStorage(['close']);
         }));
       return; // Consent did not change.
     }
@@ -309,7 +309,7 @@ const sscm = {
 
     sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
       .then(() => new Promise((resolve) => {
-        this.setStorage(['saving']);
+        sscm.setStorage(['saving']);
 
         xhr.send(new URLSearchParams(formData));
         setTimeout(resolve, 1000);
