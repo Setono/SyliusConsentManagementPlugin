@@ -217,7 +217,7 @@ const sscm = {
    */
   setup() {
     if (!document.forms[sscmFormName]) {
-      throw new Error('The sscm consent form is missing.');
+      throw new Error(`The consent form ("${sscmFormName}") is missing`);
     }
 
     sscm.elmModal = document.getElementById('sscm-w-modal');
