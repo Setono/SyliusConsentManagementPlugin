@@ -72,12 +72,6 @@ const sscm = {
    */
   error: false,
 
-  /**
-   * If true the popup and modal elements must be lazy loaded.
-   * @type {boolean}
-   */
-  lazy: false,
-
   /** @type {sscmConsentGranted} */
   consent: Object.fromEntries(sscmConsentTypes.map((c) => [c, false])),
 
@@ -128,8 +122,6 @@ const sscm = {
       sscm.decided = sscm.elmWidget.dataset.sscmDecided === '1';
 
       if (sscm.decided) {
-        sscm.lazy = true;
-
         const consent = JSON.parse(sscm.elmWidget.dataset.sscmConsent);
         sscmConsentTypes.forEach((c) => {
           sscm.consent[c] = consent[`${c}Granted`] === true;
@@ -186,18 +178,6 @@ const sscm = {
               input.checked = storageData[2];
             }
             break;
-          case 'lazy':
-            if (sscm.lazy) {
-              sscm.lazy = false;
-              sscm.doAction(() => new Promise((resolve) => {
-                requestAnimationFrame(() => {
-                  sscm.elmWidget.insertAdjacentHTML('beforeend', storageData[1]);
-                  resolve();
-                });
-              })
-                .then(sscm.setup));
-            }
-            break;
         }
       }, { passive: true });
 
@@ -222,21 +202,14 @@ const sscm = {
 
   /**
    * Internal function: Wrapper function used when doing "animations" such as showing or hiding modal, popup and son
-   * on. It handles catching errors and lazy loading of modal and popup is needed.
+   * on. It handles catching errors
    * @param {Function<Promise>} actions
    */
   doAction(actions) {
     if (!sscm.error) {
-      if (sscm.lazy) {
-        sscm.actionPromise = sscm.actionPromise
-          .then(sscm.loadLazyElements)
-          .then(actions)
-          .catch(sscm.actionError);
-      } else {
-        sscm.actionPromise = sscm.actionPromise
-          .then(actions)
-          .catch(sscm.actionError);
-      }
+      sscm.actionPromise = sscm.actionPromise
+        .then(actions)
+        .catch(sscm.actionError);
     }
   },
 
@@ -251,45 +224,6 @@ const sscm = {
     sscm.hidePopup();
     sscm.hideBanner();
     sscm.closeModal();
-  },
-
-  /**
-   * Internal function: Handles loading the modal and popup HTML via AJAX if they are not already loaded. If the user
-   * already submitted his or hers consent choices, the modal and popup sections (nor banner) will not get loaded
-   * along with every subsequent page load, and only loaded via AJAX if the user tries to open the "cookie settings".
-   */
-  loadLazyElements() {
-    sscm.lazy = false;
-
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.timeout = 5000;
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          localStorage.setItem('sscmComs', JSON.stringify(['lazy', xhr.responseText]));
-          localStorage.removeItem('sscmComs');
-
-          requestAnimationFrame(() => {
-            sscm.elmWidget.insertAdjacentHTML('beforeend', xhr.responseText);
-            resolve();
-          });
-        } else {
-          reject(new Error('The request to the server failed.'));
-        }
-      };
-      xhr.onerror = () => reject(new Error('Could not load data from server.'));
-      xhr.ontimeout = xhr.onerror;
-      // xhr.onabort = xhr.onerror;
-
-      xhr.open('POST', sscm.elmWidget.dataset.sscmAction);
-      xhr.setRequestHeader('Content-Type', 'text/plain');
-      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-      xhr.send('lazy');
-    })
-      .then(sscm.setup);
   },
 
   /**

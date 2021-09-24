@@ -91,15 +91,6 @@ final class ConsentWidgetAction
             ]), 200);
         }
 
-        if ($request->getContent() === 'lazy') {
-            $form = $this->formFactory->create(ConsentType::class, ConsentCommand::fromConsent($this->consentContext->getConsent()));
-
-            return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/_modal.html.twig', [
-                    'form' => $form->createView(),
-                    'services' => $this->serviceRepository->findAllIndexedByCategory(),
-                ]) . $this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/_popup.html.twig'), 200);
-        }
-
         $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
 
         $form->handleRequest($request);
