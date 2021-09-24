@@ -42,6 +42,13 @@ const sscmFormName = 'setono_sylius_consent_management_consent';
  */
 const sscmConsentTypes = ['preferences', 'statistics', 'marketing'];
 
+/**
+ * The key used to when setting items in local storage (which is used to communicate with other tabs)
+ *
+ * @type {string}
+ */
+const localStorageKey = 'sscmComs';
+
 const sscm = {
   /**
    * @type {Object}
@@ -130,14 +137,14 @@ const sscm = {
           sscm.doAction(() => sscm.hideBanner()
             .then(sscm.openModal)
             .then(() => {
-              localStorage.setItem('sscmComs', JSON.stringify(['open']));
-              localStorage.removeItem('sscmComs');
+              localStorage.setItem(localStorageKey, JSON.stringify(['open']));
+              localStorage.removeItem(localStorageKey);
             }));
         }, { passive: true });
       }
 
       window.addEventListener('storage', (e) => {
-        if(e.key !== 'sscmComs' || null === e.newValue || '' === e.newValue) {
+        if(e.key !== localStorageKey || null === e.newValue || '' === e.newValue) {
           return;
         }
 
@@ -236,8 +243,8 @@ const sscm = {
 
     sscm.widgetForm.addEventListener('change', (e) => {
       if (e.target.nodeName === 'INPUT') {
-        localStorage.setItem('sscmComs', JSON.stringify(['change', e.target.id, e.target.checked]));
-        localStorage.removeItem('sscmComs');
+        localStorage.setItem(localStorageKey, JSON.stringify(['change', e.target.id, e.target.checked]));
+        localStorage.removeItem(localStorageKey);
       }
     }, { passive: true });
   },
@@ -277,8 +284,8 @@ const sscm = {
     if (sscm.decided && changedConsent.length === 0) {
       sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
         .then(() => {
-          localStorage.setItem('sscmComs', JSON.stringify(['close']));
-          localStorage.removeItem('sscmComs');
+          localStorage.setItem(localStorageKey, JSON.stringify(['close']));
+          localStorage.removeItem(localStorageKey);
         }));
       return; // Consent did not change.
     }
@@ -305,8 +312,8 @@ const sscm = {
 
     sscm.doAction(() => Promise.all([sscm.hideBanner(), sscm.closeModal()])
       .then(() => new Promise((resolve) => {
-        localStorage.setItem('sscmComs', JSON.stringify(['saving']));
-        localStorage.removeItem('sscmComs');
+        localStorage.setItem(localStorageKey, JSON.stringify(['saving']));
+        localStorage.removeItem(localStorageKey);
 
         xhr.send(new URLSearchParams(formData));
         setTimeout(resolve, 1000);
@@ -352,9 +359,8 @@ const sscm = {
 
   /**
    * Internal function: Handles errors when trying to submit the consent choices.
-   * @param {boolean} initiator=true If set to false other tabs won't be informed about the error via localStorage.
    */
-  submitError(initiator = true) {
+  submitError() {
     sscmConsentTypes.forEach((c) => {
       sscm.widgetForm.querySelector(`input[name="${sscmFormName}[${c}Granted]"]`).checked = sscm.consent[c];
     });
