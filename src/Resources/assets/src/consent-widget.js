@@ -57,9 +57,11 @@ const sscm = {
    * @property {?sscmAnimationCallback} closeModal
    */
   options: {
-    hideBanner: null,
-    openModal: null,
-    closeModal: null,
+    callbacks: {
+      hideBanner: null,
+      openModal: null,
+      closeModal: null,
+    },
   },
 
   /**
@@ -103,11 +105,11 @@ const sscm = {
    * @param {Object} options All the callback options are called when the specific event happens. Such as when the
    * banner is hidden. The callbacks are called with two arguments: #1 is a resolve callback, which you must run when
    * your code is done, #2 is the element in question.
-   * @param {sscmAnimationCallback} [options.hideBanner] Optional callback which is called when the info banner is
+   * @param {sscmAnimationCallback} [options.callbacks.hideBanner] Optional callback which is called when the info banner is
    * hidden.
-   * @param {sscmAnimationCallback} [options.openModal] Optional callback which is called when the settings modal is
+   * @param {sscmAnimationCallback} [options.callbacks.openModal] Optional callback which is called when the settings modal is
    * shown.
-   * @param {sscmAnimationCallback} [options.closeModal] Optional callback which is called when the settings modal is
+   * @param {sscmAnimationCallback} [options.callbacks.closeModal] Optional callback which is called when the settings modal is
    * hidden.
    */
   init(options = {}) {
@@ -384,8 +386,8 @@ const sscm = {
       if (sscm.elmBanner && sscm.elmWidget.dataset.sscmShow === 'banner') {
         requestAnimationFrame(() => {
           sscm.elmWidget.dataset.sscmShow = '';
-          if (sscm.options.hideBanner) {
-            sscm.options.hideBanner(resolve, sscm.elmBanner);
+          if (sscm.options.callbacks.hideBanner) {
+            sscm.options.callbacks.hideBanner(resolve, sscm.elmBanner);
           } else {
             resolve();
           }
@@ -405,8 +407,8 @@ const sscm = {
         if (sscm.elmWidget.dataset.sscmShow !== 'modal') {
           requestAnimationFrame(() => {
             sscm.elmWidget.dataset.sscmShow = 'modal';
-            if (sscm.options.openModal) {
-              sscm.options.openModal(resolve, sscm.elmModal);
+            if (sscm.options.callbacks.openModal) {
+              sscm.options.callbacks.openModal(resolve, sscm.elmModal);
             } else {
               resolve();
             }
@@ -428,8 +430,8 @@ const sscm = {
       if (sscm.elmModal && sscm.elmWidget.dataset.sscmShow === 'modal') {
         requestAnimationFrame(() => {
           sscm.elmWidget.dataset.sscmShow = '';
-          if (sscm.options.closeModal) {
-            sscm.options.closeModal(resolve, sscm.elmModal);
+          if (sscm.options.callbacks.closeModal) {
+            sscm.options.callbacks.closeModal(resolve, sscm.elmModal);
           } else {
             resolve();
           }
