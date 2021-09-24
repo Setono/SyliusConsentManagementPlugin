@@ -113,7 +113,7 @@ const sscm = {
   init(options = {}) {
     try {
       if (typeof options !== 'object') {
-        throw (new Error('The sscmInit options are incorrect.'));
+        throw new Error('The init options must be an object');
       }
 
       sscm.options = { ...sscm.options, ...options };
