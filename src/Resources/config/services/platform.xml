@@ -9,5 +9,10 @@
                  class="Setono\SyliusConsentManagementPlugin\Platform\Cookiebot">
             <tag name="setono_sylius_consent_management.platform"/>
         </service>
+
+        <service id="setono_sylius_consent_management.platform.cookie_information"
+                 class="Setono\SyliusConsentManagementPlugin\Platform\CookieInformation">
+            <tag name="setono_sylius_consent_management.platform"/>
+        </service>
     </services>
 </container>
