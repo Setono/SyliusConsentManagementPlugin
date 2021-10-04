@@ -21,6 +21,7 @@
         </pluginClass>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+        <pluginClass class="Psl\Psalm\Plugin"/>
     </plugins>
     <issueHandlers>
         <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>

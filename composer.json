@@ -10,6 +10,7 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
+        "azjezz/psl": "^1.6",
         "doctrine/collections": "^1.6",
         "doctrine/orm": "^2.7",
         "knplabs/knp-menu": "^3.1",
@@ -44,6 +45,7 @@
         "lexik/jwt-authentication-bundle": "^2.11",
         "matthiasnoback/symfony-config-test": "^4.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.2",
+        "php-standard-library/psalm-plugin": "^1.1",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.0",
