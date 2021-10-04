@@ -40,14 +40,14 @@
         "doctrine/data-fixtures": "^1.5",
         "egulias/email-validator": "^2.1.25",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
-        "infection/infection": "^0.23.0",
+        "infection/infection": "^0.25.0",
         "lexik/jwt-authentication-bundle": "^2.11",
         "matthiasnoback/symfony-config-test": "^4.2",
         "matthiasnoback/symfony-dependency-injection-test": "^4.2",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.0",
-        "psalm/plugin-symfony": "^2.1",
+        "psalm/plugin-symfony": "^3.0",
         "roave/security-advisories": "dev-latest",
         "setono/code-quality-pack": "^2.1.2",
         "setono/sylius-behat-pack": "^0.2.1",
@@ -62,7 +62,7 @@
         "symfony/twig-bridge": "~5.2.0",
         "symfony/twig-bundle": "~5.2.0",
         "symfony/web-profiler-bundle": "^5.2",
-        "weirdan/doctrine-psalm-plugin": "^1.0"
+        "weirdan/doctrine-psalm-plugin": "^1.1"
     },
     "config": {
         "sort-packages": true
