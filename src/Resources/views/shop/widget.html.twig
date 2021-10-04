@@ -1,0 +1,10 @@
+<div id="sscm-widget"
+     data-sscm-show="banner"
+     data-sscm-consent="{{ consent }}"
+     data-sscm-decided="{{ decided ? 1 : 0 }}"
+     data-sscm-action="{{ path('setono_sylius_consent_management_shop_ajax_consent_widget') }}">
+    {% if not decided %}
+        {% include '@SetonoSyliusConsentManagementPlugin/shop/_initial_dialog.html.twig' %}
+        {% include '@SetonoSyliusConsentManagementPlugin/shop/_settings_dialog.html.twig' %}
+    {% endif %}
+</div>

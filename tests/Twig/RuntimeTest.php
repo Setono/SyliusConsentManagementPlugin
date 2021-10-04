@@ -25,25 +25,6 @@ final class RuntimeTest extends TestCase
     /**
      * @test
      */
-    public function it_generates_consent_tag(): void
-    {
-        $runtime = self::getRuntime();
-        self::assertSame('<script>const sscmConsent = {"clientId":"client_id","marketingGranted":true,"preferencesGranted":true,"statisticsGranted":true}</script>', $runtime->consentTag());
-    }
-
-    /**
-     * @test
-     */
-    public function it_returns_client_id(): void
-    {
-        $runtime = self::getRuntime();
-
-        self::assertSame('client_id', $runtime->clientId());
-    }
-
-    /**
-     * @test
-     */
     public function it_returns_preferences_consent_status(): void
     {
         $runtime = self::getRuntime();
@@ -78,7 +59,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime();
 
-        self::assertSame('<script src="js/test.js" async></script>', $runtime->scriptTag('js/test.js', 'marketing'));
+        self::assertSame('<script src="js/test.js"></script>', $runtime->scriptTag('js/test.js', 'marketing'));
     }
 
     /**
@@ -88,7 +69,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime(self::getConsentContext(false));
 
-        self::assertSame('<script type="text/plain" data-consent="marketing" src="js/test.js" async></script>', $runtime->scriptTag('js/test.js', 'marketing'));
+        self::assertSame('<script type="text/plain" data-sscm-consent="marketing" data-sscm-src="js/test.js"></script>', $runtime->scriptTag('js/test.js', 'marketing'));
     }
 
     /**
@@ -108,7 +89,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime(self::getConsentContext(false));
 
-        self::assertSame(' type="text/plain" data-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
+        self::assertSame(' type="text/plain" data-sscm-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
     }
 
     /**

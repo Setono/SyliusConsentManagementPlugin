@@ -60,9 +60,16 @@ setono_sylius_consent_management:
         user_agent: User agent
         widget:
             accept: Accept
+            close: Close
+            error_encountered: An error was encountered while saving your choices. Try to reload the page.
             introduction: "%channel% use cookies to give you the best possible experience on our store"
+            is_saving: Saving your choice of cookies. Please wait.'
             more_information: More information
+            must_reload: The page must be reloaded before all changes take effect.
+            reload: Reload
+            reloading_page: Reloading the page. Please wait.
             save: Save
+            settings: Cookie settings
         widget_configs: Widget configurations
         widget_config_header: Widget configuration
         widget_config_subheader: Manage the configuration of widgets on your different channels

@@ -12,8 +12,6 @@ final class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('sscm_consent_tag', [Runtime::class, 'consentTag'], ['is_safe' => ['html']]),
-            new TwigFunction('sscm_client_id', [Runtime::class, 'clientId']),
             new TwigFunction('sscm_preferences_granted', [Runtime::class, 'preferencesGranted']),
             new TwigFunction('sscm_statistics_granted', [Runtime::class, 'statisticsGranted']),
             new TwigFunction('sscm_marketing_granted', [Runtime::class, 'marketingGranted']),

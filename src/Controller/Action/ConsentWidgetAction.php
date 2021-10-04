@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
+use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
@@ -44,6 +46,8 @@ final class ConsentWidgetAction
 
     private ConsentWidgetCookieManagerInterface $consentWidgetCookieManager;
 
+    private ConsentContextInterface $consentContext;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
@@ -53,7 +57,8 @@ final class ConsentWidgetAction
         FactoryInterface $consentEntryFactory,
         EntityManagerInterface $consentEntryManager,
         ConsentWidgetInterface $consentWidget,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager
+        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        ConsentContextInterface $consentContext
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -64,12 +69,27 @@ final class ConsentWidgetAction
         $this->consentEntryManager = $consentEntryManager;
         $this->consentWidget = $consentWidget;
         $this->consentWidgetCookieManager = $consentWidgetCookieManager;
+        $this->consentContext = $consentContext;
     }
 
     public function __invoke(Request $request): Response
     {
-        if (!$this->consentWidget->show()) {
-            return new Response();
+        if (!$request->isXmlHttpRequest()) {
+            if (!$this->consentWidget->show()) {
+                return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
+                    'decided' => true,
+                    'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
+                ]), 200);
+            }
+
+            $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
+
+            return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
+                'decided' => false,
+                'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
+                'form' => $form->createView(),
+                'services' => $this->serviceRepository->findAllIndexedByCategory(),
+            ]), 200);
         }
 
         $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
@@ -100,9 +120,6 @@ final class ConsentWidgetAction
             return $response;
         }
 
-        return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
-            'form' => $form->createView(),
-            'services' => $this->serviceRepository->findAllIndexedByCategory(),
-        ]), $form->isSubmitted() ? 400 : 200); // we know the status code should be 400 if the the form was submitted because if the form was valid another response would have been sent above
+        return new Response('', 400); // we know the status code should be 400 if the the form was submitted because if the form was valid another response would have been sent above
     }
 }

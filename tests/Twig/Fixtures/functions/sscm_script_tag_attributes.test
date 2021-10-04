@@ -2,11 +2,13 @@
 "sscm_script_tag" function
 --TEMPLATE--
 <script{{ sscm_script_tag_attributes('marketing') }}>
+<script{{ sscm_script_tag_attributes('marketing', 'preferences') }}>
 <script{{ sscm_script_tag_attributes('preferences') }}>
 <script{{ sscm_script_tag_attributes('statistics') }}>
 --DATA--
 return []
 --EXPECT--
 <script>
-<script type="text/plain" data-consent="preferences">
-<script type="text/plain" data-consent="statistics">
+<script type="text/plain" data-sscm-consent="marketing,preferences">
+<script type="text/plain" data-sscm-consent="preferences">
+<script type="text/plain" data-sscm-consent="statistics">

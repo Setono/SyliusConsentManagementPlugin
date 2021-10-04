@@ -33,16 +33,6 @@ final class Runtime implements RuntimeExtensionInterface
         $this->localeContext = $localeContext;
     }
 
-    public function consentTag(): string
-    {
-        return sprintf('<script>const sscmConsent = %s</script>', json_encode($this->consentContext->getConsent(), \JSON_THROW_ON_ERROR));
-    }
-
-    public function clientId(): string
-    {
-        return $this->consentContext->getConsent()->getClientId()->toString();
-    }
-
     public function marketingGranted(): bool
     {
         return $this->consentContext->getConsent()->isMarketingConsentGranted();
@@ -58,22 +48,26 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->consentContext->getConsent()->isStatisticsConsentGranted();
     }
 
-    public function scriptTag(string $src, string $consent, bool $async = true): string
+    public function scriptTag(string $src, string ...$consents): string
     {
-        if ($this->consentContext->getConsent()->isConsentGranted($consent)) {
-            return sprintf('<script src="%s"%s></script>', $src, $async ? ' async' : '');
+        foreach ($consents as $consent) {
+            if (!$this->isGranted($consent)) {
+                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode(',', $consents), $src);
+            }
         }
 
-        return sprintf('<script type="text/plain" data-consent="%s" src="%s"%s></script>', $consent, $src, $async ? ' async' : '');
+        return sprintf('<script src="%s"></script>', $src);
     }
 
-    public function scriptTagAttributes(string $consent): string
+    public function scriptTagAttributes(string ...$consents): string
     {
-        if ($this->consentContext->getConsent()->isConsentGranted($consent)) {
-            return '';
+        foreach ($consents as $consent) {
+            if (!$this->isGranted($consent)) {
+                return sprintf(' type="text/plain" data-sscm-consent="%s"', implode(',', $consents));
+            }
         }
 
-        return sprintf(' type="text/plain" data-consent="%s"', $consent);
+        return '';
     }
 
     public function widgetConfig(): WidgetConfigInterface
@@ -82,5 +76,10 @@ final class Runtime implements RuntimeExtensionInterface
             $this->channelContext->getChannel(),
             $this->localeContext->getLocaleCode()
         );
+    }
+
+    private function isGranted(string $consent): bool
+    {
+        return $this->consentContext->getConsent()->isConsentGranted($consent);
     }
 }

@@ -10,30 +10,30 @@ use Webmozart\Assert\Assert;
 // todo should probably implement an interface
 class HomePage extends BaseHomePage
 {
-    public function hasConsentDialog(): bool
+    public function hasInitialDialog(): bool
     {
-        return $this->hasElement('consent_dialog');
+        return $this->hasElement('initial_dialog');
     }
 
-    public function isConsentDialogVisible(): bool
+    public function isInitialDialogVisible(): bool
     {
-        return $this->getElement('consent_dialog')->isVisible();
+        return $this->getElement('initial_dialog')->isVisible();
     }
 
-    public function hasConsentModal(): bool
+    public function hasSettingsDialog(): bool
     {
-        return $this->hasElement('consent_modal');
+        return $this->hasElement('settings_dialog');
     }
 
-    public function isConsentModalVisible(): bool
+    public function isSettingsDialogVisible(): bool
     {
-        return $this->getElement('consent_modal')->isVisible();
+        return $this->getElement('settings_dialog')->isVisible();
     }
 
-    public function consentDialogHides(): bool
+    public function initialDialogHides(): bool
     {
         $res = $this->getDocument()->waitFor(5, function () {
-            return $this->hasConsentDialog() && !$this->isConsentDialogVisible();
+            return $this->hasInitialDialog() && !$this->isInitialDialogVisible();
         });
 
         Assert::boolean($res);
@@ -41,10 +41,10 @@ class HomePage extends BaseHomePage
         return $res;
     }
 
-    public function consentModalHides(): bool
+    public function settingsDialogHides(): bool
     {
         $res = $this->getDocument()->waitFor(5, function () {
-            return $this->hasConsentModal() && !$this->isConsentModalVisible();
+            return $this->hasSettingsDialog() && !$this->isSettingsDialogVisible();
         });
 
         Assert::boolean($res);
@@ -121,10 +121,10 @@ class HomePage extends BaseHomePage
     {
         return array_merge(parent::getDefinedElements(), [
             // elements regarding the consent dialog
-            'consent_dialog' => '.sscm-consent-container',
-            'consent_modal' => '.sscm-consent-modal',
-            'button_accept' => '[data-test-sscm-btn-submit]',
-            'button_more_information' => '.sscm-btn-more-information',
+            'initial_dialog' => '#sscm-initial-dialog #sscm-wb-box',
+            'settings_dialog' => '#sscm-settings-dialog #sscm-wm-box',
+            'button_accept' => '#sscm-wbbb-accept',
+            'button_more_information' => '#sscm-wbbb-more',
             'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferencesGranted',
             'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketingGranted',
             'checkbox_statistics' => '#setono_sylius_consent_management_consent_statisticsGranted',
