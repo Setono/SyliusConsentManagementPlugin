@@ -30,7 +30,7 @@ final class CookieInformation implements PlatformInterface
                 'timestamp' => Type\string(),
                 'consent_url' => Type\string(),
                 'user_agent' => Type\string(),
-                'consents_approved' => Type\dict(Type\int(), Type\string()),
+                'consents_approved' => Type\dict(Type\array_key(), Type\string()),
                 'user_uid' => Type\string(),
             ], true)->assert($data);
         } catch (Type\Exception\AssertException $e) {
