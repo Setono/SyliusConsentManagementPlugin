@@ -46,10 +46,11 @@ const localStorageKey = 'sscm_tab_communication';
 const sscm = {
   /**
    * @type {Object}
+   * @property {Object} callbacks
+   * @property {?animationCallback} callbacks.closeModal
    * @property {?animationCallback} callbacks.hideBanner
    * @property {?animationCallback} callbacks.openModal
-   * @property {?animationCallback} callbacks.closeModal
-   * @property {string} callbacks.formName
+   * @property {string} formName
    */
   options: {
     callbacks: {
