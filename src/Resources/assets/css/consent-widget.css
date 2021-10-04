@@ -1,5 +1,5 @@
 #sscm-widget {
-    z-index: 10000;
+    z-index: 99999;
 
     display: flex;
     align-items: center;
@@ -44,8 +44,8 @@
     box-sizing: border-box;
 }
 
-#sscm-w-modal,
-#sscm-w-banner {
+#sscm-settings-dialog,
+#sscm-initial-dialog {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,12 +61,12 @@
     opacity: 0;
 }
 
-#sscm-w-modal {
+#sscm-settings-dialog {
     filter: blur(15px);
 }
 
-#sscm-widget[data-sscm-show="modal"] #sscm-w-modal,
-#sscm-widget[data-sscm-show="banner"] #sscm-w-banner {
+#sscm-widget[data-sscm-show="modal"] #sscm-settings-dialog,
+#sscm-widget[data-sscm-show="banner"] #sscm-initial-dialog {
     transition: opacity 300ms ease-in, filter 400ms ease-in, transform 300ms ease-in;
 
     transform: none;
@@ -107,7 +107,7 @@
 }
 
 /* Banner */
-#sscm-w-banner {
+#sscm-initial-dialog {
     align-self: flex-end;
 
     transform: translateY(calc(100% - 250px));

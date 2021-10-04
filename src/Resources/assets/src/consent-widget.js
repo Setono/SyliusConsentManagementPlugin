@@ -53,9 +53,14 @@ const sscm = {
    */
   options: {
     callbacks: {
+      closeModal: null,
       hideBanner: null,
       openModal: null,
-      closeModal: null,
+    },
+    elements: {
+      initialDialog: '#sscm-initial-dialog',
+      settingsDialog: '#sscm-settings-dialog',
+      widget: '#sscm-widget',
     },
     formName: 'setono_sylius_consent_management_consent',
   },
@@ -115,7 +120,7 @@ const sscm = {
 
       sscm.options = { ...sscm.options, ...options };
 
-      sscm.elmWidget = document.getElementById('sscm-widget');
+      sscm.elmWidget = document.querySelector(sscm.options.elements.widget);
 
       sscm.decided = sscm.elmWidget.dataset.sscmDecided === '1';
 
@@ -127,8 +132,8 @@ const sscm = {
       } else {
         sscm.setup();
 
-        sscm.elmBanner = document.getElementById('sscm-w-banner');
-        sscm.elmButtonMore = document.getElementById('sscm-wbbb-more');
+        sscm.elmBanner = document.querySelector(sscm.options.elements.initialDialog);
+        sscm.elmButtonMore = document.getElementById('sscm-wbbb-more'); // todo
 
         sscm.elmButtonMore.addEventListener('click', () => {
           sscm.doAction(() => sscm.hideBanner()
@@ -217,7 +222,7 @@ const sscm = {
       throw new Error(`The consent form ("${sscm.options.formName}") is missing`);
     }
 
-    sscm.elmModal = document.getElementById('sscm-w-modal');
+    sscm.elmModal = document.querySelector(sscm.options.elements.settingsDialog);
 
     sscm.widgetForm = document.forms[sscm.options.formName];
     sscm.widgetForm.addEventListener('submit', sscm.consentSubmit, { passive: false });
