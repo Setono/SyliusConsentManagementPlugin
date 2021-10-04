@@ -121,10 +121,10 @@ class HomePage extends BaseHomePage
     {
         return array_merge(parent::getDefinedElements(), [
             // elements regarding the consent dialog
-            'initial_dialog' => '#sscm-initial-dialog',
-            'settings_dialog' => '#sscm-settings-dialog',
-            'button_accept' => '[data-test-sscm-btn-submit]',
-            'button_more_information' => '.sscm-btn-more-information',
+            'initial_dialog' => '#sscm-initial-dialog #sscm-wb-box',
+            'settings_dialog' => '#sscm-settings-dialog #sscm-wm-box',
+            'button_accept' => '#sscm-wbbb-accept',
+            'button_more_information' => '#sscm-wbbb-more',
             'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferencesGranted',
             'checkbox_marketing' => '#setono_sylius_consent_management_consent_marketingGranted',
             'checkbox_statistics' => '#setono_sylius_consent_management_consent_statisticsGranted',

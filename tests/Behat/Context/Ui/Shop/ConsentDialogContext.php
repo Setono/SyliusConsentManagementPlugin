@@ -22,8 +22,8 @@ final class ConsentDialogContext implements Context
      */
     public function iSeeTheConsentDialog(): void
     {
-        Assert::true($this->homePage->hasInitialDialog(), 'No consent dialog in the HTML');
-        Assert::true($this->homePage->isInitialDialogVisible(), 'The consent dialog is not visible');
+        Assert::true($this->homePage->hasInitialDialog(), 'No initial dialog in the HTML');
+        Assert::true($this->homePage->isInitialDialogVisible(), 'The initial dialog is not visible');
     }
 
     /**
@@ -31,8 +31,8 @@ final class ConsentDialogContext implements Context
      */
     public function iSeeTheConsentModal(): void
     {
-        Assert::true($this->homePage->hasSettingsDialog(), 'No consent modal in the HTML');
-        Assert::true($this->homePage->isSettingsDialogVisible(), 'The consent modal is not visible');
+        Assert::true($this->homePage->hasSettingsDialog(), 'No settings dialog in the HTML');
+        Assert::true($this->homePage->isSettingsDialogVisible(), 'The settings dialog is not visible');
     }
 
     /**
@@ -40,7 +40,7 @@ final class ConsentDialogContext implements Context
      */
     public function theConsentDialogShouldNotBeVisible(): void
     {
-        Assert::false($this->homePage->hasInitialDialog(), 'There was a consent dialog in the HTML');
+        Assert::false($this->homePage->hasInitialDialog(), 'There was an initial dialog in the HTML');
     }
 
     /**
@@ -73,7 +73,7 @@ final class ConsentDialogContext implements Context
      */
     public function theConsentDialogShouldDisappear(): void
     {
-        Assert::true($this->homePage->initialDialogHides(), 'The consent dialog did not disappear');
+        Assert::true($this->homePage->initialDialogHides(), 'The initial dialog did not disappear');
     }
 
     /**
@@ -81,7 +81,7 @@ final class ConsentDialogContext implements Context
      */
     public function theConsentModalShouldDisappear(): void
     {
-        Assert::true($this->homePage->settingsDialogHides(), 'The consent modal did not disappear');
+        Assert::true($this->homePage->settingsDialogHides(), 'The settings dialog did not disappear');
     }
 
     /**
