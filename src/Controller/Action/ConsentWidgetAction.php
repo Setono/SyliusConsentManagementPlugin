@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
@@ -77,7 +78,7 @@ final class ConsentWidgetAction
             if (!$this->consentWidget->show()) {
                 return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
                     'decided' => true,
-                    'consent' => json_encode($this->consentContext->getConsent(), \JSON_THROW_ON_ERROR),
+                    'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
                 ]), 200);
             }
 
@@ -85,7 +86,7 @@ final class ConsentWidgetAction
 
             return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
                 'decided' => false,
-                'consent' => json_encode($this->consentContext->getConsent()),
+                'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
                 'form' => $form->createView(),
                 'services' => $this->serviceRepository->findAllIndexedByCategory(),
             ]), 200);
