@@ -76,7 +76,7 @@ final class ConsentWidgetAction
     {
         if (!$request->isXmlHttpRequest()) {
             if (!$this->consentWidget->show()) {
-                return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
+                return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
                     'decided' => true,
                     'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
                 ]), 200);
@@ -84,7 +84,7 @@ final class ConsentWidgetAction
 
             $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
 
-            return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/consent.html.twig', [
+            return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
                 'decided' => false,
                 'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
                 'form' => $form->createView(),
