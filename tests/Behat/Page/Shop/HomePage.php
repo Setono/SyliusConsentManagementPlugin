@@ -122,7 +122,7 @@ class HomePage extends BaseHomePage
         return array_merge(parent::getDefinedElements(), [
             // elements regarding the consent dialog
             'initial_dialog' => '#sscm-initial-dialog',
-            'settings_dialog' => '.sscm-consent-modal',
+            'settings_dialog' => '#sscm-settings-dialog',
             'button_accept' => '[data-test-sscm-btn-submit]',
             'button_more_information' => '.sscm-btn-more-information',
             'checkbox_preferences' => '#setono_sylius_consent_management_consent_preferencesGranted',
