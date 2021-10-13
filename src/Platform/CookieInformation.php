@@ -32,8 +32,8 @@ final class CookieInformation implements PlatformInterface
                 'user_agent' => Type\string(),
                 'consents_approved' => Type\dict(Type\array_key(), Type\string()),
                 'user_uid' => Type\string(),
-            ], true)->assert($data);
-        } catch (Type\Exception\AssertException $e) {
+            ], true)->coerce($data);
+        } catch (Type\Exception\CoercionException $e) {
             return null;
         }
 
