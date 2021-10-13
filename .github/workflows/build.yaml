@@ -24,7 +24,7 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
@@ -69,6 +69,7 @@ jobs:
             matrix:
                 php-version:
                     - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
@@ -105,6 +106,7 @@ jobs:
             matrix:
                 php-version:
                     - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
@@ -142,6 +144,7 @@ jobs:
             matrix:
                 php-version:
                     - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "lowest"
@@ -175,6 +178,7 @@ jobs:
             matrix:
                 php-version:
                     - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
@@ -281,7 +285,7 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
@@ -313,7 +317,7 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - "7.4"
+                    - "8.0"
 
                 dependencies:
                     - "highest"
