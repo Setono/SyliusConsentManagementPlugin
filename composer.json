@@ -12,6 +12,7 @@
         "ext-json": "*",
         "doctrine/collections": "^1.6",
         "doctrine/orm": "^2.7",
+        "fakerphp/faker": "^1.9",
         "knplabs/knp-menu": "^3.1",
         "matomo/device-detector": "^4.2",
         "psr/cache": "^1.0",
@@ -91,6 +92,7 @@
         "check-style": "ecs check",
         "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/Tests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
         "fix-style": "ecs check --fix",
+        "fixtures": "(cd tests/Application && bin/console sylius:fixture:load default -n)",
         "phpunit": "phpunit"
     }
 }

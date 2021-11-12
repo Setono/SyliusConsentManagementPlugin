@@ -1,0 +1,43 @@
+sylius_fixtures:
+    suites:
+        default:
+            fixtures:
+                setono_consent_management_widget_config:
+                    options:
+                        custom:
+                            fashion_web_store_en_US:
+                                locale: 'en_US'
+                                channel: 'FASHION_WEB'
+                                usage_description: Fashion Web Store use cookies to give you the best possible experience on our store
+
+                setono_consent_management_service:
+                    options:
+                        custom:
+                            google_analytics:
+                                code: 'google_analytics'
+                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                name: Google Analytics
+                            google_maps:
+                                code: 'google_maps'
+                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                name: Google Maps
+                            sentry:
+                                code: 'sentry'
+                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                name: Sentry
+                            facebook_pixel:
+                                code: 'facebook_pixel'
+                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                name: Facebook Pixel
+                            google_ads:
+                                code: 'google_ads'
+                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                name: Google Ads
+                            snapchat:
+                                code: 'snapchat'
+                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                name: Snapchat
+                            tiktok:
+                                code: 'tiktok'
+                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                name: Tik-Tok

@@ -40,6 +40,7 @@ setono_sylius_consent_management:
         client_id: Cliënt id
         consent_entries: Toestemmingsinvoer
         consent_entry_header: Toestemmingsinvoer
+        consent_entry_search: Zoek naar een Cliënt id of een IP-adres
         consent_entry_subheader: Lijst met toestemmingsvermeldingen
         cookie_header: Cookies
         cookie_subheader: Cookies beheren
@@ -50,9 +51,9 @@ setono_sylius_consent_management:
         missing: Missend
         open_in_new_tab: Openen in nieuw tabblad
         preferences: Voorkeuren
-        search: Zoek naar een Cliënt id of een IP-adres
         service: Dienst
         service_header: Diensten
+        service_search: Search by code or name # @todo Fix
         service_subheader: Beheer uw service waarvoor toestemming nodig is
         services: Diensten
         statistics: Statistieken

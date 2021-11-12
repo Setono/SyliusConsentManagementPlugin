@@ -12,5 +12,11 @@
             </option>
             <option name="groups">setono_sylius_consent_management</option>
         </constraint>
+        <property name="usageDescription">
+            <constraint name="NotBlank">
+                <option name="message">setono_sylius_consent_management.widget_config.usage_description.not_blank</option>
+                <option name="groups">setono_sylius_consent_management</option>
+            </constraint>
+        </property>
     </class>
 </constraint-mapping>

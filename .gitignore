@@ -7,5 +7,6 @@
 !/etc/build/.gitignore
 
 /tests/Application/yarn.lock
+/tests/Doctrine/ORM/db.sqlite
 
 /.phpunit.result.cache

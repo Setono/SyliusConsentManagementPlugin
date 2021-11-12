@@ -27,8 +27,12 @@ Add the bundle to `bundles.php` if not done automatically. Be sure to add this l
 Create the file `config/packages/setono_sylius_cookie_consent.yaml` and add the following:
 
 ```yaml
+# config/packages/setono_sylius_cookie_consent.yaml
 imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }
+
+    # Uncomment next line if you want some default fixtures for this plugin
+    # - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
 
 setono_sylius_consent_management:
     notify:
@@ -54,6 +58,7 @@ php bin/console doctrine:migration:migrate
 Create the file `config/routes/setono_sylius_cookie_consent.yaml` and add the following:
 
 ```yaml
+# config/routes/setono_sylius_cookie_consent.yaml
 setono_sylius_consent_management:
     resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml"
 ```

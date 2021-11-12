@@ -32,12 +32,13 @@ final class ServiceContext implements Context
         }
     }
 
-    private function createService(string $name, string $category): ServiceInterface
+    private function createService(string $index, string $category): ServiceInterface
     {
         /** @var ServiceInterface $service */
         $service = $this->serviceFactory->createNew();
 
-        $service->setName($name);
+        $service->setCode(sprintf('service_%s', $index));
+        $service->setName(sprintf('Service %s', $index));
         $service->setDescription('Lipsum');
         $service->setCategory($category);
 
@@ -56,19 +57,19 @@ final class ServiceContext implements Context
     {
         $i = 0;
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
     }
 }

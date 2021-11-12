@@ -50,7 +50,7 @@ class WidgetConfig implements WidgetConfigInterface
         return $this->usageDescription;
     }
 
-    public function setUsageDescription(string $usageDescription): void
+    public function setUsageDescription(?string $usageDescription): void
     {
         $this->usageDescription = $usageDescription;
     }

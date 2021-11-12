@@ -10,7 +10,7 @@
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
-
+        <field name="code" column="code" unique="true" />
         <field name="category" type="string"/>
 
         <one-to-many field="cookies" target-entity="Setono\SyliusConsentManagementPlugin\Model\CookieInterface" mapped-by="service" orphan-removal="true"/>

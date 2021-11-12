@@ -16,7 +16,8 @@ final class ServiceFixture implements FixtureInterface
         foreach (self::services() as $data) {
             $service = new Service();
             $service->setCurrentLocale('en_US');
-            $service->setName($data[0]);
+            $service->setCode(sprintf('service_%s', $data[0]));
+            $service->setName(sprintf('Service %s', $data[0]));
             $service->setCategory($data[1]);
             $service->setDescription($data[2]);
             $service->setCreatedAt(new \DateTime());
@@ -34,19 +35,19 @@ final class ServiceFixture implements FixtureInterface
     {
         $i = 0;
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
 
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield ['Service ' . ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
     }
 }

@@ -21,6 +21,6 @@ sylius_grid:
             filters:
                 search:
                     type: string
-                    label: setono_sylius_consent_management.ui.search
+                    label: setono_sylius_consent_management.ui.consent_entry_search
                     options:
                         fields: [ clientId, ip ]

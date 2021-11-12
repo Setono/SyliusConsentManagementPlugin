@@ -8,6 +8,7 @@
         <import resource="services/email_manager.xml"/>
         <import resource="services/event_subscriber.xml"/>
         <import resource="services/factory.xml"/>
+        <import resource="services/fixture.xml"/>
         <import resource="services/form.xml"/>
         <import resource="services/menu.xml"/>
         <import resource="services/platform.xml"/>

@@ -22,6 +22,8 @@ setono_sylius_consent_management:
             description: Description
             name: Name
             translations: Translations
+        widget_config:
+            usage_description: Usage description
     menu:
         admin:
             main:
@@ -40,6 +42,7 @@ setono_sylius_consent_management:
         client_id: Client id
         consent_entries: Consent entries
         consent_entry_header: Consent entries
+        consent_entry_search: Search for a client id or an IP address
         consent_entry_subheader: List of consent entries
         cookie_header: Cookies
         cookie_subheader: Manage cookies
@@ -50,9 +53,9 @@ setono_sylius_consent_management:
         missing: Missing
         open_in_new_tab: Open in new tab
         preferences: Preferences
-        search: Search for a client id or an IP address
         service: Service
         service_header: Services
+        service_search: Search by code or name
         service_subheader: Manage your service that needs consent
         services: Services
         statistics: Statistics

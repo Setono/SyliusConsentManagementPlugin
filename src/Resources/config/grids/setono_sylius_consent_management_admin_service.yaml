@@ -5,14 +5,34 @@ sylius_grid:
                 options:
                     class: "%setono_sylius_consent_management.model.service.class%"
             fields:
+                code:
+                    type: string
+                    label: sylius.ui.code
+                    sortable: ~
                 name:
                     type: string
                     label: setono_sylius_consent_management.ui.name
+                    sortable: translation.name
                 category:
                     type: twig
                     label: setono_sylius_consent_management.ui.category
+                    sortable: ~
                     options:
                         template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/category.html.twig"
+            filters:
+                search:
+                    type: string
+                    label: setono_sylius_consent_management.ui.service_search
+                    options:
+                        fields: [ code, translation.name ]
+                category:
+                    type: select
+                    label: setono_sylius_consent_management.ui.category
+                    form_options:
+                        choices:
+                            setono_sylius_consent_management.ui.categories.marketing: marketing
+                            setono_sylius_consent_management.ui.categories.preferences: preferences
+                            setono_sylius_consent_management.ui.categories.statistics: statistics
             actions:
                 main:
                     create:
@@ -20,4 +40,3 @@ sylius_grid:
                 item:
                     update:
                         type: update
-

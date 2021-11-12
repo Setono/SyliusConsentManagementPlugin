@@ -22,6 +22,8 @@ class Service implements ServiceInterface
 
     protected ?int $id = null;
 
+    protected ?string $code = null;
+
     protected ?string $category = null;
 
     /**
@@ -56,12 +58,22 @@ class Service implements ServiceInterface
         return $this->id;
     }
 
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): void
+    {
+        $this->code = $code;
+    }
+
     public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    public function setCategory(string $category): void
+    public function setCategory(?string $category): void
     {
         $this->category = $category;
     }
