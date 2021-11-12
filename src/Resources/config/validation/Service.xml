@@ -7,6 +7,7 @@
     <class name="Setono\SyliusConsentManagementPlugin\Model\Service">
         <property name="category">
             <constraint name="NotBlank">
+                <option name="message">setono_sylius_consent_management.service.category.not_blank</option>
                 <option name="groups">setono_sylius_consent_management</option>
             </constraint>
         </property>

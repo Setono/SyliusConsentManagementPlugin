@@ -1,0 +1,4 @@
+setono_sylius_consent_management:
+    service:
+        category:
+            not_blank: Please enter category. 
