@@ -58,4 +58,5 @@ return [
     Setono\ClientIdBundle\SetonoClientIdBundle::class => ['all' => true],
     FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true, 'test_cached' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    Setono\ConsentBundle\SetonoConsentBundle::class => ['all' => true],
 ];

@@ -9,7 +9,7 @@
 
         <service id="setono_sylius_consent_management.twig.runtime"
                  class="Setono\SyliusConsentManagementPlugin\Twig\Runtime">
-            <argument type="service" id="setono_sylius_consent_management.context.consent"/>
+            <argument type="service" id="setono_consent.context.default"/>
             <argument type="service" id="setono_sylius_consent_management.provider.valid_widget_config"/>
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="sylius.context.locale"/>
