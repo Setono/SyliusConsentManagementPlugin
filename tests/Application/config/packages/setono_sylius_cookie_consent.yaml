@@ -1,5 +1,6 @@
 imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }
+    - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
 
 setono_sylius_consent_management:
     notify:

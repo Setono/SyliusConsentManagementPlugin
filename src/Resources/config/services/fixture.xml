@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="true" />
+
+        <!-- Widget Config -->
+        <service id="setono_sylius_consent_management.fixture.example_factory.widget_config"
+                 class="Setono\SyliusConsentManagementPlugin\Fixture\Factory\WidgetConfigExampleFactory">
+            <argument type="service" id="setono_sylius_consent_management.factory.widget_config" />
+            <argument type="service" id="sylius.repository.channel" />
+            <argument type="service" id="sylius.repository.locale" />
+        </service>
+
+        <service id="setono_sylius_consent_management.fixture.widget_config"
+                 class="Setono\SyliusConsentManagementPlugin\Fixture\WidgetConfigFixture">
+            <argument type="service" id="setono_sylius_consent_management.manager.widget_config" />
+            <argument type="service" id="setono_sylius_consent_management.fixture.example_factory.widget_config" />
+
+            <tag name="sylius_fixtures.fixture" />
+        </service>
+
+    </services>
+</container>

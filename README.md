@@ -31,6 +31,9 @@ Create the file `config/packages/setono_sylius_cookie_consent.yaml` and add the 
 imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }
 
+    # Uncomment next line if you want some default fixtures for this plugin
+    # - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
+
 setono_sylius_consent_management:
     notify:
         - "johndoe@setono.com"
