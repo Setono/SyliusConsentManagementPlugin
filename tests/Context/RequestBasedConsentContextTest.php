@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Context\DefaultConsentContext;
+use Setono\Consent\Context\DefaultConsentContext;
 use Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
