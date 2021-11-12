@@ -22,6 +22,8 @@ setono_sylius_consent_management:
             description: Description
             name: Name
             translations: Translations
+        widget_config:
+            usage_description: Usage description
     menu:
         admin:
             main:
