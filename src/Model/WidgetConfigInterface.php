@@ -19,5 +19,5 @@ interface WidgetConfigInterface extends ResourceInterface, ChannelAwareInterface
 
     public function getUsageDescription(): ?string;
 
-    public function setUsageDescription(string $usageDescription): void;
+    public function setUsageDescription(?string $usageDescription): void;
 }

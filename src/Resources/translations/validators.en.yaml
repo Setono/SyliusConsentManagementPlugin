@@ -1,4 +1,7 @@
 setono_sylius_consent_management:
     service:
         category:
-            not_blank: Please enter category. 
+            not_blank: Please enter category.
+    widget_config:
+        usage_description:
+            not_blank: Please enter usage description.
