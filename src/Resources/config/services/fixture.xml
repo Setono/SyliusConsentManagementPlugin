@@ -5,6 +5,22 @@
     <services>
         <defaults public="true" />
 
+        <!-- Service -->
+        <service id="setono_sylius_consent_management.fixture.example_factory.service"
+                 class="Setono\SyliusConsentManagementPlugin\Fixture\Factory\ServiceExampleFactory">
+            <argument type="service" id="setono_sylius_consent_management.repository.service" />
+            <argument type="service" id="setono_sylius_consent_management.factory.service" />
+            <argument type="service" id="sylius.repository.locale" />
+        </service>
+
+        <service id="setono_sylius_consent_management.fixture.service"
+                 class="Setono\SyliusConsentManagementPlugin\Fixture\ServiceFixture">
+            <argument type="service" id="setono_sylius_consent_management.manager.service" />
+            <argument type="service" id="setono_sylius_consent_management.fixture.example_factory.service" />
+
+            <tag name="sylius_fixtures.fixture" />
+        </service>
+
         <!-- Widget Config -->
         <service id="setono_sylius_consent_management.fixture.example_factory.widget_config"
                  class="Setono\SyliusConsentManagementPlugin\Fixture\Factory\WidgetConfigExampleFactory">
