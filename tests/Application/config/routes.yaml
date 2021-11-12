@@ -1,2 +1,0 @@
-setono_sylius_consent_management:
-    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml"
