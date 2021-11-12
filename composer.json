@@ -1,6 +1,6 @@
 {
     "name": "setono/sylius-consent-management-plugin",
-    "type": "symfony-bundle",
+    "type": "sylius-plugin",
     "description": "Setono example plugin for Sylius.",
     "keywords": [
         "sylius",
@@ -49,7 +49,7 @@
         "psalm/plugin-phpunit": "^0.16.0",
         "psalm/plugin-symfony": "^3.0",
         "roave/security-advisories": "dev-latest",
-        "setono/code-quality-pack": "^2.1.2",
+        "setono/code-quality-pack": "^2.1.3",
         "setono/sylius-behat-pack": "^0.2.1",
         "sylius/sylius": "~1.9.4",
         "symfony/debug-bundle": "^5.3",
