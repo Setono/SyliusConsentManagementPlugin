@@ -60,7 +60,7 @@
         "symfony/property-info": "^5.3",
         "symfony/serializer": "^5.3",
         "symfony/twig-bridge": "~5.2.0",
-        "symfony/twig-bundle": "~5.2.0",
+        "symfony/twig-bundle": "~5.2.12",
         "symfony/web-profiler-bundle": "^5.2",
         "weirdan/doctrine-psalm-plugin": "^1.2"
     },
