@@ -5,6 +5,10 @@ sylius_grid:
                 options:
                     class: "%setono_sylius_consent_management.model.service.class%"
             fields:
+                code:
+                    type: string
+                    label: sylius.ui.code
+                    sortable: ~
                 name:
                     type: string
                     label: setono_sylius_consent_management.ui.name
