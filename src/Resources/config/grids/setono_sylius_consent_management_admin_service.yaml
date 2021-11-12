@@ -12,9 +12,11 @@ sylius_grid:
                 name:
                     type: string
                     label: setono_sylius_consent_management.ui.name
+                    sortable: translation.name
                 category:
                     type: twig
                     label: setono_sylius_consent_management.ui.category
+                    sortable: ~
                     options:
                         template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/category.html.twig"
             filters:
@@ -38,4 +40,3 @@ sylius_grid:
                 item:
                     update:
                         type: update
-
