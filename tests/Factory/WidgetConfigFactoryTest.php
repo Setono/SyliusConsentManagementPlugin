@@ -55,6 +55,7 @@ final class WidgetConfigFactoryTest extends TestCase
     private static function getLocaleRepository(): RepositoryInterface
     {
         return new class() implements RepositoryInterface {
+            /** @var mixed $id */
             public function find($id)
             {
                 return null;
