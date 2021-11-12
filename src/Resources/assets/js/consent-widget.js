@@ -134,7 +134,7 @@ const sscm = {
         sscm.setup();
 
         sscm.elmBanner = document.querySelector(sscm.options.elements.initialDialog);
-        sscm.elmButtonMore = document.getElementById('sscm-wbbb-more'); // todo
+        sscm.elmButtonMore = document.getElementById('sscm-button-more'); // todo
 
         sscm.elmButtonMore.addEventListener('click', () => {
           sscm.doAction(() => sscm.hideBanner()
