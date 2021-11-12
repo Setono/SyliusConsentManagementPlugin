@@ -10,7 +10,6 @@ use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Sylius\Bundle\CoreBundle\Fixture\Factory\AbstractExampleFactory;
-use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Formatter\StringInflector;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -46,7 +45,6 @@ use Webmozart\Assert\Assert;
         $this->configureOptions($this->optionsResolver);
     }
 
-
     public function create(array $options = []): ServiceInterface
     {
         $options = $this->optionsResolver->resolve($options);
@@ -58,6 +56,7 @@ use Webmozart\Assert\Assert;
             $service = $this->serviceFactory->createNew();
 
             if (array_key_exists('code', $options)) {
+                Assert::string($options['code']);
                 $service->setCode($options['code']);
             }
         }
@@ -76,6 +75,8 @@ use Webmozart\Assert\Assert;
         if (array_key_exists('translations', $options)) {
             Assert::isArray($options['translations']);
             foreach ($options['translations'] as $localeCode => $translationOptions) {
+                Assert::isArray($translationOptions);
+                Assert::string($localeCode);
                 $this->createTranslation($service, $localeCode, $translationOptions);
             }
         }
@@ -91,10 +92,12 @@ use Webmozart\Assert\Assert;
         $service->setFallbackLocale($localeCode);
 
         if (array_key_exists('name', $options)) {
+            Assert::string($options['name']);
             $service->setName($options['name']);
         }
 
         if (array_key_exists('description', $options)) {
+            Assert::string($options['description']);
             $service->setDescription($options['description']);
         }
     }
@@ -103,10 +106,15 @@ use Webmozart\Assert\Assert;
     {
         $resolver
             ->setDefault('code', function (Options $options): string {
+                Assert::string($options['name']);
+
                 return StringInflector::nameToCode($options['name']);
             })
             ->setDefault('category', function (Options $options): string {
-                return $this->faker->randomElement(Consent::getAvailableConsents());
+                /** @var string $category */
+                $category = $this->faker->randomElement(Consent::getAvailableConsents());
+
+                return $category;
             })
             ->setDefault('name', function (Options $options): string {
                 /** @var string $words */
@@ -122,12 +130,13 @@ use Webmozart\Assert\Assert;
         ;
     }
 
-    protected function getLocales(): iterable
+    /**
+     * @return string[]
+     */
+    protected function getLocales(): array
     {
-        /** @var LocaleInterface[] $locales */
-        $locales = $this->localeRepository->findAll();
-        foreach ($locales as $locale) {
-            yield $locale->getCode();
-        }
+        return array_filter(array_map(function (LocaleInterface $locale) {
+            return $locale->getCode();
+        }, $this->localeRepository->findAll()));
     }
 }
