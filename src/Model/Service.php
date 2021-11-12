@@ -73,7 +73,7 @@ class Service implements ServiceInterface
         return $this->category;
     }
 
-    public function setCategory(string $category): void
+    public function setCategory(?string $category): void
     {
         $this->category = $category;
     }

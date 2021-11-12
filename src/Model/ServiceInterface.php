@@ -24,7 +24,7 @@ interface ServiceInterface extends ResourceInterface, TimestampableInterface, Tr
 
     public function getCategory(): ?string;
 
-    public function setCategory(string $category): void;
+    public function setCategory(?string $category): void;
 
     public function getName(): ?string;
 
