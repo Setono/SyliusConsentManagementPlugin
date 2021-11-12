@@ -53,6 +53,7 @@ setono_sylius_consent_management:
         preferences: Preferanser
         service: Tjeneste
         service_header: Tjenester
+        service_search: Search by code or name # @todo Fix
         service_subheader: Administrer tjenesten din som trenger samtykke
         services: Tjenester
         statistics: Statistikk

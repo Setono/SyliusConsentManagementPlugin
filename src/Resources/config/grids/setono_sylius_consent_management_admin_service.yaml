@@ -17,6 +17,20 @@ sylius_grid:
                     label: setono_sylius_consent_management.ui.category
                     options:
                         template: "@SetonoSyliusConsentManagementPlugin/admin/grid/field/category.html.twig"
+            filters:
+                search:
+                    type: string
+                    label: setono_sylius_consent_management.ui.service_search
+                    options:
+                        fields: [ code, translation.name ]
+                category:
+                    type: select
+                    label: setono_sylius_consent_management.ui.category
+                    form_options:
+                        choices:
+                            setono_sylius_consent_management.ui.categories.marketing: marketing
+                            setono_sylius_consent_management.ui.categories.preferences: preferences
+                            setono_sylius_consent_management.ui.categories.statistics: statistics
             actions:
                 main:
                     create:

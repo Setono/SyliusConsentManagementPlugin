@@ -53,6 +53,7 @@ setono_sylius_consent_management:
         preferences: Voorkeuren
         service: Dienst
         service_header: Diensten
+        service_search: Search by code or name # @todo Fix
         service_subheader: Beheer uw service waarvoor toestemming nodig is
         services: Diensten
         statistics: Statistieken

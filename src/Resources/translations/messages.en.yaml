@@ -55,6 +55,7 @@ setono_sylius_consent_management:
         preferences: Preferences
         service: Service
         service_header: Services
+        service_search: Search by code or name
         service_subheader: Manage your service that needs consent
         services: Services
         statistics: Statistics
