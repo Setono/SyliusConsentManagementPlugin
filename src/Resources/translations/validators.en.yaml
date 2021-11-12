@@ -1,5 +1,8 @@
 setono_sylius_consent_management:
     service:
+        code:
+            not_blank: Please enter service code.
+            regex: Service code can only be comprised of letters, numbers, dashes and underscores.
         category:
             not_blank: Please enter category.
     widget_config:
