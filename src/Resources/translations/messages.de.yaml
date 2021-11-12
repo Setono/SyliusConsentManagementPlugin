@@ -40,6 +40,7 @@ setono_sylius_consent_management:
         client_id: Klientin id
         consent_entries: Einwilligungseinträge
         consent_entry_header: Einwilligungseinträge
+        consent_entry_search: Suchen Sie nach einer Klientin id oder einer IP-Adresse
         consent_entry_subheader: Liste der Einwilligungseinträge
         cookie_header: Cookies
         cookie_subheader: Cookies verwalten
@@ -50,7 +51,6 @@ setono_sylius_consent_management:
         missing: Fehlt
         open_in_new_tab: In neuem Tab öffnen
         preferences: Einstellungen
-        search: Suchen Sie nach einer Klientin id oder einer IP-Adresse
         service: Dienst
         service_header: Dienstleistungen
         service_subheader: Verwalten Sie Ihren Dienst, der eine Zustimmung benötigt

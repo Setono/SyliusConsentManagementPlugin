@@ -40,6 +40,7 @@ setono_sylius_consent_management:
         client_id: Klient id
         consent_entries: Samtykker
         consent_entry_header: Samtykker
+        consent_entry_search: Søg efter et klient id eller IP-adresse
         consent_entry_subheader: Liste over samtykker
         cookie_header: Cookies
         cookie_subheader: Håndter cookies
@@ -50,7 +51,6 @@ setono_sylius_consent_management:
         missing: Mangler
         open_in_new_tab: Åbn i ny fane
         preferences: Indstillinger/funktionelle
-        search: Søg efter et klient id eller IP-adresse
         service: Tjeneste
         service_header: Tjenester
         service_subheader: Manage your service that needs consent
