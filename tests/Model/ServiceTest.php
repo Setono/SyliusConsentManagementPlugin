@@ -25,6 +25,8 @@ final class ServiceTest extends TestCase
         $service->setCurrentLocale('en_US');
         $service->setName('name');
         $service->setDescription('description');
+
+        $service->setCode('code');
         $service->setCategory(ServiceInterface::CATEGORY_PREFERENCES);
 
         $cookie = new Cookie();
@@ -33,6 +35,8 @@ final class ServiceTest extends TestCase
         self::assertNull($service->getId());
         self::assertSame('name', $service->getName());
         self::assertSame('description', $service->getDescription());
+
+        self::assertSame('code', $service->getCode());
         self::assertSame(ServiceInterface::CATEGORY_PREFERENCES, $service->getCategory());
         self::assertEquals([
             ServiceInterface::CATEGORY_PREFERENCES => ServiceInterface::CATEGORY_PREFERENCES,
