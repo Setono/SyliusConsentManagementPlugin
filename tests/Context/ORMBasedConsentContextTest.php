@@ -11,7 +11,7 @@ use Setono\ClientId\ClientId;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Consent;
 use Setono\Consent\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Context\DefaultConsentContext;
+use Setono\Consent\Context\DefaultConsentContext;
 use Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
