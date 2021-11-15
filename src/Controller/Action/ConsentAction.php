@@ -30,7 +30,7 @@ use Webmozart\Assert\Assert;
  *
  * @codeCoverageIgnore
  */
-final class ConsentWidgetAction
+final class ConsentAction
 {
     private FormFactoryInterface $formFactory;
 
