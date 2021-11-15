@@ -11,15 +11,17 @@ use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
 use Setono\Consent\Event\ConsentUpdated;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webmozart\Assert\Assert;
 
@@ -40,7 +42,7 @@ final class ConsentWidgetAction
 
     private ClientIdProviderInterface $clientIdProvider;
 
-    private FactoryInterface $consentEntryFactory;
+    private ConsentEntryFactoryInterface $consentEntryFactory;
 
     private EntityManagerInterface $consentEntryManager;
 
@@ -52,18 +54,21 @@ final class ConsentWidgetAction
 
     private EventDispatcherInterface $eventDispatcher;
 
+    private UrlGeneratorInterface $urlGenerator;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
         ConsentEntryRepositoryInterface $consentEntryRepository,
         ServiceRepositoryInterface $serviceRepository,
         ClientIdProviderInterface $clientIdProvider,
-        FactoryInterface $consentEntryFactory,
+        ConsentEntryFactoryInterface $consentEntryFactory,
         EntityManagerInterface $consentEntryManager,
         ConsentWidgetInterface $consentWidget,
         ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
         ConsentContextInterface $consentContext,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -76,46 +81,32 @@ final class ConsentWidgetAction
         $this->consentWidgetCookieManager = $consentWidgetCookieManager;
         $this->consentContext = $consentContext;
         $this->eventDispatcher = $eventDispatcher;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function __invoke(Request $request): Response
     {
-        if (!$request->isXmlHttpRequest()) {
-            if (!$this->consentWidget->show()) {
-                return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
-                    'decided' => true,
-                    'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
-                ]), 200);
-            }
-
-            $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
-
-            return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
-                'decided' => false,
-                'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
-                'form' => $form->createView(),
-                'services' => $this->serviceRepository->findAllIndexedByCategory(),
-            ]), 200);
+        $consent = $this->consentContext->getConsent();
+        $decided = !$this->consentWidget->show();
+        if ($decided) {
+            $consentCommand = ConsentCommand::fromConsent($consent);
+        } else {
+            // If not decided - we want all options to be set to true
+            $consentCommand = new ConsentCommand();
         }
 
-        $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
-
+        $form = $this->formFactory->create(ConsentType::class, $consentCommand);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $clientId = $this->clientIdProvider->getClientId();
             $consentEntry = $this->consentEntryRepository->findOneFromClientId($clientId);
             if (null === $consentEntry) {
                 /** @var ConsentEntryInterface $consentEntry */
-                $consentEntry = $this->consentEntryFactory->createNew();
+                $consentEntry = $this->consentEntryFactory->createForClientId($clientId);
 
                 $this->consentEntryManager->persist($consentEntry);
             }
 
-            /** @var ConsentCommand|mixed $consentCommand */
-            $consentCommand = $form->getData();
-            Assert::isInstanceOf($consentCommand, ConsentCommand::class);
-
-            $consentEntry->setClientId($clientId);
             $consentEntry->populateFromRequest($request);
             $consentEntry->populateFromConsentCommand($consentCommand);
 
@@ -126,12 +117,69 @@ final class ConsentWidgetAction
                 $this->consentContext->getConsent()
             ));
 
-            $response = new Response('', 204);
+            if ($request->isXmlHttpRequest()) {
+                $response = new Response('', Response::HTTP_NO_CONTENT);
+            } else {
+                $redirectUrl = $this->getRedirectUrl($request, 'setono_sylius_consent_management_shop_consent_update');
+                $response = new RedirectResponse($redirectUrl);
+            }
+
             $this->consentWidgetCookieManager->write($response);
 
             return $response;
         }
 
-        return new Response('', 400); // we know the status code should be 400 if the the form was submitted because if the form was valid another response would have been sent above
+        if (!$request->isXmlHttpRequest()) {
+            $template = $this->getTemplate($request, '@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig');
+
+            return new Response($this->twig->render($template, [
+                'decided' => $decided,
+                'consent' => json_encode($consent, JSON_THROW_ON_ERROR),
+                'form' => $form->createView(),
+                'services' => $this->serviceRepository->findAllIndexedByCategory(),
+            ]), 200);
+        }
+
+        // we know the status code should be 400 if the the form was submitted
+        // because if the form was valid another response would have been sent above
+        return new Response('', Response::HTTP_BAD_REQUEST);
+    }
+
+    private function getTemplate(Request $request, string $defaultTemplate): string
+    {
+        $syliusParameters = [];
+
+        if ($request->attributes->has('_sylius')) {
+            /** @var array|mixed $syliusParameters */
+            $syliusParameters = $request->attributes->get('_sylius');
+            Assert::isArray($syliusParameters);
+        }
+
+        /** @var string|mixed $template */
+        $template = $syliusParameters['template'] ?? $defaultTemplate;
+        Assert::string($template);
+
+        return $template;
+    }
+
+    private function getRedirectUrl(Request $request, string $defaultRoute): string
+    {
+        $syliusParameters = [];
+
+        if ($request->attributes->has('_sylius')) {
+            /** @var array|mixed $syliusParameters */
+            $syliusParameters = $request->attributes->get('_sylius');
+            Assert::isArray($syliusParameters);
+        }
+
+        /** @var string|mixed $route */
+        $route = $syliusParameters['redirect']['route'] ?? $defaultRoute;
+        Assert::string($route);
+
+        /** @var array|mixed $parameters */
+        $parameters = $syliusParameters['redirect']['parameters'] ?? [];
+        Assert::isArray($parameters);
+
+        return $this->urlGenerator->generate($route, $parameters);
     }
 }
