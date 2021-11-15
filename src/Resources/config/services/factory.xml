@@ -9,6 +9,13 @@
             <argument type="service" id="setono_sylius_consent_management.custom_factory.cookie.inner"/>
         </service>
 
+        <service id="setono_sylius_consent_management.custom_factory.consent_entry"
+                 class="Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactory"
+                 decorates="setono_sylius_consent_management.factory.consent_entry"
+                 decoration-priority="128">
+            <argument type="service" id="setono_sylius_consent_management.custom_factory.consent_entry.inner"/>
+        </service>
+
         <service id="setono_sylius_consent_management.custom_factory.widget_config"
                  class="Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactory"
                  decorates="setono_sylius_consent_management.factory.widget_config"
