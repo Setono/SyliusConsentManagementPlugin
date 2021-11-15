@@ -4,13 +4,15 @@
     <services>
         <service id="setono_sylius_consent_management.custom_factory.cookie"
                  class="Setono\SyliusConsentManagementPlugin\Factory\CookieFactory"
-                 decorates="setono_sylius_consent_management.factory.cookie" decoration-priority="128">
+                 decorates="setono_sylius_consent_management.factory.cookie"
+                 decoration-priority="128">
             <argument type="service" id="setono_sylius_consent_management.custom_factory.cookie.inner"/>
         </service>
 
         <service id="setono_sylius_consent_management.custom_factory.widget_config"
                  class="Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactory"
-                 decorates="setono_sylius_consent_management.factory.widget_config" decoration-priority="128">
+                 decorates="setono_sylius_consent_management.factory.widget_config"
+                 decoration-priority="128">
             <argument type="service" id="setono_sylius_consent_management.custom_factory.widget_config.inner"/>
             <argument type="service" id="sylius.repository.locale"/>
             <argument type="service" id="translator"/>
