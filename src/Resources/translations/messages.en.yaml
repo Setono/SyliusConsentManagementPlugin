@@ -81,3 +81,4 @@ setono_sylius_consent_management:
             header: Consent preferences
             subheader: Update your cookie settings
             save: Save consent preferences
+            footer_link: Update consent preferences
