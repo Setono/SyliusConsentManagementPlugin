@@ -316,6 +316,12 @@ const sscm = {
 
         // eslint-disable-next-line default-case
         switch (typeof sscm.subscribers[subId].target) {
+          case 'function':
+            sscm.subscribers[subId].target(consentGranted);
+            sscm.subscribers[subId].init = true;
+
+            break;
+
           case 'object':
             if (consentGranted) {
               if (!sscm.subscribers[subId].init) {
