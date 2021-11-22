@@ -1,0 +1,3 @@
+setono_sylius_consent_management:
+    sampling:
+        rate: 1
