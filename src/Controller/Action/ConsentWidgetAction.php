@@ -6,8 +6,10 @@ namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
 use const JSON_THROW_ON_ERROR;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\Event\ConsentUpdated;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
@@ -48,6 +50,8 @@ final class ConsentWidgetAction
 
     private ConsentContextInterface $consentContext;
 
+    private EventDispatcherInterface $eventDispatcher;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
@@ -58,7 +62,8 @@ final class ConsentWidgetAction
         EntityManagerInterface $consentEntryManager,
         ConsentWidgetInterface $consentWidget,
         ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
-        ConsentContextInterface $consentContext
+        ConsentContextInterface $consentContext,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -70,6 +75,7 @@ final class ConsentWidgetAction
         $this->consentWidget = $consentWidget;
         $this->consentWidgetCookieManager = $consentWidgetCookieManager;
         $this->consentContext = $consentContext;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(Request $request): Response
@@ -105,6 +111,7 @@ final class ConsentWidgetAction
                 $this->consentEntryManager->persist($consentEntry);
             }
 
+            /** @var ConsentCommand|mixed $consentCommand */
             $consentCommand = $form->getData();
             Assert::isInstanceOf($consentCommand, ConsentCommand::class);
 
@@ -113,6 +120,11 @@ final class ConsentWidgetAction
             $consentEntry->populateFromConsentCommand($consentCommand);
 
             $this->consentEntryManager->flush();
+
+            $this->eventDispatcher->dispatch(new ConsentUpdated(
+                $consentCommand->getConsent($clientId),
+                $this->consentContext->getConsent()
+            ));
 
             $response = new Response('', 204);
             $this->consentWidgetCookieManager->write($response);

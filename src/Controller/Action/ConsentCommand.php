@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
 
+use Setono\ClientId\ClientId;
 use Setono\Consent\Consent;
 
 final class ConsentCommand
@@ -28,5 +29,10 @@ final class ConsentCommand
             $consent->isPreferencesConsentGranted(),
             $consent->isStatisticsConsentGranted()
         );
+    }
+
+    public function getConsent(ClientId $clientId): Consent
+    {
+        return new Consent($clientId, $this->marketingGranted, $this->preferencesGranted, $this->statisticsGranted);
     }
 }
