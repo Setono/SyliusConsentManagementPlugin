@@ -14,7 +14,7 @@
         <field name="clientId" column="client_id" type="client_id"/>
         <field name="ip" type="string"/>
         <field name="url" type="text"/>
-        <field name="userAgent" type="string"/>
+        <field name="userAgent" type="text"/>
         <field name="preferencesGranted" type="boolean"/>
         <field name="statisticsGranted" type="boolean"/>
         <field name="marketingGranted" type="boolean"/>
