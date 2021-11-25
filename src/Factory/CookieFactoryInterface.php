@@ -11,5 +11,5 @@ interface CookieFactoryInterface extends FactoryInterface
 {
     public function createNew(): CookieInterface;
 
-    public function createWithData(string $name, string $url): CookieInterface;
+    public function createWithData(string $name, string $exampleValue, string $url): CookieInterface;
 }

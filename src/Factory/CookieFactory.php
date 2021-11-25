@@ -24,10 +24,11 @@ final class CookieFactory implements CookieFactoryInterface
         return $obj;
     }
 
-    public function createWithData(string $name, string $url): CookieInterface
+    public function createWithData(string $name, string $exampleValue, string $url): CookieInterface
     {
         $obj = $this->createNew();
         $obj->setName($name);
+        $obj->setExampleValue($exampleValue);
         $obj->setUrl($url);
 
         return $obj;
