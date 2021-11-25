@@ -77,3 +77,9 @@ setono_sylius_consent_management:
         widget_configs: Widget configurations
         widget_config_header: Widget configuration
         widget_config_subheader: Manage the configuration of widgets on your different channels
+        update:
+            title: Update consent preferences
+            header: Consent preferences
+            subheader: Update your cookie settings
+            save: Save consent preferences
+            footer_link: Update consent preferences

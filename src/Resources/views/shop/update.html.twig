@@ -1,0 +1,34 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ 'setono_sylius_consent_management.ui.update.title'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+    <div class="ui two column centered stackable grid">
+        <div class="column">
+            {% include '@SetonoSyliusConsentManagementPlugin/shop/update/_header.html.twig' %}
+            <div class="ui padded segment">
+                {{ form_start(form, {
+                    'action': path('setono_sylius_consent_management_shop_consent_update'),
+                    'attr': {
+                        'id': form.vars.id,
+                        'class': 'ui large form',
+                        'novalidate': 'novalidate',
+                    },
+                }) }}
+                {{ form_errors(form) }}
+                {% include '@SetonoSyliusConsentManagementPlugin/shop/common/_form.html.twig' %}
+
+                <div class="one field">
+                    <button type="submit"
+                            class="ui fluid large primary submit button sscm-button-green"
+                        {{ sylius_test_html_attribute('sscm-btn-submit') }}>
+                        {{ 'setono_sylius_consent_management.ui.update.save'|trans }}
+                    </button>
+                </div>
+                {{ form_row(form._token) }}
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
