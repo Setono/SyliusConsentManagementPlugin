@@ -15,7 +15,8 @@ final class CookieFixture implements FixtureInterface
         foreach (self::cookies() as $data) {
             $cookie = new Cookie();
             $cookie->setName($data[0]);
-            $cookie->setUrl($data[1]);
+            $cookie->setExampleValue($data[1]);
+            $cookie->setUrl($data[2]);
             $cookie->setCreatedAt(new \DateTime());
 
             $manager->persist($cookie);
@@ -31,8 +32,8 @@ final class CookieFixture implements FixtureInterface
     {
         $i = 0;
 
-        yield ['Cookie ' . ++$i, 'https://example.com'];
-        yield ['Cookie ' . ++$i, 'https://example.com'];
-        yield ['Cookie ' . ++$i, 'https://example.com'];
+        yield ['Cookie ' . ++$i, 'Example value', 'https://example.com'];
+        yield ['Cookie ' . ++$i, 'Example value', 'https://example.com'];
+        yield ['Cookie ' . ++$i, 'Example value', 'https://example.com'];
     }
 }

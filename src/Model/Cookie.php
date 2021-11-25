@@ -14,6 +14,8 @@ class Cookie implements CookieInterface
 
     protected ?string $name = null;
 
+    protected ?string $exampleValue = null;
+
     protected ?string $url = null;
 
     protected ?ServiceInterface $service = null;
@@ -41,6 +43,16 @@ class Cookie implements CookieInterface
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getExampleValue(): ?string
+    {
+        return $this->exampleValue;
+    }
+
+    public function setExampleValue(string $exampleValue): void
+    {
+        $this->exampleValue = $exampleValue;
     }
 
     public function getUrl(): ?string

@@ -45,6 +45,7 @@ setono_sylius_consent_management:
         cookie_header: Cookies
         cookie_subheader: Cookies beheren
         cookies: Cookies
+        example_value: Voorbeeldwaarde
         ip: IP-adres
         name: Naam
         marketing: Marketing

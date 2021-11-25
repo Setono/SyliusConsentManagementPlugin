@@ -16,6 +16,13 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface
     public function setName(string $name): void;
 
     /**
+     * An example value that this cookie can obtain
+     */
+    public function getExampleValue(): ?string;
+
+    public function setExampleValue(string $exampleValue): void;
+
+    /**
      * This is the URL where this cookie was seen the first time
      */
     public function getUrl(): ?string;

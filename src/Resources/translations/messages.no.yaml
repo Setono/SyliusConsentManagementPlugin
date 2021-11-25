@@ -45,6 +45,7 @@ setono_sylius_consent_management:
         cookie_header: Informasjonskapsler
         cookie_subheader: Administrer informasjonskapsler
         cookies: Informasjonskapsler
+        example_value: Eksempelverdi
         ip: IP addresse
         name: Navn
         marketing: Markedsføring

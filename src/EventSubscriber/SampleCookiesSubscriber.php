@@ -76,16 +76,16 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
         $cookies = [];
 
-        /**
-         * @var string $name
-         * @var mixed $value
-         */
         foreach ($request->cookies->all() as $name => $value) {
+            if (!is_string($name) || !is_string($value)) {
+                continue;
+            }
+
             if (null !== $this->cookieRepository->findOneByName($name)) {
                 continue;
             }
 
-            $obj = $this->cookieFactory->createWithData($name, $request->getUri());
+            $obj = $this->cookieFactory->createWithData($name, $value, $request->getUri());
             $this->cookieRepository->add($obj);
 
             $cookies[] = $obj;
