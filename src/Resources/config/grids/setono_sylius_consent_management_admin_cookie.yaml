@@ -8,6 +8,9 @@ sylius_grid:
                 name:
                     type: string
                     label: setono_sylius_consent_management.ui.name
+                exampleValue:
+                    type: string
+                    label: setono_sylius_consent_management.ui.example_value
                 url:
                     type: twig
                     label: setono_sylius_consent_management.ui.url
