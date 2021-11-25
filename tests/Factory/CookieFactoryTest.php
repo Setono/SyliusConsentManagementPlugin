@@ -21,9 +21,10 @@ final class CookieFactoryTest extends TestCase
     public function it_creates_with_data(): void
     {
         $factory = self::getFactory();
-        $cookie = $factory->createWithData('name', 'https://example.com');
+        $cookie = $factory->createWithData('name', 'value', 'https://example.com');
 
         self::assertSame('name', $cookie->getName());
+        self::assertSame('value', $cookie->getExampleValue());
         self::assertSame('https://example.com', $cookie->getUrl());
     }
 
