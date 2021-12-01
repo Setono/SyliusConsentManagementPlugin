@@ -34,7 +34,7 @@ composer config --global --auth http-basic.setono.repo.packagist.com token your_
 
 Remember to replace `your_token` with the token given to you.
 
-Now you be able to install the plugin using the normal `composer require` command:
+Now you should be able to install the plugin using the normal `composer require` command:
 
 ```shell
 composer req setono/sylius-consent-management-plugin
