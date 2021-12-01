@@ -1,5 +1,3 @@
-# Introduction
-
 Welcome to the Sylius Consent Management Plugin docs.
 
 If you just want to get started, head over to the [installation instructions](installation.md).
