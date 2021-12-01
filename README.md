@@ -96,5 +96,4 @@ From the test layout, you can copy those important parts
 4. Run `vendor/bin/behat --strict -vvv`
 
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
-
 [link-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/actions
