@@ -1,6 +1,7 @@
 # Table of contents
 
-* [Introduction](introduction.md)
+* [Introduction](home.md)
 
 ## Getting started
-* [Installation](installation.md)
+
+* [Installation](getting-started/installation.md)
