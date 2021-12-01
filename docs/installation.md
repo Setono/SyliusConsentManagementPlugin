@@ -39,3 +39,82 @@ Now you should be able to install the plugin using the normal `composer require`
 ```shell
 composer require setono/sylius-consent-management-plugin
 ```
+
+## Enabling the plugin
+
+If you have Flex enabled the `composer require` will automatically add the bundles and the plugin to `bundles.php`.
+If not you should manually add them:
+
+```php
+    Setono\SyliusConsentManagementPlugin\SetonoSyliusConsentManagementPlugin::class => ['all' => true],
+    Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
+    
+    // ...
+    
+    Setono\ClientIdBundle\SetonoClientIdBundle::class => ['all' => true],
+    Setono\ConsentBundle\SetonoConsentBundle::class => ['all' => true],
+```
+
+{% hint style="info" %}
+**NOTICE** that the order of the client id bundle and the consent bundle doesn't matter, but it's important that you
+add the plugin _before_ the `SyliusGridBundle`.
+{% endhint %}
+
+## Add configuration file
+
+Create the file `config/packages/setono_sylius_cookie_consent.yaml` and add the following:
+
+```yaml
+# config/packages/setono_sylius_cookie_consent.yaml
+imports:
+    - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/config.yaml" }
+
+    # Uncomment next line if you want some default fixtures for this plugin
+    # - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
+
+setono_sylius_consent_management:
+    notify:
+        - "johndoe@setono.com"
+```
+
+{% hint style="info" %}
+The `setono_sylius_consent_management.notify` option contains an array of email addresses to notify when new cookies are
+discovered within your store. It's important that you send these notices to somebody who will take action on them so
+that your store is compliant at all times.
+{% endhint %}
+
+## Include routes configuration
+
+Create the file `config/routes/setono_sylius_cookie_consent.yaml` and add the following:
+
+```yaml
+# config/routes/setono_sylius_cookie_consent.yaml
+setono_sylius_consent_management:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml"
+```
+
+{% hint style="info" %}
+The plugin also provides a routes file for non localized stores. All you do is to use
+`@SetonoSyliusConsentManagementPlugin/Resources/config/routes_no_locale.yaml` instead of
+`@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml`
+{% endhint %}
+
+## Add the javascript and CSS to webpack
+
+In a Symfony recommended setup where you have an entry file with your imports, here is an example of how it will work
+with the javascript and CSS included with this plugin:
+
+```javascript
+// assets/shop/entry.js
+import { init } from 'vendor/setono/sylius-consent-management-plugin/src/Resources/assets/js/consent-widget';
+import 'vendor/setono/sylius-consent-management-plugin/src/Resources/assets/css/consent-widget.css';
+init();
+```
+
+## Output widget in HTML
+
+Finally, you will output the widget in your application. You do this with the following `render` function:
+
+```twig
+{{ render(path('setono_sylius_consent_management_shop_partial_consent_widget')) }}
+```
