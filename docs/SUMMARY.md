@@ -4,4 +4,4 @@
 
 ## Getting started
 
-* [Installation](getting-started/installation.md)
+* [Installation](installation.md)
