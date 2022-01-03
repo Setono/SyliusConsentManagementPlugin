@@ -46,7 +46,7 @@ final class ConfigurationTest extends TestCase
             [
                 [], // no values at all
             ],
-            'The child (node|config) "notify" (under|at path) "setono_sylius_consent_management" must be configured',
+            '/The child (node|config) "notify" (under|at path) "setono_sylius_consent_management" must be configured/',
             true
         );
     }
