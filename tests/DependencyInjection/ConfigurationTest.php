@@ -46,7 +46,7 @@ final class ConfigurationTest extends TestCase
             [
                 [], // no values at all
             ],
-            'The child config "notify" under "setono_sylius_consent_management" must be configured: A list of emails to notify when a new cookie is discovered'
+            'The child (node|config) "notify" (under|at path) "setono_sylius_consent_management" must be configured'
         );
     }
 
