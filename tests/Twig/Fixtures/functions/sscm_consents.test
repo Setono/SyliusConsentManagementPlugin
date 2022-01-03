@@ -1,0 +1,12 @@
+--TEST--
+"sscm_consents" function
+--TEMPLATE--
+{% for consent in sscm_consents() %}
+{{ consent ? 'true' : 'false' }}
+{% endfor %}
+--DATA--
+return []
+--EXPECT--
+true
+false
+false

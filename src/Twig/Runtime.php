@@ -33,6 +33,18 @@ final class Runtime implements RuntimeExtensionInterface
         $this->localeContext = $localeContext;
     }
 
+    /**
+     * @return array<string, bool>
+     */
+    public function consents(): array
+    {
+        return [
+            'marketingGranted' => $this->consentContext->getConsent()->isMarketingConsentGranted(),
+            'preferencesGranted' => $this->consentContext->getConsent()->isPreferencesConsentGranted(),
+            'statisticsGranted' => $this->consentContext->getConsent()->isStatisticsConsentGranted(),
+        ];
+    }
+
     public function marketingGranted(): bool
     {
         return $this->consentContext->getConsent()->isMarketingConsentGranted();
