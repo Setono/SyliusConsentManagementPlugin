@@ -25,6 +25,20 @@ final class RuntimeTest extends TestCase
     /**
      * @test
      */
+    public function it_returns_consents(): void
+    {
+        $runtime = self::getRuntime();
+
+        self::assertSame([
+            'marketingGranted' => true,
+            'preferencesGranted' => true,
+            'statisticsGranted' => true,
+        ], $runtime->consents());
+    }
+
+    /**
+     * @test
+     */
     public function it_returns_preferences_consent_status(): void
     {
         $runtime = self::getRuntime();
