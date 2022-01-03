@@ -1,12 +1,12 @@
 {
     "name": "setono/sylius-consent-management-plugin",
-    "type": "sylius-plugin",
     "description": "Setono example plugin for Sylius.",
+    "license": "proprietary",
+    "type": "sylius-plugin",
     "keywords": [
         "sylius",
         "sylius-plugin"
     ],
-    "license": "proprietary",
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
@@ -63,14 +63,7 @@
         "symfony/web-profiler-bundle": "^5.3",
         "weirdan/doctrine-psalm-plugin": "^2.0"
     },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
-    },
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Setono\\SyliusConsentManagementPlugin\\": "src/"
@@ -84,7 +77,14 @@
             "tests/Application/Kernel.php"
         ]
     },
-    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
     "scripts": {
         "analyse": [
             "@ensure-test-container-exists",
