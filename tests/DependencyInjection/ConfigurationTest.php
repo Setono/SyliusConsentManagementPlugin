@@ -108,6 +108,7 @@ final class ConfigurationTest extends TestCase
                 ],
             ],
             'sampling' => [
+                'enabled' => true,
                 'rate' => 0.01,
                 'firewalls' => [
                     'shop',

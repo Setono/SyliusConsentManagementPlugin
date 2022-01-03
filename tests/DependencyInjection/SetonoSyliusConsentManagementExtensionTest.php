@@ -31,15 +31,18 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
     /**
      * @test
      */
-    public function container_has_parameters(): void
+    public function container_loads_with_parameters_and_services(): void
     {
         $this->load();
 
+        $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sampling.enabled', true);
         $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sampling.rate', 0.01);
         $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.sampling.firewalls', ['shop']);
         $this->assertContainerBuilderHasParameter('setono_sylius_consent_management.notify', [
             'johndoe@example.com',
         ]);
+
+        $this->assertContainerBuilderHasService('setono_sylius_consent_management.event_subscriber.sample_cookies');
 
         /** @var array<string, mixed> $resources */
         $resources = $this->container->getParameter('sylius.resources');
@@ -48,5 +51,19 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
         self::assertArrayHasKey('setono_sylius_consent_management.cookie', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service_translation', $resources);
+    }
+
+    /**
+     * @test
+     */
+    public function container_does_not_have_sample_cookies_service(): void
+    {
+        $this->load([
+            'sampling' => [
+                'enabled' => false,
+            ],
+        ]);
+
+        $this->assertContainerBuilderNotHasService('setono_sylius_consent_management.event_subscriber.sample_cookies');
     }
 }
