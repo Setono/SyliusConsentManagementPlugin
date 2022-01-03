@@ -22,18 +22,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_subscriber.sample_cookies"
-                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
-            <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="security.firewall.map"/>
-            <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
-            <argument>%setono_sylius_consent_management.sampling.rate%</argument>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="setono_sylius_consent_management.event_subscriber.new_cookies_notifier"
                  class="Setono\SyliusConsentManagementPlugin\EventSubscriber\NewCookiesNotifierSubscriber">
             <argument type="service" id="setono_sylius_consent_management.email_manager.cookie"/>
