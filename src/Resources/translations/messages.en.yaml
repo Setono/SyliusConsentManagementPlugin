@@ -8,8 +8,10 @@ setono_sylius_consent_management:
             preferences: Preferences
             statistics: Statistics
         cookie:
+            expiry: Expiry
             necessary: Necessary
             necessary_help: When you mark a cookie as necessary you don't have to choose a service
+            purpose: Purpose
             service: Service
             service_placeholder: Choose a service...
         service:
@@ -21,6 +23,8 @@ setono_sylius_consent_management:
             category_placeholder: Select an appropiate category...
             description: Description
             name: Name
+            privacy_policy: Privacy policy
+            privacy_policy_placeholder: Input the URL to the privacy policy
             translations: Translations
         widget_config:
             usage_description: Usage description
@@ -44,6 +48,7 @@ setono_sylius_consent_management:
         consent_entry_header: Consent entries
         consent_entry_search: Search for a client id or an IP address
         consent_entry_subheader: List of consent entries
+        cookie: Cookie
         cookie_header: Cookies
         cookie_subheader: Manage cookies
         cookies: Cookies

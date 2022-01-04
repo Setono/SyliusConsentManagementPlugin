@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
+use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,6 +38,10 @@ final class CookieType extends AbstractResourceType
                 'class' => $this->serviceClass,
                 'choice_label' => 'name',
                 'required' => false,
+            ])
+            ->add('translations', ResourceTranslationsType::class, [
+                'entry_type' => CookieTranslationType::class,
+                'label' => 'setono_sylius_consent_management.form.cookie.translations',
             ])
         ;
     }

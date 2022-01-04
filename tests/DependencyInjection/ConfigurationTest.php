@@ -11,12 +11,14 @@ use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
 use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
+use Setono\SyliusConsentManagementPlugin\Form\Type\CookieTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\WidgetConfigType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
+use Setono\SyliusConsentManagementPlugin\Model\CookieTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
@@ -78,7 +80,15 @@ final class ConfigurationTest extends TestCase
                         'controller' => ResourceController::class,
                         'repository' => CookieRepository::class,
                         'form' => CookieType::class,
-                        'factory' => Factory::class,
+                        'factory' => TranslatableFactory::class,
+                    ],
+                    'translation' => [
+                        'classes' => [
+                            'model' => CookieTranslation::class,
+                            'controller' => ResourceController::class,
+                            'form' => CookieTranslationType::class,
+                            'factory' => Factory::class,
+                        ],
                     ],
                 ],
                 'service' => [

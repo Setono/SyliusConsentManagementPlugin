@@ -26,6 +26,8 @@ class Service implements ServiceInterface
 
     protected ?string $category = null;
 
+    protected ?string $privacyPolicy = null;
+
     /**
      * @var Collection|CookieInterface[]
      *
@@ -76,6 +78,16 @@ class Service implements ServiceInterface
     public function setCategory(?string $category): void
     {
         $this->category = $category;
+    }
+
+    public function getPrivacyPolicy(): ?string
+    {
+        return $this->privacyPolicy;
+    }
+
+    public function setPrivacyPolicy(?string $privacyPolicy): void
+    {
+        $this->privacyPolicy = $privacyPolicy;
     }
 
     public function getName(): ?string

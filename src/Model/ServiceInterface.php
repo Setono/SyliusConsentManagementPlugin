@@ -26,6 +26,13 @@ interface ServiceInterface extends ResourceInterface, TimestampableInterface, Tr
 
     public function setCategory(?string $category): void;
 
+    /**
+     * The URL to the privacy policy
+     */
+    public function getPrivacyPolicy(): ?string;
+
+    public function setPrivacyPolicy(string $privacyPolicy): void;
+
     public function getName(): ?string;
 
     public function setName(string $name): void;

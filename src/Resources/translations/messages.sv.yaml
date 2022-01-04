@@ -8,8 +8,10 @@ setono_sylius_consent_management:
             preferences: Inställningar
             statistics: Statistik
         cookie:
+            expiry: Expiry # todo translate
             necessary: Nödvändig
             necessary_help: När du markerar en cookie som nödvändig behöver du inte välja en tjänst
+            purpose: Purpose # todo translate
             service: Tjänst
             service_placeholder: Välj en tjänst...
         service:
@@ -21,6 +23,8 @@ setono_sylius_consent_management:
             category_placeholder: Välj en lämplig kategori...
             description: Beskrivning
             name: Namn
+            privacy_policy: Privacy policy # todo translate
+            privacy_policy_placeholder: Input the URL to the privacy policy # todo translate
             translations: Översättningar
     menu:
         admin:
@@ -42,6 +46,7 @@ setono_sylius_consent_management:
         consent_entry_header: Samtycksposter
         consent_entry_search: Sök efter ett klient-ID eller en IP-adress
         consent_entry_subheader: Lista över samtycke
+        cookie: Cookie
         cookie_header: Cookies
         cookie_subheader: Hantera cookies
         cookies: Cookies

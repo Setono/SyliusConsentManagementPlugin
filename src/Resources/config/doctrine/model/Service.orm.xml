@@ -12,6 +12,7 @@
         </id>
         <field name="code" column="code" unique="true" />
         <field name="category" type="string"/>
+        <field name="privacyPolicy" type="string" nullable="true"/>
 
         <one-to-many field="cookies" target-entity="Setono\SyliusConsentManagementPlugin\Model\CookieInterface" mapped-by="service" orphan-removal="true"/>
 

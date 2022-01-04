@@ -6,6 +6,10 @@
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.cookie_translation.validation_groups">
+            <parameter>setono_sylius_consent_management</parameter>
+        </parameter>
+
         <parameter type="collection" key="setono_sylius_consent_management.form.type.service.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
@@ -26,6 +30,14 @@
             <argument>%setono_sylius_consent_management.model.cookie.class%</argument>
             <argument>%setono_sylius_consent_management.model.service.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.cookie.validation_groups%</argument>
+
+            <tag name="form.type"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.form.type.cookie_translation"
+                 class="Setono\SyliusConsentManagementPlugin\Form\Type\CookieTranslationType">
+            <argument>%setono_sylius_consent_management.model.cookie_translation.class%</argument>
+            <argument>%setono_sylius_consent_management.form.type.cookie_translation.validation_groups%</argument>
 
             <tag name="form.type"/>
         </service>

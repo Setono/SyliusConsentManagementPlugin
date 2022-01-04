@@ -6,8 +6,9 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
+use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface CookieInterface extends ResourceInterface, TimestampableInterface
+interface CookieInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface
 {
     public function getId(): ?int;
 
@@ -39,4 +40,12 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface
     public function isNecessary(): bool;
 
     public function setNecessary(bool $necessary): void;
+
+    public function getExpiry(): ?string;
+
+    public function setExpiry(string $expiry): void;
+
+    public function getPurpose(): ?string;
+
+    public function setPurpose(string $purpose): void;
 }

@@ -5,10 +5,18 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Sylius\Component\Resource\Model\TimestampableTrait;
+use Sylius\Component\Resource\Model\TranslatableTrait;
+use Sylius\Component\Resource\Model\TranslationInterface;
 
 class Cookie implements CookieInterface
 {
     use TimestampableTrait;
+
+    use TranslatableTrait {
+        __construct as private initializeTranslationsCollection;
+
+        getTranslation as private doGetTranslation;
+    }
 
     protected ?int $id = null;
 
@@ -21,6 +29,11 @@ class Cookie implements CookieInterface
     protected ?ServiceInterface $service = null;
 
     protected bool $necessary = false;
+
+    public function __construct()
+    {
+        $this->initializeTranslationsCollection();
+    }
 
     public function preUpdate(): void
     {
@@ -83,5 +96,41 @@ class Cookie implements CookieInterface
     public function setNecessary(bool $necessary): void
     {
         $this->necessary = $necessary;
+    }
+
+    public function getExpiry(): ?string
+    {
+        return $this->getTranslation()->getExpiry();
+    }
+
+    public function setExpiry(string $expiry): void
+    {
+        $this->getTranslation()->setExpiry($expiry);
+    }
+
+    public function getPurpose(): ?string
+    {
+        return $this->getTranslation()->getPurpose();
+    }
+
+    public function setPurpose(string $purpose): void
+    {
+        $this->getTranslation()->setPurpose($purpose);
+    }
+
+    /**
+     * @return CookieTranslationInterface
+     */
+    public function getTranslation(?string $locale = null): TranslationInterface
+    {
+        /** @var CookieTranslationInterface $translation */
+        $translation = $this->doGetTranslation($locale);
+
+        return $translation;
+    }
+
+    protected function createTranslation(): CookieTranslationInterface
+    {
+        return new CookieTranslation();
     }
 }

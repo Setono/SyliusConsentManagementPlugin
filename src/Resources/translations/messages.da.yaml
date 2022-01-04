@@ -8,8 +8,10 @@ setono_sylius_consent_management:
             preferences: Indstillinger/funktionelle
             statistics: Statistiske
         cookie:
+            expiry: Udløb
             necessary: Nødvendig
             necessary_help: Når du markerer en cookie som nødvendig behøver du ikke vælge en service
+            purpose: Formål
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
         service:
@@ -21,6 +23,8 @@ setono_sylius_consent_management:
             category_placeholder: Vælg en passende kategori...
             description: Beskrivelse
             name: Navn
+            privacy_policy: Privatlivspolitik
+            privacy_policy_placeholder: Indsæt adressen til at privatlivspolitikken
             translations: Oversættelser
     menu:
         admin:
@@ -42,6 +46,7 @@ setono_sylius_consent_management:
         consent_entry_header: Samtykker
         consent_entry_search: Søg efter et klient id eller IP-adresse
         consent_entry_subheader: Liste over samtykker
+        cookie: Cookie
         cookie_header: Cookies
         cookie_subheader: Håndter cookies
         cookies: Cookies
