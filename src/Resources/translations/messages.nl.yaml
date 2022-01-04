@@ -8,8 +8,10 @@ setono_sylius_consent_management:
             preferences: Voorkeuren
             statistics: Statistieken
         cookie:
+            expiry: Expiry # todo translate
             necessary: Vereist
             necessary_help: Wanneer u een cookie als noodzakelijk markeert, hoeft u geen dienst te kiezen
+            purpose: Purpose # todo translate
             service: Dienst
             service_placeholder: Kies een dienst...
         service:
@@ -21,6 +23,8 @@ setono_sylius_consent_management:
             category_placeholder: Selecteer een geschikte categorie...
             description: Omschrijving
             name: Naam
+            privacy_policy: Privacy policy # todo translate
+            privacy_policy_placeholder: Input the URL to the privacy policy # todo translate
             translations: Vertalingen
     menu:
         admin:
@@ -42,6 +46,7 @@ setono_sylius_consent_management:
         consent_entry_header: Toestemmingsinvoer
         consent_entry_search: Zoek naar een Cliënt id of een IP-adres
         consent_entry_subheader: Lijst met toestemmingsvermeldingen
+        cookie: Cookie
         cookie_header: Cookies
         cookie_subheader: Cookies beheren
         cookies: Cookies

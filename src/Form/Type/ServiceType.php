@@ -9,6 +9,7 @@ use Sylius\Bundle\ResourceBundle\Form\EventSubscriber\AddCodeFormSubscriber;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class ServiceType extends AbstractResourceType
@@ -24,6 +25,13 @@ final class ServiceType extends AbstractResourceType
                 'choice_label' => static function (string $choice, string $key, string $value): string {
                     return 'setono_sylius_consent_management.form.service.categories.' . $key;
                 },
+            ])
+            ->add('privacyPolicy', UrlType::class, [
+                'label' => 'setono_sylius_consent_management.form.service.privacy_policy',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'setono_sylius_consent_management.form.service.privacy_policy_placeholder',
+                ],
             ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => ServiceTranslationType::class,

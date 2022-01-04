@@ -1,4 +1,7 @@
+{% from '@SyliusAdmin/Macro/translationForm.html.twig' import translationForm %}
+
 {{ form_errors(form) }}
+<h3 class="ui large header">{{ 'setono_sylius_consent_management.ui.cookie'|trans }}: {{ resource.name }}</h3>
 <div class="ui two column stackable grid">
     <div class="column">
         <div class="ui segment">
@@ -12,5 +15,8 @@
             {{ form_row(form.necessary) }}
             {{ form_row(form.service) }}
         </div>
+    </div>
+    <div class="column">
+        {{ translationForm(form.translations) }}
     </div>
 </div>
