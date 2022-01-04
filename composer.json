@@ -14,7 +14,7 @@
         "doctrine/orm": "^2.10",
         "fakerphp/faker": "^1.17",
         "knplabs/knp-menu": "^3.3",
-        "matomo/device-detector": "^4.2",
+        "matomo/device-detector": "^5.0",
         "psr/cache": "^1.0",
         "psr/event-dispatcher": "^1.0",
         "setono/client-id-bundle": "^0.2",
