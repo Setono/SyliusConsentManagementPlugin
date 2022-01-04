@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
-use DeviceDetector\Cache\PSR6Bridge;
-use DeviceDetector\Parser\Bot as BotParser;
-use Psr\Cache\CacheItemPoolInterface;
+use Setono\BotDetectionBundle\BotDetector\BotDetectorInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -16,12 +14,12 @@ final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
 {
     private ConsentWidgetInterface $consentWidget;
 
-    private CacheItemPoolInterface $cache;
+    private BotDetectorInterface $botDetector;
 
-    public function __construct(ConsentWidgetInterface $consentWidget, CacheItemPoolInterface $cache)
+    public function __construct(ConsentWidgetInterface $consentWidget, BotDetectorInterface $botDetector)
     {
         $this->consentWidget = $consentWidget;
-        $this->cache = $cache;
+        $this->botDetector = $botDetector;
     }
 
     public static function getSubscribedEvents(): array
@@ -43,14 +41,7 @@ final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $botParser = new BotParser();
-        $botParser->setUserAgent($userAgent);
-        $botParser->discardDetails();
-        $botParser->setCache(new PSR6Bridge($this->cache));
-        $result = $botParser->parse();
-
-        // not a bot
-        if (null === $result) {
+        if (!$this->botDetector->isBotRequest($request)) {
             return;
         }
 
