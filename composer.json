@@ -16,7 +16,7 @@
         "knplabs/knp-menu": "^3.3",
         "psr/cache": "^1.0",
         "psr/event-dispatcher": "^1.0",
-        "setono/bot-detection-bundle": "^1.1",
+        "setono/bot-detection-bundle": "^1.2",
         "setono/client-id-bundle": "^0.2",
         "setono/client-id-contracts": "^0.2",
         "setono/consent-bundle": "^0.1",
