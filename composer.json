@@ -11,7 +11,7 @@
         "php": ">=7.4",
         "ext-json": "*",
         "doctrine/collections": "^1.6",
-        "doctrine/orm": "^2.10",
+        "doctrine/orm": "^2.6",
         "fakerphp/faker": "^1.17",
         "knplabs/knp-menu": "^3.3",
         "psr/cache": "^1.0",
