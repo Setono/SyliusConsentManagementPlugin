@@ -10,6 +10,8 @@ use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Sylius\Bundle\CoreBundle\Fixture\Factory\AbstractExampleFactory;
+use Sylius\Bundle\CoreBundle\Fixture\OptionsResolver\LazyOption;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Formatter\StringInflector;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -30,14 +32,18 @@ use Webmozart\Assert\Assert;
 
     protected OptionsResolver $optionsResolver;
 
+    private ChannelRepositoryInterface $channelRepository;
+
     public function __construct(
         ServiceRepositoryInterface $serviceRepository,
         FactoryInterface $serviceFactory,
-        RepositoryInterface $localeRepository
+        RepositoryInterface $localeRepository,
+        ChannelRepositoryInterface $channelRepository
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->serviceFactory = $serviceFactory;
         $this->localeRepository = $localeRepository;
+        $this->channelRepository = $channelRepository;
 
         $this->faker = Factory::create();
         $this->optionsResolver = new OptionsResolver();
@@ -59,6 +65,11 @@ use Webmozart\Assert\Assert;
                 Assert::string($options['code']);
                 $service->setCode($options['code']);
             }
+        }
+
+        if (array_key_exists('enabled', $options)) {
+            Assert::boolean($options['enabled']);
+            $service->setEnabled($options['enabled']);
         }
 
         if (array_key_exists('category', $options)) {
@@ -110,6 +121,7 @@ use Webmozart\Assert\Assert;
 
                 return StringInflector::nameToCode($options['name']);
             })
+            ->setDefault('enabled', true)
             ->setDefault('category', function (Options $options): string {
                 /** @var string $category */
                 $category = $this->faker->randomElement(Consent::getAvailableConsents());
@@ -127,6 +139,10 @@ use Webmozart\Assert\Assert;
             })
             ->setDefault('translations', [])
             ->setAllowedTypes('translations', ['array'])
+
+            ->setDefault('channels', LazyOption::randomOnes($this->channelRepository, 3))
+            ->setAllowedTypes('channels', 'array')
+            ->setNormalizer('channels', LazyOption::findBy($this->channelRepository, 'code'))
         ;
     }
 

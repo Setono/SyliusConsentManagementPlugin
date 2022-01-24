@@ -162,6 +162,9 @@ jobs:
                     - "^5.0"
 
         steps:
+            -   name: "Start MySQL"
+                run: "sudo /etc/init.d/mysql start"
+
             -   name: "Checkout"
                 uses: "actions/checkout@v2"
 
@@ -312,6 +315,9 @@ jobs:
                     - "highest"
 
         steps:
+            -   name: "Start MySQL"
+                run: "sudo /etc/init.d/mysql start"
+                
             -   name: "Checkout"
                 uses: "actions/checkout@v2"
 
@@ -344,6 +350,9 @@ jobs:
                     - "highest"
 
         steps:
+            -   name: "Start MySQL"
+                run: "sudo /etc/init.d/mysql start"
+                
             -   name: "Checkout"
                 uses: "actions/checkout@v2"
 
@@ -361,7 +370,7 @@ jobs:
                 uses: "ramsey/composer-install@v1"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-
+            
             -   name: "Collect code coverage with pcov and phpunit/phpunit"
                 run: "vendor/bin/phpunit --coverage-clover=.build/logs/clover.xml"
 

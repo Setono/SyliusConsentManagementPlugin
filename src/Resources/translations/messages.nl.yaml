@@ -21,7 +21,9 @@ setono_sylius_consent_management:
                 statistics: Statistieken
             category: Categorie
             category_placeholder: Selecteer een geschikte categorie...
+            channels: Channels # todo translate
             description: Omschrijving
+            enabled: Enabled # todo translate
             name: Naam
             privacy_policy: Privacy policy # todo translate
             privacy_policy_placeholder: Input the URL to the privacy policy # todo translate

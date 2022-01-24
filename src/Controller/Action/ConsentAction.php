@@ -17,6 +17,7 @@ use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +57,8 @@ final class ConsentAction
 
     private UrlGeneratorInterface $urlGenerator;
 
+    private ChannelContextInterface $channelContext;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
@@ -68,7 +71,8 @@ final class ConsentAction
         ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
         ConsentContextInterface $consentContext,
         EventDispatcherInterface $eventDispatcher,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        ChannelContextInterface $channelContext
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -82,6 +86,7 @@ final class ConsentAction
         $this->consentContext = $consentContext;
         $this->eventDispatcher = $eventDispatcher;
         $this->urlGenerator = $urlGenerator;
+        $this->channelContext = $channelContext;
     }
 
     public function __invoke(Request $request): Response
@@ -136,7 +141,7 @@ final class ConsentAction
                 'decided' => $decided,
                 'consent' => json_encode($consent, JSON_THROW_ON_ERROR),
                 'form' => $form->createView(),
-                'services' => $this->serviceRepository->findAllIndexedByCategory(),
+                'services' => $this->serviceRepository->findEnabledIndexedByCategory($this->channelContext->getChannel()),
             ]), 200);
         }
 

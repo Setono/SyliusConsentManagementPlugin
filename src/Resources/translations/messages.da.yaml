@@ -21,7 +21,9 @@ setono_sylius_consent_management:
                 statistics: Statistiske
             category: Kategori
             category_placeholder: Vælg en passende kategori...
+            channels: Kanaler
             description: Beskrivelse
+            enabled: Aktiveret
             name: Navn
             privacy_policy: Privatlivspolitik
             privacy_policy_placeholder: Indsæt adressen til at privatlivspolitikken

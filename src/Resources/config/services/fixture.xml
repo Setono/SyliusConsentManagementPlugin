@@ -11,6 +11,7 @@
             <argument type="service" id="setono_sylius_consent_management.repository.service" />
             <argument type="service" id="setono_sylius_consent_management.factory.service" />
             <argument type="service" id="sylius.repository.locale" />
+            <argument type="service" id="sylius.repository.channel" />
         </service>
 
         <service id="setono_sylius_consent_management.fixture.service"

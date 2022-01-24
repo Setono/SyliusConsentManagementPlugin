@@ -30,6 +30,7 @@
     "Sylius\\Component\\Channel\\Model\\ChannelInterface",
     "Sylius\\Component\\Channel\\Repository\\ChannelRepositoryInterface",
     "Sylius\\Component\\Locale\\Context\\LocaleContextInterface",
-    "Sylius\\Component\\Locale\\Model\\LocaleInterface"
+    "Sylius\\Component\\Locale\\Model\\LocaleInterface",
+    "Sylius\\Component\\Channel\\Model\\ChannelsAwareInterface"
   ]
 }

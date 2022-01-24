@@ -21,7 +21,9 @@ setono_sylius_consent_management:
                 statistics: Statistics
             category: Category
             category_placeholder: Select an appropiate category...
+            channels: Channels
             description: Description
+            enabled: Enabled
             name: Name
             privacy_policy: Privacy policy
             privacy_policy_placeholder: Input the URL to the privacy policy
