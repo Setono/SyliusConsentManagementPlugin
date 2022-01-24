@@ -40,7 +40,6 @@
     },
     "require-dev": {
         "api-platform/core": "^2.5",
-        "dama/doctrine-test-bundle": "^6.7",
         "doctrine/data-fixtures": "^1.5",
         "egulias/email-validator": "^2.1.25",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
