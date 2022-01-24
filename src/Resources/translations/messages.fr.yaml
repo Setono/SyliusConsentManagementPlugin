@@ -1,0 +1,92 @@
+setono_sylius_consent_management:
+    email:
+        new_cookies:
+            subject: "IMPORTANT: De nouveaux cookies ont été trouvés dans votre magasin"
+    form:
+        consent:
+            marketing: Marketing
+            preferences: Préférences
+            statistics: Statistiques
+        cookie:
+            expiry: Expire
+            necessary: Nécessaire
+            necessary_help: Si vous marquez un cookie comme nécessaire, vous n'avez pas besoin de choisir un service
+            purpose: But
+            service: Service
+            service_placeholder: Choisissez un  service...
+        service:
+            categories:
+                marketing: Marketing
+                preferences: Préférences
+                statistics: Statistiques
+            category: Categorie
+            category_placeholder: Choisissez une categorie appropriée...
+            channels: Canaux
+            description: Description
+            enabled: Activé
+            name: Nom
+            privacy_policy: Politique de confidentialité
+            privacy_policy_placeholder: Entrez l'URL de la politique de confidentialité
+            translations: Traductions
+        widget_config:
+            usage_description: Description de l'utilisation
+    menu:
+        admin:
+            main:
+                consent_management:
+                    consent_entries: Consentements
+                    cookies: Cookies
+                    header: Gestion des consentements
+                    services: Services
+                    widget_configuration: Configuration du widget
+    ui:
+        categories:
+            marketing: Marketing
+            preferences: Préférences
+            statistics: Statistiques
+        category: Categorie
+        client_id: ID Client
+        consent_entries: Consentements
+        consent_entry_header: Consentements
+        consent_entry_search: Chercher un client ou une IP
+        consent_entry_subheader: Liste des consentements
+        cookie: Cookie
+        cookie_header: Cookies
+        cookie_subheader: Gérer les cookies
+        cookies: Cookies
+        example_value: Exemple de valeur
+        ip: Adresse IP
+        name: Nom
+        marketing: Marketing
+        missing: Manquant
+        open_in_new_tab: Ouvrir dans un nouvel onglet
+        preferences: Préférences
+        service: Service
+        service_header: Services
+        service_search: Chercher par code ou nom
+        service_subheader: Gérer les services qui requièrent un consentement
+        services: Services
+        statistics: Statistiques
+        url: URL
+        user_agent: User agent
+        widget:
+            accept: Accepter
+            close: Fermer
+            error_encountered: Une erreur est survenir lors de la sauvegarde de vos choix. Merci de recharger la page.
+            introduction: "%channel% utilise des cookies pour vous fournir la meilleur expérience sur notre boutique"
+            is_saving: Sauvegarde de vos choix. Veuillez patienter.'
+            more_information: Plus d'information
+            must_reload: La page doit être rechargée afin que vos changements prennent effet.
+            reload: Recharger
+            reloading_page: Rechargement de la page. Veuillez patienter.
+            save: Sauvegarder
+            settings: Gestion des cookies
+        widget_configs: Configuration du widget
+        widget_config_header: Configuration du widget
+        widget_config_subheader: Gérer la configuration de vos widgets sur les différents canaux
+        update:
+            title: Modifier les consentements
+            header: Consentements
+            subheader: Modifier vos préférences de cookies
+            save: Sauvegarder les consentements
+            footer_link: Modifier les consentements
