@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Form\Type;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
+use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\Channel;
 use Sylius\Component\Resource\Translation\Provider\TranslationLocaleProviderInterface;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
@@ -20,6 +24,8 @@ use Symfony\Component\Form\Test\TypeTestCase;
  */
 final class ServiceTypeTest extends TypeTestCase
 {
+    use ProphecyTrait;
+
     protected function getExtensions(): array
     {
         $localeProvider = new class() implements TranslationLocaleProviderInterface {
@@ -38,8 +44,15 @@ final class ServiceTypeTest extends TypeTestCase
         $serviceTranslationType = new ServiceTranslationType(ServiceTranslation::class);
         $resourceTranslationType = new ResourceTranslationsType($localeProvider);
 
+        $channel = new Channel();
+        $channel->setCode('FASHION_WEB');
+
+        $channelRepository = $this->prophesize(ChannelRepositoryInterface::class);
+        $channelRepository->findAll()->willReturn([$channel]);
+        $channelChoiceType = new ChannelChoiceType($channelRepository->reveal());
+
         return [
-            new PreloadedExtension([$serviceType, $serviceTranslationType, $resourceTranslationType], []),
+            new PreloadedExtension([$serviceType, $serviceTranslationType, $resourceTranslationType, $channelChoiceType], []),
         ];
     }
 
@@ -59,17 +72,21 @@ final class ServiceTypeTest extends TypeTestCase
                     'description' => 'description',
                 ],
             ],
+            'privacyPolicy' => 'https://example.com/privacy-policy.html',
+            'enabled' => '1',
+            'channels' => ['FASHION_WEB'],
         ]);
 
         self::assertTrue($form->isSynchronized());
 
         $expected = new Service();
-        $expected->setCategory('marketing');
-        $expected->getTranslation('en_US')->setName('name');
         $expected->getTranslation('en_US')->setDescription('description');
+        $expected->setPrivacyPolicy('https://example.com/privacy-policy.html');
+        $expected->enable();
 
-        self::assertSame($expected->getCategory(), $model->getCategory());
-        self::assertSame($expected->getTranslation('en_US_')->getName(), $model->getTranslation('en_US_')->getName());
-        self::assertSame($expected->getTranslation('en_US_')->getDescription(), $model->getTranslation('en_US_')->getDescription());
+        self::assertSame('marketing', $model->getCategory());
+        self::assertSame('name', $model->getTranslation('en_US')->getName());
+        self::assertSame('description', $model->getTranslation('en_US')->getDescription());
+        self::assertTrue($model->isEnabled());
     }
 }
