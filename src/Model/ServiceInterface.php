@@ -5,12 +5,20 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelsAwareInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
+use Sylius\Component\Resource\Model\ToggleableInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface ServiceInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface, CodeAwareInterface
+interface ServiceInterface extends
+    ResourceInterface,
+    TimestampableInterface,
+    TranslatableInterface,
+    CodeAwareInterface,
+    ChannelsAwareInterface,
+    ToggleableInterface
 {
     public const CATEGORY_PREFERENCES = 'preferences';
 
