@@ -18,6 +18,7 @@
             <argument type="service" id="setono_consent.context.default"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="sylius.context.channel"/>
         </service>
     </services>
 </container>
