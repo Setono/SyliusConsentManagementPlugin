@@ -19,9 +19,11 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
     {
         $childNode = $resourceNode->children();
         $childNode->scalarNode('code')->cannotBeEmpty();
+        $childNode->booleanNode('enabled')->defaultTrue();
         $childNode->enumNode('category')->values(Consent::getAvailableConsents())->cannotBeEmpty();
         $childNode->scalarNode('name')->cannotBeEmpty();
         $childNode->scalarNode('description')->cannotBeEmpty();
+        $childNode->arrayNode('channels')->scalarPrototype();
         $childNode->variableNode('translations')->cannotBeEmpty()->defaultValue([]);
     }
 }
