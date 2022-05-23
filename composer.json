@@ -35,7 +35,7 @@
         "symfony/security-bundle": "^4.4 || ^5.0",
         "symfony/translation-contracts": "^1.1 || ^2.4",
         "symfony/webpack-encore-bundle": "^1.12",
-        "twig/twig": "^2.14",
+        "twig/twig": "^2.15",
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
