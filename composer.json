@@ -36,7 +36,7 @@
         "symfony/translation-contracts": "^1.1 || ^2.4",
         "symfony/webpack-encore-bundle": "^1.12",
         "twig/twig": "^2.14",
-        "webmozart/assert": "^1.10"
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "api-platform/core": "^2.5",
