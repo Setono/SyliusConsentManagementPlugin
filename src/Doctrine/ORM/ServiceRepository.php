@@ -46,7 +46,6 @@ class ServiceRepository extends EntityRepository implements ServiceRepositoryInt
             ->getQuery()
             ->getResult()
         ;
-        Assert::isArray($services);
 
         foreach ($services as $service) {
             Assert::isInstanceOf($service, ServiceInterface::class);

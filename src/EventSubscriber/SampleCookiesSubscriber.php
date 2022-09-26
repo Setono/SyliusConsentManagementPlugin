@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Setono\MainRequestTrait\MainRequestTrait;
 use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
@@ -17,6 +18,8 @@ use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
 {
+    use MainRequestTrait;
+
     private CookieRepositoryInterface $cookieRepository;
 
     private CookieFactoryInterface $cookieFactory;
@@ -65,7 +68,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     public function sample(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->isMainRequest($event)) {
             return;
         }
         $request = $event->getRequest();
