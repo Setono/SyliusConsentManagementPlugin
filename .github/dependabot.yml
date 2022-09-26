@@ -8,9 +8,9 @@ updates:
             prefix: "composer"
         directory: "/"
         ignore:
-            -   dependency-name: "symfony*"
-            -   dependency-name: "sylius/sylius"
-        open-pull-requests-limit: 10
+            -   dependency-name: "symfony/*"
+            -   dependency-name: "sylius/*"
+        open-pull-requests-limit: 1
         package-ecosystem: "composer"
         schedule:
             interval: "weekly"
