@@ -35,12 +35,11 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "api-platform/core": "^2.5",
+        "api-platform/core": "^2.6",
         "doctrine/data-fixtures": "^1.5",
-        "egulias/email-validator": "^2.1.25",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
         "infection/infection": "^0.26",
-        "lexik/jwt-authentication-bundle": "^2.14",
+        "lexik/jwt-authentication-bundle": "^2.16",
         "matthiasnoback/symfony-config-test": "^4.3",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",
         "phpspec/prophecy-phpunit": "^2.0",
@@ -50,7 +49,7 @@
         "roave/security-advisories": "dev-latest",
         "setono/code-quality-pack": "^2.2",
         "setono/sylius-behat-pack": "^0.2.2",
-        "sylius/sylius": "~1.9.8",
+        "sylius/sylius": "~1.10.14",
         "symfony/debug-bundle": "^4.4 || ^5.4 || ^6.0",
         "symfony/dotenv": "^4.4 || ^5.4 || ^6.0",
         "symfony/intl": "^4.4 || ^5.4 || ^6.0",
