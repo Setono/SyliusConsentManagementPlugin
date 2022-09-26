@@ -11,3 +11,6 @@ parameters:
 sylius_shop:
     product_grid:
         include_all_descendants: true
+
+sylius_api:
+    enabled: true

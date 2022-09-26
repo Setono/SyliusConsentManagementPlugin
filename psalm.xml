@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <psalm
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    totallyTyped="true"
-    errorLevel="1"
-    findUnusedCode="false"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    errorLevel="1"
+    phpVersion="8.1"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src"/>
@@ -46,10 +46,10 @@
         </DeprecatedConstant>
         <DeprecatedMethod>
             <errorLevel type="suppress">
-                <referencedMethod name="Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest"/>
-                <referencedMethod name="Symfony\Component\HttpFoundation\RequestStack::getMasterRequest"/>
+                <referencedMethod name="Sylius\Component\Mailer\Sender\SenderInterface::send"/>
             </errorLevel>
         </DeprecatedMethod>
+        <UnnecessaryVarAnnotation errorLevel="suppress"/>
     </issueHandlers>
     <forbiddenFunctions>
         <function name="dd"/>

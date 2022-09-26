@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\BotDetectionBundle\BotDetector\BotDetectorInterface;
+use Setono\MainRequestTrait\MainRequestTrait;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
 {
+    use MainRequestTrait;
+
     private ConsentWidgetInterface $consentWidget;
 
     private BotDetectorInterface $botDetector;
@@ -31,7 +34,7 @@ final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
 
     public function check(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest() || !$this->consentWidget->show()) {
+        if (!$this->isMainRequest($event) || !$this->consentWidget->show()) {
             return;
         }
         $request = $event->getRequest();
