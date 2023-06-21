@@ -9,7 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\CookieRepository
  *
  * @property CookieRepositoryInterface $repository
  */

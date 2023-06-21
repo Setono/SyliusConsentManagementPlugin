@@ -51,7 +51,6 @@ interface ServiceInterface extends
 
     /**
      * @return Collection|CookieInterface[]
-     *
      * @psalm-return Collection<array-key, CookieInterface>
      */
     public function getCookies(): Collection;

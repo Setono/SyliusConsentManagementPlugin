@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Setono\SyliusConsentManagementPlugin\Repository;
 
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Webmozart\Assert\Assert;

@@ -33,7 +33,7 @@ use Webmozart\Assert\Assert;
     public function __construct(
         FactoryInterface $widgetConfigFactory,
         ChannelRepositoryInterface $channelRepository,
-        RepositoryInterface $localeRepository
+        RepositoryInterface $localeRepository,
     ) {
         $this->widgetConfigFactory = $widgetConfigFactory;
         $this->channelRepository = $channelRepository;
@@ -93,7 +93,7 @@ use Webmozart\Assert\Assert;
                 if ($channel->getLocales()->isEmpty()) {
                     throw new \InvalidArgumentException(sprintf(
                         'You have no locales at the channel "%s".',
-                        (string) $channel->getCode()
+                        (string) $channel->getCode(),
                     ));
                 }
 

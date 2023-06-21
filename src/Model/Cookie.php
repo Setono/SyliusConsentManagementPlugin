@@ -11,7 +11,6 @@ use Sylius\Component\Resource\Model\TranslationInterface;
 class Cookie implements CookieInterface
 {
     use TimestampableTrait;
-
     use TranslatableTrait {
         __construct as private initializeTranslationsCollection;
 

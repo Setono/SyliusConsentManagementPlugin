@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Webmozart\Assert\Assert;
 
 final class CookieFactory implements CookieFactoryInterface
 {
@@ -18,8 +19,8 @@ final class CookieFactory implements CookieFactoryInterface
 
     public function createNew(): CookieInterface
     {
-        /** @var CookieInterface $obj */
         $obj = $this->decorated->createNew();
+        Assert::isInstanceOf($obj, CookieInterface::class);
 
         return $obj;
     }

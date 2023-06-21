@@ -16,14 +16,18 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 {
     private FactoryInterface $decorated;
 
+    /** @var RepositoryInterface<LocaleInterface> */
     private RepositoryInterface $localeRepository;
 
     private TranslatorInterface $translator;
 
+    /**
+     * @param RepositoryInterface<LocaleInterface> $localeRepository
+     */
     public function __construct(
         FactoryInterface $decorated,
         RepositoryInterface $localeRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->decorated = $decorated;
         $this->localeRepository = $localeRepository;
@@ -32,8 +36,8 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 
     public function createNew(): WidgetConfigInterface
     {
-        /** @var WidgetConfigInterface $obj */
         $obj = $this->decorated->createNew();
+        Assert::isInstanceOf($obj, WidgetConfigInterface::class);
 
         return $obj;
     }
@@ -53,7 +57,7 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
             'setono_sylius_consent_management.ui.widget.introduction',
             ['%channel%' => $channel->getName()],
             null,
-            $localeCode
+            $localeCode,
         ));
 
         return $obj;

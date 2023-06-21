@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Setono\SyliusConsentManagementPlugin\Repository;
 
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Webmozart\Assert\Assert;
 

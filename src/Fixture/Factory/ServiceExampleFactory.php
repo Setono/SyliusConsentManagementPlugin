@@ -24,8 +24,10 @@ use Webmozart\Assert\Assert;
 {
     protected ServiceRepositoryInterface $serviceRepository;
 
+    /** @var FactoryInterface<ServiceInterface> */
     protected FactoryInterface $serviceFactory;
 
+    /** @var RepositoryInterface<LocaleInterface> */
     protected RepositoryInterface $localeRepository;
 
     protected Generator $faker;
@@ -34,11 +36,15 @@ use Webmozart\Assert\Assert;
 
     private ChannelRepositoryInterface $channelRepository;
 
+    /**
+     * @param FactoryInterface<ServiceInterface> $serviceFactory
+     * @param RepositoryInterface<LocaleInterface> $localeRepository
+     */
     public function __construct(
         ServiceRepositoryInterface $serviceRepository,
         FactoryInterface $serviceFactory,
         RepositoryInterface $localeRepository,
-        ChannelRepositoryInterface $channelRepository
+        ChannelRepositoryInterface $channelRepository,
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->serviceFactory = $serviceFactory;
@@ -151,7 +157,7 @@ use Webmozart\Assert\Assert;
      */
     protected function getLocales(): array
     {
-        return array_filter(array_map(function (LocaleInterface $locale) {
+        return array_filter(array_map(static function (LocaleInterface $locale) {
             return $locale->getCode();
         }, $this->localeRepository->findAll()));
     }

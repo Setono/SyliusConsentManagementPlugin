@@ -25,7 +25,7 @@ final class Runtime implements RuntimeExtensionInterface
         ConsentContextInterface $consentContext,
         ValidWidgetConfigProviderInterface $widgetConfigProvider,
         ChannelContextInterface $channelContext,
-        LocaleContextInterface $localeContext
+        LocaleContextInterface $localeContext,
     ) {
         $this->consentContext = $consentContext;
         $this->widgetConfigProvider = $widgetConfigProvider;
@@ -86,7 +86,7 @@ final class Runtime implements RuntimeExtensionInterface
     {
         return $this->widgetConfigProvider->getWidgetConfig(
             $this->channelContext->getChannel(),
-            $this->localeContext->getLocaleCode()
+            $this->localeContext->getLocaleCode(),
         );
     }
 

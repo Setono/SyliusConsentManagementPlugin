@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Setono\SyliusConsentManagementPlugin\Repository;
 
 use Setono\ClientId\ClientId;
 use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Webmozart\Assert\Assert;
 

@@ -15,9 +15,7 @@ use Sylius\Component\Resource\Model\TranslationInterface;
 class Service implements ServiceInterface
 {
     use TimestampableTrait;
-
     use ToggleableTrait;
-
     use TranslatableTrait {
         __construct as private initializeTranslationsCollection;
 
@@ -34,14 +32,12 @@ class Service implements ServiceInterface
 
     /**
      * @var Collection|CookieInterface[]
-     *
      * @psalm-var Collection<array-key, CookieInterface>
      */
     protected Collection $cookies;
 
     /**
      * @var Collection|ChannelInterface[]
-     *
      * @psalm-var Collection<array-key, ChannelInterface>
      */
     protected Collection $channels;

@@ -7,9 +7,8 @@ require_once 'Application/config/bootstrap.php';
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Tests\Setono\SyliusConsentManagementPlugin\Application\Kernel;
-use Webmozart\Assert\Assert;
 
-Assert::string($_SERVER['APP_ENV']);
+/** @psalm-suppress PossiblyUndefinedArrayOffset */
 $kernel = new Kernel($_SERVER['APP_ENV'], false);
 $kernel->boot();
 

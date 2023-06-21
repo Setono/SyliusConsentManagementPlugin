@@ -8,6 +8,9 @@ use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
+/**
+ * @extends RepositoryInterface<ServiceInterface>
+ */
 interface ServiceRepositoryInterface extends RepositoryInterface
 {
     /**

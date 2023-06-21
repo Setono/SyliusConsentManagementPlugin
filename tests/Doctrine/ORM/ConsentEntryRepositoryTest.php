@@ -11,7 +11,7 @@ use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository
  *
  * @property ConsentEntryRepositoryInterface $repository
  */

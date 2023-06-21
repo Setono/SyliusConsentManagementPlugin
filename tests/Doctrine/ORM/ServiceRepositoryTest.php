@@ -9,7 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository
  *
  * @property ServiceRepositoryInterface $repository
  */

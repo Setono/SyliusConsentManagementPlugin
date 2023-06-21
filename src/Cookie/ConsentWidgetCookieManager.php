@@ -34,7 +34,7 @@ final class ConsentWidgetCookieManager implements ConsentWidgetCookieManagerInte
             '/',
             null,
             null,
-            false
+            false,
         ));
     }
 }

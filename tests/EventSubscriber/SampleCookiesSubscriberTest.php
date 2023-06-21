@@ -122,7 +122,7 @@ final class SampleCookiesSubscriberTest extends TestCase
         bool $callEventDispatcher = true,
         float $sampleRate = 1,
         bool $callFirewallConfig = false,
-        array $firewalls = ['shop']
+        array $firewalls = ['shop'],
     ): SampleCookiesSubscriber {
         $repository = $this->prophesize(CookieRepositoryInterface::class);
         if ($callRepository) {
@@ -148,10 +148,10 @@ final class SampleCookiesSubscriberTest extends TestCase
         return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $firewallMap->reveal(), $firewalls, $sampleRate);
     }
 
-    private function getRequestEvent(int $requestType = HttpKernelInterface::MASTER_REQUEST): RequestEvent
+    private function getRequestEvent(int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         $kernel = new class() implements HttpKernelInterface {
-            public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+            public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true): Response
             {
                 return new Response();
             }
@@ -170,7 +170,7 @@ class RequestEvent extends BaseRequestEvent
 {
     public bool $getRequestCalled = false;
 
-    public function getRequest()
+    public function getRequest(): Request
     {
         $this->getRequestCalled = true;
 

@@ -7,10 +7,6 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\DependencyInjection;
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
 use Setono\SyliusConsentManagementPlugin\DependencyInjection\Configuration;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
@@ -22,6 +18,10 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\CookieRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepository;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Component\Resource\Factory\Factory;
@@ -49,7 +49,7 @@ final class ConfigurationTest extends TestCase
                 [], // no values at all
             ],
             '/The child (node|config) "notify" (under|at path) "setono_sylius_consent_management" must be configured/',
-            true
+            true,
         );
     }
 

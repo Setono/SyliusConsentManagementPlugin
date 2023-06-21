@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Webmozart\Assert\Assert;
 
 final class ConsentEntryFactory implements ConsentEntryFactoryInterface
 {
@@ -19,10 +20,10 @@ final class ConsentEntryFactory implements ConsentEntryFactoryInterface
 
     public function createNew(): ConsentEntryInterface
     {
-        /** @var ConsentEntryInterface $consentEntry */
-        $consentEntry = $this->decorated->createNew();
+        $obj = $this->decorated->createNew();
+        Assert::isInstanceOf($obj, ConsentEntryInterface::class);
 
-        return $consentEntry;
+        return $obj;
     }
 
     public function createForClientId(ClientId $clientId): ConsentEntryInterface

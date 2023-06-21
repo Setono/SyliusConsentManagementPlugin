@@ -72,7 +72,7 @@ final class ConsentAction
         ConsentContextInterface $consentContext,
         EventDispatcherInterface $eventDispatcher,
         UrlGeneratorInterface $urlGenerator,
-        ChannelContextInterface $channelContext
+        ChannelContextInterface $channelContext,
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -119,7 +119,7 @@ final class ConsentAction
 
             $this->eventDispatcher->dispatch(new ConsentUpdated(
                 $consentCommand->getConsent($clientId),
-                $this->consentContext->getConsent()
+                $this->consentContext->getConsent(),
             ));
 
             if ($request->isXmlHttpRequest()) {

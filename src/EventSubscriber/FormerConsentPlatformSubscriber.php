@@ -46,7 +46,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         ClientIdProviderInterface $clientIdProvider,
         ConsentEntryRepositoryInterface $consentEntryRepository,
         FactoryInterface $consentEntryFactory,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager
+        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
         $this->platformRegistry = $platformRegistry;
         $this->consentWidget = $consentWidget;

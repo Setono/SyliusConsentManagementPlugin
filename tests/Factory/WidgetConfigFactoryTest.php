@@ -10,6 +10,7 @@ use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Locale\Model\Locale;
+use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -43,62 +44,67 @@ final class WidgetConfigFactoryTest extends TestCase
         $translator = new /**
          * @method string getLocale()
          */ class() implements TranslatorInterface {
-            public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null)
+            public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
             {
                 return 'usage description';
             }
         };
 
-        return new WidgetConfigFactory(new Factory(WidgetConfig::class), self::getLocaleRepository(), $translator);
+        return new WidgetConfigFactory(new Factory(WidgetConfig::class), new MockLocaleRepository(), $translator);
+    }
+}
+
+/** @implements RepositoryInterface<LocaleInterface> */
+final class MockLocaleRepository implements RepositoryInterface
+{
+    /** @param mixed $id */
+    public function find($id): ?LocaleInterface
+    {
+        return null;
     }
 
-    private static function getLocaleRepository(): RepositoryInterface
+    /**
+     * @return list<LocaleInterface>
+     */
+    public function findAll(): array
     {
-        return new class() implements RepositoryInterface {
-            /** @param mixed $id */
-            public function find($id)
-            {
-                return null;
-            }
+        return [];
+    }
 
-            public function findAll()
-            {
-                return [];
-            }
+    /**
+     * @return list<LocaleInterface>
+     */
+    public function findBy(array $criteria, ?array $orderBy = null, int $limit = null, int $offset = null): array
+    {
+        return [];
+    }
 
-            public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
-            {
-                return [];
-            }
+    public function findOneBy(array $criteria): ?LocaleInterface
+    {
+        Assert::keyExists($criteria, 'code');
+        Assert::string($criteria['code']);
 
-            public function findOneBy(array $criteria)
-            {
-                Assert::keyExists($criteria, 'code');
-                Assert::string($criteria['code']);
+        $locale = new Locale();
+        $locale->setCode($criteria['code']);
 
-                $locale = new Locale();
-                $locale->setCode($criteria['code']);
+        return $locale;
+    }
 
-                return $locale;
-            }
+    public function getClassName(): string
+    {
+        return Locale::class;
+    }
 
-            public function getClassName()
-            {
-                return Locale::class;
-            }
+    public function createPaginator(array $criteria = [], array $sorting = []): iterable
+    {
+        return [];
+    }
 
-            public function createPaginator(array $criteria = [], array $sorting = []): iterable
-            {
-                return [];
-            }
+    public function add(ResourceInterface $resource): void
+    {
+    }
 
-            public function add(ResourceInterface $resource): void
-            {
-            }
-
-            public function remove(ResourceInterface $resource): void
-            {
-            }
-        };
+    public function remove(ResourceInterface $resource): void
+    {
     }
 }

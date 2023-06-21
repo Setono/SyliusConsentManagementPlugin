@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
@@ -19,6 +15,10 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\CookieRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepository;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -37,11 +37,7 @@ final class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
-        /**
-         * @psalm-suppress MixedMethodCall
-         * @psalm-suppress PossiblyUndefinedMethod
-         * @psalm-suppress PossiblyNullReference
-         */
+        /** @psalm-suppress MixedMethodCall,PossiblyUndefinedMethod,PossiblyNullReference,UndefinedInterfaceMethod */
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
@@ -64,7 +60,7 @@ final class Configuration implements ConfigurationInterface
                         ->floatNode('rate')
                             ->defaultValue(0.01)
                             ->info('The rate at which cookies should be sampled/collected from requests. The default is every 100th request')
-                            ->example(0.1)
+                            ->example('0.1')
                             ->min(0.0001)
                             ->max(1)
                         ->end()
@@ -82,9 +78,7 @@ final class Configuration implements ConfigurationInterface
     private function addResourcesSection(ArrayNodeDefinition $node): void
     {
         /**
-         * @psalm-suppress MixedMethodCall
-         * @psalm-suppress PossiblyUndefinedMethod
-         * @psalm-suppress PossiblyNullReference
+         * @psalm-suppress MixedMethodCall,PossiblyUndefinedMethod,PossiblyNullReference,UndefinedInterfaceMethod
          */
         $node
             ->children()

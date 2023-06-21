@@ -9,6 +9,9 @@ use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
+/**
+ * @extends RepositoryInterface<ConsentEntryInterface>
+ */
 interface ConsentEntryRepositoryInterface extends RepositoryInterface
 {
     public function findConsentFromClientId(ClientId $clientId): ?Consent;

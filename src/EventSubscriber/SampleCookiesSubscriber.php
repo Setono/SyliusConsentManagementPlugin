@@ -46,7 +46,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         EventDispatcherInterface $eventDispatcher,
         FirewallMap $firewallMap,
         array $firewalls,
-        float $sampleRate
+        float $sampleRate,
     ) {
         Assert::greaterThanEq($sampleRate, 0.0001);
         Assert::lessThanEq($sampleRate, 1);

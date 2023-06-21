@@ -8,6 +8,9 @@ use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
+/**
+ * @extends FactoryInterface<ConsentEntryInterface>
+ */
 interface ConsentEntryFactoryInterface extends FactoryInterface
 {
     public function createNew(): ConsentEntryInterface;
