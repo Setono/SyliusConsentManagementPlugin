@@ -73,8 +73,10 @@ final class MockLocaleRepository implements RepositoryInterface
 
     /**
      * @return list<LocaleInterface>
+     *
+     * @psalm-suppress MissingParamType
      */
-    public function findBy(array $criteria, ?array $orderBy = null, int $limit = null, int $offset = null): array
+    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
     {
         return [];
     }
