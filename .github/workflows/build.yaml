@@ -75,7 +75,6 @@ jobs:
                     - "highest"
 
                 symfony:
-                    - "^4.4"
                     - "^5.4"
                     - "^6.0"
 
@@ -224,9 +223,9 @@ jobs:
                     tools: "flex,symfony"
 
             -   name: "Setup node"
-                uses: "actions/setup-node@v2"
+                uses: "actions/setup-node@v3"
                 with:
-                    node-version: "14.x"
+                    node-version: "16.x"
             
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -252,7 +251,7 @@ jobs:
                 run: "echo \"::set-output name=dir::$(yarn cache dir)\""
 
             -   name: "Cache Yarn"
-                uses: "actions/cache@v2"
+                uses: "actions/cache@v3"
                 with:
                     path: "${{ steps.yarn-cache.outputs.dir }}"
                     key: "yarn-${{ hashFiles('**/package.json **/yarn.lock') }}"
