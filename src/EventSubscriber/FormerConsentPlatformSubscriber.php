@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\MainRequestTrait\MainRequestTrait;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Platform\PlatformRegistryInterface;
@@ -21,8 +20,6 @@ use Webmozart\Assert\Assert;
 
 final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 {
-    use MainRequestTrait;
-
     private bool $setConsentWidgetCookie = false;
 
     /** @var array<array-key, string> */
@@ -66,7 +63,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function onRequest(RequestEvent $event): void
     {
-        if (!$this->isMainRequest($event) || !$this->consentWidget->show()) {
+        if (!$event->isMainRequest() || !$this->consentWidget->show()) {
             return;
         }
 
@@ -117,7 +114,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function onResponse(ResponseEvent $event): void
     {
-        if (!$this->isMainRequest($event)) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

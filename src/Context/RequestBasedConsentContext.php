@@ -7,7 +7,6 @@ namespace Setono\SyliusConsentManagementPlugin\Context;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Consent;
 use Setono\Consent\Context\ConsentContextInterface;
-use Setono\MainRequestTrait\MainRequestTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -22,8 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class RequestBasedConsentContext implements ConsentContextInterface
 {
-    use MainRequestTrait;
-
     private ConsentContextInterface $decorated;
 
     private RequestStack $requestStack;
@@ -42,7 +39,7 @@ final class RequestBasedConsentContext implements ConsentContextInterface
 
     public function getConsent(): Consent
     {
-        $request = $this->getMainRequestFromRequestStack($this->requestStack);
+        $request = $this->requestStack->getMainRequest();
         if (null === $request) {
             return $this->decorated->getConsent();
         }
