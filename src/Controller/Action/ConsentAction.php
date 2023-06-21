@@ -13,7 +13,6 @@ use Setono\Consent\Event\ConsentUpdated;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
-use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
@@ -106,7 +105,6 @@ final class ConsentAction
             $clientId = $this->clientIdProvider->getClientId();
             $consentEntry = $this->consentEntryRepository->findOneFromClientId($clientId);
             if (null === $consentEntry) {
-                /** @var ConsentEntryInterface $consentEntry */
                 $consentEntry = $this->consentEntryFactory->createForClientId($clientId);
 
                 $this->consentEntryManager->persist($consentEntry);
@@ -135,7 +133,7 @@ final class ConsentAction
         }
 
         if (!$request->isXmlHttpRequest()) {
-            $template = $this->getTemplate($request, '@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig');
+            $template = $this->getTemplate($request);
 
             return new Response($this->twig->render($template, [
                 'decided' => $decided,
@@ -145,12 +143,12 @@ final class ConsentAction
             ]), 200);
         }
 
-        // we know the status code should be 400 if the the form was submitted
+        // we know the status code should be 400 if the form was submitted
         // because if the form was valid another response would have been sent above
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
-    private function getTemplate(Request $request, string $defaultTemplate): string
+    private function getTemplate(Request $request): string
     {
         $syliusParameters = [];
 
@@ -161,7 +159,7 @@ final class ConsentAction
         }
 
         /** @var string|mixed $template */
-        $template = $syliusParameters['template'] ?? $defaultTemplate;
+        $template = $syliusParameters['template'] ?? '@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig';
         Assert::string($template);
 
         return $template;
