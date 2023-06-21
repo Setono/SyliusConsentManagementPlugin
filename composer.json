@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "api-platform/core": "^2.6",
-        "doctrine/data-fixtures": "^1.5",
+        "doctrine/data-fixtures": "^1.6",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
         "infection/infection": "^0.26",
         "lexik/jwt-authentication-bundle": "^2.16",
