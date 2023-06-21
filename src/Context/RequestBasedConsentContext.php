@@ -8,6 +8,7 @@ use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Consent;
 use Setono\Consent\Context\ConsentContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Throwable;
 
 /**
  * This class is used to override the consent for a given request by appending query parameters to the URL.
@@ -50,8 +51,12 @@ final class RequestBasedConsentContext implements ConsentContextInterface
 
         $marketing = $preferences = $statistics = false;
 
-        /** @var mixed $consentQuery */
-        $consentQuery = $request->query->get('_consent');
+        try {
+            $consentQuery = $request->query->get('_consent');
+        } catch (Throwable) {
+            $consentQuery = $request->query->all('_consent');
+        }
+
         if (is_array($consentQuery)) {
             $marketing = isset($consentQuery['marketing']) && is_string($consentQuery['marketing']) && 1 === (int) $consentQuery['marketing'];
             $preferences = isset($consentQuery['preferences']) && is_string($consentQuery['preferences']) && 1 === (int) $consentQuery['preferences'];
