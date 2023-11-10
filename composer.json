@@ -58,7 +58,7 @@
         "symfony/intl": "^4.4 || ^5.4 || ^6.0",
         "symfony/property-info": "^4.4 || ^5.4 || ^6.0",
         "symfony/serializer": "^4.4 || ^5.4 || ^6.0",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.4 || ^6.0",
+        "symfony/web-profiler-bundle": "^5.4.31",
         "weirdan/doctrine-psalm-plugin": "^2.0"
     },
     "prefer-stable": true,
