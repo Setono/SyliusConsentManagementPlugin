@@ -52,7 +52,7 @@
         "psalm/plugin-symfony": "^3.0",
         "setono/code-quality-pack": "^2.4",
         "setono/sylius-behat-pack": "^0.2.1",
-        "sylius/sylius": "~1.9.8",
+        "sylius/sylius": "~1.9.9",
         "symfony/debug-bundle": "^4.4 || ^5.4 || ^6.0",
         "symfony/dotenv": "^4.4 || ^5.4 || ^6.0",
         "symfony/intl": "^4.4 || ^5.4 || ^6.0",
