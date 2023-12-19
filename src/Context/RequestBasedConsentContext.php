@@ -39,7 +39,7 @@ final class RequestBasedConsentContext implements ConsentContextInterface
 
     public function getConsent(): Consent
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         if (null === $request) {
             return $this->decorated->getConsent();
         }

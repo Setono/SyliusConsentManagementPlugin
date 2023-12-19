@@ -148,10 +148,10 @@ final class SampleCookiesSubscriberTest extends TestCase
         return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $firewallMap->reveal(), $firewalls, $sampleRate);
     }
 
-    private function getRequestEvent(int $requestType = HttpKernelInterface::MASTER_REQUEST): RequestEvent
+    private function getRequestEvent(int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         $kernel = new class() implements HttpKernelInterface {
-            public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+            public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true)
             {
                 return new Response();
             }

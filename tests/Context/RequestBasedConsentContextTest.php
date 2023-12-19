@@ -18,7 +18,7 @@ final class RequestBasedConsentContextTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_decorated_if_master_request_is_null(): void
+    public function it_returns_decorated_if_main_request_is_null(): void
     {
         $context = new RequestBasedConsentContext(
             self::getConsentContext(),

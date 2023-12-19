@@ -33,7 +33,7 @@ final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
 
     public function check(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest() || !$this->consentWidget->show()) {
+        if (!$event->isMainRequest() || !$this->consentWidget->show()) {
             return;
         }
         $request = $event->getRequest();

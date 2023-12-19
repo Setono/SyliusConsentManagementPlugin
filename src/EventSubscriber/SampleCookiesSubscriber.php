@@ -65,7 +65,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     public function sample(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
         $request = $event->getRequest();
