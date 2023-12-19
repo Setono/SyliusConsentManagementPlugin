@@ -58,7 +58,7 @@ final class Configuration implements ConfigurationInterface
                         ->floatNode('rate')
                             ->defaultValue(0.01)
                             ->info('The rate at which cookies should be sampled/collected from requests. The default is every 100th request')
-                            ->example(0.1)
+                            ->example('0.1')
                             ->min(0.0001)
                             ->max(1)
                         ->end()
