@@ -13,6 +13,7 @@
         <directory name="tests"/>
         <ignoreFiles>
             <directory name="tests/Application"/>
+            <directory name="tests/Behat"/>
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
@@ -23,11 +24,6 @@
     </plugins>
     <issueHandlers>
         <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>
-        <DocblockTypeContradiction>
-            <errorLevel type="suppress">
-                <file name="tests/Behat/Page/Shop/HomePage.php"/>
-            </errorLevel>
-        </DocblockTypeContradiction>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <file name="tests/Model/ConsentEntryTest.php"/>
@@ -38,5 +34,8 @@
     <forbiddenFunctions>
         <function name="dd"/>
         <function name="dump"/>
+        <function name="print_r"/>
+        <function name="var_dump"/>
+        <function name="exit"/>
     </forbiddenFunctions>
 </psalm>
