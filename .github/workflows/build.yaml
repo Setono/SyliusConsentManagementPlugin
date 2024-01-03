@@ -84,6 +84,18 @@ jobs:
                     - "~6.2.0"
                     - "~6.3.0"
                     - "~6.4.0"
+                
+                exclude:
+                    -   php-version: "7.4"
+                        symfony: "~6.0.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.1.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.2.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.3.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.4.0"
 
         steps:
             -   name: "Checkout"
@@ -137,6 +149,18 @@ jobs:
                     - "~6.2.0"
                     - "~6.3.0"
                     - "~6.4.0"
+                
+                exclude:
+                    -   php-version: "7.4"
+                        symfony: "~6.0.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.1.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.2.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.3.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.4.0"
 
         steps:
             -   name: "Checkout"
@@ -187,6 +211,18 @@ jobs:
                     - "~6.2.0"
                     - "~6.3.0"
                     - "~6.4.0"
+                
+                exclude:
+                    -   php-version: "7.4"
+                        symfony: "~6.0.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.1.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.2.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.3.0"
+                    -   php-version: "7.4"
+                        symfony: "~6.4.0"
 
         steps:
             -   name: "Checkout"
