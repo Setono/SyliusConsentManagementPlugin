@@ -53,10 +53,10 @@
         "matthiasnoback/symfony-config-test": "^4.3",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",
         "php-http/message-factory": "^1.1",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.16.1",
-        "psalm/plugin-symfony": "^3.0",
+        "phpspec/prophecy-phpunit": "^2.1",
+        "phpunit/phpunit": "^9.6",
+        "psalm/plugin-phpunit": "^0.18",
+        "psalm/plugin-symfony": "^5.1",
         "setono/code-quality-pack": "^2.4",
         "setono/sylius-behat-pack": "^0.2.1",
         "sylius/sylius": "~1.10.14",
@@ -66,7 +66,7 @@
         "symfony/property-info": "^5.4 || ^6.0",
         "symfony/serializer": "^5.4 || ^6.0.1",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "weirdan/doctrine-psalm-plugin": "^2.0"
+        "weirdan/doctrine-psalm-plugin": "^2.9"
     },
     "prefer-stable": true,
     "autoload": {
