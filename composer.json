@@ -77,9 +77,10 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": false,
-            "symfony/thanks": false,
             "ergebnis/composer-normalize": true,
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "ocramius/package-versions": true,
+            "symfony/thanks": false
         },
         "sort-packages": true
     },
