@@ -6,6 +6,7 @@
     findUnusedCode="false"
     findUnusedVariablesAndParams="false"
     findUnusedPsalmSuppress="false"
+    findUnusedBaselineEntry="false"
     errorLevel="1"
 >
     <projectFiles>
