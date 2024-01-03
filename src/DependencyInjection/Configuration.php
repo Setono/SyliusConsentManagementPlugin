@@ -36,9 +36,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         /**
-         * @psalm-suppress MixedMethodCall
-         * @psalm-suppress PossiblyUndefinedMethod
-         * @psalm-suppress PossiblyNullReference
+         * @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference
          */
         $rootNode
             ->addDefaultsIfNotSet()
@@ -76,9 +74,7 @@ final class Configuration implements ConfigurationInterface
     private function addResourcesSection(ArrayNodeDefinition $node): void
     {
         /**
-         * @psalm-suppress MixedMethodCall
-         * @psalm-suppress PossiblyUndefinedMethod
-         * @psalm-suppress PossiblyNullReference
+         * @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference
          */
         $node
             ->children()
@@ -161,13 +157,6 @@ final class Configuration implements ConfigurationInterface
                                         ->scalarNode('repository')->defaultValue(WidgetConfigRepository::class)->cannotBeEmpty()->end()
                                         ->scalarNode('form')->defaultValue(WidgetConfigType::class)->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
         ;
     }
 }
