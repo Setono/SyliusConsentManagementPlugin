@@ -44,14 +44,15 @@ final class RequestBasedConsentContext implements ConsentContextInterface
             return $this->decorated->getConsent();
         }
 
-        if (!$request->query->has('_consent')) {
+        /** @var mixed $consentQuery */
+        $consentQuery = $request->query->all()['_consent'] ?? [];
+
+        if ([] === $consentQuery) {
             return $this->decorated->getConsent();
         }
 
         $marketing = $preferences = $statistics = false;
 
-        /** @var mixed $consentQuery */
-        $consentQuery = $request->query->get('_consent');
         if (is_array($consentQuery)) {
             $marketing = isset($consentQuery['marketing']) && is_string($consentQuery['marketing']) && 1 === (int) $consentQuery['marketing'];
             $preferences = isset($consentQuery['preferences']) && is_string($consentQuery['preferences']) && 1 === (int) $consentQuery['preferences'];

@@ -151,7 +151,7 @@ final class SampleCookiesSubscriberTest extends TestCase
     private function getRequestEvent(int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         $kernel = new class() implements HttpKernelInterface {
-            public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true)
+            public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true): Response
             {
                 return new Response();
             }
@@ -170,7 +170,7 @@ class RequestEvent extends BaseRequestEvent
 {
     public bool $getRequestCalled = false;
 
-    public function getRequest()
+    public function getRequest(): Request
     {
         $this->getRequestCalled = true;
 

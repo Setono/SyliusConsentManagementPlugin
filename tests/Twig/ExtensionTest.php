@@ -29,6 +29,9 @@ final class ExtensionTest extends IntegrationTestCase
     public function getRuntimeLoaders(): array
     {
         $runtimeLoader = new class() implements RuntimeLoaderInterface {
+            /**
+             * @param string $class
+             */
             public function load($class): Runtime
             {
                 Assert::same($class, Runtime::class);
