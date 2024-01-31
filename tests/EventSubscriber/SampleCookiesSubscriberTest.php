@@ -122,7 +122,7 @@ final class SampleCookiesSubscriberTest extends TestCase
         bool $callEventDispatcher = true,
         float $sampleRate = 1,
         bool $callFirewallConfig = false,
-        array $firewalls = ['shop']
+        array $firewalls = ['shop'],
     ): SampleCookiesSubscriber {
         $repository = $this->prophesize(CookieRepositoryInterface::class);
         if ($callRepository) {

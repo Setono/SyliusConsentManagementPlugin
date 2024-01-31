@@ -27,7 +27,7 @@ final class ConsentCommand
         return new self(
             $consent->isMarketingConsentGranted(),
             $consent->isPreferencesConsentGranted(),
-            $consent->isStatisticsConsentGranted()
+            $consent->isStatisticsConsentGranted(),
         );
     }
 

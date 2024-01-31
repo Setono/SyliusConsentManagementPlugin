@@ -18,7 +18,7 @@ final class ConsentWidgetCookieSubscriber implements EventSubscriberInterface
 
     public function __construct(
         ConsentWidgetInterface $consentWidget,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager
+        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
         $this->consentWidget = $consentWidget;
         $this->consentWidgetCookieManager = $consentWidgetCookieManager;

@@ -8,14 +8,15 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
@@ -48,7 +49,7 @@ final class ConsentEntryRepositoryTest extends TestCase
             $fileLocator = new SymfonyFileLocator([
                 __DIR__ . '/../../../src/Resources/config/doctrine/model' => 'Setono\SyliusConsentManagementPlugin\Model',
             ], '.orm.xml');
-            $config = Setup::createXMLMetadataConfiguration([], true);
+            $config = ORMSetup::createXMLMetadataConfiguration([], true);
             $config->setMetadataDriverImpl(new XmlDriver($fileLocator));
 
             $resolveTargetEntityListener = new ResolveTargetEntityListener();
@@ -59,10 +60,12 @@ final class ConsentEntryRepositoryTest extends TestCase
             $eventManager = new EventManager();
             $eventManager->addEventListener(Events::loadClassMetadata, $resolveTargetEntityListener);
 
-            $this->entityManager = EntityManager::create([
+            $connection = DriverManager::getConnection([
                 'driver' => 'pdo_sqlite',
                 'path' => __DIR__ . '/db.sqlite',
             ], $config, $eventManager);
+
+            $this->entityManager = new EntityManager($connection, $config, $eventManager);
 
             $classes = [
                 $this->entityManager->getClassMetadata(ConsentEntry::class),

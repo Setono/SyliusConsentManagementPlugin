@@ -58,7 +58,7 @@ class HomePage extends BaseHomePage
 
         Assert::true(
             $this->getSession()->wait(10000, "document.cookie.indexOf('sscm_consent_widget=1') >= 0"),
-            'The clicking on the accept button did not result in a cookie being set'
+            'The clicking on the accept button did not result in a cookie being set',
         );
     }
 
@@ -81,20 +81,20 @@ class HomePage extends BaseHomePage
 
     public function isPreferencesGranted(): bool
     {
-        return $this->javascriptVariableIsTrue('scriptFilePreferencesGranted')
-            && $this->javascriptVariableIsTrue('inlinePreferencesGranted');
+        return $this->javascriptVariableIsTrue('scriptFilePreferencesGranted') &&
+            $this->javascriptVariableIsTrue('inlinePreferencesGranted');
     }
 
     public function isMarketingGranted(): bool
     {
-        return $this->javascriptVariableIsTrue('scriptFileMarketingGranted')
-            && $this->javascriptVariableIsTrue('inlineMarketingGranted');
+        return $this->javascriptVariableIsTrue('scriptFileMarketingGranted') &&
+            $this->javascriptVariableIsTrue('inlineMarketingGranted');
     }
 
     public function isStatisticsGranted(): bool
     {
-        return $this->javascriptVariableIsTrue('scriptFileStatisticsGranted')
-            && $this->javascriptVariableIsTrue('inlineStatisticsGranted');
+        return $this->javascriptVariableIsTrue('scriptFileStatisticsGranted') &&
+            $this->javascriptVariableIsTrue('inlineStatisticsGranted');
     }
 
     public function isGoogleTagManagerPreferencesGranted(): bool

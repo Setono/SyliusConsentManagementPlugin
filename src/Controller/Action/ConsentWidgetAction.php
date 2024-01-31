@@ -63,7 +63,7 @@ final class ConsentWidgetAction
         ConsentWidgetInterface $consentWidget,
         ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
         ConsentContextInterface $consentContext,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -123,7 +123,7 @@ final class ConsentWidgetAction
 
             $this->eventDispatcher->dispatch(new ConsentUpdated(
                 $consentCommand->getConsent($clientId),
-                $this->consentContext->getConsent()
+                $this->consentContext->getConsent(),
             ));
 
             $response = new Response('', 204);

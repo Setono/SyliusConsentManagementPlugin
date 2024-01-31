@@ -33,7 +33,7 @@ use Webmozart\Assert\Assert;
     public function __construct(
         ServiceRepositoryInterface $serviceRepository,
         FactoryInterface $serviceFactory,
-        RepositoryInterface $localeRepository
+        RepositoryInterface $localeRepository,
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->serviceFactory = $serviceFactory;
@@ -135,8 +135,10 @@ use Webmozart\Assert\Assert;
      */
     protected function getLocales(): array
     {
-        return array_filter(array_map(function (LocaleInterface $locale) {
-            return $locale->getCode();
+        return array_filter(array_map(static function (object $locale): string {
+            Assert::isInstanceOf($locale, LocaleInterface::class);
+
+            return (string) $locale->getCode();
         }, $this->localeRepository->findAll()));
     }
 }

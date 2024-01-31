@@ -30,7 +30,7 @@ final class FormerConsent
     public function __construct(
         bool $marketingGranted,
         bool $preferencesGranted,
-        bool $statisticsGranted
+        bool $statisticsGranted,
     ) {
         $this->marketingGranted = $marketingGranted;
         $this->preferencesGranted = $preferencesGranted;

@@ -17,7 +17,7 @@ final class ValidWidgetConfigProvider implements ValidWidgetConfigProviderInterf
 
     public function __construct(
         WidgetConfigRepositoryInterface $widgetConfigRepository,
-        WidgetConfigFactoryInterface $widgetConfigFactory
+        WidgetConfigFactoryInterface $widgetConfigFactory,
     ) {
         $this->widgetConfigRepository = $widgetConfigRepository;
         $this->widgetConfigFactory = $widgetConfigFactory;
