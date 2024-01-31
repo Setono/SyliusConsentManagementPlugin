@@ -36,7 +36,6 @@ interface ServiceInterface extends ResourceInterface, TimestampableInterface, Tr
 
     /**
      * @return Collection|CookieInterface[]
-     *
      * @psalm-return Collection<array-key, CookieInterface>
      */
     public function getCookies(): Collection;

@@ -23,7 +23,7 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
     public function __construct(
         FactoryInterface $decorated,
         RepositoryInterface $localeRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->decorated = $decorated;
         $this->localeRepository = $localeRepository;
@@ -53,7 +53,7 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
             'setono_sylius_consent_management.ui.widget.introduction',
             ['%channel%' => $channel->getName()],
             null,
-            $localeCode
+            $localeCode,
         ));
 
         return $obj;

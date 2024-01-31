@@ -15,6 +15,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     {
         /**
          * @var array{sampling: array{rate: float, firewalls: array<array-key, string>}, notify: array<array-key, string>, driver: string, resources: array<string, mixed>} $config
+         *
          * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);

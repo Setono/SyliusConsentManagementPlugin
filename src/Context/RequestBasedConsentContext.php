@@ -30,7 +30,7 @@ final class RequestBasedConsentContext implements ConsentContextInterface
     public function __construct(
         ConsentContextInterface $decorated,
         RequestStack $requestStack,
-        ClientIdProviderInterface $clientIdProvider
+        ClientIdProviderInterface $clientIdProvider,
     ) {
         $this->decorated = $decorated;
         $this->requestStack = $requestStack;

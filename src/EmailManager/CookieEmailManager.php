@@ -24,6 +24,7 @@ final class CookieEmailManager implements CookieEmailManagerInterface
 
     public function sendNewCookiesEmail(array $cookies): void
     {
+        /** @psalm-suppress DeprecatedMethod */
         $this->emailSender->send(Emails::NEW_COOKIES, $this->emails, [
             'cookies' => $cookies,
         ]);

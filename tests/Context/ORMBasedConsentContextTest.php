@@ -40,7 +40,7 @@ final class ORMBasedConsentContextTest extends TestCase
     {
         $context = new ORMBasedConsentContext(
             self::getConsentContext(),
-            $this->getRepository(new Consent(new ClientId('saved_client_id'), false, false, false))
+            $this->getRepository(new Consent(new ClientId('saved_client_id'), false, false, false)),
         );
         $consent = $context->getConsent();
 

@@ -1,14 +1,16 @@
 {
     "name": "setono/sylius-consent-management-plugin",
-    "description": "Setono example plugin for Sylius.",
+    "description": "Consent management plugin for Sylius",
     "license": "proprietary",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "cookie",
+        "consent"
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "ext-json": "*",
         "doctrine/collections": "^1.6",
         "doctrine/orm": "^2.7",
@@ -42,7 +44,7 @@
         "symfony/security-bundle": "^5.4 || ^6.0",
         "symfony/translation-contracts": "^1.1 || ^2.4 || ^3.3",
         "symfony/webpack-encore-bundle": "^1.12",
-        "twig/twig": "^2.14",
+        "twig/twig": "^2.14 || ^3.8",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
@@ -50,8 +52,8 @@
         "doctrine/data-fixtures": "^1.5",
         "infection/infection": "^0.25.3",
         "lexik/jwt-authentication-bundle": "^2.14",
-        "matthiasnoback/symfony-config-test": "^4.3",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.3",
+        "matthiasnoback/symfony-config-test": "^4.3 || ^5.1",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.3 || ^5.1",
         "php-http/message-factory": "^1.1",
         "phpspec/prophecy-phpunit": "^2.1",
         "phpunit/phpunit": "^9.6",
