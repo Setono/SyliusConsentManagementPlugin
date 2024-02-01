@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Factory;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactory;
 use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Locale\Model\Locale;
 use Sylius\Component\Resource\Factory\Factory;
-use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
@@ -21,6 +22,8 @@ use Webmozart\Assert\Assert;
  */
 final class WidgetConfigFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -28,7 +31,7 @@ final class WidgetConfigFactoryTest extends TestCase
     {
         $channel = new Channel();
 
-        $factory = self::getFactory();
+        $factory = $this->getFactory();
         $obj = $factory->createFromChannelAndLocale($channel, 'en_US');
 
         $locale = $obj->getLocale();
@@ -38,67 +41,24 @@ final class WidgetConfigFactoryTest extends TestCase
         self::assertSame('usage description', $obj->getUsageDescription());
     }
 
-    private static function getFactory(): WidgetConfigFactoryInterface
+    private function getFactory(): WidgetConfigFactoryInterface
     {
-        $translator = new /**
-         * @method string getLocale()
-         */ class() implements TranslatorInterface {
-            public function trans($id, array $parameters = [], $domain = null, $locale = null)
-            {
-                return 'usage description';
-            }
-        };
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans(Argument::cetera())->willReturn('usage description');
 
-        return new WidgetConfigFactory(new Factory(WidgetConfig::class), self::getLocaleRepository(), $translator);
-    }
+        $repository = $this->prophesize(RepositoryInterface::class);
+        $repository->findOneBy(Argument::cetera())->will(function (array $args) {
+            Assert::count($args, 1);
+            Assert::isArray($args[0]);
+            Assert::keyExists($args[0], 'code');
+            Assert::string($args[0]['code']);
 
-    private static function getLocaleRepository(): RepositoryInterface
-    {
-        return new class() implements RepositoryInterface {
-            /** @param mixed $id */
-            public function find($id)
-            {
-                return null;
-            }
+            $locale = new Locale();
+            $locale->setCode($args[0]['code']);
 
-            public function findAll()
-            {
-                return [];
-            }
+            return $locale;
+        });
 
-            public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
-            {
-                return [];
-            }
-
-            public function findOneBy(array $criteria)
-            {
-                Assert::keyExists($criteria, 'code');
-                Assert::string($criteria['code']);
-
-                $locale = new Locale();
-                $locale->setCode($criteria['code']);
-
-                return $locale;
-            }
-
-            public function getClassName()
-            {
-                return Locale::class;
-            }
-
-            public function createPaginator(array $criteria = [], array $sorting = []): iterable
-            {
-                return [];
-            }
-
-            public function add(ResourceInterface $resource): void
-            {
-            }
-
-            public function remove(ResourceInterface $resource): void
-            {
-            }
-        };
+        return new WidgetConfigFactory(new Factory(WidgetConfig::class), $repository->reveal(), $translator->reveal());
     }
 }

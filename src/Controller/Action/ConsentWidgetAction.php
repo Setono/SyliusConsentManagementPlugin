@@ -80,6 +80,10 @@ final class ConsentWidgetAction
 
     public function __invoke(Request $request): Response
     {
+        $form = $this->formFactory->create(ConsentType::class, new ConsentCommand(), [
+            'csrf_protection' => false,
+        ]);
+
         if (!$request->isXmlHttpRequest()) {
             if (!$this->consentWidget->show()) {
                 return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
@@ -88,10 +92,6 @@ final class ConsentWidgetAction
                 ]), 200);
             }
 
-            $form = $this->formFactory->create(ConsentType::class, new ConsentCommand(), [
-                'csrf_protection' => false,
-            ]);
-
             return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
                 'decided' => false,
                 'consent' => json_encode($this->consentContext->getConsent(), JSON_THROW_ON_ERROR),
@@ -99,8 +99,6 @@ final class ConsentWidgetAction
                 'services' => $this->serviceRepository->findAllIndexedByCategory(),
             ]), 200);
         }
-
-        $form = $this->formFactory->create(ConsentType::class, new ConsentCommand());
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

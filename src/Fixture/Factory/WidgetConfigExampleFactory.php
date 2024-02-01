@@ -98,7 +98,7 @@ use Webmozart\Assert\Assert;
                 }
 
                 /** @var LocaleInterface $locale */
-                $locale = $this->faker->randomElement($channel->getLocales());
+                $locale = $this->faker->randomElement($channel->getLocales()->toArray());
 
                 return $locale;
             })
