@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\WidgetConfigRepository;
 use Setono\SyliusConsentManagementPlugin\Form\Type\CookieType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType;
@@ -17,9 +13,12 @@ use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\CookieRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
+use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepository;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
-use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Resource\Factory\Factory;
 use Sylius\Component\Resource\Factory\TranslatableFactory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -69,9 +68,7 @@ final class Configuration implements ConfigurationInterface
 
     private function addResourcesSection(ArrayNodeDefinition $node): void
     {
-        /**
-         * @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference
-         */
+        /** @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference */
         $node
             ->children()
                 ->arrayNode('resources')

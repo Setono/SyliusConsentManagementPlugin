@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Repository;
 
 use Setono\ClientId\ClientId;
 use Setono\Consent\Consent;
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
+use Tests\Setono\SyliusConsentManagementPlugin\Repository\AbstractRepositoryTest;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ConsentEntryRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository
  */
 final class ConsentEntryRepositoryTest extends AbstractRepositoryTest
 {

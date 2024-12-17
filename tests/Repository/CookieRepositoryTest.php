@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Repository;
 
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CookieRepository;
+use Tests\Setono\SyliusConsentManagementPlugin\Repository\AbstractRepositoryTest;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\CookieRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\CookieRepository
  */
 final class CookieRepositoryTest extends AbstractRepositoryTest
 {

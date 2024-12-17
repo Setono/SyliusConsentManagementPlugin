@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Doctrine\ORM;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Repository;
 
-use Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
+use Tests\Setono\SyliusConsentManagementPlugin\Repository\AbstractRepositoryTest;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Doctrine\ORM\ServiceRepository
+ * @covers \Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository
  */
 final class ServiceRepositoryTest extends AbstractRepositoryTest
 {
