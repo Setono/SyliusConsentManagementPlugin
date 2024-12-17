@@ -199,6 +199,9 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'update' => [
                                 'type' => 'update',
                             ],
+                            'delete' => [
+                                'type' => 'delete',
+                            ],
                         ],
                     ],
                 ],
