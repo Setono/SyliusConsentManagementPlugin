@@ -6,7 +6,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Model;
 
 use PHPUnit\Framework\TestCase;
 use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
+use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\FormerConsent;
 use Symfony\Component\HttpFoundation\Request;

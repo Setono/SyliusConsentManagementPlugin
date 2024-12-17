@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
+use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Symfony\Component\HttpFoundation\Request;
 

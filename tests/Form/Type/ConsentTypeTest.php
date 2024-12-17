@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Form\Type;
 
-use Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentCommand;
+use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Symfony\Component\Form\Test\TypeTestCase;
 

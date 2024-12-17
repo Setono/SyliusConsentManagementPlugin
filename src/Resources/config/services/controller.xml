@@ -5,7 +5,7 @@
         <defaults public="true"/>
 
         <service id="setono_sylius_consent_management.controller.action.consent_widget"
-                 class="Setono\SyliusConsentManagementPlugin\Controller\Action\ConsentWidgetAction">
+                 class="Setono\SyliusConsentManagementPlugin\Controller\ConsentWidgetAction">
             <argument type="service" id="form.factory"/>
             <argument type="service" id="twig"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
+namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use const JSON_THROW_ON_ERROR;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
@@ -22,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Webmozart\Assert\Assert;
+use const JSON_THROW_ON_ERROR;
 
 /**
  * The coverage of this class is handled by the behat tests

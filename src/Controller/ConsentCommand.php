@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Controller\Action;
+namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Setono\ClientId\ClientId;
 use Setono\Consent\Consent;
