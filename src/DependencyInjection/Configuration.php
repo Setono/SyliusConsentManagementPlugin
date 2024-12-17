@@ -35,15 +35,11 @@ final class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
-        /**
-         * @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference
-         */
+        /** @psalm-suppress MixedMethodCall,UndefinedInterfaceMethod,PossiblyUndefinedMethod,PossiblyNullReference */
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('driver')
-                    ->defaultValue(SyliusResourceBundle::DRIVER_DOCTRINE_ORM)
-                ->end()
+                // todo allow this to be empty and use the channel email as a fallback
                 ->arrayNode('notify')
                     ->requiresAtLeastOneElement()
                     ->isRequired()
@@ -62,7 +58,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('firewalls')
                             ->defaultValue(['shop'])
-                            ->info("A list of firewall to sample. The default is to only sample the 'shop' firewall. This means you won't sample API requests and admin requests by default.")
+                            ->info("A list of firewalls to sample. The default is to only sample the 'shop' firewall. This means you won't sample API requests and admin requests by default.")
                             ->scalarPrototype()->end()
         ;
 

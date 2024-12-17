@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
+use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -25,7 +26,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
         $container->setParameter('setono_sylius_consent_management.notify', $config['notify']);
 
-        $this->registerResources('setono_sylius_consent_management', $config['driver'], $config['resources'], $container);
+        $this->registerResources('setono_sylius_consent_management', SyliusResourceBundle::DRIVER_DOCTRINE_ORM, $config['resources'], $container);
 
         $loader->load('services.xml');
     }
