@@ -1,7 +1,5 @@
 {# @var \Setono\SyliusConsentManagementPlugin\Model\CookieInterface data #}
-{% if data.necessary %}
-    Necessary cookie - service not needed
-{% elseif data.service is null %}
+{% if data.service is null %}
     <span class="ui red label"><i class="exclamation circle icon"></i> {{ 'setono_sylius_consent_management.ui.missing'|trans }}</span>
 {% else %}
     {{ data.service }}
