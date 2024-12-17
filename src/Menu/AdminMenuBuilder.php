@@ -22,6 +22,14 @@ final class AdminMenuBuilder
         ;
 
         $header
+            ->addChild('categories', [
+                'route' => 'setono_sylius_consent_management_admin_category_index',
+            ])
+            ->setLabel('setono_sylius_consent_management.menu.admin.main.consent_management.categories')
+            ->setLabelAttribute('icon', 'folder')
+        ;
+
+        $header
             ->addChild('services', [
                 'route' => 'setono_sylius_consent_management_admin_service_index',
             ])

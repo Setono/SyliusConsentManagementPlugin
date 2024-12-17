@@ -10,33 +10,24 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface ServiceInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface, CodeAwareInterface
+interface ServiceInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface, CodeAwareInterface, \Stringable
 {
-    public const CATEGORY_PREFERENCES = 'preferences';
-
-    public const CATEGORY_STATISTICS = 'statistics';
-
-    public const CATEGORY_MARKETING = 'marketing';
-
-    public function __toString(): string;
-
     public function getId(): ?int;
 
-    public function getCategory(): ?string;
+    public function getCategory(): ?CategoryInterface;
 
-    public function setCategory(?string $category): void;
+    public function setCategory(?CategoryInterface $category): void;
 
     public function getName(): ?string;
 
-    public function setName(string $name): void;
+    public function setName(?string $name): void;
 
     public function getDescription(): ?string;
 
-    public function setDescription(string $description): void;
+    public function setDescription(?string $description): void;
 
     /**
-     * @return Collection|CookieInterface[]
-     * @psalm-return Collection<array-key, CookieInterface>
+     * @return Collection<array-key, CookieInterface>
      */
     public function getCookies(): Collection;
 

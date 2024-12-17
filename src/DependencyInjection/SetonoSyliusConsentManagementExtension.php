@@ -41,6 +41,41 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     {
         $container->prependExtensionConfig('sylius_grid', [
             'grids' => [
+                'setono_sylius_consent_management_admin_category' => [
+                    'driver' => [
+                        'options' => [
+                            'class' => '%setono_sylius_consent_management.model.category.class%',
+                        ],
+                    ],
+                    'limits' => [100, 250, 500, 1000],
+                    'fields' => [
+                        'name' => [
+                            'type' => 'string',
+                            'label' => 'setono_sylius_consent_management.ui.name',
+                        ],
+                    ],
+                    'filters' => [
+                        'search' => [
+                            'type' => 'string',
+                            'label' => 'sylius.ui.search',
+                            'options' => [
+                                'fields' => ['name'],
+                            ],
+                        ],
+                    ],
+                    'actions' => [
+                        'main' => [
+                            'create' => [
+                                'type' => 'create',
+                            ],
+                        ],
+                        'item' => [
+                            'update' => [
+                                'type' => 'update',
+                            ],
+                        ],
+                    ],
+                ],
                 'setono_sylius_consent_management_admin_consent_entry' => [
                     'driver' => [
                         'options' => [
@@ -154,17 +189,6 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'label' => 'setono_sylius_consent_management.ui.service_search',
                             'options' => [
                                 'fields' => ['code', 'translation.name'],
-                            ],
-                        ],
-                        'category' => [
-                            'type' => 'select',
-                            'label' => 'setono_sylius_consent_management.ui.category',
-                            'form_options' => [
-                                'choices' => [
-                                    'setono_sylius_consent_management.ui.categories.marketing' => 'marketing',
-                                    'setono_sylius_consent_management.ui.categories.preferences' => 'preferences',
-                                    'setono_sylius_consent_management.ui.categories.statistics' => 'statistics',
-                                ],
                             ],
                         ],
                     ],

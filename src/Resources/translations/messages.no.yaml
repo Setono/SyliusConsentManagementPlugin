@@ -26,17 +26,17 @@ setono_sylius_consent_management:
         admin:
             main:
                 consent_management:
+                    categories: Kategorier
                     consent_entries: Samtykker
                     cookies: Informasjonskapsler
                     header: Samtykkeadministrasjon
                     services: Tjenester
                     widget_configuration: Widget configuration # todo translate
     ui:
-        categories:
-            marketing: Markedsføring
-            preferences: Preferanser
-            statistics: Statistikk
         category: Kategori
+        categories: Kategorier
+        category_header: Kategorier
+        category_subheader: Administrer kategoriene dine
         client_id: Klient id
         consent_entries: Samtykker
         consent_entry_header: Samtykker

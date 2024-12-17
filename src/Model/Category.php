@@ -10,7 +10,7 @@ use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
 use Sylius\Component\Resource\Model\TranslationInterface;
 
-class Service implements ServiceInterface
+class Category implements CategoryInterface
 {
     use TimestampableTrait;
     use TranslatableTrait {
@@ -23,20 +23,18 @@ class Service implements ServiceInterface
 
     protected ?string $code = null;
 
-    protected ?CategoryInterface $category = null;
-
-    /** @var Collection<array-key, CookieInterface> */
-    protected Collection $cookies;
+    /** @var Collection<array-key, ServiceInterface> */
+    protected Collection $services;
 
     public function __construct()
     {
         $this->initializeTranslationsCollection();
-        $this->cookies = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return (string) ($this->getName() ?? $this->getCode());
     }
 
     public function getId(): ?int
@@ -52,16 +50,6 @@ class Service implements ServiceInterface
     public function setCode(?string $code): void
     {
         $this->code = $code;
-    }
-
-    public function getCategory(): ?CategoryInterface
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?CategoryInterface $category): void
-    {
-        $this->category = $category;
     }
 
     public function getName(): ?string
@@ -85,44 +73,44 @@ class Service implements ServiceInterface
     }
 
     /**
-     * @return ServiceTranslationInterface
+     * @return CategoryTranslationInterface
      */
     public function getTranslation(?string $locale = null): TranslationInterface
     {
-        /** @var ServiceTranslationInterface $translation */
+        /** @var CategoryTranslationInterface $translation */
         $translation = $this->doGetTranslation($locale);
 
         return $translation;
     }
 
-    protected function createTranslation(): ServiceTranslationInterface
+    protected function createTranslation(): CategoryTranslationInterface
     {
-        return new ServiceTranslation();
+        return new CategoryTranslation();
     }
 
-    public function getCookies(): Collection
+    public function getServices(): Collection
     {
-        return $this->cookies;
+        return $this->services;
     }
 
-    public function addCookie(CookieInterface $cookie): void
+    public function addService(ServiceInterface $service): void
     {
-        if (!$this->hasCookie($cookie)) {
-            $cookie->setService($this);
-            $this->cookies->add($cookie);
+        if (!$this->hasService($service)) {
+            $service->setCategory($this);
+            $this->services->add($service);
         }
     }
 
-    public function removeCookie(CookieInterface $cookie): void
+    public function removeService(ServiceInterface $service): void
     {
-        if ($this->hasCookie($cookie)) {
-            $cookie->setService(null);
-            $this->cookies->removeElement($cookie);
+        if ($this->hasService($service)) {
+            $service->setCategory(null);
+            $this->services->removeElement($service);
         }
     }
 
-    public function hasCookie(CookieInterface $cookie): bool
+    public function hasService(ServiceInterface $service): bool
     {
-        return $this->cookies->contains($cookie);
+        return $this->services->contains($service);
     }
 }

@@ -26,17 +26,17 @@ setono_sylius_consent_management:
         admin:
             main:
                 consent_management:
+                    categories: Kategorien
                     consent_entries: Einwilligungseinträge
                     cookies: Cookies
                     header: Einwilligungsmanagement
                     services: Dienstleistungen
                     widget_configuration: Widget configuration # todo translate
     ui:
-        categories:
-            marketing: Marketing
-            preferences: Einstellungen
-            statistics: Statistiken
         category: Kategorie
+        categories: Katogorien
+        category_header: Kategorien
+        category_subheader: Verwalten Sie Ihre Kategorien
         client_id: Klientin id
         consent_entries: Einwilligungseinträge
         consent_entry_header: Einwilligungseinträge

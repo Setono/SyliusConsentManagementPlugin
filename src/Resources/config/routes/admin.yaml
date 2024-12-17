@@ -1,3 +1,19 @@
+setono_sylius_consent_management_admin_category:
+    resource: |
+        section: admin
+        alias: setono_sylius_consent_management.category
+        templates: "@SyliusAdmin\\Crud"
+        redirect: index
+        permission: true
+        grid: setono_sylius_consent_management_admin_category
+        vars:
+            all:
+                header: setono_sylius_consent_management.ui.category_header
+                subheader: setono_sylius_consent_management.ui.category_subheader
+                templates:
+                    form: "@SetonoSyliusConsentManagementPlugin/admin/category/_form.html.twig"
+    type: sylius.resource
+    
 setono_sylius_consent_management_admin_consent_entry:
     resource: |
         section: admin

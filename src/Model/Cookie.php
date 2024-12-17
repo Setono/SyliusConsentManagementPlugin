@@ -18,16 +18,6 @@ class Cookie implements CookieInterface
 
     protected ?ServiceInterface $service = null;
 
-    protected bool $necessary = false;
-
-    public function preUpdate(): void
-    {
-        // when a cookie is necessary we don't want to associate this cookie with any service
-        if (true === $this->necessary) {
-            $this->setService(null);
-        }
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -61,15 +51,5 @@ class Cookie implements CookieInterface
     public function setService(?ServiceInterface $service): void
     {
         $this->service = $service;
-    }
-
-    public function isNecessary(): bool
-    {
-        return $this->necessary;
-    }
-
-    public function setNecessary(bool $necessary): void
-    {
-        $this->necessary = $necessary;
     }
 }

@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslationInterface;
 
-interface ServiceTranslationInterface extends ResourceInterface, TranslationInterface
+interface CategoryTranslationInterface extends ResourceInterface, TranslationInterface
 {
     public function getName(): ?string;
 

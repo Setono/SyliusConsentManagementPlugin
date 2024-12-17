@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Sylius\Component\Resource\Model\AbstractTranslation;
 
-class ServiceTranslation extends AbstractTranslation implements ServiceTranslationInterface
+class CategoryTranslation extends AbstractTranslation implements CategoryTranslationInterface
 {
     protected ?int $id = null;
 

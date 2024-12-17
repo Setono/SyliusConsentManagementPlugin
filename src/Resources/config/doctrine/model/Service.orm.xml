@@ -10,10 +10,14 @@
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
-        <field name="code" column="code" unique="true" />
-        <field name="category" type="string"/>
+        <field name="code" column="code" unique="true"/>
 
-        <one-to-many field="cookies" target-entity="Setono\SyliusConsentManagementPlugin\Model\CookieInterface" mapped-by="service" orphan-removal="true"/>
+        <one-to-many field="cookies" target-entity="Setono\SyliusConsentManagementPlugin\Model\CookieInterface"
+                     mapped-by="service" orphan-removal="true"/>
+
+        <many-to-one target-entity="Setono\SyliusConsentManagementPlugin\Model\CategoryInterface" field="category" inversed-by="services">
+            <join-column name="category_id" referenced-column-name="id" on-delete="SET NULL"/>
+        </many-to-one>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

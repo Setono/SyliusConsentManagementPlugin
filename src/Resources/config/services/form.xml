@@ -2,6 +2,15 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.category.validation_groups">
+            <parameter>setono_sylius_consent_management</parameter>
+        </parameter>
+
+        <parameter type="collection"
+                   key="setono_sylius_consent_management.form.type.category_translation.validation_groups">
+            <parameter>setono_sylius_consent_management</parameter>
+        </parameter>
+
         <parameter type="collection" key="setono_sylius_consent_management.form.type.cookie.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
@@ -21,6 +30,20 @@
         </parameter>
     </parameters>
     <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CategoryType">
+            <argument>%setono_sylius_consent_management.model.category.class%</argument>
+            <argument>%setono_sylius_consent_management.form.type.category.validation_groups%</argument>
+
+            <tag name="form.type"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CategoryTranslationType">
+            <argument>%setono_sylius_consent_management.model.category_translation.class%</argument>
+            <argument>%setono_sylius_consent_management.form.type.category_translation.validation_groups%</argument>
+
+            <tag name="form.type"/>
+        </service>
+
         <service id="setono_sylius_consent_management.form.type.cookie"
                  class="Setono\SyliusConsentManagementPlugin\Form\Type\CookieType">
             <argument>%setono_sylius_consent_management.model.cookie.class%</argument>
