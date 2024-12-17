@@ -37,7 +37,7 @@ setono_sylius_consent_management:
                     cookies: Cookies
                     header: Einwilligungsmanagement
                     services: Dienstleistungen
-                    widget_configuration: Widget configuration # todo translate
+                    widget_configuration: Widget-Konfiguration
     ui:
         default_categories:
             marketing:
