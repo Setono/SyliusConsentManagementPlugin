@@ -6,6 +6,7 @@ setono_sylius_consent_management:
         category:
             name: Navn
             description: Beskrivelse
+            necessary: Obligatorisk
         category_choice:
             label: Kategori
             placeholder: Vælg en kategori...
@@ -39,6 +40,7 @@ setono_sylius_consent_management:
                     services: Tjenester
                     widget_configuration: Widget-indstillinger
     ui:
+        necessary: Obligatorisk
         create_default_categories: Opret standard kategorier
         default_categories:
             marketing:

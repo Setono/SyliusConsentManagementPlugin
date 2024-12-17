@@ -14,5 +14,5 @@ interface CategoryFactoryInterface extends TranslatableFactoryInterface
     /**
      * @param array<string, array{name: string, description: string}> $translations
      */
-    public function createWithData(string $code, array $translations): CategoryInterface;
+    public function createWithData(string $code, array $translations, bool $necessary = false): CategoryInterface;
 }

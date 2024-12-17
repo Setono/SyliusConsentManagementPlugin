@@ -6,6 +6,7 @@ setono_sylius_consent_management:
         category:
             name: Name
             description: Description
+            necessary: Necessary
         category_choice:
             label: Category
             placeholder: Choose a category...
@@ -41,6 +42,7 @@ setono_sylius_consent_management:
                     services: Services
                     widget_configuration: Widget configuration
     ui:
+        necessary: Necessary
         default_categories:
             marketing:
                 description: Cookies used for marketing purposes

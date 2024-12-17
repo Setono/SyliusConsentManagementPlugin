@@ -42,7 +42,7 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
                 ];
             }
 
-            yield $this->categoryFactory->createWithData($defaultCategory, $translations);
+            yield $this->categoryFactory->createWithData($defaultCategory, $translations, 'necessary' === $defaultCategory);
         }
     }
 }

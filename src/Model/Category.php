@@ -23,6 +23,8 @@ class Category implements CategoryInterface
 
     protected ?string $code = null;
 
+    protected bool $necessary = false;
+
     /** @var Collection<array-key, ServiceInterface> */
     protected Collection $services;
 
@@ -72,20 +74,14 @@ class Category implements CategoryInterface
         $this->getTranslation()->setDescription($description);
     }
 
-    /**
-     * @return CategoryTranslationInterface
-     */
-    public function getTranslation(?string $locale = null): TranslationInterface
+    public function isNecessary(): bool
     {
-        /** @var CategoryTranslationInterface $translation */
-        $translation = $this->doGetTranslation($locale);
-
-        return $translation;
+        return $this->necessary;
     }
 
-    protected function createTranslation(): CategoryTranslationInterface
+    public function setNecessary(bool $necessary): void
     {
-        return new CategoryTranslation();
+        $this->necessary = $necessary;
     }
 
     public function getServices(): Collection
@@ -112,5 +108,21 @@ class Category implements CategoryInterface
     public function hasService(ServiceInterface $service): bool
     {
         return $this->services->contains($service);
+    }
+
+    /**
+     * @return CategoryTranslationInterface
+     */
+    public function getTranslation(?string $locale = null): TranslationInterface
+    {
+        /** @var CategoryTranslationInterface $translation */
+        $translation = $this->doGetTranslation($locale);
+
+        return $translation;
+    }
+
+    protected function createTranslation(): CategoryTranslationInterface
+    {
+        return new CategoryTranslation();
     }
 }

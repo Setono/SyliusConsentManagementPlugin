@@ -11,6 +11,7 @@
         </id>
 
         <field name="code" unique="true"/>
+        <field name="necessary" type="boolean"/>
 
         <one-to-many field="services" target-entity="Setono\SyliusConsentManagementPlugin\Model\ServiceInterface" mapped-by="category"/>
     </mapped-superclass>

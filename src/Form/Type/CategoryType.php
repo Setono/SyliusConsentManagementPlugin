@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 use Sylius\Bundle\ResourceBundle\Form\EventSubscriber\AddCodeFormSubscriber;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class CategoryType extends AbstractResourceType
@@ -15,6 +16,9 @@ final class CategoryType extends AbstractResourceType
     {
         $builder
             ->addEventSubscriber(new AddCodeFormSubscriber())
+            ->add('necessary', CheckboxType::class, [
+                'label' => 'setono_sylius_consent_management.form.category.necessary',
+            ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => CategoryTranslationType::class,
                 'label' => 'sylius.ui.translations',

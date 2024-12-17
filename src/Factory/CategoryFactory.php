@@ -24,10 +24,11 @@ final class CategoryFactory implements CategoryFactoryInterface
         return $obj;
     }
 
-    public function createWithData(string $code, array $translations): CategoryInterface
+    public function createWithData(string $code, array $translations, bool $necessary = false): CategoryInterface
     {
         $obj = $this->createNew();
         $obj->setCode($code);
+        $obj->setNecessary($necessary);
 
         foreach ($translations as $localeCode => $translationData) {
             $obj->addTranslation($this->categoryTranslationFactory->createFromData($localeCode, $translationData));

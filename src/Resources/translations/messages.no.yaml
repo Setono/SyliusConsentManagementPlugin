@@ -6,6 +6,7 @@ setono_sylius_consent_management:
         category:
             name: Navn
             description: Beskrivelse
+            necessary: Nødvendig
         category_choice:
             label: Kategori
             placeholder: Velg en kategori...
@@ -39,6 +40,7 @@ setono_sylius_consent_management:
                     services: Tjenester
                     widget_configuration: Widget konfigurasjon
     ui:
+        necessary: Nødvendig
         default_categories:
             marketing:
                 description: Informasjonskapsler brukt til markedsføringsformål

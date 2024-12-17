@@ -21,6 +21,10 @@ interface CategoryInterface extends ResourceInterface, TranslatableInterface, Co
 
     public function setDescription(string $description): void;
 
+    public function isNecessary(): bool;
+
+    public function setNecessary(bool $necessary): void;
+
     /**
      * @return Collection<array-key, ServiceInterface>
      */
