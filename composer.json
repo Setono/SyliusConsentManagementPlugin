@@ -64,7 +64,7 @@
         "polishsymfonycommunity/symfony-mocker-container": "^1.0.7",
         "psalm/plugin-phpunit": "^0.18",
         "psalm/plugin-symfony": "^5.1",
-        "setono/code-quality-pack": "^2.6",
+        "setono/code-quality-pack": "^2.8.3",
         "setono/sylius-behat-pack": "^0.2.2",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "sylius/sylius": "~1.12.13",
@@ -102,18 +102,9 @@
         },
         "sort-packages": true
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
-    },
     "scripts": {
-        "analyse": [
-            "@ensure-test-container-exists",
-            "psalm"
-        ],
+        "analyse": "psalm",
         "check-style": "ecs check",
-        "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/Tests_Setono_SyliusConsentManagementPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
         "fix-style": "ecs check --fix",
         "fixtures": "(cd tests/Application && bin/console sylius:fixture:load default -n)",
         "phpunit": "phpunit"
