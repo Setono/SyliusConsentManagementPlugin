@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Platform;
 
+use DateTimeImmutable;
 use Setono\SyliusConsentManagementPlugin\Model\FormerConsent;
 
 final class Cookiebot implements PlatformInterface
@@ -61,7 +62,7 @@ final class Cookiebot implements PlatformInterface
 
         try {
             $createdAt = self::getDateTimeFromTimestamp($timestamp);
-        } catch (\Exception $e) {
+        } catch (\Throwable) {
             return null;
         }
 
@@ -87,13 +88,13 @@ final class Cookiebot implements PlatformInterface
         $json = preg_replace('/([a-z]+):/', '"$1":', $badJson);
 
         try {
-            $result = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+            $result = json_decode((string) $json, true, 512, \JSON_THROW_ON_ERROR);
             if (!is_array($result)) {
                 return [];
             }
 
             return $result;
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             return [];
         }
     }
@@ -102,7 +103,7 @@ final class Cookiebot implements PlatformInterface
     {
         $timestamp = (int) round($timestamp / 1000);
 
-        return new \DateTimeImmutable('@' . $timestamp);
+        return new DateTimeImmutable('@' . $timestamp);
     }
 
     /**

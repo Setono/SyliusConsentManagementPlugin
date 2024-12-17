@@ -12,16 +12,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class ConsentWidgetCookieSubscriber implements EventSubscriberInterface
 {
-    private ConsentWidgetInterface $consentWidget;
-
-    private ConsentWidgetCookieManagerInterface $consentWidgetCookieManager;
-
     public function __construct(
-        ConsentWidgetInterface $consentWidget,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly ConsentWidgetInterface $consentWidget,
+        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
-        $this->consentWidget = $consentWidget;
-        $this->consentWidgetCookieManager = $consentWidgetCookieManager;
     }
 
     public static function getSubscribedEvents(): array

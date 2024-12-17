@@ -13,24 +13,12 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface
 {
-    private ConsentContextInterface $consentContext;
-
-    private ValidWidgetConfigProviderInterface $widgetConfigProvider;
-
-    private ChannelContextInterface $channelContext;
-
-    private LocaleContextInterface $localeContext;
-
     public function __construct(
-        ConsentContextInterface $consentContext,
-        ValidWidgetConfigProviderInterface $widgetConfigProvider,
-        ChannelContextInterface $channelContext,
-        LocaleContextInterface $localeContext,
+        private readonly ConsentContextInterface $consentContext,
+        private readonly ValidWidgetConfigProviderInterface $widgetConfigProvider,
+        private readonly ChannelContextInterface $channelContext,
+        private readonly LocaleContextInterface $localeContext,
     ) {
-        $this->consentContext = $consentContext;
-        $this->widgetConfigProvider = $widgetConfigProvider;
-        $this->channelContext = $channelContext;
-        $this->localeContext = $localeContext;
     }
 
     public function marketingGranted(): bool

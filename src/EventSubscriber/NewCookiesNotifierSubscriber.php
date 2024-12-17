@@ -10,11 +10,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class NewCookiesNotifierSubscriber implements EventSubscriberInterface
 {
-    private CookieEmailManagerInterface $cookieEmailManager;
-
-    public function __construct(CookieEmailManagerInterface $cookieEmailManager)
+    public function __construct(private readonly CookieEmailManagerInterface $cookieEmailManager)
     {
-        $this->cookieEmailManager = $cookieEmailManager;
     }
 
     public static function getSubscribedEvents(): array

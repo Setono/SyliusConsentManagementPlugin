@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Webmozart\Assert\Assert;
 
+// todo implement ResetInterface
 final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 {
     private bool $setConsentWidgetCookie = false;
@@ -25,32 +26,14 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
     /** @var array<array-key, string> */
     private array $cookiesToClear = [];
 
-    private PlatformRegistryInterface $platformRegistry;
-
-    private ConsentWidgetInterface $consentWidget;
-
-    private ClientIdProviderInterface $clientIdProvider;
-
-    private ConsentEntryRepositoryInterface $consentEntryRepository;
-
-    private FactoryInterface $consentEntryFactory;
-
-    private ConsentWidgetCookieManagerInterface $consentWidgetCookieManager;
-
     public function __construct(
-        PlatformRegistryInterface $platformRegistry,
-        ConsentWidgetInterface $consentWidget,
-        ClientIdProviderInterface $clientIdProvider,
-        ConsentEntryRepositoryInterface $consentEntryRepository,
-        FactoryInterface $consentEntryFactory,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly PlatformRegistryInterface $platformRegistry,
+        private readonly ConsentWidgetInterface $consentWidget,
+        private readonly ClientIdProviderInterface $clientIdProvider,
+        private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
+        private readonly FactoryInterface $consentEntryFactory,
+        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
-        $this->platformRegistry = $platformRegistry;
-        $this->consentWidget = $consentWidget;
-        $this->clientIdProvider = $clientIdProvider;
-        $this->consentEntryRepository = $consentEntryRepository;
-        $this->consentEntryFactory = $consentEntryFactory;
-        $this->consentWidgetCookieManager = $consentWidgetCookieManager;
     }
 
     public static function getSubscribedEvents(): array

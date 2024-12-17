@@ -18,27 +18,17 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Webmozart\Assert\Assert;
 
-/* not final */ class ServiceExampleFactory extends AbstractExampleFactory
+class ServiceExampleFactory extends AbstractExampleFactory
 {
-    protected ServiceRepositoryInterface $serviceRepository;
-
-    protected FactoryInterface $serviceFactory;
-
-    protected RepositoryInterface $localeRepository;
-
     protected Generator $faker;
 
     protected OptionsResolver $optionsResolver;
 
     public function __construct(
-        ServiceRepositoryInterface $serviceRepository,
-        FactoryInterface $serviceFactory,
-        RepositoryInterface $localeRepository,
+        protected readonly ServiceRepositoryInterface $serviceRepository,
+        protected readonly FactoryInterface $serviceFactory,
+        protected readonly RepositoryInterface $localeRepository,
     ) {
-        $this->serviceRepository = $serviceRepository;
-        $this->serviceFactory = $serviceFactory;
-        $this->localeRepository = $localeRepository;
-
         $this->faker = Factory::create();
         $this->optionsResolver = new OptionsResolver();
 
@@ -122,9 +112,7 @@ use Webmozart\Assert\Assert;
 
                 return $words;
             })
-            ->setDefault('description', function (Options $options): string {
-                return $this->faker->paragraph;
-            })
+            ->setDefault('description', fn (Options $options): string => $this->faker->paragraph)
             ->setDefault('translations', [])
             ->setAllowedTypes('translations', ['array'])
         ;

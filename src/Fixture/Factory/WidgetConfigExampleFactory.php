@@ -18,27 +18,17 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Webmozart\Assert\Assert;
 
-/* not final */ class WidgetConfigExampleFactory extends AbstractExampleFactory
+class WidgetConfigExampleFactory extends AbstractExampleFactory
 {
-    protected FactoryInterface $widgetConfigFactory;
-
-    protected ChannelRepositoryInterface $channelRepository;
-
-    protected RepositoryInterface $localeRepository;
-
     protected Generator $faker;
 
     protected OptionsResolver $optionsResolver;
 
     public function __construct(
-        FactoryInterface $widgetConfigFactory,
-        ChannelRepositoryInterface $channelRepository,
-        RepositoryInterface $localeRepository,
+        protected readonly FactoryInterface $widgetConfigFactory,
+        protected readonly ChannelRepositoryInterface $channelRepository,
+        protected readonly RepositoryInterface $localeRepository,
     ) {
-        $this->widgetConfigFactory = $widgetConfigFactory;
-        $this->channelRepository = $channelRepository;
-        $this->localeRepository = $localeRepository;
-
         $this->faker = Factory::create();
         $this->optionsResolver = new OptionsResolver();
 
@@ -72,9 +62,7 @@ use Webmozart\Assert\Assert;
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefault('usage_description', function (Options $options): string {
-                return $this->faker->paragraph;
-            })
+            ->setDefault('usage_description', fn (Options $options): string => $this->faker->paragraph)
 
             ->setDefault('channel', LazyOption::randomOne($this->channelRepository))
             ->setAllowedTypes('channel', ['null', 'string', ChannelInterface::class])

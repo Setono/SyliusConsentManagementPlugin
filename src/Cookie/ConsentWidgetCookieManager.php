@@ -10,14 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ConsentWidgetCookieManager implements ConsentWidgetCookieManagerInterface
 {
-    /**
-     * This is the name of the consent widget cookie
-     */
-    private string $cookieName;
-
-    public function __construct(string $cookieName)
-    {
-        $this->cookieName = $cookieName;
+    public function __construct(
+        private readonly string $cookieName,
+    ) {
     }
 
     public function exists(Request $request): bool

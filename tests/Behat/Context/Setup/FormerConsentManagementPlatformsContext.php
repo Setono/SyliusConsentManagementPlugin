@@ -9,11 +9,8 @@ use Behat\Mink\Session;
 
 final class FormerConsentManagementPlatformsContext implements Context
 {
-    private Session $session;
-
-    public function __construct(Session $session)
+    public function __construct(private readonly Session $session)
     {
-        $this->session = $session;
     }
 
     /**

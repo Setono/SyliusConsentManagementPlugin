@@ -14,20 +14,11 @@ use Webmozart\Assert\Assert;
 
 final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 {
-    private FactoryInterface $decorated;
-
-    private RepositoryInterface $localeRepository;
-
-    private TranslatorInterface $translator;
-
     public function __construct(
-        FactoryInterface $decorated,
-        RepositoryInterface $localeRepository,
-        TranslatorInterface $translator,
+        private readonly FactoryInterface $decorated,
+        private readonly RepositoryInterface $localeRepository,
+        private readonly TranslatorInterface $translator,
     ) {
-        $this->decorated = $decorated;
-        $this->localeRepository = $localeRepository;
-        $this->translator = $translator;
     }
 
     public function createNew(): WidgetConfigInterface

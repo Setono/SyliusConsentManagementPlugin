@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * This class is used to override the consent for a given request by appending query parameters to the URL.
  *
- * You can do it like this: ?_consent[preferences]=1&_consent[statistics]=1&_consent[marketing]=0 which will
+ * You do it like this: ?_consent[preferences]=1&_consent[statistics]=1&_consent[marketing]=0 which will
  * grant consent for preferences and statistics, but not marketing
  *
  * and you can do it like this: ?_consent=1 which will grant consent for all categories
@@ -21,20 +21,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class RequestBasedConsentContext implements ConsentContextInterface
 {
-    private ConsentContextInterface $decorated;
-
-    private RequestStack $requestStack;
-
-    private ClientIdProviderInterface $clientIdProvider;
-
     public function __construct(
-        ConsentContextInterface $decorated,
-        RequestStack $requestStack,
-        ClientIdProviderInterface $clientIdProvider,
+        private readonly ConsentContextInterface $decorated,
+        private readonly RequestStack $requestStack,
+        private readonly ClientIdProviderInterface $clientIdProvider,
     ) {
-        $this->decorated = $decorated;
-        $this->requestStack = $requestStack;
-        $this->clientIdProvider = $clientIdProvider;
     }
 
     public function getConsent(): Consent

@@ -17,43 +17,25 @@ use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
 {
-    private CookieRepositoryInterface $cookieRepository;
-
-    private CookieFactoryInterface $cookieFactory;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private FirewallMap $firewallMap;
-
-    /** @var array<array-key, string> */
-    private array $firewalls;
-
     /**
      * The sample rate can be between 0.0001 and 1. This means that it can be set to collect cookie samples
      * between every 10,000th visit and every visit
      */
-    private float $sampleRate;
+    private readonly float $sampleRate;
 
-    /**
-     * @param array<array-key, string> $firewalls
-     */
     public function __construct(
-        CookieRepositoryInterface $cookieRepository,
-        CookieFactoryInterface $cookieFactory,
-        EventDispatcherInterface $eventDispatcher,
-        FirewallMap $firewallMap,
-        array $firewalls,
+        private readonly CookieRepositoryInterface $cookieRepository,
+        private readonly CookieFactoryInterface $cookieFactory,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly FirewallMap $firewallMap,
+        /** @var list<string> $firewalls */
+        private readonly array $firewalls,
         float $sampleRate,
     ) {
         Assert::greaterThanEq($sampleRate, 0.0001);
         Assert::lessThanEq($sampleRate, 1);
 
-        $this->cookieRepository = $cookieRepository;
-        $this->cookieFactory = $cookieFactory;
-        $this->eventDispatcher = $eventDispatcher;
         $this->sampleRate = $sampleRate;
-        $this->firewallMap = $firewallMap;
-        $this->firewalls = $firewalls;
     }
 
     public static function getSubscribedEvents(): array

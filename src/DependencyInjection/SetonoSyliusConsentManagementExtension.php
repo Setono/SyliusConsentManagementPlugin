@@ -27,7 +27,12 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
         $container->setParameter('setono_sylius_consent_management.notify', $config['notify']);
 
-        $this->registerResources('setono_sylius_consent_management', SyliusResourceBundle::DRIVER_DOCTRINE_ORM, $config['resources'], $container);
+        $this->registerResources(
+            'setono_sylius_consent_management',
+            SyliusResourceBundle::DRIVER_DOCTRINE_ORM,
+            $config['resources'],
+            $container,
+        );
 
         $loader->load('services.xml');
     }
@@ -220,8 +225,8 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                 'new_cookies' => [
                     'subject' => 'setono_sylius_consent_management.emails.new_cookies.subject',
                     'template' => '@SetonoSyliusConsentManagementPlugin/email/new_cookies.html.twig',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $container->prependExtensionConfig('sylius_ui', [
@@ -230,11 +235,11 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                     'blocks' => [
                         'index_header' => [
                             'template' => '@SetonoSyliusConsentManagementPlugin/admin/widget_config/index_header.html.twig',
-                            'priority' => 15
-                        ]
-                    ]
-                ]
-            ]
+                            'priority' => 15,
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 }

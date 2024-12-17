@@ -32,9 +32,7 @@ class HomePage extends BaseHomePage
 
     public function initialDialogHides(): bool
     {
-        $res = $this->getDocument()->waitFor(5, function () {
-            return $this->hasInitialDialog() && !$this->isInitialDialogVisible();
-        });
+        $res = $this->getDocument()->waitFor(5, fn () => $this->hasInitialDialog() && !$this->isInitialDialogVisible());
 
         Assert::boolean($res);
 
@@ -43,9 +41,7 @@ class HomePage extends BaseHomePage
 
     public function settingsDialogHides(): bool
     {
-        $res = $this->getDocument()->waitFor(5, function () {
-            return $this->hasSettingsDialog() && !$this->isSettingsDialogVisible();
-        });
+        $res = $this->getDocument()->waitFor(5, fn () => $this->hasSettingsDialog() && !$this->isSettingsDialogVisible());
 
         Assert::boolean($res);
 

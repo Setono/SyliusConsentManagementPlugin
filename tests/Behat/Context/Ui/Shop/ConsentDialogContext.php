@@ -10,11 +10,8 @@ use Webmozart\Assert\Assert;
 
 final class ConsentDialogContext implements Context
 {
-    private HomePage $homePage;
-
-    public function __construct(HomePage $homePage)
+    public function __construct(private readonly HomePage $homePage)
     {
-        $this->homePage = $homePage;
     }
 
     /**

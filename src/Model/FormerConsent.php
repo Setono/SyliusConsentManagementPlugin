@@ -11,12 +11,6 @@ use DateTimeInterface;
  */
 final class FormerConsent
 {
-    public bool $marketingGranted;
-
-    public bool $preferencesGranted;
-
-    public bool $statisticsGranted;
-
     public ?string $clientId = null;
 
     public ?string $url = null;
@@ -28,12 +22,9 @@ final class FormerConsent
     public ?DateTimeInterface $createdAt = null;
 
     public function __construct(
-        bool $marketingGranted,
-        bool $preferencesGranted,
-        bool $statisticsGranted,
+        public readonly bool $marketingGranted,
+        public readonly bool $preferencesGranted,
+        public readonly bool $statisticsGranted,
     ) {
-        $this->marketingGranted = $marketingGranted;
-        $this->preferencesGranted = $preferencesGranted;
-        $this->statisticsGranted = $statisticsGranted;
     }
 }

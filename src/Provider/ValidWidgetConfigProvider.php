@@ -11,16 +11,10 @@ use Sylius\Component\Channel\Model\ChannelInterface;
 
 final class ValidWidgetConfigProvider implements ValidWidgetConfigProviderInterface
 {
-    private WidgetConfigRepositoryInterface $widgetConfigRepository;
-
-    private WidgetConfigFactoryInterface $widgetConfigFactory;
-
     public function __construct(
-        WidgetConfigRepositoryInterface $widgetConfigRepository,
-        WidgetConfigFactoryInterface $widgetConfigFactory,
+        private readonly WidgetConfigRepositoryInterface $widgetConfigRepository,
+        private readonly WidgetConfigFactoryInterface $widgetConfigFactory,
     ) {
-        $this->widgetConfigRepository = $widgetConfigRepository;
-        $this->widgetConfigFactory = $widgetConfigFactory;
     }
 
     public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface

@@ -11,14 +11,8 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 
 final class ServiceContext implements Context
 {
-    private ServiceRepositoryInterface $serviceRepository;
-
-    private FactoryInterface $serviceFactory;
-
-    public function __construct(ServiceRepositoryInterface $serviceRepository, FactoryInterface $serviceFactory)
+    public function __construct(private readonly ServiceRepositoryInterface $serviceRepository, private readonly FactoryInterface $serviceFactory)
     {
-        $this->serviceRepository = $serviceRepository;
-        $this->serviceFactory = $serviceFactory;
     }
 
     /**

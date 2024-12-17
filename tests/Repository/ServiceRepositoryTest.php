@@ -7,7 +7,6 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Repository;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
-use Tests\Setono\SyliusConsentManagementPlugin\Repository\AbstractRepositoryTest;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository

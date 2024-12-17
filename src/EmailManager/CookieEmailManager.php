@@ -8,18 +8,11 @@ use Sylius\Component\Mailer\Sender\SenderInterface;
 
 final class CookieEmailManager implements CookieEmailManagerInterface
 {
-    private SenderInterface $emailSender;
-
-    /** @var array<array-key, string> */
-    private array $emails;
-
-    /**
-     * @param array<array-key, string> $emails
-     */
-    public function __construct(SenderInterface $emailSender, array $emails)
-    {
-        $this->emailSender = $emailSender;
-        $this->emails = $emails;
+    public function __construct(
+        private readonly SenderInterface $emailSender,
+        /** @var list<string> $emails */
+        private readonly array $emails,
+    ) {
     }
 
     public function sendNewCookiesEmail(array $cookies): void

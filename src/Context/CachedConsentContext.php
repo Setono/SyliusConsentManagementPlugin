@@ -14,11 +14,8 @@ final class CachedConsentContext implements ConsentContextInterface
 {
     private ?Consent $consent = null;
 
-    private ConsentContextInterface $decorated;
-
-    public function __construct(ConsentContextInterface $decorated)
+    public function __construct(private readonly ConsentContextInterface $decorated)
     {
-        $this->decorated = $decorated;
     }
 
     public function getConsent(): Consent

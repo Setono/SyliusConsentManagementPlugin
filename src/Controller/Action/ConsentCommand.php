@@ -9,17 +9,11 @@ use Setono\Consent\Consent;
 
 final class ConsentCommand
 {
-    public bool $marketingGranted;
-
-    public bool $preferencesGranted;
-
-    public bool $statisticsGranted;
-
-    public function __construct(bool $marketingGranted = true, bool $preferencesGranted = true, bool $statisticsGranted = true)
-    {
-        $this->marketingGranted = $marketingGranted;
-        $this->preferencesGranted = $preferencesGranted;
-        $this->statisticsGranted = $statisticsGranted;
+    public function __construct(
+        public readonly bool $marketingGranted = true,
+        public readonly bool $preferencesGranted = true,
+        public readonly bool $statisticsGranted = true,
+    ) {
     }
 
     public static function fromConsent(Consent $consent): self

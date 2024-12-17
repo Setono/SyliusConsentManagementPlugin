@@ -14,14 +14,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class CheckIfVisitorIsABotSubscriber implements EventSubscriberInterface
 {
-    private ConsentWidgetInterface $consentWidget;
-
-    private CacheItemPoolInterface $cache;
-
-    public function __construct(ConsentWidgetInterface $consentWidget, CacheItemPoolInterface $cache)
-    {
-        $this->consentWidget = $consentWidget;
-        $this->cache = $cache;
+    public function __construct(
+        private readonly ConsentWidgetInterface $consentWidget,
+        private readonly CacheItemPoolInterface $cache,
+    ) {
     }
 
     public static function getSubscribedEvents(): array

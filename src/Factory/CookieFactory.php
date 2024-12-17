@@ -9,11 +9,8 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 
 final class CookieFactory implements CookieFactoryInterface
 {
-    private FactoryInterface $decorated;
-
-    public function __construct(FactoryInterface $decorated)
+    public function __construct(private readonly FactoryInterface $decorated)
     {
-        $this->decorated = $decorated;
     }
 
     public function createNew(): CookieInterface

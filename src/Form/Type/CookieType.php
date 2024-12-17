@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
+use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -11,17 +12,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class CookieType extends AbstractResourceType
 {
-    private string $serviceClass;
-
     /**
-     * @param class-string $serviceClass
-     * @param array<array-key, string> $validationGroups
+     * @param list<string> $validationGroups
      */
-    public function __construct(string $dataClass, string $serviceClass, array $validationGroups = [])
-    {
+    public function __construct(
+        string $dataClass,
+        /** @var class-string<ServiceInterface> $serviceClass */
+        private readonly string $serviceClass,
+        array $validationGroups = [],
+    ) {
         parent::__construct($dataClass, $validationGroups);
-
-        $this->serviceClass = $serviceClass;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

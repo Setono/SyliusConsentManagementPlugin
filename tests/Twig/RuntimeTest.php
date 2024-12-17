@@ -134,17 +134,8 @@ final class RuntimeTest extends TestCase
     private static function getConsentContext(bool $marketing = true, bool $preferences = true, bool $statistics = true): ConsentContextInterface
     {
         return new class($marketing, $preferences, $statistics) implements ConsentContextInterface {
-            private bool $marketing;
-
-            private bool $preferences;
-
-            private bool $statistics;
-
-            public function __construct(bool $marketing, bool $preferences, bool $statistics)
+            public function __construct(private readonly bool $marketing, private readonly bool $preferences, private readonly bool $statistics)
             {
-                $this->marketing = $marketing;
-                $this->preferences = $preferences;
-                $this->statistics = $statistics;
             }
 
             public function getConsent(): Consent

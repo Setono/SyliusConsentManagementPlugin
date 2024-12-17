@@ -10,14 +10,10 @@ use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterf
 
 final class ORMBasedConsentContext implements ConsentContextInterface
 {
-    private ConsentContextInterface $decorated;
-
-    private ConsentEntryRepositoryInterface $consentEntryRepository;
-
-    public function __construct(ConsentContextInterface $decorated, ConsentEntryRepositoryInterface $consentEntryRepository)
-    {
-        $this->decorated = $decorated;
-        $this->consentEntryRepository = $consentEntryRepository;
+    public function __construct(
+        private readonly ConsentContextInterface $decorated,
+        private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
+    ) {
     }
 
     public function getConsent(): Consent

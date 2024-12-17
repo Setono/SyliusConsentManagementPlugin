@@ -30,52 +30,19 @@ use Webmozart\Assert\Assert;
  */
 final class ConsentWidgetAction
 {
-    private FormFactoryInterface $formFactory;
-
-    private Environment $twig;
-
-    private ConsentEntryRepositoryInterface $consentEntryRepository;
-
-    private ServiceRepositoryInterface $serviceRepository;
-
-    private ClientIdProviderInterface $clientIdProvider;
-
-    private FactoryInterface $consentEntryFactory;
-
-    private EntityManagerInterface $consentEntryManager;
-
-    private ConsentWidgetInterface $consentWidget;
-
-    private ConsentWidgetCookieManagerInterface $consentWidgetCookieManager;
-
-    private ConsentContextInterface $consentContext;
-
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        FormFactoryInterface $formFactory,
-        Environment $twig,
-        ConsentEntryRepositoryInterface $consentEntryRepository,
-        ServiceRepositoryInterface $serviceRepository,
-        ClientIdProviderInterface $clientIdProvider,
-        FactoryInterface $consentEntryFactory,
-        EntityManagerInterface $consentEntryManager,
-        ConsentWidgetInterface $consentWidget,
-        ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
-        ConsentContextInterface $consentContext,
-        EventDispatcherInterface $eventDispatcher,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly Environment $twig,
+        private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
+        private readonly ServiceRepositoryInterface $serviceRepository,
+        private readonly ClientIdProviderInterface $clientIdProvider,
+        private readonly FactoryInterface $consentEntryFactory,
+        private readonly EntityManagerInterface $consentEntryManager,
+        private readonly ConsentWidgetInterface $consentWidget,
+        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly ConsentContextInterface $consentContext,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
-        $this->formFactory = $formFactory;
-        $this->twig = $twig;
-        $this->consentEntryRepository = $consentEntryRepository;
-        $this->serviceRepository = $serviceRepository;
-        $this->clientIdProvider = $clientIdProvider;
-        $this->consentEntryFactory = $consentEntryFactory;
-        $this->consentEntryManager = $consentEntryManager;
-        $this->consentWidget = $consentWidget;
-        $this->consentWidgetCookieManager = $consentWidgetCookieManager;
-        $this->consentContext = $consentContext;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(Request $request): Response

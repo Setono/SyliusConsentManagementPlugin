@@ -9,7 +9,6 @@ use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
-use Tests\Setono\SyliusConsentManagementPlugin\Repository\AbstractRepositoryTest;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository

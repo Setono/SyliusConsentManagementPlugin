@@ -6,8 +6,8 @@ namespace Setono\SyliusConsentManagementPlugin\Platform;
 
 final class PlatformRegistry implements PlatformRegistryInterface
 {
-    /** @var array<array-key, PlatformInterface> */
-    private array $platforms;
+    /** @var list<PlatformInterface> */
+    private readonly array $platforms;
 
     public function __construct(PlatformInterface ...$platforms)
     {
