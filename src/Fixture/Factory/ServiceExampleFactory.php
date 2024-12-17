@@ -53,7 +53,8 @@ class ServiceExampleFactory extends AbstractExampleFactory
 
         if (array_key_exists('category', $options)) {
             Assert::string($options['category']);
-            $service->setCategory($options['category']);
+            // todo fix this
+            //$service->setCategory($options['category']);
         }
 
         // add translation for each defined locales
