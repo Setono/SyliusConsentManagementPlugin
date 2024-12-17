@@ -54,15 +54,6 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'label' => 'setono_sylius_consent_management.ui.name',
                         ],
                     ],
-                    'filters' => [
-                        'search' => [
-                            'type' => 'string',
-                            'label' => 'sylius.ui.search',
-                            'options' => [
-                                'fields' => ['name'],
-                            ],
-                        ],
-                    ],
                     'actions' => [
                         'main' => [
                             'create' => [
@@ -72,6 +63,9 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         'item' => [
                             'update' => [
                                 'type' => 'update',
+                            ],
+                            'delete' => [
+                                'type' => 'delete',
                             ],
                         ],
                     ],

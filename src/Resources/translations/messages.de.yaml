@@ -3,6 +3,9 @@ setono_sylius_consent_management:
         new_cookies:
             subject: "WICHTIG: Neue Cookies in Ihrem Shop entdeckt"
     form:
+        category:
+            name: Name
+            description: Beschreibung
         consent:
             marketing: Marketing
             preferences: Einstellungen
@@ -33,6 +36,20 @@ setono_sylius_consent_management:
                     services: Dienstleistungen
                     widget_configuration: Widget configuration # todo translate
     ui:
+        default_categories:
+            marketing:
+                description: Cookies, die für Marketingzwecke verwendet werden
+                name: Marketing
+            preferences:
+                description: Cookies, die für funktionale Zwecke verwendet werden
+                name: Einstellungen
+            statistics:
+                description: Cookies, die für statistische Zwecke verwendet werden
+                name: Statistiken
+            necessary:
+                description: Notwendige Cookies sind für das ordnungsgemäße Funktionieren der Website unerlässlich
+                name: Notwendig
+        create_default_categories: Standardkategorien erstellen
         category: Kategorie
         categories: Katogorien
         category_header: Kategorien

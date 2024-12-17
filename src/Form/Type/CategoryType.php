@@ -16,7 +16,7 @@ final class CategoryType extends AbstractResourceType
         $builder
             ->addEventSubscriber(new AddCodeFormSubscriber())
             ->add('translations', ResourceTranslationsType::class, [
-                'entry_type' => ServiceTranslationType::class,
+                'entry_type' => CategoryTranslationType::class,
                 'label' => 'sylius.ui.translations',
             ])
         ;

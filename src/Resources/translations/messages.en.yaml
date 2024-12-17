@@ -3,6 +3,9 @@ setono_sylius_consent_management:
         new_cookies:
             subject: "IMPORTANT: New cookies discovered in your store"
     form:
+        category:
+            name: Name
+            description: Description
         consent:
             marketing: Marketing
             preferences: Preferences
@@ -35,6 +38,20 @@ setono_sylius_consent_management:
                     services: Services
                     widget_configuration: Widget configuration
     ui:
+        default_categories:
+            marketing:
+                description: Cookies used for marketing purposes
+                name: Marketing
+            preferences:
+                description: Cookies used for functional purposes
+                name: Preferences
+            statistics:
+                description: Cookies used for statistical purposes
+                name: Statistics
+            necessary:
+                description: Necessary cookies are essential for the website to function properly
+                name: Necessary
+        create_default_categories: Create default categories
         category: Category
         categories: Categories
         category_header: Categories

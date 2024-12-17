@@ -3,6 +3,9 @@ setono_sylius_consent_management:
         new_cookies:
             subject: "VIKTIG: Nye informasjonskapsler oppdaget i butikken din"
     form:
+        category:
+            name: Navn
+            description: Beskrivelse
         consent:
             marketing: Markedsføring
             preferences: Preferanser
@@ -33,6 +36,20 @@ setono_sylius_consent_management:
                     services: Tjenester
                     widget_configuration: Widget configuration # todo translate
     ui:
+        default_categories:
+            marketing:
+                description: Informasjonskapsler brukt til markedsføringsformål
+                name: Markedsføring
+            preferences:
+                description: Informasjonskapsler brukt til funksjonelle formål
+                name: Preferanser
+            statistics:
+                description: Informasjonskapsler brukt til statistiske formål
+                name: Statistikk
+            necessary:
+                description: Nødvendige informasjonskapsler er essensielle for at nettstedet skal fungere ordentlig
+                name: Nødvendig
+        create_default_categories: Opprett standardkategorier
         category: Kategori
         categories: Kategorier
         category_header: Kategorier

@@ -4,6 +4,14 @@
     <services>
         <defaults public="true"/>
 
+        <!-- Admin related -->
+        <service id="Setono\SyliusConsentManagementPlugin\Controller\Admin\CreateDefaultCategoriesAction">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\DefaultCategoriesProviderInterface"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <!-- Shop related -->
         <service id="setono_sylius_consent_management.controller.action.consent_widget"
                  class="Setono\SyliusConsentManagementPlugin\Controller\ConsentWidgetAction">
             <argument type="service" id="form.factory"/>

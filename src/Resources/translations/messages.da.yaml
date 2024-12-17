@@ -3,6 +3,9 @@ setono_sylius_consent_management:
         new_cookies:
             subject: "VIGTIGT: Nye cookies opdaget på din webshop"
     form:
+        category:
+            name: Navn
+            description: Beskrivelse
         consent:
             marketing: Marketing
             preferences: Indstillinger/funktionelle
@@ -33,6 +36,20 @@ setono_sylius_consent_management:
                     services: Tjenester
                     widget_configuration: Widget indstillinger
     ui:
+        create_default_categories: Opret standard kategorier
+        default_categories:
+            marketing:
+                description: Cookies brugt til markedsføringsformål
+                name: Markedsføring
+            preferences:
+                description: Cookies brugt til funktionelle formål
+                name: Præferencer
+            statistics:
+                description: Cookies brugt til statistiske formål
+                name: Statistik
+            necessary:
+                description: Nødvendige cookies er essentielle for, at hjemmesiden fungerer korrekt
+                name: Nødvendig
         category: Kategori
         categories: Kategorier
         category_header: Kategorier

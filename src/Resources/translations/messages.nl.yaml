@@ -3,6 +3,9 @@ setono_sylius_consent_management:
         new_cookies:
             subject: "BELANGRIJK: nieuwe cookies ontdekt in uw winkel"
     form:
+        category:
+            name: Naam
+            description: Beschrijving
         consent:
             marketing: Marketing
             preferences: Voorkeuren
@@ -33,6 +36,20 @@ setono_sylius_consent_management:
                     services: Diensten
                     widget_configuration: Widget configuration # todo translate
     ui:
+        default_categories:
+            marketing:
+                description: Cookies die voor marketingdoeleinden worden gebruikt
+                name: Marketing
+            preferences:
+                description: Cookies die voor functionele doeleinden worden gebruikt
+                name: Voorkeuren
+            statistics:
+                description: Cookies die voor statistische doeleinden worden gebruikt
+                name: Statistieken
+            necessary:
+                description: Noodzakelijke cookies zijn essentieel voor de goede werking van de website
+                name: Vereist
+        create_default_categories: Standaardcategorieën maken
         category: Categorie
         categories: Categorieën
         category_header: Categorieën
