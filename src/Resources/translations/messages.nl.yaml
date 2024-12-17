@@ -6,6 +6,9 @@ setono_sylius_consent_management:
         category:
             name: Naam
             description: Beschrijving
+        category_choice:
+            label: Categorie
+            placeholder: Kies een categorie...
         consent:
             marketing: Marketing
             preferences: Voorkeuren
