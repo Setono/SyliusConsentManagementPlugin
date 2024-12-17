@@ -169,12 +169,8 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'sortable' => 'translation.name',
                         ],
                         'category' => [
-                            'type' => 'twig',
+                            'type' => 'string',
                             'label' => 'setono_sylius_consent_management.ui.category',
-                            'sortable' => null,
-                            'options' => [
-                                'template' => '@SetonoSyliusConsentManagementPlugin/admin/grid/field/category.html.twig',
-                            ],
                         ],
                     ],
                     'filters' => [
