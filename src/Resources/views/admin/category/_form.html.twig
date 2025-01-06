@@ -4,6 +4,16 @@
 <div class="ui two column stackable grid">
     <div class="column">
         <div class="ui segment">
+            <div class="ui info message">
+                {# todo translate #}
+                The code is used in your application code to check if the user has given consent to the category.<br>E.g. in a Twig template:<br>
+                <code><pre>
+{{ '{%' }} if sscm_is_granted('{{ resource.code ?? 'your_category_code' }}') {{ '%}' }}
+    Output marketing related content
+{{ '{%' }} endif {{ '%}' }}
+</pre></code>
+            </div>
+
             {{ form_row(form.code) }}
             {{ form_row(form.necessary) }}
         </div>
