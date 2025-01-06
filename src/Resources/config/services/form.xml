@@ -6,8 +6,11 @@
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
-        <parameter type="collection"
-                   key="setono_sylius_consent_management.form.type.category_translation.validation_groups">
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.category_translation.validation_groups">
+            <parameter>setono_sylius_consent_management</parameter>
+        </parameter>
+
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.consent_entry.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
@@ -19,13 +22,11 @@
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
-        <parameter type="collection"
-                   key="setono_sylius_consent_management.form.type.service_translation.validation_groups">
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.service_translation.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
-        <parameter type="collection"
-                   key="setono_sylius_consent_management.form.type.widget_config.validation_groups">
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.widget_config.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
     </parameters>
@@ -46,6 +47,14 @@
         <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CategoryTranslationType">
             <argument>%setono_sylius_consent_management.model.category_translation.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.category_translation.validation_groups%</argument>
+
+            <tag name="form.type"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType">
+            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
+            <argument>%setono_sylius_consent_management.model.consent_entry.class%</argument>
+            <argument>%setono_sylius_consent_management.form.type.consent_entry.validation_groups%</argument>
 
             <tag name="form.type"/>
         </service>

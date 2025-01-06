@@ -1,11 +1,17 @@
-setono_sylius_consent_management_shop_ajax_consent_widget:
-    path: /ajax/consent-widget
-    methods: POST
-    defaults:
-        _controller: setono_sylius_consent_management.controller.action.consent_widget
-        
-setono_sylius_consent_management_shop_partial_consent_widget:
-    path: /_partial/consent-widget
+#setono_sylius_consent_management_shop_ajax_widget:
+#    path: /ajax/widget
+#    methods: POST
+#    defaults:
+#        _controller: setono_sylius_consent_management.controller.consent::widget
+
+setono_sylius_consent_management_shop_partial_widget:
+    path: /_partial/widget
     methods: GET
     defaults:
-        _controller: setono_sylius_consent_management.controller.action.consent_widget
+        _controller: Setono\SyliusConsentManagementPlugin\Controller\ConsentController::widget
+        
+setono_sylius_consent_management_shop_update_consent:
+    path: /ajax/update-consent
+    methods: POST
+    defaults:
+        _controller: Setono\SyliusConsentManagementPlugin\Controller\ConsentController::update

@@ -1,10 +1,41 @@
-<div id="sscm-widget"
-     data-sscm-show="banner"
-     data-sscm-consent="{{ consent }}"
-     data-sscm-decided="{{ decided ? 1 : 0 }}"
-     data-sscm-action="{{ path('setono_sylius_consent_management_shop_ajax_consent_widget') }}">
-    {% if not decided %}
-        {% include '@SetonoSyliusConsentManagementPlugin/shop/_initial_dialog.html.twig' %}
-        {% include '@SetonoSyliusConsentManagementPlugin/shop/_settings_dialog.html.twig' %}
-    {% endif %}
+{# todo all texts should come from the widget configuration #}
+
+<div style="position: fixed; inset: 0; z-index: 900; background-color: rgba(0, 0, 0, 0.4)"></div>
+<div style="position: fixed; inset: 0; z-index: 1000; width: 100vw; overflow-y: auto">
+    <div style="display: flex; min-height: 100%; align-items: center; justify-content: center;">
+        <div style="display: flex; flex-direction: column; gap: 20px; background-color: #fff; border-radius: 5px; overflow: hidden">
+            <div style="padding: 0 10px">
+                <h1 style="text-align: center;padding: 20px">We respect your privacy</h1>
+                <p>Lorem ipsum...</p>
+                {% for key, choice_form in form.consentedCategories %}
+                    <div>
+                        {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}
+                        {% set category = form.consentedCategories.vars.choices[key].data %}
+                        <strong>{{ category.name }}</strong><br>
+                        {{ category.description }}
+
+                        {% for service in category.services %}
+                            {{ service.name }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div style="display: flex; justify-content: center; gap: 20px">
+                <button type="submit" data-action="reject" form="{{ form.vars.id }}">Reject</button>
+                <button type="submit" data-action="accept" form="{{ form.vars.id }}">Accept</button>
+            </div>
+            <div style="padding: 5px 20px 20px; background-color: #f8f8f8">
+                {{ form_start(form, { 'action': path('setono_sylius_consent_management_shop_update_consent'), 'attr': { 'id': form.vars.id } }) }}
+                <div style="display: flex; justify-content: space-between">
+                    {% for key, choice_form in form.consentedCategories %}
+                        <div style="text-align: center; display: flex; flex-direction: column">
+                            {{ form_label(choice_form) }}
+                            {{ form_widget(choice_form) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 </div>

@@ -39,17 +39,15 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
 
     public function setUserAgent(string $userAgent): void;
 
-    public function isPreferencesGranted(): bool;
+    /**
+     * @return list<string>
+     */
+    public function getConsentedCategories(): array;
 
-    public function setPreferencesGranted(bool $preferencesGranted): void;
-
-    public function isStatisticsGranted(): bool;
-
-    public function setStatisticsGranted(bool $statisticsGranted): void;
-
-    public function isMarketingGranted(): bool;
-
-    public function setMarketingGranted(bool $marketingGranted): void;
+    /**
+     * @param list<string> $consentedCategories
+     */
+    public function setConsentedCategories(array $consentedCategories): void;
 
     public function populateFromRequest(Request $request): void;
 

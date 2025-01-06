@@ -29,6 +29,11 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected bool $statisticsGranted = false;
 
+    /**
+     * @var list<string>
+     */
+    protected array $consentedCategories = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,14 +99,14 @@ class ConsentEntry implements ConsentEntryInterface
         $this->preferencesGranted = $preferencesGranted;
     }
 
-    public function isStatisticsGranted(): bool
+    public function getConsentedCategories(): array
     {
-        return $this->statisticsGranted;
+        return $this->consentedCategories;
     }
 
-    public function setStatisticsGranted(bool $statisticsGranted): void
+    public function setConsentedCategories(array $consentedCategories): void
     {
-        $this->statisticsGranted = $statisticsGranted;
+        $this->consentedCategories = $consentedCategories;
     }
 
     public function populateFromRequest(Request $request): void
