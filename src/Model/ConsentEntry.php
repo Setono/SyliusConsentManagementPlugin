@@ -7,7 +7,6 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Sylius\Component\Resource\Model\TimestampableTrait;
-use Symfony\Component\HttpFoundation\Request;
 
 class ConsentEntry implements ConsentEntryInterface
 {
@@ -138,21 +137,6 @@ class ConsentEntry implements ConsentEntryInterface
         }
 
         $this->consentedCategories[] = $consentedCategory;
-    }
-
-    public function populateFromRequest(Request $request): void
-    {
-        $this->ip = (string) $request->getClientIp();
-
-        $this->url = $request->getUri();
-        if ($request->isXmlHttpRequest() && $request->headers->has('referer')) {
-            $this->url = $request->headers->get('referer');
-        }
-
-        $userAgent = $request->headers->get('user-agent');
-        if (is_string($userAgent)) {
-            $this->userAgent = $userAgent;
-        }
     }
 
     public function populateFromConsentCommand(ConsentCommand $consentCommand): void

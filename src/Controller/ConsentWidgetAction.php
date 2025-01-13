@@ -11,12 +11,12 @@ use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\Consent\Context\ConsentContextInterface;
 use Setono\Consent\Event\ConsentUpdated;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,7 @@ final class ConsentWidgetAction
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
         private readonly ServiceRepositoryInterface $serviceRepository,
         private readonly ClientIdProviderInterface $clientIdProvider,
-        private readonly FactoryInterface $consentEntryFactory,
+        private readonly ConsentEntryFactoryInterface $consentEntryFactory,
         private readonly EntityManagerInterface $consentEntryManager,
         private readonly ConsentWidgetInterface $consentWidget,
         private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
@@ -73,7 +73,7 @@ final class ConsentWidgetAction
             $consentEntry = $this->consentEntryRepository->findOneFromClientId($clientId);
             if (null === $consentEntry) {
                 /** @var ConsentEntryInterface $consentEntry */
-                $consentEntry = $this->consentEntryFactory->createNew();
+                $consentEntry = $this->consentEntryFactory->createFromRequest($request);
 
                 $this->consentEntryManager->persist($consentEntry);
             }
@@ -83,7 +83,6 @@ final class ConsentWidgetAction
             Assert::isInstanceOf($consentCommand, ConsentCommand::class);
 
             $consentEntry->setClientId($clientId);
-            $consentEntry->populateFromRequest($request);
             $consentEntry->populateFromConsentCommand($consentCommand);
 
             $this->consentEntryManager->flush();

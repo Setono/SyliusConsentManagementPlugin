@@ -8,7 +8,6 @@ use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 interface ConsentEntryInterface extends ResourceInterface, TimestampableInterface
 {
@@ -50,8 +49,6 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
     public function setConsentedCategories(array $consentedCategories): void;
 
     public function addConsentedCategory(CategoryInterface|string $consentedCategory): void;
-
-    public function populateFromRequest(Request $request): void;
 
     public function populateFromConsentCommand(ConsentCommand $consentCommand): void;
 

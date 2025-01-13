@@ -6,17 +6,15 @@ namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\ClientId\Provider\ClientIdProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
-use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Platform\PlatformRegistryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Webmozart\Assert\Assert;
 
 // todo implement ResetInterface
 final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
@@ -31,7 +29,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         private readonly ConsentWidgetInterface $consentWidget,
         private readonly ClientIdProviderInterface $clientIdProvider,
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
-        private readonly FactoryInterface $consentEntryFactory,
+        private readonly ConsentEntryFactoryInterface $consentEntryFactory,
         private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
     }
@@ -84,11 +82,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
             return;
         }
 
-        /** @var ConsentEntryInterface|object $consentEntry */
-        $consentEntry = $this->consentEntryFactory->createNew();
-        Assert::isInstanceOf($consentEntry, ConsentEntryInterface::class);
-
-        $consentEntry->populateFromRequest($request);
+        $consentEntry = $this->consentEntryFactory->createFromRequest($request);
         $consentEntry->populateFromFormerConsent($formerConsent);
         $consentEntry->setClientId($clientId);
 

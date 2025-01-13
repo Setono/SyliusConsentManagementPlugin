@@ -30,9 +30,9 @@ final class ConsentController
         $this->managerRegistry = $managerRegistry;
     }
 
-    public function widget(Environment $twig, WidgetConfigProviderInterface $widgetConfigProvider): Response
+    public function widget(Request $request, Environment $twig, WidgetConfigProviderInterface $widgetConfigProvider): Response
     {
-        $form = $this->createForm();
+        $form = $this->createForm($request);
 
         return new Response($twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
             'form' => $form->createView(),
@@ -42,7 +42,7 @@ final class ConsentController
 
     public function update(Request $request): JsonResponse
     {
-        $form = $this->createForm();
+        $form = $this->createForm($request);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
@@ -59,10 +59,10 @@ final class ConsentController
         return new JsonResponse('', Response::HTTP_NO_CONTENT);
     }
 
-    private function createForm(): FormInterface
+    private function createForm(Request $request): FormInterface
     {
         // todo check if the user has a consent entry already and use that instead of a new one if it exists
-        return $this->formFactory->create(ConsentEntryType::class, $this->consentEntryFactory->createNew(), [
+        return $this->formFactory->create(ConsentEntryType::class, $this->consentEntryFactory->createFromRequest($request), [
             'csrf_protection' => false,
         ]);
     }

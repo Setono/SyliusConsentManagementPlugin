@@ -21,6 +21,21 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+.sscm-widget-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100vw;
+    overflow-y: auto;
+}
+
+.sscm-widget-centering {
+    display: flex;
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .sscm-widget {
     max-width: var(--sscm-widget-max-width);
     background-color: var(--sscm-widget-background-color);
