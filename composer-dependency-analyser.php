@@ -5,7 +5,10 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 return (new Configuration())
     ->addPathToExclude(__DIR__ . '/tests')
+    ->ignoreErrorsOnPackage('league/commonmark', [ErrorType::UNUSED_DEPENDENCY]) // Used for rendering the widget body text
     ->ignoreErrorsOnPackage('setono/client-id-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('setono/consent-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('stof/doctrine-extensions-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('twig/extra-bundle', [ErrorType::UNUSED_DEPENDENCY]) // Used for rendering the widget body text
+    ->ignoreErrorsOnPackage('twig/markdown-extra', [ErrorType::UNUSED_DEPENDENCY]) // Used for rendering the widget body text
 ;
