@@ -77,21 +77,41 @@ class ConsentEntry implements ConsentEntryInterface
         $this->userAgent = $userAgent;
     }
 
+    /**
+     * todo: Remove
+     *
+     * @deprecated
+     */
     public function isMarketingGranted(): bool
     {
         return $this->marketingGranted;
     }
 
+    /**
+     * todo: Remove
+     *
+     * @deprecated
+     */
     public function setMarketingGranted(bool $marketingGranted): void
     {
         $this->marketingGranted = $marketingGranted;
     }
 
+    /**
+     * todo: Remove
+     *
+     * @deprecated
+     */
     public function isPreferencesGranted(): bool
     {
         return $this->preferencesGranted;
     }
 
+    /**
+     * todo: Remove
+     *
+     * @deprecated
+     */
     public function setPreferencesGranted(bool $preferencesGranted): void
     {
         $this->preferencesGranted = $preferencesGranted;
@@ -104,7 +124,20 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function setConsentedCategories(array $consentedCategories): void
     {
-        $this->consentedCategories = $consentedCategories;
+        $this->consentedCategories = [];
+
+        foreach ($consentedCategories as $consentedCategory) {
+            $this->addConsentedCategory($consentedCategory);
+        }
+    }
+
+    public function addConsentedCategory(CategoryInterface|string $consentedCategory): void
+    {
+        if ($consentedCategory instanceof CategoryInterface) {
+            $consentedCategory = (string) $consentedCategory->getCode();
+        }
+
+        $this->consentedCategories[] = $consentedCategory;
     }
 
     public function populateFromRequest(Request $request): void

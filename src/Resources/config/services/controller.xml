@@ -28,9 +28,11 @@
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\Controller\ConsentController">
-            <argument type="service" id="twig"/>
             <argument type="service" id="form.factory"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
+            <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
+            <argument type="service" id="doctrine"/>
+
+            <tag name="controller.service_arguments"/>
         </service>
     </services>
 </container>

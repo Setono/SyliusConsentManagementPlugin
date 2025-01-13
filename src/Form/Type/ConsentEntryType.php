@@ -7,9 +7,13 @@ namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * TODO: This form could most likely be improved, but I am Symfony Form newb. If you see this and you're a Symfony Form oracle, please create a PR <3
+ */
 final class ConsentEntryType extends AbstractResourceType
 {
     /**
@@ -35,6 +39,21 @@ final class ConsentEntryType extends AbstractResourceType
                 'choice_label' => 'name',
                 'choice_value' => 'code',
             ])
+        ;
+
+        $builder->get('consentedCategories')
+            ->addModelTransformer(new CallbackTransformer(
+                function (?array $categories): array {
+                    if (null === $categories) {
+                        return [];
+                    }
+
+                    return array_map(fn (string $category) => $this->categoryRepository->findOneBy(['code' => $category]), $categories);
+                },
+                function (?array $value): ?array {
+                    return $value;
+                },
+            ))
         ;
     }
 
