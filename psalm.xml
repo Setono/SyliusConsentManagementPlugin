@@ -11,8 +11,7 @@
 >
     <projectFiles>
         <directory name="src"/>
-        <!-- todo READD tests -->
-        <!-- <directory name="tests"/> -->
+        <directory name="tests"/>
         <ignoreFiles>
             <directory name="tests/Application"/>
             <directory name="vendor"/>
