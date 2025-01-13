@@ -19,9 +19,8 @@ final class ConsentEntryType extends AbstractResourceType
     public function __construct(
         private readonly RepositoryInterface $categoryRepository,
         string $dataClass,
-        array $validationGroups = []
-    )
-    {
+        array $validationGroups = [],
+    ) {
         parent::__construct($dataClass, $validationGroups);
     }
 

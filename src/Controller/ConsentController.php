@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
+use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,7 @@ final class ConsentController
     public function __construct(
         private readonly Environment $twig,
         private readonly FormFactoryInterface $formFactory,
+        private readonly WidgetConfigProviderInterface $widgetConfigProvider,
     ) {
     }
 
@@ -26,6 +29,7 @@ final class ConsentController
 
         return new Response($this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
             'form' => $form->createView(),
+            'widgetConfiguration' => $this->widgetConfigProvider->getWidgetConfig(),
         ]));
     }
 

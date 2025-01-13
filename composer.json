@@ -17,6 +17,7 @@
         "doctrine/persistence": "^3.0",
         "fakerphp/faker": "^1.9",
         "knplabs/knp-menu": "^3.1",
+        "league/commonmark": "^2.6",
         "matomo/device-detector": "^4.2",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/event-dispatcher": "^1.0",
@@ -47,6 +48,8 @@
         "symfony/routing": "^5.4 || ^6.4",
         "symfony/security-bundle": "^5.4 || ^6.4",
         "symfony/translation-contracts": "^1.1 || ^2.4 || ^3.3",
+        "twig/extra-bundle": "^3.18",
+        "twig/markdown-extra": "^3.18",
         "twig/twig": "^2.14 || ^3.8",
         "webmozart/assert": "^1.11"
     },

@@ -41,9 +41,15 @@ class WidgetConfigExampleFactory extends AbstractExampleFactory
 
         /** @var WidgetConfigInterface $widgetConfig */
         $widgetConfig = $this->widgetConfigFactory->createNew();
-        if (array_key_exists('usage_description', $options)) {
-            Assert::string($options['usage_description']);
-            $widgetConfig->setUsageDescription($options['usage_description']);
+
+        if (array_key_exists('heading', $options)) {
+            Assert::string($options['heading']);
+            $widgetConfig->setHeading($options['heading']);
+        }
+
+        if (array_key_exists('body', $options)) {
+            Assert::string($options['body']);
+            $widgetConfig->setHeading($options['body']);
         }
 
         if (array_key_exists('channel', $options)) {

@@ -40,8 +40,14 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
         $obj = $this->createNew();
         $obj->setChannel($channel);
         $obj->setLocale($locale);
-        $obj->setUsageDescription($this->translator->trans(
-            'setono_sylius_consent_management.ui.widget.introduction',
+        $obj->setHeading($this->translator->trans(
+            'setono_sylius_consent_management.ui.widget_config_defaults.heading',
+            ['%channel%' => $channel->getName()],
+            null,
+            $localeCode,
+        ));
+        $obj->setBody($this->translator->trans(
+            'setono_sylius_consent_management.ui.widget_config_defaults.body',
             ['%channel%' => $channel->getName()],
             null,
             $localeCode,

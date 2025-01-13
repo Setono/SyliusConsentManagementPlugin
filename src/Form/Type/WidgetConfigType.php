@@ -27,6 +27,7 @@ final class WidgetConfigType extends AbstractResourceType
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'setono_sylius_consent_management.form.widget_config.body',
+                'help' => 'setono_sylius_consent_management.form.widget_config.body_help',
             ])
         ;
     }

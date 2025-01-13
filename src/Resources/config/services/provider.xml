@@ -11,13 +11,14 @@
             <argument type="service" id="translator"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Provider\ValidWidgetConfigProviderInterface"
-                 alias="setono_sylius_consent_management.provider.valid_widget_config"/>
+        <service id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProvider"/>
 
-        <service id="setono_sylius_consent_management.provider.valid_widget_config"
-                 class="Setono\SyliusConsentManagementPlugin\Provider\ValidWidgetConfigProvider">
+        <service id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProvider">
             <argument type="service" id="setono_sylius_consent_management.repository.widget_config"/>
             <argument type="service" id="setono_sylius_consent_management.factory.widget_config"/>
+            <argument type="service" id="sylius.context.channel"/>
+            <argument type="service" id="sylius.context.locale"/>
         </service>
     </services>
 </container>

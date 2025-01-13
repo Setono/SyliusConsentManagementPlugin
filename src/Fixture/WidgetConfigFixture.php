@@ -17,7 +17,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
     protected function configureResourceNode(ArrayNodeDefinition $resourceNode): void
     {
         $childNode = $resourceNode->children();
-        $childNode->scalarNode('usage_description')->cannotBeEmpty();
+        $childNode->scalarNode('heading')->cannotBeEmpty();
+        $childNode->scalarNode('body')->cannotBeEmpty();
         $childNode->scalarNode('channel')->cannotBeEmpty();
         $childNode->scalarNode('locale')->cannotBeEmpty();
     }

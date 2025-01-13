@@ -15,6 +15,9 @@ Install the package via composer:
 composer require setono/sylius-consent-management-plugin
 ```
 
+**NOTICE** that this plugin uses the `twig/markdown-extra`, `twig/extra-bundle`, and `league/commonmark` to render the widget with Markdown.
+It should work out of the box with the Symfony Flex recipe, but if you're not using Symfony Flex, you should install the bundle manually.
+
 ### Register bundle
 
 Add the bundle to `bundles.php` if not done automatically. Be sure to add this line **before** `Sylius\Bundle\GridBundle\SyliusGridBundle::class`

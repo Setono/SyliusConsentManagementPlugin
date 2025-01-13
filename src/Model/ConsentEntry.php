@@ -29,9 +29,7 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected bool $statisticsGranted = false;
 
-    /**
-     * @var list<string>
-     */
+    /** @var list<string> */
     protected array $consentedCategories = [];
 
     public function getId(): ?int

@@ -5,8 +5,8 @@
     <div style="display: flex; min-height: 100%; align-items: center; justify-content: center;">
         <div style="display: flex; flex-direction: column; gap: 20px; background-color: #fff; border-radius: 5px; overflow: hidden">
             <div style="padding: 0 10px">
-                <h1 style="text-align: center;padding: 20px">We respect your privacy</h1>
-                <p>Lorem ipsum...</p>
+                <h1 style="text-align: center;padding: 20px">{{ widgetConfiguration.heading }}</h1>
+                {{ widgetConfiguration.body|markdown_to_html }}
                 {% for key, choice_form in form.consentedCategories %}
                     <div>
                         {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}

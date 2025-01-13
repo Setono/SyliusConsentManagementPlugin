@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
-use Setono\SyliusConsentManagementPlugin\Provider\ValidWidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -15,7 +15,7 @@ final class Runtime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly ConsentContextInterface $consentContext,
-        private readonly ValidWidgetConfigProviderInterface $widgetConfigProvider,
+        private readonly WidgetConfigProviderInterface $widgetConfigProvider,
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
     ) {

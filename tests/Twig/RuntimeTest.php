@@ -10,7 +10,7 @@ use Setono\Consent\Consent;
 use Setono\Consent\Context\ConsentContextInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
-use Setono\SyliusConsentManagementPlugin\Provider\ValidWidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Model\Channel;
@@ -107,7 +107,7 @@ final class RuntimeTest extends TestCase
             $consentContext = self::getConsentContext();
         }
 
-        $widgetConfigProvider = new class() implements ValidWidgetConfigProviderInterface {
+        $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
             public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
             {
                 return new WidgetConfig();
