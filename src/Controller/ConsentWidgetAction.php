@@ -23,11 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Webmozart\Assert\Assert;
 
-/**
- * The coverage of this class is handled by the behat tests
- *
- * @codeCoverageIgnore
- */
 final class ConsentWidgetAction
 {
     public function __construct(

@@ -10,11 +10,6 @@ use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * This class is covered by Behat
- *
- * @codeCoverageIgnore
- */
 final class SetonoSyliusConsentManagementPlugin extends AbstractResourceBundle
 {
     use SyliusPluginTrait;
