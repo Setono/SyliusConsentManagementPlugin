@@ -8,6 +8,7 @@ use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\LocaleBundle\Form\Type\LocaleChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class WidgetConfigType extends AbstractResourceType
@@ -21,9 +22,11 @@ final class WidgetConfigType extends AbstractResourceType
             ->add('locale', LocaleChoiceType::class, [
                 'label' => 'sylius.ui.locale',
             ])
-            ->add('usageDescription', TextareaType::class, [
-                'label' => 'setono_sylius_consent_management.form.widget_config.usage_description',
-                'required' => true,
+            ->add('heading', TextType::class, [
+                'label' => 'setono_sylius_consent_management.form.widget_config.heading',
+            ])
+            ->add('body', TextareaType::class, [
+                'label' => 'setono_sylius_consent_management.form.widget_config.body',
             ])
         ;
     }

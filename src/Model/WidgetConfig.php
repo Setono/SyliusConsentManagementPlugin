@@ -18,7 +18,9 @@ class WidgetConfig implements WidgetConfigInterface
 
     protected ?ChannelInterface $channel = null;
 
-    protected ?string $usageDescription = null;
+    protected ?string $heading = null;
+
+    protected ?string $body = null;
 
     public function getId(): ?int
     {
@@ -45,13 +47,23 @@ class WidgetConfig implements WidgetConfigInterface
         $this->locale = $locale;
     }
 
-    public function getUsageDescription(): ?string
+    public function getHeading(): ?string
     {
-        return $this->usageDescription;
+        return $this->heading;
     }
 
-    public function setUsageDescription(?string $usageDescription): void
+    public function setHeading(?string $heading): void
     {
-        $this->usageDescription = $usageDescription;
+        $this->heading = $heading;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(?string $body): void
+    {
+        $this->body = $body;
     }
 }

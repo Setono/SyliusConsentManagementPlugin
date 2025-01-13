@@ -27,6 +27,9 @@ setono_sylius_consent_management:
             description: Omschrijving
             name: Naam
             translations: Vertalingen
+        widget_config:
+            heading: Kop
+            body: Lichaam
     menu:
         admin:
             main:

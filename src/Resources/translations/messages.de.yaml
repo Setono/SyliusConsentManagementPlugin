@@ -27,6 +27,9 @@ setono_sylius_consent_management:
             description: Beschreibung
             name: Name
             translations: Übersetzungen
+        widget_config:
+            heading: Überschrift
+            body: Text
     menu:
         admin:
             main:
