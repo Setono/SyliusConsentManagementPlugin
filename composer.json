@@ -48,9 +48,9 @@
         "symfony/routing": "^5.4 || ^6.4",
         "symfony/security-bundle": "^5.4 || ^6.4",
         "symfony/translation-contracts": "^1.1 || ^2.4 || ^3.3",
-        "twig/extra-bundle": "^3.18",
-        "twig/markdown-extra": "^3.18",
-        "twig/twig": "^2.14 || ^3.18",
+        "twig/extra-bundle": "^2.12 || ^3.0",
+        "twig/markdown-extra": "^2.12 || ^3.0",
+        "twig/twig": "^2.12 || ^3.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
