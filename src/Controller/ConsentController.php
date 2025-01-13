@@ -61,6 +61,7 @@ final class ConsentController
 
     private function createForm(): FormInterface
     {
+        // todo check if the user has a consent entry already and use that instead of a new one if it exists
         return $this->formFactory->create(ConsentEntryType::class, $this->consentEntryFactory->createNew(), [
             'csrf_protection' => false,
         ]);
