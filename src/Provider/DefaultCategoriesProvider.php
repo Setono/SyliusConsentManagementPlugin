@@ -32,12 +32,16 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
 
                 $translations[$localeCode] = [
                     'name' => $this->translator->trans(
-                        id: sprintf('setono_sylius_consent_management.ui.default_categories.%s.name', $defaultCategory),
-                        locale: $localeCode,
+                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.name', $defaultCategory),
+                        [],
+                        null,
+                        $localeCode,
                     ),
                     'description' => $this->translator->trans(
-                        id: sprintf('setono_sylius_consent_management.ui.default_categories.%s.description', $defaultCategory),
-                        locale: $localeCode,
+                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.description', $defaultCategory),
+                        [],
+                        null,
+                        $localeCode,
                     ),
                 ];
             }
