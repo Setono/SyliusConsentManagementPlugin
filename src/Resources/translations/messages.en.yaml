@@ -30,7 +30,9 @@ setono_sylius_consent_management:
         widget_config:
             heading: Heading
             body: Body
-            body_help: By default, the body is rendered as markdown.
+            body_help: By default, the body is rendered as markdown
+            reject_button_label: Reject button label
+            accept_button_label: Accept button label
     menu:
         admin:
             main:
@@ -97,6 +99,8 @@ setono_sylius_consent_management:
         widget_config_defaults:
             heading: We use cookies
             body: We use cookies to give you the best possible experience on our store. You can find more information about the cookies we use and how to manage them in the settings.
+            reject_button: Reject
+            accept_button: Accept
         widget_configs: Widget configurations
         widget_config_header: Widget configuration
         widget_config_subheader: Manage the configuration of widgets on your different channels

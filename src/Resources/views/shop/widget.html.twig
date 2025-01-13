@@ -1,9 +1,10 @@
 {# todo all texts should come from the widget configuration #}
 
-<div style="position: fixed; inset: 0; z-index: 900; background-color: rgba(0, 0, 0, 0.4)"></div>
+<div class="sscm-backdrop"></div>
+
 <div style="position: fixed; inset: 0; z-index: 1000; width: 100vw; overflow-y: auto">
     <div style="display: flex; min-height: 100%; align-items: center; justify-content: center;">
-        <div style="display: flex; flex-direction: column; gap: 20px; background-color: #fff; border-radius: 5px; overflow: hidden">
+        <div class="sscm-widget">
             <div style="padding: 0 10px">
                 <h1 style="text-align: center;padding: 20px">{{ widgetConfiguration.heading }}</h1>
                 {{ widgetConfiguration.body|markdown_to_html }}
@@ -21,8 +22,8 @@
                 {% endfor %}
             </div>
             <div style="display: flex; justify-content: center; gap: 20px">
-                <button type="submit" data-action="reject" form="{{ form.vars.id }}">Reject</button>
-                <button type="submit" data-action="accept" form="{{ form.vars.id }}">Accept</button>
+                <button type="submit" data-action="reject" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-reject">{{ widgetConfiguration.rejectButtonLabel }}</button>
+                <button type="submit" data-action="accept" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-accept">{{ widgetConfiguration.acceptButtonLabel }}</button>
             </div>
             <div style="padding: 5px 20px 20px; background-color: #f8f8f8">
                 {{ form_start(form, { 'action': path('setono_sylius_consent_management_shop_update_consent'), 'attr': { 'id': form.vars.id } }) }}

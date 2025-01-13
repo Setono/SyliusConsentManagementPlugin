@@ -22,6 +22,10 @@ class WidgetConfig implements WidgetConfigInterface
 
     protected ?string $body = null;
 
+    protected ?string $rejectButtonLabel = null;
+
+    protected ?string $acceptButtonLabel = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,5 +69,25 @@ class WidgetConfig implements WidgetConfigInterface
     public function setBody(?string $body): void
     {
         $this->body = $body;
+    }
+
+    public function getRejectButtonLabel(): ?string
+    {
+        return $this->rejectButtonLabel;
+    }
+
+    public function setRejectButtonLabel(?string $rejectButtonLabel): void
+    {
+        $this->rejectButtonLabel = $rejectButtonLabel;
+    }
+
+    public function getAcceptButtonLabel(): ?string
+    {
+        return $this->acceptButtonLabel;
+    }
+
+    public function setAcceptButtonLabel(?string $acceptButtonLabel): void
+    {
+        $this->acceptButtonLabel = $acceptButtonLabel;
     }
 }

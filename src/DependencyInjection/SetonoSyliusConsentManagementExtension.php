@@ -263,6 +263,26 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         ],
                     ],
                 ],
+                'sylius.shop.layout.stylesheets' => [
+                    'blocks' => [
+                        'setono_sylius_consent_management.stylesheets.widget' => [
+                            'template' => '@SyliusUi/_stylesheets.html.twig',
+                            'context' => [
+                                'path' => 'bundles/setonosyliusconsentmanagementplugin/css/widget.css',
+                            ],
+                        ],
+                    ],
+                ],
+                'sylius.shop.layout.javascripts' => [
+                    'blocks' => [
+                        'setono_sylius_consent_management.javascriptss.widget' => [
+                            'template' => '@SyliusUi/_javascripts.html.twig',
+                            'context' => [
+                                'path' => 'bundles/setonosyliusconsentmanagementplugin/js/widget.js',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ]);
     }

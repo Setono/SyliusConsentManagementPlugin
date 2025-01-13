@@ -1,0 +1,53 @@
+/* todo: these variables should be made editable in the admin panel */
+:root {
+    /* Widget */
+    --sscm-widget-background-color: #fff;
+    --sscm-widget-max-width: 600px;
+    --sscm-widget-border-radius: 5px;
+
+    /* Buttons */
+    --sscm-button-border-radius: 4px;
+    --sscm-button-padding: 10px 20px;
+    --sscm-button-accept-color: #fff;
+    --sscm-button-reject-color: #fff;
+    --sscm-button-accept-background-color: #1cbb9c;
+    --sscm-button-reject-background-color: #0f172b;
+}
+
+.sscm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sscm-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: var(--sscm-widget-max-width);
+    background-color: var(--sscm-widget-background-color);
+    border-radius: var(--sscm-widget-border-radius);
+    overflow: hidden;
+}
+
+.sscm-btn {
+    border-radius: var(--sscm-button-border-radius);
+    padding: var(--sscm-button-padding);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sscm-btn-accept {
+    color: var(--sscm-button-accept-color);
+    background-color: var(--sscm-button-accept-background-color);
+    border: 1px solid var(--sscm-button-accept-background-color);
+}
+
+.sscm-btn-reject {
+    color: var(--sscm-button-reject-color);
+    background-color: var(--sscm-button-reject-background-color);
+    border: 1px solid var(--sscm-button-reject-background-color);
+}

@@ -40,17 +40,29 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
         $obj = $this->createNew();
         $obj->setChannel($channel);
         $obj->setLocale($locale);
+
         $obj->setHeading($this->translator->trans(
             'setono_sylius_consent_management.ui.widget_config_defaults.heading',
             ['%channel%' => $channel->getName()],
             null,
             $localeCode,
         ));
+
         $obj->setBody($this->translator->trans(
             'setono_sylius_consent_management.ui.widget_config_defaults.body',
             ['%channel%' => $channel->getName()],
             null,
             $localeCode,
+        ));
+
+        $obj->setRejectButtonLabel($this->translator->trans(
+            id: 'setono_sylius_consent_management.ui.widget_config_defaults.reject_button',
+            locale: $localeCode,
+        ));
+
+        $obj->setAcceptButtonLabel($this->translator->trans(
+            id: 'setono_sylius_consent_management.ui.widget_config_defaults.accept_button',
+            locale: $localeCode,
         ));
 
         return $obj;
