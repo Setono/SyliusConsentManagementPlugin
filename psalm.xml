@@ -8,7 +8,6 @@
     findUnusedPsalmSuppress="false"
     findUnusedBaselineEntry="false"
     errorLevel="1"
-    errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
         <directory name="src"/>
@@ -25,14 +24,14 @@
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
-        <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>
-        <PropertyNotSetInConstructor>
+        <InvalidArgument>
             <errorLevel type="suppress">
-                <file name="tests/Model/ConsentEntryTest.php"/>
-                <file name="tests/Cookie/ConsentWidgetCookieManagerTest.php"/>
+                <referencedFunction name="Sylius\Bundle\CoreBundle\Fixture\OptionsResolver\LazyOption::findOneBy"/>
+                <referencedFunction name="Sylius\Bundle\CoreBundle\Fixture\OptionsResolver\LazyOption::randomOne"/>
             </errorLevel>
-        </PropertyNotSetInConstructor>
+        </InvalidArgument>
         <MissingTemplateParam errorLevel="suppress"/>
+        <PluginIssue name="QueryBuilderSetParameter" errorLevel="info"/>
     </issueHandlers>
     <forbiddenFunctions>
         <function name="dd"/>

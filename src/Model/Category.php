@@ -14,7 +14,7 @@ class Category implements CategoryInterface
 {
     use TimestampableTrait;
     use TranslatableTrait {
-        __construct as private initializeTranslationsCollection;
+        __construct as private __translatableConstruct;
 
         getTranslation as private doGetTranslation;
     }
@@ -30,7 +30,7 @@ class Category implements CategoryInterface
 
     public function __construct()
     {
-        $this->initializeTranslationsCollection();
+        $this->translations = new ArrayCollection();
         $this->services = new ArrayCollection();
     }
 

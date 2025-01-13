@@ -14,7 +14,7 @@ class Service implements ServiceInterface
 {
     use TimestampableTrait;
     use TranslatableTrait {
-        __construct as private initializeTranslationsCollection;
+        __construct as private __translatableConstruct;
 
         getTranslation as private doGetTranslation;
     }
@@ -30,8 +30,8 @@ class Service implements ServiceInterface
 
     public function __construct()
     {
-        $this->initializeTranslationsCollection();
         $this->cookies = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function __toString(): string
