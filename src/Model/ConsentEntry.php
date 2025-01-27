@@ -20,12 +20,6 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?string $userAgent = null;
 
-    protected bool $marketingGranted = false;
-
-    protected bool $preferencesGranted = false;
-
-    protected bool $statisticsGranted = false;
-
     /** @var list<string> */
     protected array $consentedCategories = [];
 

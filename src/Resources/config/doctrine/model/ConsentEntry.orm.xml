@@ -11,13 +11,11 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="clientId" column="client_id" type="client_id"/>
+        <field name="clientId" type="string" unique="true"/>
         <field name="ip" type="string"/>
         <field name="url" type="text"/>
         <field name="userAgent" type="text"/>
-        <field name="preferencesGranted" type="boolean"/>
-        <field name="statisticsGranted" type="boolean"/>
-        <field name="marketingGranted" type="boolean"/>
+        <field name="consentedCategories" type="json"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -26,9 +24,5 @@
         <field name="updatedAt" type="datetime" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
-
-        <unique-constraints>
-            <unique-constraint columns="client_id"/>
-        </unique-constraints>
     </mapped-superclass>
 </doctrine-mapping>
