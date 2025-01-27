@@ -3,14 +3,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="setono_sylius_consent_management.context.consent.orm_based"
-                 class="Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext"
+                 class="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker"
                  decorates="setono_consent.context.default" decoration-priority="256">
             <argument type="service" id="setono_sylius_consent_management.context.consent.orm_based.inner"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
         </service>
 
         <service id="setono_sylius_consent_management.context.consent.request_based"
-                 class="Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext"
+                 class="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker"
                  decorates="setono_consent.context.default" decoration-priority="128">
             <argument type="service" id="setono_sylius_consent_management.context.consent.request_based.inner"/>
             <argument type="service" id="request_stack"/>
@@ -18,7 +18,7 @@
         </service>
 
         <service id="setono_sylius_consent_management.context.consent.cached"
-                 class="Setono\SyliusConsentManagementPlugin\Context\CachedConsentContext"
+                 class="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker"
                  decorates="setono_consent.context.default" decoration-priority="64">
             <argument type="service" id="setono_sylius_consent_management.context.consent.cached.inner"/>
         </service>

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Context;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\ConsentBundle\Checker\StaticConsentChecker;
-use Setono\SyliusConsentManagementPlugin\Context\RequestBasedConsentContext;
+use Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final class RequestBasedConsentContextTest extends TestCase
+final class RequestBasedConsentCheckerTest extends TestCase
 {
     /**
      * @test
      */
     public function it_grants_all(): void
     {
-        $context = new RequestBasedConsentContext(
+        $context = new RequestBasedConsentChecker(
             self::getConsentChecker(),
             self::getRequestStack('_consent=1'),
         );
@@ -33,7 +33,7 @@ final class RequestBasedConsentContextTest extends TestCase
      */
     public function it_denies_all(): void
     {
-        $context = new RequestBasedConsentContext(
+        $context = new RequestBasedConsentChecker(
             self::getConsentChecker(),
             self::getRequestStack('_consent=0'),
         );
@@ -47,7 +47,7 @@ final class RequestBasedConsentContextTest extends TestCase
      */
     public function it_grants_specific_consent(): void
     {
-        $context = new RequestBasedConsentContext(
+        $context = new RequestBasedConsentChecker(
             self::getConsentChecker(),
             self::getRequestStack('_consent[statistical]=1'),
         );

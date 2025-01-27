@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Checker;
 
 use Setono\Consent\ConsentCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * and lastly you can do the opposite: ?_consent=0 which will deny consent for all categories
  */
-final class RequestBasedConsentContext implements ConsentCheckerInterface
+final class RequestBasedConsentChecker implements ConsentCheckerInterface
 {
     public function __construct(
         private readonly ConsentCheckerInterface $decorated,

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Checker;
 
 use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
-final class ORMBasedConsentContext implements ConsentCheckerInterface
+final class ORMBasedConsentChecker implements ConsentCheckerInterface
 {
     public function __construct(
         private readonly ConsentCheckerInterface $decorated,

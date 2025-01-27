@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Context;
+namespace Setono\SyliusConsentManagementPlugin\Checker;
 
 use Setono\Consent\ConsentCheckerInterface;
 
 /**
  * This class will cache the consent for the request life cycle directly in memory
  */
-final class CachedConsentContext implements ConsentCheckerInterface
+final class CachedConsentChecker implements ConsentCheckerInterface
 {
     /** @var array<string, bool> */
     private array $consents = [];

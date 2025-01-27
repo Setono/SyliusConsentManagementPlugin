@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Context;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
-use Setono\ClientId\ClientId;
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
-use Setono\SyliusConsentManagementPlugin\Context\CachedConsentContext;
+use Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Context\CachedConsentContext
+ * @covers \Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker
  */
-final class CachedConsentContextTest extends TestCase
+final class CachedConsentCheckerTest extends TestCase
 {
     /**
      * @test
@@ -27,7 +24,7 @@ final class CachedConsentContextTest extends TestCase
             }
         };
 
-        $cachedConsentContext = new CachedConsentContext($decorated);
+        $cachedConsentContext = new CachedConsentChecker($decorated);
         $res1 = $cachedConsentContext->getConsent();
         $res2 = $cachedConsentContext->getConsent();
 

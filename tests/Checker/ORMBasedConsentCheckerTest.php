@@ -2,23 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Context;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Setono\ClientId\ClientId;
-use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
-use Setono\Consent\Context\DefaultConsentContext;
-use Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext;
+use Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Context\ORMBasedConsentContext
+ * @covers \Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker
  */
-final class ORMBasedConsentContextTest extends TestCase
+final class ORMBasedConsentCheckerTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -27,7 +22,7 @@ final class ORMBasedConsentContextTest extends TestCase
      */
     public function it_returns_decorated_consent_if_no_consent_has_been_saved(): void
     {
-        $context = new ORMBasedConsentContext(self::getConsentContext(), $this->getRepository());
+        $context = new ORMBasedConsentChecker(self::getConsentContext(), $this->getRepository());
         $consent = $context->getConsent();
 
         self::assertSame('client_id', $consent->getClientId()->toString());
@@ -38,7 +33,7 @@ final class ORMBasedConsentContextTest extends TestCase
      */
     public function it_returns_saved_consent(): void
     {
-        $context = new ORMBasedConsentContext(
+        $context = new ORMBasedConsentChecker(
             self::getConsentContext(),
             $this->getRepository(new Consent(new ClientId('saved_client_id'), false, false, false)),
         );
