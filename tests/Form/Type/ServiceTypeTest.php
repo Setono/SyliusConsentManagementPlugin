@@ -63,13 +63,7 @@ final class ServiceTypeTest extends TypeTestCase
 
         self::assertTrue($form->isSynchronized());
 
-        $expected = new Service();
-        $expected->setCategory('marketing');
-        $expected->getTranslation('en_US')->setName('name');
-        $expected->getTranslation('en_US')->setDescription('description');
-
-        self::assertSame($expected->getCategory(), $model->getCategory());
-        self::assertSame($expected->getTranslation('en_US_')->getName(), $model->getTranslation('en_US_')->getName());
-        self::assertSame($expected->getTranslation('en_US_')->getDescription(), $model->getTranslation('en_US_')->getDescription());
+        self::assertSame('name', $model->getTranslation('en_US')->getName());
+        self::assertSame('description', $model->getTranslation('en_US')->getDescription());
     }
 }

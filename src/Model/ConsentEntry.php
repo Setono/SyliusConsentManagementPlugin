@@ -76,46 +76,6 @@ class ConsentEntry implements ConsentEntryInterface
         $this->userAgent = $userAgent;
     }
 
-    /**
-     * todo: Remove
-     *
-     * @deprecated
-     */
-    public function isMarketingGranted(): bool
-    {
-        return $this->marketingGranted;
-    }
-
-    /**
-     * todo: Remove
-     *
-     * @deprecated
-     */
-    public function setMarketingGranted(bool $marketingGranted): void
-    {
-        $this->marketingGranted = $marketingGranted;
-    }
-
-    /**
-     * todo: Remove
-     *
-     * @deprecated
-     */
-    public function isPreferencesGranted(): bool
-    {
-        return $this->preferencesGranted;
-    }
-
-    /**
-     * todo: Remove
-     *
-     * @deprecated
-     */
-    public function setPreferencesGranted(bool $preferencesGranted): void
-    {
-        $this->preferencesGranted = $preferencesGranted;
-    }
-
     public function getConsentedCategories(): array
     {
         return $this->consentedCategories;

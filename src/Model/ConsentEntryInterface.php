@@ -39,6 +39,8 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
     public function setUserAgent(string $userAgent): void;
 
     /**
+     * List of codes of consented categories
+     *
      * @return list<string>
      */
     public function getConsentedCategories(): array;

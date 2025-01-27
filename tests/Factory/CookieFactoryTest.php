@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
-use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Resource\Factory\Factory;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Factory\CookieFactory

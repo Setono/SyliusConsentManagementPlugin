@@ -31,8 +31,7 @@ final class ConsentTypeTest extends TypeTestCase
 
         self::assertTrue($form->isSynchronized());
 
-        $expected = new ConsentCommand();
-        $expected->preferencesGranted = $expected->marketingGranted = $expected->statisticsGranted = false;
+        $expected = new ConsentCommand(false, false, false);
 
         self::assertEquals($expected, $model);
     }

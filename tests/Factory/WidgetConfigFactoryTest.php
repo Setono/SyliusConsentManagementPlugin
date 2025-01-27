@@ -12,8 +12,8 @@ use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Locale\Model\Locale;
-use Sylius\Component\Resource\Factory\Factory;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Sylius\Resource\Factory\Factory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 

@@ -28,7 +28,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly FirewallMap $firewallMap,
-        /** @var list<string> $firewalls */
+        /** @var array<array-key, string> $firewalls */
         private readonly array $firewalls,
         float $sampleRate,
     ) {
