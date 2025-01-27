@@ -22,6 +22,11 @@ final class Runtime implements RuntimeExtensionInterface
     ) {
     }
 
+    public function isGranted(string $consent): bool
+    {
+        return $this->consentChecker->isGranted($consent);
+    }
+
     public function marketingGranted(): bool
     {
         return $this->consentChecker->isGranted(DefaultConsents::CONSENT_MARKETING);

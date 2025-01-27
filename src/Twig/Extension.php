@@ -12,6 +12,7 @@ final class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('sscm_is_granted', [Runtime::class, 'isGranted']),
             new TwigFunction('sscm_statistics_granted', [Runtime::class, 'statisticalGranted']),
             new TwigFunction('sscm_functional_granted', [Runtime::class, 'functionalGranted']),
             new TwigFunction('sscm_marketing_granted', [Runtime::class, 'marketingGranted']),
