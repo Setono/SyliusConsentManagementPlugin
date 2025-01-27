@@ -9,6 +9,7 @@ use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -53,14 +54,14 @@ final class ConsentController
             throw new BadRequestHttpException(sprintf('Form is not valid: %s', $form->getErrors(true)));
         }
 
-        /** @var mixed $consentEntry */
+        /** @var mixed|ConsentEntryInterface $consentEntry */
         $consentEntry = $form->getData();
-        Assert::object($consentEntry);
+        Assert::isInstanceOf($consentEntry, ConsentEntryInterface::class);
 
         $this->getManager($consentEntry)->persist($consentEntry);
         $this->getManager($consentEntry)->flush();
 
-        return new JsonResponse('', Response::HTTP_NO_CONTENT);
+        return new JsonResponse($consentEntry->getConsentedCategories());
     }
 
     private function createForm(Request $request): FormInterface

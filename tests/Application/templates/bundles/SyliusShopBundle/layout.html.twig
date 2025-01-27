@@ -25,6 +25,8 @@
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-KJHCKT9');</script>
     <!-- End Google Tag Manager -->
+
+    {{ sscm_categories() }}
 </head>
 
 <body class="pushable">
@@ -61,21 +63,18 @@
 {% block javascripts %}
     {{ sylius_template_event('sylius.shop.layout.javascripts') }}
 
-    {{ sscm_script_tag(asset('js/preferences.js'), 'preferences') }}
-    {{ sscm_script_tag(asset('js/statistics.js'), 'statistics') }}
+    {{ sscm_script_tag(asset('js/functional.js'), 'functional') }}
     {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
+    {{ sscm_script_tag(asset('js/statistical.js'), 'statistical') }}
 
-    <script{{ sscm_script_tag_attributes('preferences') }}>
-        var inlinePreferencesGranted = true;
-        console.info('Inline script: Preferences granted');
-    </script>
-    <script{{ sscm_script_tag_attributes('statistics') }}>
-        var inlineStatisticsGranted = true;
-        console.info('Inline script: Statistics granted');
+    <script{{ sscm_script_tag_attributes('functional') }}>
+        console.info('Inline script: Functional granted');
     </script>
     <script{{ sscm_script_tag_attributes('marketing') }}>
-        var inlineMarketingGranted = true;
         console.info('Inline script: Marketing granted');
+    </script>
+    <script{{ sscm_script_tag_attributes('statistical') }}>
+        console.info('Inline script: Statistics granted');
     </script>
 {% endblock %}
 

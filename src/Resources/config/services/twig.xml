@@ -13,6 +13,7 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="sylius.context.locale"/>
+            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
 
             <tag name="twig.runtime"/>
         </service>

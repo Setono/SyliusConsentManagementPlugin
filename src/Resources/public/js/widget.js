@@ -1,6 +1,4 @@
 /**
- * Handles the add to wishlist and remove from wishlist actions (i.e. toggling)
- *
  * @typedef {Object} ConsentWidgetOptions
  * @property {Object} selector
  * @property {string} selector.backdrop - Selector for the backdrop element
@@ -38,13 +36,16 @@ class ConsentWidget {
                     acceptAll: function() {
                         this.#checkAll();
                     },
-                    acceptSelected: function() {
-                    },
+                    acceptSelected: function() {},
                 },
             },
             options
         );
 
+        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', this.#init.bind(this)) : this.#init();
+    }
+
+    #init() {
         this.#backdrop = document.querySelector(this.#options.selector.backdrop);
         if(null === this.#backdrop) {
             throw new Error('Backdrop element not found. Selector was: ' + this.#options.selector.backdrop);
@@ -59,13 +60,12 @@ class ConsentWidget {
             event.preventDefault();
 
             const action = event.submitter.dataset.action;
-            if (action === 'acceptAll') {
-                this.#options.callback.acceptAll.bind(this)();
+
+            if(!['acceptAll', 'acceptSelected'].includes(action)) {
+                throw new Error('Invalid action');
             }
 
-            if (action === 'acceptSelected') {
-                this.#options.callback.acceptSelected.bind(this)();
-            }
+            this.#options.callback[action].bind(this)();
 
             fetch(event.target.action, {
                 method: 'POST',
@@ -80,13 +80,18 @@ class ConsentWidget {
 
                 return response.json();
             }).then((json) => {
-                console.log(json);
+                this.#widget.dispatchEvent(new CustomEvent('sscm:consent:updated', {
+                    bubbles: true,
+                    detail: {
+                        categories: json,
+                    },
+                }));
             }).catch((error) => {
                 console.error(error);
             });
 
-            this.#backdrop.remove();
-            this.#widget.remove();
+            this.#widget.style.display = 'none';
+            this.#backdrop.style.display = 'none';
         });
     }
 

@@ -6,10 +6,12 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
+use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface
@@ -19,6 +21,7 @@ final class Runtime implements RuntimeExtensionInterface
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
+        private readonly RepositoryInterface $categoryRepository,
     ) {
     }
 
@@ -70,5 +73,21 @@ final class Runtime implements RuntimeExtensionInterface
             $this->channelContext->getChannel(),
             $this->localeContext->getLocaleCode(),
         );
+    }
+
+    public function categories(): string
+    {
+        $categories = [];
+
+        /** @var CategoryInterface $category */
+        foreach ($this->categoryRepository->findAll() as $category) {
+            if (!$this->consentChecker->isGranted((string) $category->getCode())) {
+                continue;
+            }
+
+            $categories[] = $category->getCode();
+        }
+
+        return sprintf('<script type="application/json" class="sscm-categories">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
     }
 }
