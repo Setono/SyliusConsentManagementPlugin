@@ -22,8 +22,10 @@ class WidgetConfig implements WidgetConfigInterface
 
     protected ?string $body = null;
 
+    // todo should be called 'acceptSelected'
     protected ?string $rejectButtonLabel = null;
 
+    // todo should be called 'acceptAll'
     protected ?string $acceptButtonLabel = null;
 
     public function getId(): ?int
