@@ -19,7 +19,7 @@
                  class="Setono\SyliusConsentManagementPlugin\EventSubscriber\FormerConsentPlatformSubscriber">
             <argument type="service" id="setono_sylius_consent_management.platform.registry"/>
             <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
-            <argument type="service" id="setono_client_id.provider.default_client_id"/>
+            <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.cookie.consent_widget_cookie_manager"/>

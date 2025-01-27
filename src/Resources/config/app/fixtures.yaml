@@ -16,29 +16,29 @@ sylius_fixtures:
                         custom:
                             google_analytics:
                                 code: 'google_analytics'
-                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_STATISTICAL
                                 name: Google Analytics
                             google_maps:
                                 code: 'google_maps'
-                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_STATISTICAL
                                 name: Google Maps
                             sentry:
                                 code: 'sentry'
-                                category: !php/const Setono\Consent\Consent::CONSENT_STATISTICS
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_STATISTICAL
                                 name: Sentry
                             facebook_pixel:
                                 code: 'facebook_pixel'
-                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_MARKETING
                                 name: Facebook Pixel
                             google_ads:
                                 code: 'google_ads'
-                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_MARKETING
                                 name: Google Ads
                             snapchat:
                                 code: 'snapchat'
-                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_MARKETING
                                 name: Snapchat
                             tiktok:
                                 code: 'tiktok'
-                                category: !php/const Setono\Consent\Consent::CONSENT_MARKETING
+                                category: !php/const Setono\Consent\DefaultConsents::CONSENT_MARKETING
                                 name: Tik-Tok

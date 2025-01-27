@@ -2,25 +2,22 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="setono_sylius_consent_management.context.consent.orm_based"
-                 class="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker"
-                 decorates="setono_consent.context.default" decoration-priority="256">
-            <argument type="service" id="setono_sylius_consent_management.context.consent.orm_based.inner"/>
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker"
+                 decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="256">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker.inner"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
+            <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
         </service>
 
-        <service id="setono_sylius_consent_management.context.consent.request_based"
-                 class="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker"
-                 decorates="setono_consent.context.default" decoration-priority="128">
-            <argument type="service" id="setono_sylius_consent_management.context.consent.request_based.inner"/>
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker"
+                 decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="128">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker.inner"/>
             <argument type="service" id="request_stack"/>
-            <argument type="service" id="setono_client_id.provider.default_client_id"/>
         </service>
 
-        <service id="setono_sylius_consent_management.context.consent.cached"
-                 class="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker"
-                 decorates="setono_consent.context.default" decoration-priority="64">
-            <argument type="service" id="setono_sylius_consent_management.context.consent.cached.inner"/>
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker"
+                 decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="64">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker.inner"/>
         </service>
     </services>
 </container>
