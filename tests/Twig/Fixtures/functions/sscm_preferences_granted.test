@@ -1,7 +1,7 @@
 --TEST--
-"sscm_preferences_granted" function
+"sscm_functional_granted" function
 --TEMPLATE--
-{{ sscm_preferences_granted() ? 'true' : 'false' }}
+{{ sscm_functional_granted() ? 'true' : 'false' }}
 --DATA--
 return []
 --EXPECT--
