@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
-use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
@@ -24,7 +24,7 @@ final class Runtime implements RuntimeExtensionInterface
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
         private readonly RepositoryInterface $categoryRepository,
-        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly WidgetCookieManagerInterface $widgetCookieManager,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -56,7 +56,7 @@ final class Runtime implements RuntimeExtensionInterface
             return false;
         }
 
-        return !$this->consentWidgetCookieManager->exists($request);
+        return !$this->widgetCookieManager->exists($request);
     }
 
     public function scriptTag(string $src, string ...$consents): string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
-use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -14,7 +14,7 @@ final class ConsentWidgetCookieSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly ConsentWidgetInterface $consentWidget,
-        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly WidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
     }
 

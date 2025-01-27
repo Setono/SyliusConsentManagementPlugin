@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-interface ConsentWidgetCookieManagerInterface
+interface WidgetCookieManagerInterface
 {
     /**
      * Returns true if the cookie exists on the given request

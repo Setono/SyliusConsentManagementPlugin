@@ -2,13 +2,13 @@
 "sscm_script_tag" function
 --TEMPLATE--
 {{ sscm_script_tag('js/analytics.js', 'marketing') }}
-{{ sscm_script_tag('js/analytics.js', 'marketing', 'preferences') }}
-{{ sscm_script_tag('js/analytics.js', 'preferences') }}
-{{ sscm_script_tag('js/analytics.js', 'statistics') }}
+{{ sscm_script_tag('js/analytics.js', 'marketing', 'functional') }}
+{{ sscm_script_tag('js/analytics.js', 'functional') }}
+{{ sscm_script_tag('js/analytics.js', 'statistical') }}
 --DATA--
 return []
 --EXPECT--
+<script type="text/plain" data-sscm-consent="marketing" data-sscm-src="js/analytics.js"></script>
+<script type="text/plain" data-sscm-consent="marketing,functional" data-sscm-src="js/analytics.js"></script>
 <script src="js/analytics.js"></script>
-<script type="text/plain" data-sscm-consent="marketing,preferences" data-sscm-src="js/analytics.js"></script>
-<script type="text/plain" data-sscm-consent="preferences" data-sscm-src="js/analytics.js"></script>
-<script type="text/plain" data-sscm-consent="statistics" data-sscm-src="js/analytics.js"></script>
+<script src="js/analytics.js"></script>

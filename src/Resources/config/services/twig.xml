@@ -14,7 +14,7 @@
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="sylius.context.locale"/>
             <argument type="service" id="setono_sylius_consent_management.repository.category"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface"/>
             <argument type="service" id="request_stack"/>
 
             <tag name="twig.runtime"/>

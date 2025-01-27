@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\ClientBundle\Context\ClientContextInterface;
-use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Platform\PlatformRegistryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
@@ -30,7 +30,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         private readonly ClientContextInterface $clientContext,
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
         private readonly ConsentEntryFactoryInterface $consentEntryFactory,
-        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly WidgetCookieManagerInterface $consentWidgetCookieManager,
     ) {
     }
 

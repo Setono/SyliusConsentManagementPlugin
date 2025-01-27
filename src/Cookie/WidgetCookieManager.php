@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class ConsentWidgetCookieManager implements ConsentWidgetCookieManagerInterface
+final class WidgetCookieManager implements WidgetCookieManagerInterface
 {
     public function __construct(
         private readonly string $cookieName,

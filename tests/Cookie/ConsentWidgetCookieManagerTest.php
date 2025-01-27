@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Cookie;
 
 use PHPUnit\Framework\TestCase;
-use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManager;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManager
+ * @covers \Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManager
  */
 final class ConsentWidgetCookieManagerTest extends TestCase
 {
@@ -26,7 +26,7 @@ final class ConsentWidgetCookieManagerTest extends TestCase
             ],
         );
 
-        $manager = new ConsentWidgetCookieManager('cookie_name');
+        $manager = new WidgetCookieManager('cookie_name');
         self::assertTrue($manager->exists($request));
     }
 
@@ -37,7 +37,7 @@ final class ConsentWidgetCookieManagerTest extends TestCase
     {
         $response = new Response();
 
-        $manager = new ConsentWidgetCookieManager('cookie_name');
+        $manager = new WidgetCookieManager('cookie_name');
         $manager->write($response);
 
         $cookies = $response->headers->getCookies();

@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\Doctrine\ORMTrait;
-use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
@@ -46,7 +46,7 @@ final class ConsentController
         ]));
     }
 
-    public function update(Request $request, ConsentWidgetCookieManagerInterface $consentWidgetCookieManager): JsonResponse
+    public function update(Request $request, WidgetCookieManagerInterface $consentWidgetCookieManager): JsonResponse
     {
         $form = $this->createForm($request);
         $form->handleRequest($request);
