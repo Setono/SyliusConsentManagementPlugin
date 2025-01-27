@@ -17,6 +17,7 @@
                  decorates="setono_sylius_consent_management.factory.consent_entry" decoration-priority="64">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactory.inner"/>
             <argument type="service" id="setono_sylius_consent_management.repository.category"/>
+            <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
         </service>
 
         <service id="setono_sylius_consent_management.custom_factory.cookie"

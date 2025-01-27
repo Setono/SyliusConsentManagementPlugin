@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Provider;
 
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Factory\CategoryFactoryInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -20,10 +21,7 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
 
     public function getCategories(): \Generator
     {
-        // todo get from constants
-        $defaultCategories = ['marketing', 'preferences', 'statistics', 'necessary'];
-
-        foreach ($defaultCategories as $defaultCategory) {
+        foreach (DefaultConsents::all() as $defaultCategory) {
             $translations = [];
 
             /** @var LocaleInterface $locale */

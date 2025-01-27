@@ -13,7 +13,7 @@ setono_sylius_consent_management:
         consent:
             marketing: Marketing
             preferences: Indstillinger/funktionelle
-            statistics: Statistiske
+            statistical: Statistiske
         cookie:
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
@@ -21,7 +21,7 @@ setono_sylius_consent_management:
             categories:
                 marketing: Marketing
                 preferences: Indstillinger/funktionelle
-                statistics: Statistiske
+                statistical: Statistiske
             category: Kategori
             category_placeholder: Vælg en passende kategori...
             description: Beskrivelse

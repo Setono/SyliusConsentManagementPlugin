@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Factory;
 
+use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -16,6 +17,7 @@ final class ConsentEntryFactory implements ConsentEntryFactoryInterface
     public function __construct(
         private readonly FactoryInterface $decorated,
         private readonly RepositoryInterface $categoryRepository,
+        private readonly ClientContextInterface $clientContext,
     ) {
     }
 
@@ -33,6 +35,8 @@ final class ConsentEntryFactory implements ConsentEntryFactoryInterface
 
             $obj->addConsentedCategory($category);
         }
+
+        $obj->setClientId($this->clientContext->getClient()->id);
 
         return $obj;
     }
