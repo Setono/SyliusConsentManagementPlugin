@@ -14,7 +14,6 @@ use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker
@@ -26,7 +25,7 @@ final class ORMBasedConsentCheckerTest extends TestCase
     /** @var ObjectProphecy<ConsentCheckerInterface> */
     private ObjectProphecy $decoratedChecker;
 
-    /** @var ObjectProphecy<RepositoryInterface> */
+    /** @var ObjectProphecy<ConsentEntryRepositoryInterface> */
     private ObjectProphecy $repository;
 
     /** @var ObjectProphecy<ClientContextInterface> */

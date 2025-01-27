@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Setono\Consent\ConsentCheckerInterface;
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker;
 
 /**
@@ -12,22 +15,21 @@ use Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker;
  */
 final class CachedConsentCheckerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
     public function it_caches(): void
     {
-        $decorated = new class() implements ConsentContextInterface {
-            public function getConsent(): Consent
-            {
-                return new Consent(new ClientId('client_id'), true, true, true);
-            }
-        };
+        $consentChecker = $this->prophesize(ConsentCheckerInterface::class);
+        $consentChecker->isGranted(DefaultConsents::CONSENT_FUNCTIONAL)->willReturn(true)->shouldBeCalledOnce();
 
-        $cachedConsentContext = new CachedConsentChecker($decorated);
-        $res1 = $cachedConsentContext->getConsent();
-        $res2 = $cachedConsentContext->getConsent();
+        $cachedConsentContext = new CachedConsentChecker($consentChecker->reveal());
 
-        self::assertSame($res1, $res2);
+        self::assertSame(
+            $cachedConsentContext->isGranted(DefaultConsents::CONSENT_FUNCTIONAL),
+            $cachedConsentContext->isGranted(DefaultConsents::CONSENT_FUNCTIONAL),
+        );
     }
 }
