@@ -8,10 +8,10 @@
     /* Buttons */
     --sscm-button-border-radius: 4px;
     --sscm-button-padding: 10px 20px;
-    --sscm-button-accept-color: #fff;
-    --sscm-button-reject-color: #fff;
-    --sscm-button-accept-background-color: #1cbb9c;
-    --sscm-button-reject-background-color: #0f172b;
+    --sscm-button-accept-all-color: #fff;
+    --sscm-button-accept-selected-color: #fff;
+    --sscm-button-accept-all-background-color: #1cbb9c;
+    --sscm-button-accept-selected-background-color: #0f172b;
 }
 
 .sscm-backdrop {
@@ -80,16 +80,16 @@
     align-items: center;
 }
 
-.sscm-btn-accept {
-    color: var(--sscm-button-accept-color);
-    background-color: var(--sscm-button-accept-background-color);
-    border: 1px solid var(--sscm-button-accept-background-color);
+.sscm-btn-accept-all {
+    color: var(--sscm-button-accept-all-color);
+    background-color: var(--sscm-button-accept-all-background-color);
+    border: 1px solid var(--sscm-button-accept-all-background-color);
 }
 
-.sscm-btn-reject {
-    color: var(--sscm-button-reject-color);
-    background-color: var(--sscm-button-reject-background-color);
-    border: 1px solid var(--sscm-button-reject-background-color);
+.sscm-btn-accept-selected {
+    color: var(--sscm-button-accept-selected-color);
+    background-color: var(--sscm-button-accept-selected-background-color);
+    border: 1px solid var(--sscm-button-accept-selected-background-color);
 }
 
 .sscm-checkboxes {

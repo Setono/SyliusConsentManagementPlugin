@@ -21,7 +21,9 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
 
     public function getCategories(): \Generator
     {
-        foreach (DefaultConsents::all() as $defaultCategory) {
+        $defaultCategories = array_merge(DefaultConsents::all(), ['necessary']);
+
+        foreach ($defaultCategories as $defaultCategory) {
             $translations = [];
 
             /** @var LocaleInterface $locale */

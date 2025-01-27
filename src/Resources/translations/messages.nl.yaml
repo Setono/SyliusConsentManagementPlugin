@@ -46,10 +46,10 @@ setono_sylius_consent_management:
             marketing:
                 description: Cookies die voor marketingdoeleinden worden gebruikt
                 name: Marketing
-            preferences:
+            functional:
                 description: Cookies die voor functionele doeleinden worden gebruikt
                 name: Voorkeuren
-            statistics:
+            statistical:
                 description: Cookies die voor statistische doeleinden worden gebruikt
                 name: Statistieken
             necessary:

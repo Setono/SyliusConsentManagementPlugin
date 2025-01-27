@@ -62,8 +62,8 @@ class WidgetConfigExampleFactory extends AbstractExampleFactory
             $widgetConfig->setLocale($options['locale']);
         }
 
-        $widgetConfig->setAcceptButtonLabel('Accept');
-        $widgetConfig->setRejectButtonLabel('Reject');
+        $widgetConfig->setAcceptAllButtonLabel('Accept all');
+        $widgetConfig->setAcceptSelectedButtonLabel('Accept selected');
 
         return $widgetConfig;
     }

@@ -21,8 +21,8 @@
 
         <field name="heading" type="text"/>
         <field name="body" type="text"/>
-        <field name="rejectButtonLabel" type="string"/>
-        <field name="acceptButtonLabel" type="string"/>
+        <field name="acceptSelectedButtonLabel" type="string"/>
+        <field name="acceptAllButtonLabel" type="string"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

@@ -29,11 +29,11 @@ final class WidgetConfigType extends AbstractResourceType
                 'label' => 'setono_sylius_consent_management.form.widget_config.body',
                 'help' => 'setono_sylius_consent_management.form.widget_config.body_help',
             ])
-            ->add('rejectButtonLabel', TextType::class, [
-                'label' => 'setono_sylius_consent_management.form.widget_config.reject_button_label',
+            ->add('acceptSelectedButtonLabel', TextType::class, [
+                'label' => 'setono_sylius_consent_management.form.widget_config.accept_selected_button_label',
             ])
-            ->add('acceptButtonLabel', TextType::class, [
-                'label' => 'setono_sylius_consent_management.form.widget_config.accept_button_label',
+            ->add('acceptAllButtonLabel', TextType::class, [
+                'label' => 'setono_sylius_consent_management.form.widget_config.accept_all_button_label',
             ])
         ;
     }

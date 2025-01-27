@@ -6,8 +6,8 @@
  * @property {string} selector.backdrop - Selector for the backdrop element
  * @property {string} selector.widget - Selector for the widget container
  * @property {Object} callback
- * @property {Function} callback.accept - Callback function to call when the accept button is clicked. The first argument is the consent widget object
- * @property {Function} callback.reject - Callback function to call when the reject button is clicked. The first argument is the consent widget object
+ * @property {Function} callback.acceptAll - Callback function to call when the accept all button is clicked. The first argument is the consent widget object
+ * @property {Function} callback.acceptSelected - Callback function to call when the accept selected button is clicked. The first argument is the consent widget object
  */
 class ConsentWidget {
     /**
@@ -35,11 +35,10 @@ class ConsentWidget {
                     widget: '.sscm-widget-container',
                 },
                 callback: {
-                    accept: function() {
+                    acceptAll: function() {
                         this.#checkAll();
                     },
-                    reject: function() {
-                        this.#uncheckAll();
+                    acceptSelected: function() {
                     },
                 },
             },
@@ -60,12 +59,12 @@ class ConsentWidget {
             event.preventDefault();
 
             const action = event.submitter.dataset.action;
-            if (action === 'accept') {
-                this.#options.callback.accept.bind(this)();
+            if (action === 'acceptAll') {
+                this.#options.callback.acceptAll.bind(this)();
             }
 
-            if (action === 'reject') {
-                this.#options.callback.reject.bind(this)();
+            if (action === 'acceptSelected') {
+                this.#options.callback.acceptSelected.bind(this)();
             }
 
             fetch(event.target.action, {
@@ -91,18 +90,10 @@ class ConsentWidget {
         });
     }
 
-    #toggleCheckboxes(value) {
-        this.#widget.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-            checkbox.checked = value;
-        });
-    }
-
     #checkAll() {
-        this.#toggleCheckboxes(true);
-    }
-
-    #uncheckAll() {
-        this.#toggleCheckboxes(false);
+        this.#widget.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+            checkbox.checked = true;
+        });
     }
 }
 

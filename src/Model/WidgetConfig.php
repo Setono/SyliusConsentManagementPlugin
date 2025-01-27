@@ -22,11 +22,9 @@ class WidgetConfig implements WidgetConfigInterface
 
     protected ?string $body = null;
 
-    // todo should be called 'acceptSelected'
-    protected ?string $rejectButtonLabel = null;
+    protected ?string $acceptSelectedButtonLabel = null;
 
-    // todo should be called 'acceptAll'
-    protected ?string $acceptButtonLabel = null;
+    protected ?string $acceptAllButtonLabel = null;
 
     public function getId(): ?int
     {
@@ -73,23 +71,23 @@ class WidgetConfig implements WidgetConfigInterface
         $this->body = $body;
     }
 
-    public function getRejectButtonLabel(): ?string
+    public function getAcceptSelectedButtonLabel(): ?string
     {
-        return $this->rejectButtonLabel;
+        return $this->acceptSelectedButtonLabel;
     }
 
-    public function setRejectButtonLabel(?string $rejectButtonLabel): void
+    public function setAcceptSelectedButtonLabel(?string $acceptSelectedButtonLabel): void
     {
-        $this->rejectButtonLabel = $rejectButtonLabel;
+        $this->acceptSelectedButtonLabel = $acceptSelectedButtonLabel;
     }
 
-    public function getAcceptButtonLabel(): ?string
+    public function getAcceptAllButtonLabel(): ?string
     {
-        return $this->acceptButtonLabel;
+        return $this->acceptAllButtonLabel;
     }
 
-    public function setAcceptButtonLabel(?string $acceptButtonLabel): void
+    public function setAcceptAllButtonLabel(?string $acceptAllButtonLabel): void
     {
-        $this->acceptButtonLabel = $acceptButtonLabel;
+        $this->acceptAllButtonLabel = $acceptAllButtonLabel;
     }
 }

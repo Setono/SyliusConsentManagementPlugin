@@ -55,15 +55,15 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
             $localeCode,
         ));
 
-        $obj->setRejectButtonLabel($this->translator->trans(
-            'setono_sylius_consent_management.ui.widget_config_defaults.reject_button',
+        $obj->setAcceptSelectedButtonLabel($this->translator->trans(
+            'setono_sylius_consent_management.ui.widget_config_defaults.accept_selected_button',
             [],
             null,
             $localeCode,
         ));
 
-        $obj->setAcceptButtonLabel($this->translator->trans(
-            'setono_sylius_consent_management.ui.widget_config_defaults.accept_button',
+        $obj->setAcceptAllButtonLabel($this->translator->trans(
+            'setono_sylius_consent_management.ui.widget_config_defaults.accept_all_button',
             [],
             null,
             $localeCode,

@@ -46,10 +46,10 @@ setono_sylius_consent_management:
             marketing:
                 description: Informasjonskapsler brukt til markedsføringsformål
                 name: Markedsføring
-            preferences:
+            functional:
                 description: Informasjonskapsler brukt til funksjonelle formål
                 name: Preferanser
-            statistics:
+            statistical:
                 description: Informasjonskapsler brukt til statistiske formål
                 name: Statistikk
             necessary:

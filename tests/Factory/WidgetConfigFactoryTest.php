@@ -40,8 +40,8 @@ final class WidgetConfigFactoryTest extends TestCase
         self::assertSame('en_US', $locale->getCode());
         self::assertNotNull($obj->getHeading());
         self::assertNotNull($obj->getBody());
-        self::assertNotNull($obj->getAcceptButtonLabel());
-        self::assertNotNull($obj->getRejectButtonLabel());
+        self::assertNotNull($obj->getAcceptAllButtonLabel());
+        self::assertNotNull($obj->getAcceptSelectedButtonLabel());
     }
 
     private function getFactory(): WidgetConfigFactoryInterface
