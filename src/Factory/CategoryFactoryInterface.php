@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Factory;
 
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
-use Sylius\Component\Resource\Factory\TranslatableFactoryInterface;
+use Sylius\Resource\Factory\TranslatableFactoryInterface;
 
 interface CategoryFactoryInterface extends TranslatableFactoryInterface
 {

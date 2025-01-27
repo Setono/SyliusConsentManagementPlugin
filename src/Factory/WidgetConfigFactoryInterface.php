@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Resource\Factory\FactoryInterface;
 
 interface WidgetConfigFactoryInterface extends FactoryInterface
 {
