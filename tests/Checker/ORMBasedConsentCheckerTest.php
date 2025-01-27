@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Setono\Client\Client;
+use Setono\ClientBundle\Context\ClientContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker;
+use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker
@@ -17,48 +23,61 @@ final class ORMBasedConsentCheckerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function it_returns_decorated_consent_if_no_consent_has_been_saved(): void
-    {
-        $context = new ORMBasedConsentChecker(self::getConsentContext(), $this->getRepository());
-        $consent = $context->getConsent();
+    /** @var ObjectProphecy<ConsentCheckerInterface> */
+    private ObjectProphecy $decoratedChecker;
 
-        self::assertSame('client_id', $consent->getClientId()->toString());
-    }
+    /** @var ObjectProphecy<RepositoryInterface> */
+    private ObjectProphecy $repository;
 
-    /**
-     * @test
-     */
-    public function it_returns_saved_consent(): void
+    /** @var ObjectProphecy<ClientContextInterface> */
+    private ObjectProphecy $clientContext;
+
+    private ORMBasedConsentChecker $checker;
+
+    protected function setUp(): void
     {
-        $context = new ORMBasedConsentChecker(
-            self::getConsentContext(),
-            $this->getRepository(new Consent(new ClientId('saved_client_id'), false, false, false)),
+        parent::setUp();
+
+        $this->decoratedChecker = $this->prophesize(ConsentCheckerInterface::class);
+        $this->repository = $this->prophesize(ConsentEntryRepositoryInterface::class);
+        $this->clientContext = $this->prophesize(ClientContextInterface::class);
+
+        $this->checker = new ORMBasedConsentChecker(
+            $this->decoratedChecker->reveal(),
+            $this->repository->reveal(),
+            $this->clientContext->reveal(),
         );
-        $consent = $context->getConsent();
-
-        self::assertSame('saved_client_id', $consent->getClientId()->toString());
     }
 
-    private static function getConsentContext(): ConsentContextInterface
+    /**
+     * @test
+     */
+    public function it_returns_true_when_consent_exists(): void
     {
-        $clientIdProvider = new class() implements ClientIdProviderInterface {
-            public function getClientId(): ClientId
-            {
-                return new ClientId('client_id');
-            }
-        };
+        $client = new Client('client_id');
 
-        return new DefaultConsentContext($clientIdProvider);
+        $this->clientContext->getClient()->willReturn($client);
+
+        $consentEntry = new ConsentEntry();
+        $consentEntry->addConsentedCategory(DefaultConsents::CONSENT_MARKETING);
+        $this->repository->findOneFromClient($client)->willReturn($consentEntry);
+
+        self::assertTrue($this->checker->isGranted(DefaultConsents::CONSENT_MARKETING));
     }
 
-    private function getRepository(Consent $consent = null): ConsentEntryRepositoryInterface
+    /**
+     * @test
+     */
+    public function it_returns_false_when_consent_does_not_exist(): void
     {
-        $repository = $this->prophesize(ConsentEntryRepositoryInterface::class);
-        $repository->findFromClient(Argument::any())->willReturn($consent);
+        $client = new Client('client_id');
 
-        return $repository->reveal();
+        $this->clientContext->getClient()->willReturn($client);
+
+        $consentEntry = new ConsentEntry();
+        $consentEntry->addConsentedCategory(DefaultConsents::CONSENT_MARKETING);
+        $this->repository->findOneFromClient($client)->willReturn($consentEntry);
+
+        self::assertFalse($this->checker->isGranted(DefaultConsents::CONSENT_FUNCTIONAL));
     }
 }

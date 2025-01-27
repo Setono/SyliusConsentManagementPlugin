@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Model;
 
 use PHPUnit\Framework\TestCase;
-use Setono\ClientId\ClientId;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
 use Setono\SyliusConsentManagementPlugin\Model\FormerConsent;
 
@@ -19,16 +18,14 @@ final class ConsentEntryTest extends TestCase
      */
     public function it_sets_and_gets(): void
     {
-        $clientId = new ClientId('client_id');
-
         $consentEntry = new ConsentEntry();
-        $consentEntry->setClientId($clientId);
+        $consentEntry->setClientId('client_id');
         $consentEntry->setUserAgent('user agent');
         $consentEntry->setUrl('https://example.com');
         $consentEntry->setIp('192.168.1.1');
 
         self::assertNull($consentEntry->getId());
-        self::assertSame($clientId, $consentEntry->getClientId());
+        self::assertSame('client_id', $consentEntry->getClientId());
         self::assertSame('user agent', $consentEntry->getUserAgent());
         self::assertSame('https://example.com', $consentEntry->getUrl());
         self::assertSame('192.168.1.1', $consentEntry->getIp());
