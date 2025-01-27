@@ -1,0 +1,10 @@
+--TEST--
+"sscm_is_granted" function
+--TEMPLATE--
+{{ sscm_is_granted('functional') ? 'true' : 'false' }}
+{{ sscm_is_granted('marketing') ? 'true' : 'false' }}
+--DATA--
+return []
+--EXPECT--
+true
+false

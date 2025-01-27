@@ -9,6 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\ConsentBundle\Checker\StaticConsentChecker;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManager;
 use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
@@ -58,11 +59,11 @@ final class ExtensionTest extends IntegrationTestCase
         $categoryRepository = $this->prophesize(RepositoryInterface::class);
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
-        $widgetCookieManager = $this->prophesize(WidgetCookieManagerInterface::class);
+        $widgetCookieManager = new WidgetCookieManager('sscm_widget');
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetCookieManager->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetCookieManager, $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly ConsentCheckerInterface $consentChecker,
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,

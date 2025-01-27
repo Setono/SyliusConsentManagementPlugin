@@ -1,0 +1,10 @@
+--TEST--
+"sscm_should_display_widget" should return true because the cookie isn't set
+--TEMPLATE--
+{{ sscm_should_display_widget(request) ? 'true' : 'false' }}
+--DATA--
+return [
+    'request' => \Symfony\Component\HttpFoundation\Request::create('/'),
+]
+--EXPECT--
+true

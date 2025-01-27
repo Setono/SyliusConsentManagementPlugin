@@ -13,6 +13,7 @@ use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -49,11 +50,11 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->consentChecker->isGranted(DefaultConsents::CONSENT_STATISTICAL);
     }
 
-    public function shouldDisplayWidget(): bool
+    public function shouldDisplayWidget(Request $request = null): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $request ?? $this->requestStack->getCurrentRequest();
         if (null === $request) {
-            return false;
+            return true;
         }
 
         return !$this->widgetCookieManager->exists($request);

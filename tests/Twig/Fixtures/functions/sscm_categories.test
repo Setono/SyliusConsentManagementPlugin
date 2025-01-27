@@ -1,0 +1,8 @@
+--TEST--
+"sscm_categories" function
+--TEMPLATE--
+{{ sscm_categories() }}
+--DATA--
+return []
+--EXPECT--
+<script type="application/json" class="sscm-categories">["functional","statistical"]</script>
