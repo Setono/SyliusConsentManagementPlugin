@@ -6,8 +6,8 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Fixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Setono\Consent\Consent;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
-use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 
 final class ServiceFixture implements FixtureInterface
 {
@@ -35,19 +35,19 @@ final class ServiceFixture implements FixtureInterface
     {
         $i = 0;
 
-        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
 
-        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
 
-        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
-        yield [(string) ++$i, ServiceInterface::CATEGORY_MARKETING, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
     }
 }

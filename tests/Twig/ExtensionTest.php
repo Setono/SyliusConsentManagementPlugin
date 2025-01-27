@@ -44,7 +44,7 @@ final class ExtensionTest extends IntegrationTestCase
                 };
 
                 $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
-                    public function getWidgetConfig(ChannelInterface $channel, string $locale): WidgetConfigInterface
+                    public function getWidgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface
                     {
                         return new WidgetConfig();
                     }

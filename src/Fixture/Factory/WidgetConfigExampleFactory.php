@@ -49,7 +49,7 @@ class WidgetConfigExampleFactory extends AbstractExampleFactory
 
         if (array_key_exists('body', $options)) {
             Assert::string($options['body']);
-            $widgetConfig->setHeading($options['body']);
+            $widgetConfig->setBody($options['body']);
         }
 
         if (array_key_exists('channel', $options)) {
@@ -62,13 +62,17 @@ class WidgetConfigExampleFactory extends AbstractExampleFactory
             $widgetConfig->setLocale($options['locale']);
         }
 
+        $widgetConfig->setAcceptButtonLabel('Accept');
+        $widgetConfig->setRejectButtonLabel('Reject');
+
         return $widgetConfig;
     }
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefault('usage_description', fn (Options $options): string => $this->faker->paragraph)
+            ->setDefault('heading', fn (Options $options): string => $this->faker->paragraph(1, true))
+            ->setDefault('body', fn (Options $options): string => $this->faker->paragraph)
 
             ->setDefault('channel', LazyOption::randomOne($this->channelRepository))
             ->setAllowedTypes('channel', ['null', 'string', ChannelInterface::class])

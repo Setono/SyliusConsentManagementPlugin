@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Model;
 
 use PHPUnit\Framework\TestCase;
+use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
-use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Model\Service
@@ -27,7 +27,9 @@ final class ServiceTest extends TestCase
         $service->setDescription('description');
 
         $service->setCode('code');
-        $service->setCategory(ServiceInterface::CATEGORY_PREFERENCES);
+
+        $category = new Category();
+        $service->setCategory($category);
 
         $cookie = new Cookie();
         $service->addCookie($cookie);
@@ -37,12 +39,7 @@ final class ServiceTest extends TestCase
         self::assertSame('description', $service->getDescription());
 
         self::assertSame('code', $service->getCode());
-        self::assertSame(ServiceInterface::CATEGORY_PREFERENCES, $service->getCategory());
-        self::assertEquals([
-            ServiceInterface::CATEGORY_PREFERENCES => ServiceInterface::CATEGORY_PREFERENCES,
-            ServiceInterface::CATEGORY_MARKETING => ServiceInterface::CATEGORY_MARKETING,
-            ServiceInterface::CATEGORY_STATISTICS => ServiceInterface::CATEGORY_STATISTICS,
-        ], Service::getCategories());
+        self::assertSame($category, $service->getCategory());
         self::assertCount(1, $service->getCookies());
         self::assertTrue($service->hasCookie($cookie));
         self::assertSame($service, $cookie->getService());

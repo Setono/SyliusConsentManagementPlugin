@@ -19,14 +19,12 @@ final class ConsentWidgetCookieManagerTest extends TestCase
      */
     public function it_checks_for_existence(): void
     {
-        $request = new class() extends Request {
-            public function __construct(
-            ) {
-                parent::__construct();
-
-                $this->cookies->set('cookie_name', '1');
-            }
-        };
+        $request = Request::create(
+            uri: '/',
+            cookies: [
+                'cookie_name' => '1',
+            ],
+        );
 
         $manager = new ConsentWidgetCookieManager('cookie_name');
         self::assertTrue($manager->exists($request));

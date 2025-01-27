@@ -25,12 +25,14 @@ final class WidgetConfigTest extends TestCase
         $obj = new WidgetConfig();
         $obj->setChannel($channel);
         $obj->setLocale($locale);
-        $obj->setUsageDescription('usage description');
+        $obj->setHeading('heading');
+        $obj->setBody('body');
 
         self::assertNull($obj->getId());
         self::assertSame($channel, $obj->getChannel());
         self::assertSame($locale, $obj->getLocale());
-        self::assertSame('usage description', $obj->getUsageDescription());
+        self::assertSame('heading', $obj->getHeading());
+        self::assertSame('body', $obj->getBody());
     }
 
     /**
@@ -41,10 +43,10 @@ final class WidgetConfigTest extends TestCase
         $obj = new class() extends WidgetConfig {
             public function __construct()
             {
-                $this->setUsageDescription('usage description');
+                $this->setBody('body');
             }
         };
 
-        self::assertSame('usage description', $obj->getUsageDescription());
+        self::assertSame('body', $obj->getBody());
     }
 }
