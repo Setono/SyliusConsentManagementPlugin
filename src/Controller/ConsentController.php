@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,6 +27,8 @@ final class ConsentController
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly ConsentEntryFactoryInterface $consentEntryFactory,
+        private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
+        private readonly ClientContextInterface $clientContext,
         ManagerRegistry $managerRegistry,
     ) {
         $this->managerRegistry = $managerRegistry;
@@ -61,8 +65,9 @@ final class ConsentController
 
     private function createForm(Request $request): FormInterface
     {
-        // todo check if the user has a consent entry already and use that instead of a new one if it exists
-        return $this->formFactory->create(ConsentEntryType::class, $this->consentEntryFactory->createFromRequest($request), [
+        $consentEntry = $this->consentEntryRepository->findOneFromClient($this->clientContext->getClient());
+
+        return $this->formFactory->create(ConsentEntryType::class, $consentEntry ?? $this->consentEntryFactory->createFromRequest($request), [
             'csrf_protection' => false,
         ]);
     }
