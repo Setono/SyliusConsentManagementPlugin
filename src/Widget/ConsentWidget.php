@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Widget;
 
+// todo remove
 final class ConsentWidget implements ConsentWidgetInterface
 {
     private bool $show = true;

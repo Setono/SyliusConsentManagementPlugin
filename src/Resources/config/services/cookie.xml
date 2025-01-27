@@ -4,13 +4,15 @@
     <parameters>
         <!--
         Do not edit this value on a production environment since this will
-        cause the consent widget to be shown again to all users although they consented once before
+        cause the consent widget to be shown again to all users, although they consented once before
         -->
         <parameter key="setono_sylius_consent_management.cookie.consent_widget">sscm_consent_widget</parameter>
     </parameters>
     <services>
-        <service id="setono_sylius_consent_management.cookie.consent_widget_cookie_manager"
-                 class="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManager">
+        <service id="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManager"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManager">
             <argument>%setono_sylius_consent_management.cookie.consent_widget%</argument>
         </service>
     </services>

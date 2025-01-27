@@ -6,12 +6,14 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
+use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface
@@ -22,6 +24,8 @@ final class Runtime implements RuntimeExtensionInterface
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
         private readonly RepositoryInterface $categoryRepository,
+        private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -30,19 +34,29 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->consentChecker->isGranted($consent);
     }
 
-    public function marketingGranted(): bool
-    {
-        return $this->consentChecker->isGranted(DefaultConsents::CONSENT_MARKETING);
-    }
-
     public function functionalGranted(): bool
     {
         return $this->consentChecker->isGranted(DefaultConsents::CONSENT_FUNCTIONAL);
     }
 
+    public function marketingGranted(): bool
+    {
+        return $this->consentChecker->isGranted(DefaultConsents::CONSENT_MARKETING);
+    }
+
     public function statisticalGranted(): bool
     {
         return $this->consentChecker->isGranted(DefaultConsents::CONSENT_STATISTICAL);
+    }
+
+    public function shouldDisplayWidget(): bool
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return false;
+        }
+
+        return !$this->consentWidgetCookieManager->exists($request);
     }
 
     public function scriptTag(string $src, string ...$consents): string

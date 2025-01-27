@@ -56,7 +56,10 @@
 
     {% block footer %}
         {% include '@SyliusShop/_footer.html.twig' %}
-        {{ render(path('setono_sylius_consent_management_shop_partial_widget')) }}
+
+        {% if sscm_should_display_widget() %}
+            {{ render(path('setono_sylius_consent_management_shop_partial_widget')) }}
+        {% endif %}
     {% endblock %}
 </div>
 

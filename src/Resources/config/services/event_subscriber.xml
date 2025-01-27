@@ -10,7 +10,7 @@
         <service id="setono_sylius_consent_management.event_subscriber.consent_widget_cookie"
                  class="Setono\SyliusConsentManagementPlugin\EventSubscriber\ConsentWidgetCookieSubscriber">
             <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
-            <argument type="service" id="setono_sylius_consent_management.cookie.consent_widget_cookie_manager"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
@@ -22,7 +22,7 @@
             <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
-            <argument type="service" id="setono_sylius_consent_management.cookie.consent_widget_cookie_manager"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
