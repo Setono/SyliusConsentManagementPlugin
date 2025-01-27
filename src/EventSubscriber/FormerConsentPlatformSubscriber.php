@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
-use Setono\ClientId\Provider\ClientIdProviderInterface;
+use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\SyliusConsentManagementPlugin\Cookie\ConsentWidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Platform\PlatformRegistryInterface;
@@ -27,7 +27,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly PlatformRegistryInterface $platformRegistry,
         private readonly ConsentWidgetInterface $consentWidget,
-        private readonly ClientIdProviderInterface $clientIdProvider,
+        private readonly ClientContextInterface $clientContext,
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
         private readonly ConsentEntryFactoryInterface $consentEntryFactory,
         private readonly ConsentWidgetCookieManagerInterface $consentWidgetCookieManager,
@@ -77,14 +77,14 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
         $this->consentWidget->setShow(false);
         $this->setConsentWidgetCookie = true;
 
-        $clientId = $this->clientIdProvider->getClientId();
-        if (null !== $this->consentEntryRepository->findOneFromClientId($clientId)) {
+        $client = $this->clientContext->getClient();
+        if (null !== $this->consentEntryRepository->findOneFromClient($client)) {
             return;
         }
 
         $consentEntry = $this->consentEntryFactory->createFromRequest($request);
         $consentEntry->populateFromFormerConsent($formerConsent);
-        $consentEntry->setClientId($clientId);
+        $consentEntry->setClientId($client->id);
 
         $this->consentEntryRepository->add($consentEntry);
     }

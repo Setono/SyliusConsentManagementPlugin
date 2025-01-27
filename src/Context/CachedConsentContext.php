@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
 
 /**
  * This class will cache the consent for the request life cycle directly in memory
  */
-final class CachedConsentContext implements ConsentContextInterface
+final class CachedConsentContext implements ConsentCheckerInterface
 {
-    private ?Consent $consent = null;
+    /** @var array<string, bool> */
+    private array $consents = [];
 
-    public function __construct(private readonly ConsentContextInterface $decorated)
+    public function __construct(private readonly ConsentCheckerInterface $decorated)
     {
     }
 
-    public function getConsent(): Consent
+    public function isGranted(string $consent): bool
     {
-        if (null === $this->consent) {
-            $this->consent = $this->decorated->getConsent();
+        if (!array_key_exists($consent, $this->consents)) {
+            $this->consents[$consent] = $this->decorated->isGranted($consent);
         }
 
-        return $this->consent;
+        return $this->consents[$consent];
     }
 }

@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\ClientBundle\Context\ClientContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
 
-final class ORMBasedConsentContext implements ConsentContextInterface
+final class ORMBasedConsentContext implements ConsentCheckerInterface
 {
     public function __construct(
-        private readonly ConsentContextInterface $decorated,
+        private readonly ConsentCheckerInterface $decorated,
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
+        private readonly ClientContextInterface $clientContext,
     ) {
     }
 
-    public function getConsent(): Consent
+    public function isGranted(string $consent): bool
     {
-        $currentConsent = $this->decorated->getConsent();
-
-        $consent = $this->consentEntryRepository->findConsentFromClientId($currentConsent->getClientId());
-        if (null === $consent) {
-            return $currentConsent;
+        $consentEntry = $this->consentEntryRepository->findOneFromClient($this->clientContext->getClient());
+        if (null === $consentEntry) {
+            return $this->decorated->isGranted($consent);
         }
 
-        return $consent;
+        return in_array($consent, $consentEntry->getConsentedCategories(), true);
     }
 }

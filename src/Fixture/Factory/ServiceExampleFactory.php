@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Fixture\Factory;
 
 use Faker\Factory;
 use Faker\Generator;
-use Setono\Consent\Consent;
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepositoryInterface;
 use Sylius\Bundle\CoreBundle\Fixture\Factory\AbstractExampleFactory;
@@ -103,7 +103,7 @@ class ServiceExampleFactory extends AbstractExampleFactory
             })
             ->setDefault('category', function (Options $options): string {
                 /** @var string $category */
-                $category = $this->faker->randomElement(Consent::getAvailableConsents());
+                $category = $this->faker->randomElement(DefaultConsents::all());
 
                 return $category;
             })

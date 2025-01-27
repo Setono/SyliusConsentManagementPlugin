@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Twig;
 
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -14,7 +15,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 final class Runtime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private readonly ConsentContextInterface $consentContext,
+        private readonly ConsentCheckerInterface $consentChecker,
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
@@ -23,23 +24,23 @@ final class Runtime implements RuntimeExtensionInterface
 
     public function marketingGranted(): bool
     {
-        return $this->consentContext->getConsent()->isMarketingConsentGranted();
+        return $this->consentChecker->isGranted(DefaultConsents::CONSENT_MARKETING);
     }
 
-    public function preferencesGranted(): bool
+    public function functionalGranted(): bool
     {
-        return $this->consentContext->getConsent()->isPreferencesConsentGranted();
+        return $this->consentChecker->isGranted(DefaultConsents::CONSENT_FUNCTIONAL);
     }
 
-    public function statisticsGranted(): bool
+    public function statisticalGranted(): bool
     {
-        return $this->consentContext->getConsent()->isStatisticsConsentGranted();
+        return $this->consentChecker->isGranted(DefaultConsents::CONSENT_STATISTICAL);
     }
 
     public function scriptTag(string $src, string ...$consents): string
     {
         foreach ($consents as $consent) {
-            if (!$this->isGranted($consent)) {
+            if (!$this->consentChecker->isGranted($consent)) {
                 return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode(',', $consents), $src);
             }
         }
@@ -50,7 +51,7 @@ final class Runtime implements RuntimeExtensionInterface
     public function scriptTagAttributes(string ...$consents): string
     {
         foreach ($consents as $consent) {
-            if (!$this->isGranted($consent)) {
+            if (!$this->consentChecker->isGranted($consent)) {
                 return sprintf(' type="text/plain" data-sscm-consent="%s"', implode(',', $consents));
             }
         }
@@ -64,10 +65,5 @@ final class Runtime implements RuntimeExtensionInterface
             $this->channelContext->getChannel(),
             $this->localeContext->getLocaleCode(),
         );
-    }
-
-    private function isGranted(string $consent): bool
-    {
-        return $this->consentContext->getConsent()->isConsentGranted($consent);
     }
 }

@@ -4,54 +4,45 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Context;
 
-use Setono\ClientId\Provider\ClientIdProviderInterface;
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This class is used to override the consent for a given request by appending query parameters to the URL.
  *
- * You do it like this: ?_consent[preferences]=1&_consent[statistics]=1&_consent[marketing]=0 which will
- * grant consent for preferences and statistics, but not marketing
+ * You do it like this: ?_consent[functional]=1&_consent[statistical]=1&_consent[marketing]=0 which will
+ * grant consent for functional and statistical, but not marketing
  *
  * and you can do it like this: ?_consent=1 which will grant consent for all categories
  *
  * and lastly you can do the opposite: ?_consent=0 which will deny consent for all categories
  */
-final class RequestBasedConsentContext implements ConsentContextInterface
+final class RequestBasedConsentContext implements ConsentCheckerInterface
 {
     public function __construct(
-        private readonly ConsentContextInterface $decorated,
+        private readonly ConsentCheckerInterface $decorated,
         private readonly RequestStack $requestStack,
-        private readonly ClientIdProviderInterface $clientIdProvider,
     ) {
     }
 
-    public function getConsent(): Consent
+    public function isGranted(string $consent): bool
     {
         $request = $this->requestStack->getMainRequest();
         if (null === $request) {
-            return $this->decorated->getConsent();
+            return $this->decorated->isGranted($consent);
         }
 
         /** @var mixed $consentQuery */
         $consentQuery = $request->query->all()['_consent'] ?? [];
 
         if ([] === $consentQuery) {
-            return $this->decorated->getConsent();
+            return $this->decorated->isGranted($consent);
         }
-
-        $marketing = $preferences = $statistics = false;
 
         if (is_array($consentQuery)) {
-            $marketing = isset($consentQuery['marketing']) && is_string($consentQuery['marketing']) && 1 === (int) $consentQuery['marketing'];
-            $preferences = isset($consentQuery['preferences']) && is_string($consentQuery['preferences']) && 1 === (int) $consentQuery['preferences'];
-            $statistics = isset($consentQuery['statistics']) && is_string($consentQuery['statistics']) && 1 === (int) $consentQuery['statistics'];
-        } elseif (is_string($consentQuery)) {
-            $marketing = $preferences = $statistics = 1 === (int) $consentQuery;
+            return isset($consentQuery[$consent]) && is_string($consentQuery[$consent]) && 1 === (int) $consentQuery[$consent];
         }
 
-        return new Consent($this->clientIdProvider->getClientId(), $marketing, $preferences, $statistics);
+        return 1 === (int) $consentQuery;
     }
 }

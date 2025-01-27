@@ -62,7 +62,7 @@ final class ORMBasedConsentContextTest extends TestCase
     private function getRepository(Consent $consent = null): ConsentEntryRepositoryInterface
     {
         $repository = $this->prophesize(ConsentEntryRepositoryInterface::class);
-        $repository->findConsentFromClientId(Argument::any())->willReturn($consent);
+        $repository->findFromClient(Argument::any())->willReturn($consent);
 
         return $repository->reveal();
     }

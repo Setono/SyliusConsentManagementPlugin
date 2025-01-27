@@ -6,7 +6,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Fixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Setono\Consent\Consent;
+use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 
 final class ServiceFixture implements FixtureInterface
@@ -35,19 +35,19 @@ final class ServiceFixture implements FixtureInterface
     {
         $i = 0;
 
-        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_PREFERENCES, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_FUNCTIONAL, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_FUNCTIONAL, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_FUNCTIONAL, 'Very important service'];
 
-        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_STATISTICS, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_STATISTICAL, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_STATISTICAL, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_STATISTICAL, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_STATISTICAL, 'Very important service'];
 
-        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
-        yield [(string) ++$i, Consent::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_MARKETING, 'Very important service'];
+        yield [(string) ++$i, DefaultConsents::CONSENT_MARKETING, 'Very important service'];
     }
 }

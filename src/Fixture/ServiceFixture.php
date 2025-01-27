@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Fixture;
 
-use Setono\Consent\Consent;
+use Setono\Consent\DefaultConsents;
 use Sylius\Bundle\CoreBundle\Fixture\AbstractResourceFixture;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
     {
         $childNode = $resourceNode->children();
         $childNode->scalarNode('code')->cannotBeEmpty();
-        $childNode->enumNode('category')->values(Consent::getAvailableConsents())->cannotBeEmpty();
+        $childNode->enumNode('category')->values(DefaultConsents::all())->cannotBeEmpty();
         $childNode->scalarNode('name')->cannotBeEmpty();
         $childNode->scalarNode('description')->cannotBeEmpty();
         $childNode->variableNode('translations')->cannotBeEmpty()->defaultValue([]);

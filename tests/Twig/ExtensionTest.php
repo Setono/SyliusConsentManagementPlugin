@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
-use Setono\ClientId\ClientId;
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\DefaultConsents;
+use Setono\ConsentBundle\Checker\StaticConsentChecker;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
@@ -36,13 +35,6 @@ final class ExtensionTest extends IntegrationTestCase
             {
                 Assert::same($class, Runtime::class);
 
-                $consentContext = new class() implements ConsentContextInterface {
-                    public function getConsent(): Consent
-                    {
-                        return new Consent(new ClientId('client_id'), true, false, false);
-                    }
-                };
-
                 $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
                     public function getWidgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface
                     {
@@ -64,7 +56,11 @@ final class ExtensionTest extends IntegrationTestCase
                     }
                 };
 
-                return new Runtime($consentContext, $widgetConfigProvider, $channelContext, $localeContext);
+                return new Runtime(new StaticConsentChecker([
+                    DefaultConsents::CONSENT_MARKETING => true,
+                    DefaultConsents::CONSENT_FUNCTIONAL => false,
+                    DefaultConsents::CONSENT_STATISTICAL => false,
+                ]), $widgetConfigProvider, $channelContext, $localeContext);
             }
         };
 

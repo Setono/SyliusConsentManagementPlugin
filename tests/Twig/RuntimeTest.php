@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
 use PHPUnit\Framework\TestCase;
-use Setono\ClientId\ClientId;
-use Setono\Consent\Consent;
-use Setono\Consent\Context\ConsentContextInterface;
+use Setono\Consent\ConsentCheckerInterface;
+use Setono\ConsentBundle\Checker\StaticConsentChecker;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
@@ -29,7 +28,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime();
 
-        self::assertTrue($runtime->preferencesGranted());
+        self::assertTrue($runtime->functionalGranted());
     }
 
     /**
@@ -49,7 +48,7 @@ final class RuntimeTest extends TestCase
     {
         $runtime = self::getRuntime();
 
-        self::assertTrue($runtime->statisticsGranted());
+        self::assertTrue($runtime->statisticalGranted());
     }
 
     /**
@@ -67,7 +66,7 @@ final class RuntimeTest extends TestCase
      */
     public function it_generates_text_script_tag(): void
     {
-        $runtime = self::getRuntime(self::getConsentContext(false));
+        $runtime = self::getRuntime(self::getConsentChecker(false));
 
         self::assertSame('<script type="text/plain" data-sscm-consent="marketing" data-sscm-src="js/test.js"></script>', $runtime->scriptTag('js/test.js', 'marketing'));
     }
@@ -87,7 +86,7 @@ final class RuntimeTest extends TestCase
      */
     public function it_generates_text_script_tag_attributes(): void
     {
-        $runtime = self::getRuntime(self::getConsentContext(false));
+        $runtime = self::getRuntime(self::getConsentChecker(false));
 
         self::assertSame(' type="text/plain" data-sscm-consent="marketing"', $runtime->scriptTagAttributes('marketing'));
     }
@@ -97,14 +96,14 @@ final class RuntimeTest extends TestCase
      */
     public function it_returns_widget_config(): void
     {
-        $runtime = self::getRuntime(self::getConsentContext());
+        $runtime = self::getRuntime(self::getConsentChecker());
         self::assertInstanceOf(WidgetConfigInterface::class, $runtime->widgetConfig());
     }
 
-    private static function getRuntime(ConsentContextInterface $consentContext = null): Runtime
+    private static function getRuntime(ConsentCheckerInterface $consentChecker = null): Runtime
     {
-        if (null === $consentContext) {
-            $consentContext = self::getConsentContext();
+        if (null === $consentChecker) {
+            $consentChecker = self::getConsentChecker();
         }
 
         $widgetConfigProvider = new class() implements WidgetConfigProviderInterface {
@@ -128,20 +127,15 @@ final class RuntimeTest extends TestCase
             }
         };
 
-        return new Runtime($consentContext, $widgetConfigProvider, $channelContext, $localeContext);
+        return new Runtime($consentChecker, $widgetConfigProvider, $channelContext, $localeContext);
     }
 
-    private static function getConsentContext(bool $marketing = true, bool $preferences = true, bool $statistics = true): ConsentContextInterface
+    private static function getConsentChecker(bool $marketing = true, bool $preferences = true, bool $statistics = true): StaticConsentChecker
     {
-        return new class($marketing, $preferences, $statistics) implements ConsentContextInterface {
-            public function __construct(private readonly bool $marketing, private readonly bool $preferences, private readonly bool $statistics)
-            {
-            }
-
-            public function getConsent(): Consent
-            {
-                return new Consent(new ClientId('client_id'), $this->marketing, $this->preferences, $this->statistics);
-            }
-        };
+        return new StaticConsentChecker([
+            'marketing' => $marketing,
+            'preferences' => $preferences,
+            'statistics' => $statistics,
+        ]);
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
-use Setono\ClientId\ClientId;
-use Setono\SyliusConsentManagementPlugin\Controller\ConsentCommand;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 
 class ConsentEntry implements ConsentEntryInterface
@@ -14,7 +12,7 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?int $id = null;
 
-    protected ?ClientId $clientId = null;
+    protected ?string $clientId = null;
 
     protected ?string $ip = null;
 
@@ -36,12 +34,12 @@ class ConsentEntry implements ConsentEntryInterface
         return $this->id;
     }
 
-    public function getClientId(): ?ClientId
+    public function getClientId(): ?string
     {
         return $this->clientId;
     }
 
-    public function setClientId(ClientId $clientId): void
+    public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
     }
@@ -97,13 +95,6 @@ class ConsentEntry implements ConsentEntryInterface
         }
 
         $this->consentedCategories[] = $consentedCategory;
-    }
-
-    public function populateFromConsentCommand(ConsentCommand $consentCommand): void
-    {
-        $this->marketingGranted = $consentCommand->marketingGranted;
-        $this->preferencesGranted = $consentCommand->preferencesGranted;
-        $this->statisticsGranted = $consentCommand->statisticsGranted;
     }
 
     public function populateFromFormerConsent(FormerConsent $formerConsent): void

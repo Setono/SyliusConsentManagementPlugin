@@ -21,7 +21,7 @@ final class ConsentEntryRepositoryTest extends AbstractRepositoryTest
     public function it_finds_consent_from_client_id(): void
     {
         $repository = new ConsentEntryRepository($this->entityManager, $this->entityManager->getClassMetadata(ConsentEntry::class));
-        $result = $repository->findConsentFromClientId(new ClientId('client_id_1'));
+        $result = $repository->findFromClient(new ClientId('client_id_1'));
 
         self::assertInstanceOf(Consent::class, $result);
         self::assertSame('client_id_1', $result->getClientId()->toString());
@@ -33,7 +33,7 @@ final class ConsentEntryRepositoryTest extends AbstractRepositoryTest
     public function it_finds_one_from_client_id(): void
     {
         $repository = new ConsentEntryRepository($this->entityManager, $this->entityManager->getClassMetadata(ConsentEntry::class));
-        $result = $repository->findOneFromClientId(new ClientId('client_id_1'));
+        $result = $repository->findOneFromClient(new ClientId('client_id_1'));
 
         self::assertInstanceOf(ConsentEntryInterface::class, $result);
         self::assertSame('client_id_1', (string) $result->getClientId());
