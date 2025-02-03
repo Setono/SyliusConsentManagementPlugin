@@ -6,9 +6,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
-use Setono\ConsentBundle\Checker\StaticConsentChecker;
 use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
@@ -39,12 +37,6 @@ final class ExtensionTest extends IntegrationTestCase
         $widgetConfigProvider = $this->prophesize(WidgetConfigProviderInterface::class);
         $widgetConfigProvider->getWidgetConfig(Argument::cetera())->willReturn(new WidgetConfig());
 
-        $consentChecker = new StaticConsentChecker([
-            DefaultConsents::CONSENT_FUNCTIONAL => true,
-            DefaultConsents::CONSENT_MARKETING => false,
-            DefaultConsents::CONSENT_STATISTICAL => true,
-        ]);
-
         $channelContext = $this->prophesize(ChannelContextInterface::class);
         $channelContext->getChannel()->willReturn(new Channel());
 
@@ -67,9 +59,8 @@ final class ExtensionTest extends IntegrationTestCase
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
-                private readonly ConsentCheckerInterface $consentChecker,
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
                 private readonly ChannelContextInterface $channelContext,
                 private readonly LocaleContextInterface $localeContext,
@@ -88,7 +79,6 @@ final class ExtensionTest extends IntegrationTestCase
                 Assert::same($class, Runtime::class);
 
                 return new Runtime(
-                    $this->consentChecker,
                     $this->widgetConfigProvider,
                     $this->channelContext,
                     $this->localeContext,

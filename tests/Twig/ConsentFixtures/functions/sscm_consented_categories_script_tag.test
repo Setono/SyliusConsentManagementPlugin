@@ -1,0 +1,8 @@
+--TEST--
+"sscm_consented_categories_script_tag" function
+--TEMPLATE--
+{{ sscm_consented_categories_script_tag() }}
+--DATA--
+return []
+--EXPECT--
+<script type="application/json" id="sscm-consented-categories-json">["functional","statistical"]</script>

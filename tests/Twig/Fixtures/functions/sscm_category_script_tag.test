@@ -1,8 +1,0 @@
---TEST--
-"sscm_category_script_tag" function
---TEMPLATE--
-{{ sscm_category_script_tag() }}
---DATA--
-return []
---EXPECT--
-<script type="application/json" id="sscm-category-json">["functional","statistical"]</script>

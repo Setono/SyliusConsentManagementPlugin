@@ -2,6 +2,17 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\ConsentExtension">
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\ConsentRuntime">
+            <argument type="service" id="Setono\Consent\ConsentCheckerInterface"/>
+            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
+
+            <tag name="twig.runtime"/>
+        </service>
+
         <service id="setono_sylius_consent_management.twig.extension"
                  class="Setono\SyliusConsentManagementPlugin\Twig\Extension">
             <tag name="twig.extension"/>
@@ -9,7 +20,6 @@
 
         <service id="setono_sylius_consent_management.twig.runtime"
                  class="Setono\SyliusConsentManagementPlugin\Twig\Runtime">
-            <argument type="service" id="Setono\Consent\ConsentCheckerInterface"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="sylius.context.locale"/>
