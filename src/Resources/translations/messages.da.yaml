@@ -82,6 +82,7 @@ setono_sylius_consent_management:
         service_subheader: Manage your service that needs consent
         services: Tjeneste
         statistics: Statistiske
+        ttl: Levetid
         url: URL
         user_agent: Brugeragent (browser)
         widget:

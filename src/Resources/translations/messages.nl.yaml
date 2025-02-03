@@ -82,6 +82,7 @@ setono_sylius_consent_management:
         service_subheader: Beheer uw service waarvoor toestemming nodig is
         services: Diensten
         statistics: Statistieken
+        ttl: Time to live
         url: URL
         user_agent: User-agent (browser)
         widget:

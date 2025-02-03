@@ -1,0 +1,7 @@
+{# @var \DateInterval|null data #}
+{% if data is null %}
+    <span class="ui red label"><i class="exclamation circle icon"></i> {{ 'setono_sylius_consent_management.ui.missing'|trans }}</span>
+{% else %}
+    {# todo make the formatting better (and translatable) #}
+    {{ data|date('%y years, %m months, %d days, %h hours') }}
+{% endif %}
