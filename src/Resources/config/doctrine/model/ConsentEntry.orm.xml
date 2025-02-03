@@ -15,7 +15,7 @@
         <field name="ip" type="string"/>
         <field name="url" type="text"/>
         <field name="userAgent" type="text"/>
-        <field name="consentedCategories" type="json"/>
+        <field name="consentedCategories" type="json" nullable="true"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

@@ -21,8 +21,8 @@ class ConsentEntry implements ConsentEntryInterface
 
     protected ?string $userAgent = null;
 
-    /** @var list<string> */
-    protected array $consentedCategories = [];
+    /** @var list<string>|null */
+    protected ?array $consentedCategories = [];
 
     public function getId(): ?int
     {
@@ -71,12 +71,16 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function getConsentedCategories(): array
     {
-        return $this->consentedCategories;
+        return $this->consentedCategories ?? [];
     }
 
-    public function setConsentedCategories(array $consentedCategories): void
+    public function setConsentedCategories(?array $consentedCategories): void
     {
-        $this->consentedCategories = [];
+        if ([] === $consentedCategories || null === $consentedCategories) {
+            $this->consentedCategories = null;
+
+            return;
+        }
 
         foreach ($consentedCategories as $consentedCategory) {
             $this->addConsentedCategory($consentedCategory);
@@ -85,6 +89,10 @@ class ConsentEntry implements ConsentEntryInterface
 
     public function addConsentedCategory(CategoryInterface|string $consentedCategory): void
     {
+        if (null === $this->consentedCategories) {
+            $this->consentedCategories = [];
+        }
+
         if ($consentedCategory instanceof CategoryInterface) {
             $consentedCategory = (string) $consentedCategory->getCode();
         }

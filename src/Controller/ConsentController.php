@@ -34,8 +34,7 @@ final class ConsentController
         Request $request,
         WidgetCookieManagerInterface $consentWidgetCookieManager,
         ConsentEntryTypeFactoryInterface $consentEntryTypeFactory,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $form = $consentEntryTypeFactory->createNew($request);
         $form->handleRequest($request);
 
