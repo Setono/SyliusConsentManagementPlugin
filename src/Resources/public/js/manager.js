@@ -15,7 +15,7 @@ class ConsentManager {
     constructor(options = {}) {
         this.#options = Object.assign({
                 selector: {
-                    categories: '.sscm-categories',
+                    categories: '.sscm-categories-json',
                 },
             },
             options

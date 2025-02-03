@@ -84,14 +84,14 @@ final class Runtime implements RuntimeExtensionInterface
         return '';
     }
 
-    public function widget(bool $force = false): string
+    public function widget(): string
     {
         $request = $this->requestStack->getMainRequest();
         if (null === $request) {
             throw new \RuntimeException('The consent widget cannot be rendered in a non request/response lifecycle');
         }
 
-        if (!$force && !$this->widgetDisplayDecider->display($request)) {
+        if (!$this->widgetDisplayDecider->display($request)) {
             return '';
         }
 
@@ -119,6 +119,6 @@ final class Runtime implements RuntimeExtensionInterface
             $categories[] = $category->getCode();
         }
 
-        return sprintf('<script type="application/json" class="sscm-categories">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
+        return sprintf('<script type="application/json" class="sscm-categories-json">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
     }
 }
