@@ -9,6 +9,10 @@ use Sylius\Component\Resource\Model\TimestampableInterface;
 
 interface CookieInterface extends ResourceInterface, TimestampableInterface
 {
+    public const STATE_PENDING = 'pending';
+
+    public const STATE_CONFIRMED = 'confirmed';
+
     public function getId(): ?int;
 
     public function getName(): ?string;
@@ -21,6 +25,19 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface
     public function getUrl(): ?string;
 
     public function setUrl(string $url): void;
+
+    public function getState(): ?string;
+
+    public function setState(?string $state): void;
+
+    /**
+     * Indicates how many times the cookie has occurred in a sample
+     */
+    public function getSamples(): int;
+
+    public function setSamples(int $samples): void;
+
+    public function increaseSamples(): void;
 
     public function getService(): ?ServiceInterface;
 

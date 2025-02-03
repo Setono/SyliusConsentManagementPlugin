@@ -16,6 +16,10 @@ class Cookie implements CookieInterface
 
     protected ?string $url = null;
 
+    protected ?string $state = self::STATE_PENDING;
+
+    protected int $samples = 0;
+
     protected ?ServiceInterface $service = null;
 
     public function getId(): ?int
@@ -41,6 +45,31 @@ class Cookie implements CookieInterface
     public function setUrl(string $url): void
     {
         $this->url = $url;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): void
+    {
+        $this->state = $state;
+    }
+
+    public function getSamples(): int
+    {
+        return $this->samples;
+    }
+
+    public function setSamples(int $samples): void
+    {
+        $this->samples = $samples;
+    }
+
+    public function increaseSamples(): void
+    {
+        ++$this->samples;
     }
 
     public function getService(): ?ServiceInterface

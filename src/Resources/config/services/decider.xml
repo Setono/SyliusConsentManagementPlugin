@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Decider\CompositeWidgetDisplayDecider"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\CompositeWidgetDisplayDecider"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\CookieBasedWidgetDisplayDecider">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface"/>
+
+            <tag name="setono_sylius_consent_management.widget_display_decider" priority="90"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\BotBasedWidgetDisplayDecider">
+            <argument type="service" id="setono_bot_detection.bot_detector.default"/>
+
+            <tag name="setono_sylius_consent_management.widget_display_decider" priority="80"/>
+        </service>
+    </services>
+</container>

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -26,7 +24,6 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly CookieRepositoryInterface $cookieRepository,
         private readonly CookieFactoryInterface $cookieFactory,
-        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly FirewallMap $firewallMap,
         /** @var array<array-key, string> $firewalls */
         private readonly array $firewalls,
@@ -56,25 +53,18 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $cookies = [];
-
         /**
          * @var string $name
          * @var mixed $value
          */
         foreach ($request->cookies->all() as $name => $value) {
-            if (null !== $this->cookieRepository->findOneByName($name)) {
-                continue;
+            $cookie = $this->cookieRepository->findOneByName($name);
+            if (null === $cookie) {
+                $cookie = $this->cookieFactory->createWithData($name, $request->getUri());
             }
+            $cookie->increaseSamples();
 
-            $obj = $this->cookieFactory->createWithData($name, $request->getUri());
-            $this->cookieRepository->add($obj);
-
-            $cookies[] = $obj;
-        }
-
-        if (count($cookies) > 0) {
-            $this->eventDispatcher->dispatch(new CookiesCreatedEvent($cookies));
+            $this->cookieRepository->add($cookie);
         }
     }
 

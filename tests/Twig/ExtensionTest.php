@@ -9,8 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\ConsentBundle\Checker\StaticConsentChecker;
-use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManager;
-use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
@@ -59,18 +58,18 @@ final class ExtensionTest extends IntegrationTestCase
         $categoryRepository = $this->prophesize(RepositoryInterface::class);
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
-        $widgetCookieManager = new WidgetCookieManager('sscm_widget');
+        $widgetDisplayDecider = $this->prophesize(WidgetDisplayDeciderInterface::class);
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetCookieManager, $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly ConsentCheckerInterface $consentChecker,
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
                 private readonly ChannelContextInterface $channelContext,
                 private readonly LocaleContextInterface $localeContext,
                 private readonly RepositoryInterface $categoryRepository,
-                private readonly WidgetCookieManagerInterface $widgetCookieManager,
+                private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
                 private readonly RequestStack $requestStack,
             ) {
             }
@@ -88,7 +87,7 @@ final class ExtensionTest extends IntegrationTestCase
                     $this->channelContext,
                     $this->localeContext,
                     $this->categoryRepository,
-                    $this->widgetCookieManager,
+                    $this->widgetDisplayDecider,
                     $this->requestStack,
                 );
             }

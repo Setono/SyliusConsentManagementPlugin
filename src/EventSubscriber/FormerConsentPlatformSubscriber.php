@@ -9,7 +9,6 @@ use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Platform\PlatformRegistryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
-use Setono\SyliusConsentManagementPlugin\Widget\ConsentWidgetInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -26,7 +25,6 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private readonly PlatformRegistryInterface $platformRegistry,
-        private readonly ConsentWidgetInterface $consentWidget,
         private readonly ClientContextInterface $clientContext,
         private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
         private readonly ConsentEntryFactoryInterface $consentEntryFactory,
@@ -44,7 +42,7 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
 
     public function onRequest(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !$this->consentWidget->show()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -74,7 +72,6 @@ final class FormerConsentPlatformSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->consentWidget->setShow(false);
         $this->setConsentWidgetCookie = true;
 
         $client = $this->clientContext->getClient();

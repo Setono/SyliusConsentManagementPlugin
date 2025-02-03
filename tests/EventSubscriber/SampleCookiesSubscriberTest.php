@@ -7,8 +7,6 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Setono\SyliusConsentManagementPlugin\Event\CookiesCreatedEvent;
 use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
@@ -62,7 +60,7 @@ final class SampleCookiesSubscriberTest extends TestCase
     {
         $event = $this->getRequestEvent(HttpKernelInterface::SUB_REQUEST);
 
-        $subscriber = $this->getSubscriber(false, false);
+        $subscriber = $this->getSubscriber(false);
         $subscriber->sample($event);
 
         self::assertFalse($event->getRequestCalled);
@@ -77,7 +75,7 @@ final class SampleCookiesSubscriberTest extends TestCase
 
         $event = $this->getRequestEvent();
 
-        $subscriber = $this->getSubscriber(false, false, 0.5);
+        $subscriber = $this->getSubscriber(false, 0.5);
         $subscriber->sample($event);
 
         self::assertTrue($event->getRequestCalled);
@@ -90,7 +88,7 @@ final class SampleCookiesSubscriberTest extends TestCase
     {
         $event = $this->getRequestEvent();
 
-        $subscriber = $this->getSubscriber(true, true, 1, true);
+        $subscriber = $this->getSubscriber(true, 1, true);
         $subscriber->sample($event);
 
         self::assertTrue($event->getRequestCalled);
@@ -102,7 +100,7 @@ final class SampleCookiesSubscriberTest extends TestCase
     public function it_throws_exception_if_sample_rate_is_out_of_upper_bound(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->getSubscriber(false, false, 1.1);
+        $this->getSubscriber(false, 1.1);
     }
 
     /**
@@ -111,7 +109,7 @@ final class SampleCookiesSubscriberTest extends TestCase
     public function it_throws_exception_if_sample_rate_is_out_of_lower_bound(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->getSubscriber(false, false, 0.00001);
+        $this->getSubscriber(false, 0.00001);
     }
 
     /**
@@ -119,7 +117,6 @@ final class SampleCookiesSubscriberTest extends TestCase
      */
     private function getSubscriber(
         bool $callRepository = true,
-        bool $callEventDispatcher = true,
         float $sampleRate = 1,
         bool $callFirewallConfig = false,
         array $firewalls = ['shop'],
@@ -132,20 +129,13 @@ final class SampleCookiesSubscriberTest extends TestCase
 
         $factory = new CookieFactory(new Factory(Cookie::class));
 
-        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        if ($callEventDispatcher) {
-            $eventDispatcher->dispatch(Argument::type(CookiesCreatedEvent::class))->shouldBeCalled();
-        } else {
-            $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
-        }
-
         $firewallMap = $this->prophesize(FirewallMap::class);
         if ($callFirewallConfig) {
             $firewallConfig = new FirewallConfig('shop', 'user_checker');
             $firewallMap->getFirewallConfig(Argument::type(Request::class))->willReturn($firewallConfig);
         }
 
-        return new SampleCookiesSubscriber($repository->reveal(), $factory, $eventDispatcher->reveal(), $firewallMap->reveal(), $firewalls, $sampleRate);
+        return new SampleCookiesSubscriber($repository->reveal(), $factory, $firewallMap->reveal(), $firewalls, $sampleRate);
     }
 
     private function getRequestEvent(int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent

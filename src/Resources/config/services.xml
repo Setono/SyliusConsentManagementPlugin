@@ -5,6 +5,7 @@
         <import resource="services/checker.xml"/>
         <import resource="services/controller.xml"/>
         <import resource="services/cookie.xml"/>
+        <import resource="services/decider.xml"/>
         <import resource="services/email_manager.xml"/>
         <import resource="services/event_listener.xml"/>
         <import resource="services/event_subscriber.xml"/>

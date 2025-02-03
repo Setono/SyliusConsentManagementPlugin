@@ -7,18 +7,9 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_subscriber.consent_widget_cookie"
-                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\ConsentWidgetCookieSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="setono_sylius_consent_management.event_subscriber.former_consent_platform"
                  class="Setono\SyliusConsentManagementPlugin\EventSubscriber\FormerConsentPlatformSubscriber">
             <argument type="service" id="setono_sylius_consent_management.platform.registry"/>
-            <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
             <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
             <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
             <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
@@ -31,25 +22,9 @@
                  class="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
-            <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="security.firewall.map"/>
             <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
             <argument>%setono_sylius_consent_management.sampling.rate%</argument>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
-        <service id="setono_sylius_consent_management.event_subscriber.new_cookies_notifier"
-                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\NewCookiesNotifierSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.email_manager.cookie"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
-        <service id="setono_sylius_consent_management.event_subscriber.check_if_visitor_is_a_bot"
-                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\CheckIfVisitorIsABotSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.widget.consent"/>
-            <argument type="service" id="cache.app"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
