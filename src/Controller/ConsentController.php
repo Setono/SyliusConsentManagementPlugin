@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
-use Setono\SyliusConsentManagementPlugin\Factory\ConsentEntryFactoryInterface;
-use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
+use Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepositoryInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,10 +22,7 @@ final class ConsentController
     use ORMTrait;
 
     public function __construct(
-        private readonly FormFactoryInterface $formFactory,
-        private readonly ConsentEntryFactoryInterface $consentEntryFactory,
-        private readonly ConsentEntryRepositoryInterface $consentEntryRepository,
-        private readonly ClientContextInterface $clientContext,
+        private readonly ConsentEntryTypeFactoryInterface $consentEntryTypeFactory,
         ManagerRegistry $managerRegistry,
     ) {
         $this->managerRegistry = $managerRegistry;
@@ -38,7 +30,7 @@ final class ConsentController
 
     public function widget(Request $request, Environment $twig, WidgetConfigProviderInterface $widgetConfigProvider): Response
     {
-        $form = $this->createForm($request);
+        $form = $this->consentEntryTypeFactory->createNew($request);
 
         return new Response($twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
             'form' => $form->createView(),
@@ -48,7 +40,7 @@ final class ConsentController
 
     public function update(Request $request, WidgetCookieManagerInterface $consentWidgetCookieManager): JsonResponse
     {
-        $form = $this->createForm($request);
+        $form = $this->consentEntryTypeFactory->createNew($request);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
@@ -66,14 +58,5 @@ final class ConsentController
         $consentWidgetCookieManager->write($response);
 
         return $response;
-    }
-
-    private function createForm(Request $request): FormInterface
-    {
-        $consentEntry = $this->consentEntryRepository->findOneFromClient($this->clientContext->getClient());
-
-        return $this->formFactory->create(ConsentEntryType::class, $consentEntry ?? $this->consentEntryFactory->createFromRequest($request), [
-            'csrf_protection' => false,
-        ]);
     }
 }
