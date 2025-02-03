@@ -106,7 +106,12 @@ final class Runtime implements RuntimeExtensionInterface
         );
     }
 
-    public function categories(): string
+    public function categories(): array
+    {
+        return $this->categoryRepository->findAll();
+    }
+
+    public function categoriesJson(): string
     {
         $categories = [];
 

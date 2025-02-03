@@ -1,8 +1,8 @@
 --TEST--
-"sscm_categories" function
+"sscm_categories_json" function
 --TEMPLATE--
-{{ sscm_categories() }}
+{{ sscm_categories_json() }}
 --DATA--
 return []
 --EXPECT--
-<script type="application/json" class="sscm-categories">["functional","statistical"]</script>
+<script type="application/json" class="sscm-categories-json">["functional","statistical"]</script>
