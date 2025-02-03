@@ -1,5 +1,6 @@
 /**
  * @typedef {Object} ConsentWidgetOptions
+ * @property {Array<string>} allowedActions - The allowed actions for widget buttons
  * @property {Object} selector
  * @property {string} selector.backdrop - Selector for the backdrop element
  * @property {string} selector.widget - Selector for the widget container
@@ -28,6 +29,7 @@ class ConsentWidget {
      */
     constructor(options = {}) {
         this.#options = Object.assign({
+                allowedActions: ['acceptAll', 'acceptSelected'],
                 selector: {
                     backdrop: '.sscm-backdrop',
                     widget: '.sscm-widget-container',
@@ -61,8 +63,12 @@ class ConsentWidget {
 
             const action = event.submitter.dataset.action;
 
-            if(!['acceptAll', 'acceptSelected'].includes(action)) {
-                throw new Error('Invalid action');
+            if(!this.#options.allowedActions.includes(action)) {
+                throw new Error('Invalid action. Allowed actions are: ' + this.#options.allowedActions.join(', '));
+            }
+
+            if(!Object.hasOwn(this.#options.callback, action)) {
+                throw new Error('Callback function not found for action: ' + action);
             }
 
             this.#options.callback[action].bind(this)();
