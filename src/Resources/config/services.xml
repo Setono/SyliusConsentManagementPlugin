@@ -16,6 +16,5 @@
         <import resource="services/platform.xml"/>
         <import resource="services/provider.xml"/>
         <import resource="services/twig.xml"/>
-        <import resource="services/widget.xml"/>
     </imports>
 </container>
