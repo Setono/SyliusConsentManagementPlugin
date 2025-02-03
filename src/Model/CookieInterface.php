@@ -39,6 +39,17 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface
 
     public function increaseSamples(): void;
 
+    /**
+     * The TTL in days
+     */
+    public function getTtl(): ?\DateInterval;
+
+    public function setTtl(null|string|\DateInterval $ttl): void;
+
+    public function getLastSeenAt(): ?\DateTimeInterface;
+
+    public function setLastSeenAt(?\DateTimeInterface $lastSeenAt): void;
+
     public function getService(): ?ServiceInterface;
 
     public function setService(?ServiceInterface $service): void;

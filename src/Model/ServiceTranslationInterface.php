@@ -16,4 +16,8 @@ interface ServiceTranslationInterface extends ResourceInterface, TranslationInte
     public function getDescription(): ?string;
 
     public function setDescription(?string $description): void;
+
+    public function getPrivacyPolicyUrl(): ?string;
+
+    public function setPrivacyPolicyUrl(?string $privacyPolicyUrl): void;
 }

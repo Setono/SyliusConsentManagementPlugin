@@ -17,6 +17,7 @@ setono_sylius_consent_management:
         cookie:
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
+            ttl: Levetid
         service:
             categories:
                 marketing: Marketing
@@ -26,6 +27,7 @@ setono_sylius_consent_management:
             category_placeholder: Vælg en passende kategori...
             description: Beskrivelse
             name: Navn
+            privacy_policy_url: Privatlivspolitik (URL)
             translations: Oversættelser
         widget_config:
             heading: Overskrift

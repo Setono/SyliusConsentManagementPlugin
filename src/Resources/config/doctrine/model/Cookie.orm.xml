@@ -13,6 +13,10 @@
 
         <field name="name" column="name" type="string" unique="true"/>
         <field name="url" type="string"/>
+        <field name="state" type="string"/>
+        <field name="samples" type="integer"/>
+        <field name="ttl" type="string" nullable="true"/>
+        <field name="lastSeenAt" type="datetime"/>
 
         <many-to-one target-entity="Setono\SyliusConsentManagementPlugin\Model\ServiceInterface" field="service" inversed-by="cookies">
             <join-column name="service_id" referenced-column-name="id" on-delete="CASCADE" />
@@ -25,9 +29,5 @@
         <field name="updatedAt" type="datetime" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
-
-        <indexes>
-            <index columns="name"/>
-        </indexes>
     </mapped-superclass>
 </doctrine-mapping>

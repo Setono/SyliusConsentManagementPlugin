@@ -8,7 +8,7 @@
                 {# todo translate #}
                 The code is used in your application code to check if the user has given consent to the category.<br>E.g. in a Twig template:<br>
 <pre><code>{{ '{%' }} if sscm_is_granted('{{ resource.code ?? 'your_category_code' }}') {{ '%}' }}
-    Output marketing related content
+    Output '{{ resource.code ?? 'your_category_code' }}' related content
 {{ '{%' }} endif {{ '%}' }}</code></pre>
             </div>
 

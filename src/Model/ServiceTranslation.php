@@ -14,6 +14,8 @@ class ServiceTranslation extends AbstractTranslation implements ServiceTranslati
 
     protected ?string $description = null;
 
+    protected ?string $privacyPolicyUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,5 +39,15 @@ class ServiceTranslation extends AbstractTranslation implements ServiceTranslati
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getPrivacyPolicyUrl(): ?string
+    {
+        return $this->privacyPolicyUrl;
+    }
+
+    public function setPrivacyPolicyUrl(?string $privacyPolicyUrl): void
+    {
+        $this->privacyPolicyUrl = $privacyPolicyUrl;
     }
 }

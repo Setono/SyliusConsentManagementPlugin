@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class CookieType extends AbstractResourceType
@@ -27,6 +28,10 @@ final class CookieType extends AbstractResourceType
     {
         // todo create service choice type instead
         $builder
+            ->add('ttl', DateIntervalType::class, [
+                'label' => 'setono_sylius_consent_management.form.cookie.ttl',
+                'with_hours' => true,
+            ])
             ->add('service', EntityType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.service',
                 'placeholder' => 'setono_sylius_consent_management.form.cookie.service_placeholder',

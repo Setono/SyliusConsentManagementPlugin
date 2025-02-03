@@ -10,7 +10,8 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="name" type="string" />
-        <field name="description" type="text" />
+        <field name="name" type="string"/>
+        <field name="description" type="text" nullable="true"/>
+        <field name="privacyPolicyUrl" type="text" nullable="true"/>
     </mapped-superclass>
 </doctrine-mapping>

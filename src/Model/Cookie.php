@@ -20,6 +20,10 @@ class Cookie implements CookieInterface
 
     protected int $samples = 0;
 
+    protected ?string $ttl = null;
+
+    protected ?\DateTimeInterface $lastSeenAt = null;
+
     protected ?ServiceInterface $service = null;
 
     public function getId(): ?int
@@ -70,6 +74,34 @@ class Cookie implements CookieInterface
     public function increaseSamples(): void
     {
         ++$this->samples;
+    }
+
+    public function getTtl(): ?\DateInterval
+    {
+        if (null === $this->ttl) {
+            return null;
+        }
+
+        return new \DateInterval($this->ttl);
+    }
+
+    public function setTtl(null|string|\DateInterval $ttl): void
+    {
+        if ($ttl instanceof \DateInterval) {
+            $ttl = $ttl->format('P%yY%mM%dDT%hH%iM%sS');
+        }
+
+        $this->ttl = $ttl;
+    }
+
+    public function getLastSeenAt(): ?\DateTimeInterface
+    {
+        return $this->lastSeenAt;
+    }
+
+    public function setLastSeenAt(?\DateTimeInterface $lastSeenAt): void
+    {
+        $this->lastSeenAt = $lastSeenAt;
     }
 
     public function getService(): ?ServiceInterface

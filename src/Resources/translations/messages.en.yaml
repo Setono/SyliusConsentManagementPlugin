@@ -17,6 +17,7 @@ setono_sylius_consent_management:
         cookie:
             service: Service
             service_placeholder: Choose a service...
+            ttl: Time to live
         service:
             categories:
                 marketing: Marketing
@@ -26,6 +27,7 @@ setono_sylius_consent_management:
             category_placeholder: Select an appropiate category...
             description: Description
             name: Name
+            privacy_policy_url: Privacy policy URL
             translations: Translations
         widget_config:
             heading: Heading

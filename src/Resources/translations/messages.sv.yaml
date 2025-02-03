@@ -17,6 +17,7 @@ setono_sylius_consent_management:
         cookie:
             service: Tjänst
             service_placeholder: Välj en tjänst...
+            ttl: Time to live
         service:
             categories:
                 marketing: Marknadsföring
@@ -26,6 +27,7 @@ setono_sylius_consent_management:
             category_placeholder: Välj en lämplig kategori...
             description: Beskrivning
             name: Namn
+            privacy_policy_url: Privacy policy URL
             translations: Översättningar
         widget_config:
             heading: Rubrik
