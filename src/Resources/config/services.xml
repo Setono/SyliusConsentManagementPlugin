@@ -15,6 +15,7 @@
         <import resource="services/menu.xml"/>
         <import resource="services/platform.xml"/>
         <import resource="services/provider.xml"/>
+        <import resource="services/renderer.xml"/>
         <import resource="services/twig.xml"/>
     </imports>
 </container>

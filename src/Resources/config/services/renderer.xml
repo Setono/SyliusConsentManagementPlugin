@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRenderer"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRenderer">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
+            <argument type="service" id="twig"/>
+        </service>
+    </services>
+</container>
