@@ -18,8 +18,6 @@
         "fakerphp/faker": "^1.9",
         "knplabs/knp-menu": "^3.1",
         "league/commonmark": "^2.6",
-        "psr/cache": "^1.0 || ^2.0 || ^3.0",
-        "psr/event-dispatcher": "^1.0",
         "setono/bot-detection-bundle": "^1.13",
         "setono/client": "^1.1",
         "setono/client-bundle": "^1.0@beta",
