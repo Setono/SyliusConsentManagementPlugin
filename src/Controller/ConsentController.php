@@ -9,38 +9,34 @@ use Setono\Doctrine\ORMTrait;
 use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
-use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Twig\Environment;
 use Webmozart\Assert\Assert;
 
 final class ConsentController
 {
     use ORMTrait;
 
-    public function __construct(
-        private readonly ConsentEntryTypeFactoryInterface $consentEntryTypeFactory,
-        ManagerRegistry $managerRegistry,
-    ) {
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
         $this->managerRegistry = $managerRegistry;
     }
 
-    public function widget(Request $request, Environment $twig, WidgetConfigProviderInterface $widgetConfigProvider): Response
+    public function widget(WidgetRendererInterface $widgetRenderer): Response
     {
-        $form = $this->consentEntryTypeFactory->createNew($request);
-
-        return new Response($twig->render('@SetonoSyliusConsentManagementPlugin/shop/widget.html.twig', [
-            'form' => $form->createView(),
-            'widgetConfiguration' => $widgetConfigProvider->getWidgetConfig(),
-        ]));
+        return new Response($widgetRenderer->render());
     }
 
-    public function update(Request $request, WidgetCookieManagerInterface $consentWidgetCookieManager): JsonResponse
+    public function update(
+        Request $request,
+        WidgetCookieManagerInterface $consentWidgetCookieManager,
+        ConsentEntryTypeFactoryInterface $consentEntryTypeFactory,
+    ): JsonResponse
     {
-        $form = $this->consentEntryTypeFactory->createNew($request);
+        $form = $consentEntryTypeFactory->createNew($request);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {

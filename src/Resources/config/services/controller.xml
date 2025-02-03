@@ -13,7 +13,6 @@
 
         <!-- Shop related -->
         <service id="Setono\SyliusConsentManagementPlugin\Controller\ConsentController">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface"/>
             <argument type="service" id="doctrine"/>
 
             <tag name="controller.service_arguments"/>
