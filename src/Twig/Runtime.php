@@ -8,8 +8,7 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Locale\Context\LocaleContextInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,8 +18,6 @@ final class Runtime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-        private readonly ChannelContextInterface $channelContext,
-        private readonly LocaleContextInterface $localeContext,
         private readonly RepositoryInterface $categoryRepository,
         private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
         private readonly WidgetRendererInterface $widgetRenderer,
@@ -38,9 +35,9 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->widgetDisplayDecider->display($request);
     }
 
-    public function widget(): string
+    public function widget(Request $request = null): string
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $request ?? $this->requestStack->getMainRequest();
         if (null === $request) {
             throw new \RuntimeException('The consent widget cannot be rendered in a non request/response lifecycle');
         }
@@ -52,12 +49,9 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->widgetRenderer->render();
     }
 
-    public function widgetConfig(): WidgetConfigInterface
+    public function widgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface
     {
-        return $this->widgetConfigProvider->getWidgetConfig(
-            $this->channelContext->getChannel(),
-            $this->localeContext->getLocaleCode(),
-        );
+        return $this->widgetConfigProvider->getWidgetConfig($channel, $locale);
     }
 
     public function categories(): array

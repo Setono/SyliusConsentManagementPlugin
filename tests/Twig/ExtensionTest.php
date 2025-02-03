@@ -14,9 +14,6 @@ use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Channel\Model\Channel;
-use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,12 +34,6 @@ final class ExtensionTest extends IntegrationTestCase
         $widgetConfigProvider = $this->prophesize(WidgetConfigProviderInterface::class);
         $widgetConfigProvider->getWidgetConfig(Argument::cetera())->willReturn(new WidgetConfig());
 
-        $channelContext = $this->prophesize(ChannelContextInterface::class);
-        $channelContext->getChannel()->willReturn(new Channel());
-
-        $localeContext = $this->prophesize(LocaleContextInterface::class);
-        $localeContext->getLocaleCode()->willReturn('en_US');
-
         $category1 = new Category();
         $category1->setCode(DefaultConsents::CONSENT_FUNCTIONAL);
 
@@ -59,11 +50,9 @@ final class ExtensionTest extends IntegrationTestCase
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($widgetConfigProvider->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-                private readonly ChannelContextInterface $channelContext,
-                private readonly LocaleContextInterface $localeContext,
                 private readonly RepositoryInterface $categoryRepository,
                 private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
                 private readonly WidgetRendererInterface $widgetRenderer,
@@ -80,8 +69,6 @@ final class ExtensionTest extends IntegrationTestCase
 
                 return new Runtime(
                     $this->widgetConfigProvider,
-                    $this->channelContext,
-                    $this->localeContext,
                     $this->categoryRepository,
                     $this->widgetDisplayDecider,
                     $this->widgetRenderer,
