@@ -13,6 +13,7 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -60,9 +61,11 @@ final class ExtensionTest extends IntegrationTestCase
 
         $widgetDisplayDecider = $this->prophesize(WidgetDisplayDeciderInterface::class);
 
+        $widgetRenderer = $this->prophesize(WidgetRendererInterface::class);
+
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($consentChecker, $widgetConfigProvider->reveal(), $channelContext->reveal(), $localeContext->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly ConsentCheckerInterface $consentChecker,
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
@@ -70,6 +73,7 @@ final class ExtensionTest extends IntegrationTestCase
                 private readonly LocaleContextInterface $localeContext,
                 private readonly RepositoryInterface $categoryRepository,
                 private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
+                private readonly WidgetRendererInterface $widgetRenderer,
                 private readonly RequestStack $requestStack,
             ) {
             }
@@ -88,6 +92,7 @@ final class ExtensionTest extends IntegrationTestCase
                     $this->localeContext,
                     $this->categoryRepository,
                     $this->widgetDisplayDecider,
+                    $this->widgetRenderer,
                     $this->requestStack,
                 );
             }

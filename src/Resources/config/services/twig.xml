@@ -15,6 +15,7 @@
             <argument type="service" id="sylius.context.locale"/>
             <argument type="service" id="setono_sylius_consent_management.repository.category"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface"/>
             <argument type="service" id="request_stack"/>
 
             <tag name="twig.runtime"/>

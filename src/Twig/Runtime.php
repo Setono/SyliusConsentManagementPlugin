@@ -10,6 +10,7 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -26,6 +27,7 @@ final class Runtime implements RuntimeExtensionInterface
         private readonly LocaleContextInterface $localeContext,
         private readonly RepositoryInterface $categoryRepository,
         private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
+        private readonly WidgetRendererInterface $widgetRenderer,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -52,7 +54,7 @@ final class Runtime implements RuntimeExtensionInterface
 
     public function shouldDisplayWidget(Request $request = null): bool
     {
-        $request = $request ?? $this->requestStack->getCurrentRequest();
+        $request = $request ?? $this->requestStack->getMainRequest();
         if (null === $request) {
             return true;
         }
@@ -80,6 +82,20 @@ final class Runtime implements RuntimeExtensionInterface
         }
 
         return '';
+    }
+
+    public function widget(bool $force = false): string
+    {
+        $request = $this->requestStack->getMainRequest();
+        if (null === $request) {
+            throw new \RuntimeException('The consent widget cannot be rendered in a non request/response lifecycle');
+        }
+
+        if (!$force && !$this->widgetDisplayDecider->display($request)) {
+            return '';
+        }
+
+        return $this->widgetRenderer->render();
     }
 
     public function widgetConfig(): WidgetConfigInterface
