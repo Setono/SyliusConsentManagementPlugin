@@ -20,6 +20,7 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Test\IntegrationTestCase;
@@ -60,6 +61,7 @@ final class ExtensionTest extends IntegrationTestCase
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
         $widgetDisplayDecider = $this->prophesize(WidgetDisplayDeciderInterface::class);
+        $widgetDisplayDecider->display(Argument::type(Request::class))->willReturn(true);
 
         $widgetRenderer = $this->prophesize(WidgetRendererInterface::class);
 
