@@ -111,7 +111,7 @@ final class Runtime implements RuntimeExtensionInterface
         return $this->categoryRepository->findAll();
     }
 
-    public function categoriesJson(): string
+    public function categoryScriptTag(): string
     {
         $categories = [];
 
@@ -124,6 +124,6 @@ final class Runtime implements RuntimeExtensionInterface
             $categories[] = $category->getCode();
         }
 
-        return sprintf('<script type="application/json" class="sscm-categories-json">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
+        return sprintf('<script type="application/json" id="sscm-category-json">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
     }
 }

@@ -22,7 +22,7 @@ final class Extension extends AbstractExtension
             new TwigFunction('sscm_widget', [Runtime::class, 'widget'], ['is_safe' => ['html']]),
             new TwigFunction('sscm_widget_config', [Runtime::class, 'widgetConfig']),
             new TwigFunction('sscm_categories', [Runtime::class, 'categories']),
-            new TwigFunction('sscm_categories_json', [Runtime::class, 'categoriesJson'], ['is_safe' => ['html']]),
+            new TwigFunction('sscm_category_script_tag', [Runtime::class, 'categoryScriptTag'], ['is_safe' => ['html']]),
         ];
     }
 }
