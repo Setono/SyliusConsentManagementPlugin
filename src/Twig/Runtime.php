@@ -8,8 +8,8 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -18,7 +18,7 @@ final class Runtime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-        private readonly RepositoryInterface $categoryRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
         private readonly WidgetRendererInterface $widgetRenderer,
         private readonly RequestStack $requestStack,

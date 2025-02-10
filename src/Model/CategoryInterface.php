@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Core\Model\PositionAwareInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface CategoryInterface extends ResourceInterface, TranslatableInterface, CodeAwareInterface, \Stringable
+interface CategoryInterface extends PositionAwareInterface, ResourceInterface, TranslatableInterface, CodeAwareInterface, \Stringable
 {
     public function getId(): ?int;
 

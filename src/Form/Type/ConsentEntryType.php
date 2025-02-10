@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +21,7 @@ final class ConsentEntryType extends AbstractResourceType
      * @param list<string> $validationGroups
      */
     public function __construct(
-        private readonly RepositoryInterface $categoryRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository,
         string $dataClass,
         array $validationGroups = [],
     ) {

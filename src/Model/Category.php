@@ -25,6 +25,8 @@ class Category implements CategoryInterface
 
     protected bool $necessary = false;
 
+    protected int $position = 0;
+
     /** @var Collection<array-key, ServiceInterface> */
     protected Collection $services;
 
@@ -82,6 +84,16 @@ class Category implements CategoryInterface
     public function setNecessary(bool $necessary): void
     {
         $this->necessary = $necessary;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): void
+    {
+        $this->position = (int) $position;
     }
 
     public function getServices(): Collection

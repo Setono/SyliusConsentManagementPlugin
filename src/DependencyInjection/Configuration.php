@@ -19,6 +19,7 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\Service;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceTranslation;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepository;
 use Setono\SyliusConsentManagementPlugin\Repository\ConsentEntryRepository;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepository;
 use Setono\SyliusConsentManagementPlugin\Repository\ServiceRepository;
@@ -89,7 +90,7 @@ final class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('model')->defaultValue(Category::class)->cannotBeEmpty()->end()
                                         ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
-                                        ->scalarNode('repository')->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(CategoryRepository::class)->cannotBeEmpty()->end()
                                         ->scalarNode('factory')->defaultValue(TranslatableFactory::class)->end()
                                         ->scalarNode('form')->defaultValue(CategoryType::class)->cannotBeEmpty()->end()
                                     ->end()

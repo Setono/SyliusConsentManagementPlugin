@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Resource\Factory\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Webmozart\Assert\Assert;
@@ -16,7 +16,7 @@ final class ConsentEntryFactory implements ConsentEntryFactoryInterface
 {
     public function __construct(
         private readonly FactoryInterface $decorated,
-        private readonly RepositoryInterface $categoryRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly ClientContextInterface $clientContext,
     ) {
     }

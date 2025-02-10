@@ -7,14 +7,14 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class ConsentRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly ConsentCheckerInterface $consentChecker,
-        private readonly RepositoryInterface $categoryRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository,
     ) {
     }
 

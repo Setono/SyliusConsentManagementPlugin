@@ -60,6 +60,10 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                                 'template' => '@SyliusUi/Grid/Field/yesNo.html.twig',
                             ],
                         ],
+                        'position' => [
+                            'type' => 'string',
+                            'label' => 'sylius.ui.position',
+                        ],
                     ],
                     'actions' => [
                         'main' => [

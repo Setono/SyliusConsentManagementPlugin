@@ -12,9 +12,9 @@ use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -40,7 +40,7 @@ final class ExtensionTest extends IntegrationTestCase
         $category2 = new Category();
         $category2->setCode(DefaultConsents::CONSENT_STATISTICAL);
 
-        $categoryRepository = $this->prophesize(RepositoryInterface::class);
+        $categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
         $widgetDisplayDecider = $this->prophesize(WidgetDisplayDeciderInterface::class);
@@ -53,7 +53,7 @@ final class ExtensionTest extends IntegrationTestCase
         $runtimeLoader = new class($widgetConfigProvider->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-                private readonly RepositoryInterface $categoryRepository,
+                private readonly CategoryRepositoryInterface $categoryRepository,
                 private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
                 private readonly WidgetRendererInterface $widgetRenderer,
                 private readonly RequestStack $requestStack,
