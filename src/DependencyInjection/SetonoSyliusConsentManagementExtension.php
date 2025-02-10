@@ -160,6 +160,17 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                                 'template' => '@SetonoSyliusConsentManagementPlugin/admin/grid/field/ttl.html.twig',
                             ],
                         ],
+                        'state' => [
+                            'type' => 'twig',
+                            'label' => 'sylius.ui.state',
+                            'sortable' => null,
+                            'options' => [
+                                'template' => '@SyliusUi/Grid/Field/state.html.twig',
+                                'vars' => [
+                                    'labels' => '@SetonoSyliusConsentManagementPlugin/admin/cookie/state',
+                                ],
+                            ],
+                        ],
                     ],
                     'filters' => [
                         'search' => [
