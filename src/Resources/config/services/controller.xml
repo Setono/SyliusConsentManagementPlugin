@@ -17,5 +17,10 @@
 
             <tag name="controller.service_arguments"/>
         </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Controller\SampleController">
+            <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
+            <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
+        </service>
     </services>
 </container>

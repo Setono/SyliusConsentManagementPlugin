@@ -7,7 +7,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesSubscriber
+ * @covers \Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber
  */
 final class SampleCookiesSubscriberTest extends TestCase
 {
@@ -39,7 +39,7 @@ final class SampleCookiesSubscriberTest extends TestCase
      */
     public function it_subscribes(): void
     {
-        self::assertSame([KernelEvents::REQUEST => 'sample'], SampleCookiesSubscriber::getSubscribedEvents());
+        self::assertSame([KernelEvents::REQUEST => 'sample'], SampleCookiesServerSideSubscriber::getSubscribedEvents());
     }
 
     /**
@@ -120,7 +120,7 @@ final class SampleCookiesSubscriberTest extends TestCase
         float $sampleRate = 1,
         bool $callFirewallConfig = false,
         array $firewalls = ['shop'],
-    ): SampleCookiesSubscriber {
+    ): SampleCookiesServerSideSubscriber {
         $repository = $this->prophesize(CookieRepositoryInterface::class);
         if ($callRepository) {
             $repository->findOneByName(Argument::type('string'))->willReturn(null, new Cookie());
@@ -135,7 +135,7 @@ final class SampleCookiesSubscriberTest extends TestCase
             $firewallMap->getFirewallConfig(Argument::type(Request::class))->willReturn($firewallConfig);
         }
 
-        return new SampleCookiesSubscriber($repository->reveal(), $factory, $firewallMap->reveal(), $firewalls, $sampleRate);
+        return new SampleCookiesServerSideSubscriber($repository->reveal(), $factory, $firewallMap->reveal(), $firewalls, $sampleRate);
     }
 
     private function getRequestEvent(int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent

@@ -1,0 +1,22 @@
+<script>
+    (async () => {
+        if(typeof cookieStore !== 'object') {
+            console.error("Javascript API cookieStore not supported");
+
+            return;
+        }
+
+        const cookies = await cookieStore.getAll();
+        if (cookies.length <= 0) {
+            return;
+        }
+
+        await fetch("{{ path('setono_sylius_consent_management_shop_sample') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cookies),
+        });
+    })();
+</script>

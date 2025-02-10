@@ -15,3 +15,9 @@ setono_sylius_consent_management_shop_update_consent:
     methods: POST
     defaults:
         _controller: Setono\SyliusConsentManagementPlugin\Controller\ConsentController::update
+        
+setono_sylius_consent_management_shop_sample:
+    path: /ajax/sample-cookies
+    methods: POST
+    defaults:
+        _controller: Setono\SyliusConsentManagementPlugin\Controller\SampleController

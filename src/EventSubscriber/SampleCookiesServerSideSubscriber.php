@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 use Webmozart\Assert\Assert;
 
-final class SampleCookiesSubscriber implements EventSubscriberInterface
+final class SampleCookiesServerSideSubscriber implements EventSubscriberInterface
 {
     private readonly float $sampleRate;
 
