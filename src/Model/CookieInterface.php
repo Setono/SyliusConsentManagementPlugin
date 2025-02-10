@@ -20,6 +20,10 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface, Tra
 
     public function setName(string $name): void;
 
+    public function getDescription(): ?string;
+
+    public function setDescription(?string $description): void;
+
     /**
      * This is the URL where this cookie was seen the first time
      */
@@ -41,7 +45,7 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface, Tra
     public function increaseSamples(): void;
 
     /**
-     * The TTL in days
+     * The TTL in days. If null, the cookie is considered a session cookie
      */
     public function getTtl(): ?\DateInterval;
 

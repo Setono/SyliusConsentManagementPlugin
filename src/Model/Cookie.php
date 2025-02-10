@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
+use Sylius\Component\Resource\Model\TranslationInterface;
 
 class Cookie implements CookieInterface
 {
@@ -54,6 +55,16 @@ class Cookie implements CookieInterface
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->getTranslation()->getDescription();
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->getTranslation()->setDescription($description);
     }
 
     public function getUrl(): ?string
@@ -127,6 +138,17 @@ class Cookie implements CookieInterface
     public function setService(?ServiceInterface $service): void
     {
         $this->service = $service;
+    }
+
+    /**
+     * @return CookieTranslationInterface
+     */
+    public function getTranslation(?string $locale = null): TranslationInterface
+    {
+        /** @var CookieTranslationInterface $translation */
+        $translation = $this->doGetTranslation($locale);
+
+        return $translation;
     }
 
     protected function createTranslation(): CookieTranslationInterface
