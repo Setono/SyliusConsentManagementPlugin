@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Provider;
 interface ConsentedCategoriesProviderInterface
 {
     /**
-     * @psalm-return ($includeNonConsented is true ? array<string, bool> : list<string>)
+     * @psalm-return ($onlyGranted is true ? array<string, bool> : list<string>)
      */
-    public function getCategories(bool $includeNonConsented = false): array;
+    public function getCategories(bool $onlyGranted = true): array;
 }

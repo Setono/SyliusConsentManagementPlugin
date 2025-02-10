@@ -49,7 +49,7 @@ final class ConsentedCategoriesProviderTest extends TestCase
             DefaultConsents::CONSENT_FUNCTIONAL => false,
             DefaultConsents::CONSENT_MARKETING => false,
             DefaultConsents::CONSENT_STATISTICAL => true,
-        ], $this->provider->getCategories(true));
+        ], $this->provider->getCategories(false));
     }
 
     private static function createCategory(string $code): Category

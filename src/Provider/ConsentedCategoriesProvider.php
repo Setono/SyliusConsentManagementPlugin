@@ -13,7 +13,7 @@ final class ConsentedCategoriesProvider implements ConsentedCategoriesProviderIn
     {
     }
 
-    public function getCategories(bool $includeNonConsented = false): array
+    public function getCategories(bool $onlyGranted = true): array
     {
         /** @var array<string, bool> $categories */
         $categories = [];
@@ -23,7 +23,7 @@ final class ConsentedCategoriesProvider implements ConsentedCategoriesProviderIn
             $categories[$code] = $this->consentChecker->isGranted($code);
         }
 
-        if ($includeNonConsented) {
+        if (!$onlyGranted) {
             return $categories;
         }
 
