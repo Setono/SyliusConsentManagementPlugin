@@ -48,7 +48,7 @@
 
         <!-- Form types -->
         <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CategoryChoiceType">
-            <argument>%setono_sylius_consent_management.model.category.class%</argument>
+            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
 
             <tag name="form.type"/>
         </service>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
 
@@ -11,8 +12,6 @@ class Cookie implements CookieInterface
 {
     use TimestampableTrait;
     use TranslatableTrait {
-        __construct as private __translatableConstruct;
-
         getTranslation as private doGetTranslation;
     }
 
@@ -34,7 +33,7 @@ class Cookie implements CookieInterface
 
     public function __construct()
     {
-        $this->__translatableConstruct();
+        $this->translations = new ArrayCollection();
     }
 
     public function __toString(): string

@@ -14,8 +14,6 @@ class Category implements CategoryInterface
 {
     use TimestampableTrait;
     use TranslatableTrait {
-        __construct as private __translatableConstruct;
-
         getTranslation as private doGetTranslation;
     }
 

@@ -48,6 +48,9 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         ],
                     ],
                     'limits' => [100, 250, 500, 1000],
+                    'sorting' => [
+                        'position' => 'asc',
+                    ],
                     'fields' => [
                         'name' => [
                             'type' => 'string',
@@ -59,10 +62,12 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'options' => [
                                 'template' => '@SyliusUi/Grid/Field/yesNo.html.twig',
                             ],
+                            'sortable' => null,
                         ],
                         'position' => [
                             'type' => 'string',
                             'label' => 'sylius.ui.position',
+                            'sortable' => null,
                         ],
                     ],
                     'actions' => [

@@ -8,7 +8,6 @@ use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -31,13 +30,10 @@ final class ConsentEntryType extends AbstractResourceType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('consentedCategories', ChoiceType::class, [
-                'choices' => $this->categoryRepository->findAll(),
+            ->add('consentedCategories', CategoryChoiceType::class, [
                 'required' => false,
                 'multiple' => true,
                 'expanded' => true,
-                'choice_label' => 'name',
-                'choice_value' => 'code',
             ])
         ;
 
@@ -48,7 +44,7 @@ final class ConsentEntryType extends AbstractResourceType
                         return [];
                     }
 
-                    return array_map(fn (string $category) => $this->categoryRepository->findOneBy(['code' => $category]), $categories);
+                    return array_map(fn (string $category) => $this->categoryRepository->findOneByCode($category), $categories);
                 },
                 function (?array $value): ?array {
                     return $value;
