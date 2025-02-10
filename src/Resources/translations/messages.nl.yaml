@@ -15,6 +15,7 @@ setono_sylius_consent_management:
             preferences: Voorkeuren
             statistics: Statistieken
         cookie:
+            description: Beschrijving
             service: Dienst
             service_placeholder: Kies een dienst...
             ttl: Time to live
@@ -28,7 +29,6 @@ setono_sylius_consent_management:
             description: Omschrijving
             name: Naam
             privacy_policy_url: Privacy policy URL
-            translations: Vertalingen
         widget_config:
             heading: Kop
             body: Lichaam

@@ -6,8 +6,7 @@
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
-        <parameter type="collection"
-                   key="setono_sylius_consent_management.form.type.category_translation.validation_groups">
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.category_translation.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
@@ -19,12 +18,15 @@
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.cookie_translation.validation_groups">
+            <parameter>setono_sylius_consent_management</parameter>
+        </parameter>
+
         <parameter type="collection" key="setono_sylius_consent_management.form.type.service.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
-        <parameter type="collection"
-                   key="setono_sylius_consent_management.form.type.service_translation.validation_groups">
+        <parameter type="collection" key="setono_sylius_consent_management.form.type.service_translation.validation_groups">
             <parameter>setono_sylius_consent_management</parameter>
         </parameter>
 
@@ -73,8 +75,7 @@
             <tag name="form.type"/>
         </service>
 
-        <service id="setono_sylius_consent_management.form.type.cookie"
-                 class="Setono\SyliusConsentManagementPlugin\Form\Type\CookieType">
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CookieType">
             <argument>%setono_sylius_consent_management.model.cookie.class%</argument>
             <argument>%setono_sylius_consent_management.model.service.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.cookie.validation_groups%</argument>
@@ -82,24 +83,28 @@
             <tag name="form.type"/>
         </service>
 
-        <service id="setono_sylius_consent_management.form.type.service"
-                 class="Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType">
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\CookieTranslationType">
+            <argument>%setono_sylius_consent_management.model.cookie_translation.class%</argument>
+            <argument>%setono_sylius_consent_management.form.type.cookie_translation.validation_groups%</argument>
+
+            <tag name="form.type"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\ServiceType">
             <argument>%setono_sylius_consent_management.model.service.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.service.validation_groups%</argument>
 
             <tag name="form.type"/>
         </service>
 
-        <service id="setono_sylius_consent_management.form.type.service_translation"
-                 class="Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType">
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\ServiceTranslationType">
             <argument>%setono_sylius_consent_management.model.service_translation.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.service_translation.validation_groups%</argument>
 
             <tag name="form.type"/>
         </service>
 
-        <service id="setono_sylius_consent_management.form.type.widget_config"
-                 class="Setono\SyliusConsentManagementPlugin\Form\Type\WidgetConfigType">
+        <service id="Setono\SyliusConsentManagementPlugin\Form\Type\WidgetConfigType">
             <argument>%setono_sylius_consent_management.model.widget_config.class%</argument>
             <argument>%setono_sylius_consent_management.form.type.widget_config.validation_groups%</argument>
 

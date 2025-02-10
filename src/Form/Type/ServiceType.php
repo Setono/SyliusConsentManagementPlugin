@@ -18,7 +18,7 @@ final class ServiceType extends AbstractResourceType
             ->add('category', CategoryChoiceType::class)
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => ServiceTranslationType::class,
-                'label' => 'setono_sylius_consent_management.form.service.translations',
+                'label' => 'sylius.ui.translations',
             ])
         ;
     }

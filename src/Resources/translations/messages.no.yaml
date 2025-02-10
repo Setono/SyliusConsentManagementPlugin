@@ -15,6 +15,7 @@ setono_sylius_consent_management:
             preferences: Preferanser
             statistics: Statistikk
         cookie:
+            description: Beskrivelse
             service: Tjeneste
             service_placeholder: Velg en tjeneste...
             ttl: Time to live
@@ -28,7 +29,6 @@ setono_sylius_consent_management:
             description: Beskrivelse
             name: Navn
             privacy_policy_url: Privacy policy URL
-            translations: Oversettelser
         widget_config:
             heading: Overskrift
             body: Tekst

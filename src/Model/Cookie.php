@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Sylius\Component\Resource\Model\TimestampableTrait;
+use Sylius\Component\Resource\Model\TranslatableTrait;
 
 class Cookie implements CookieInterface
 {
     use TimestampableTrait;
+    use TranslatableTrait {
+        __construct as private __translatableConstruct;
+
+        getTranslation as private doGetTranslation;
+    }
 
     protected ?int $id = null;
 
@@ -25,6 +31,16 @@ class Cookie implements CookieInterface
     protected ?\DateTimeInterface $lastSeenAt = null;
 
     protected ?ServiceInterface $service = null;
+
+    public function __construct()
+    {
+        $this->__translatableConstruct();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
+    }
 
     public function getId(): ?int
     {
@@ -112,5 +128,10 @@ class Cookie implements CookieInterface
     public function setService(?ServiceInterface $service): void
     {
         $this->service = $service;
+    }
+
+    protected function createTranslation(): CookieTranslationInterface
+    {
+        return new CookieTranslation();
     }
 }

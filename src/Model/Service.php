@@ -105,11 +105,6 @@ class Service implements ServiceInterface
         return $translation;
     }
 
-    protected function createTranslation(): ServiceTranslationInterface
-    {
-        return new ServiceTranslation();
-    }
-
     public function getCookies(): Collection
     {
         return $this->cookies;
@@ -134,5 +129,10 @@ class Service implements ServiceInterface
     public function hasCookie(CookieInterface $cookie): bool
     {
         return $this->cookies->contains($cookie);
+    }
+
+    protected function createTranslation(): ServiceTranslationInterface
+    {
+        return new ServiceTranslation();
     }
 }

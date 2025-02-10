@@ -15,6 +15,7 @@ setono_sylius_consent_management:
             preferences: Indstillinger/funktionelle
             statistical: Statistiske
         cookie:
+            description: Beskrivelse
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
             ttl: Levetid
@@ -28,7 +29,6 @@ setono_sylius_consent_management:
             description: Beskrivelse
             name: Navn
             privacy_policy_url: Privatlivspolitik (URL)
-            translations: Oversættelser
         widget_config:
             heading: Overskrift
             body: Tekst

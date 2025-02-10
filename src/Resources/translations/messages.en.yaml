@@ -15,6 +15,7 @@ setono_sylius_consent_management:
             preferences: Preferences
             statistics: Statistics
         cookie:
+            description: Description
             service: Service
             service_placeholder: Choose a service...
             ttl: Time to live
@@ -28,7 +29,6 @@ setono_sylius_consent_management:
             description: Description
             name: Name
             privacy_policy_url: Privacy policy URL
-            translations: Translations
         widget_config:
             heading: Heading
             body: Body
