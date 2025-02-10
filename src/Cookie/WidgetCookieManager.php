@@ -10,9 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class WidgetCookieManager implements WidgetCookieManagerInterface
 {
-    public function __construct(
-        private readonly string $cookieName,
-    ) {
+    public function __construct(private readonly string $cookieName)
+    {
     }
 
     public function exists(Request $request): bool
