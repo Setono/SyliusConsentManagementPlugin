@@ -47,6 +47,7 @@
         "symfony/routing": "^6.4 || ^7.0",
         "symfony/security-bundle": "^6.4 || ^7.0",
         "symfony/translation-contracts": "^1.1 || ^2.4 || ^3.3",
+        "symfony/workflow": "^6.4 || ^7.0",
         "twig/extra-bundle": "^2.12 || ^3.0",
         "twig/markdown-extra": "^2.12 || ^3.0",
         "twig/twig": "^2.12 || ^3.0",

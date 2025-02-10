@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
+use Setono\SyliusConsentManagementPlugin\Workflow\CookieWorkflow;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Symfony\Component\Config\FileLocator;
@@ -39,6 +40,10 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
 
     public function prepend(ContainerBuilder $container): void
     {
+        $container->prependExtensionConfig('framework', [
+            'workflows' => CookieWorkflow::getConfig(),
+        ]);
+
         $container->prependExtensionConfig('sylius_grid', [
             'grids' => [
                 'setono_sylius_consent_management_admin_category' => [

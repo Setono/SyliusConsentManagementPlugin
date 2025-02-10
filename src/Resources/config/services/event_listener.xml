@@ -2,6 +2,12 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="Setono\SyliusConsentManagementPlugin\EventListener\Doctrine\ConfirmCookieListener">
+            <argument type="service" id="state_machine.setono_sylius_consent_management__cookie"/>
+
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+        </service>
+
         <service id="Setono\SyliusConsentManagementPlugin\EventListener\Doctrine\ORMTranslatableListener">
             <tag name="doctrine.event_listener" event="loadClassMetadata"/>
         </service>
