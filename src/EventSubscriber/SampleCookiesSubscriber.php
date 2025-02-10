@@ -58,7 +58,7 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
             if (null === $cookie) {
                 $cookie = $this->cookieFactory->createWithData($name, $request->getUri());
             }
-            $cookie->increaseSamples();
+            $cookie->incrementSamples();
             $cookie->setLastSeenAt(new \DateTimeImmutable());
 
             $this->cookieRepository->add($cookie);

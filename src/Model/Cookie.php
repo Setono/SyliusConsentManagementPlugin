@@ -97,7 +97,7 @@ class Cookie implements CookieInterface
         $this->samples = $samples;
     }
 
-    public function increaseSamples(): void
+    public function incrementSamples(): void
     {
         ++$this->samples;
     }

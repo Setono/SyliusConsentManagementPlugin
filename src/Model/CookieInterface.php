@@ -42,7 +42,7 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface, Tra
 
     public function setSamples(int $samples): void;
 
-    public function increaseSamples(): void;
+    public function incrementSamples(): void;
 
     /**
      * The TTL in days. If null, the cookie is considered a session cookie
