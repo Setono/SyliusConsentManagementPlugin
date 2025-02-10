@@ -9,8 +9,10 @@ use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 
 final class ConsentedCategoriesProvider implements ConsentedCategoriesProviderInterface
 {
-    public function __construct(private readonly CategoryRepositoryInterface $categoryRepository, private readonly ConsentCheckerInterface $consentChecker)
-    {
+    public function __construct(
+        private readonly CategoryRepositoryInterface $categoryRepository,
+        private readonly ConsentCheckerInterface $consentChecker,
+    ) {
     }
 
     public function getCategories(bool $onlyGranted = true): array
