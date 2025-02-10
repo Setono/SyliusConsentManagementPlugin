@@ -16,6 +16,7 @@
         <field name="state" type="string"/>
         <field name="samples" type="integer"/>
         <field name="ttl" type="string" nullable="true"/>
+        <field name="session" type="boolean"/>
         <field name="lastSeenAt" type="datetime"/>
 
         <many-to-one target-entity="Setono\SyliusConsentManagementPlugin\Model\ServiceInterface" field="service" inversed-by="cookies">

@@ -83,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Beheer uw service waarvoor toestemming nodig is
         services: Diensten
         statistics: Statistieken
+        session: Session
         session_cookie_information: Een sessiecookie is een soort cookie die wordt gebruikt om gegevens over de sessie van een gebruiker op een website op te slaan. In tegenstelling tot permanente cookies bestaan sessiecookies alleen tijdelijk terwijl de gebruiker over de website navigeert.
         ttl: Time to live
         url: URL

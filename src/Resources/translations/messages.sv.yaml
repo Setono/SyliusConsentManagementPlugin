@@ -83,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Hantera din tjänst som behöver samtycke
         services: Tjänster
         statistics: Statistik
+        session: Session
         session_cookie_information: En sessionscookie är en typ av cookie som används för att lagra data om en användares session på en webbplats. Till skillnad från permanenta cookies existerar sessionscookies endast tillfälligt medan användaren navigerar på webbplatsen.
         ttl: Time to live
         url: URL

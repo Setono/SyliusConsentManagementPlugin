@@ -28,6 +28,8 @@ class Cookie implements CookieInterface
 
     protected ?string $ttl = null;
 
+    protected bool $session = false;
+
     protected ?\DateTimeInterface $lastSeenAt = null;
 
     protected ?ServiceInterface $service = null;
@@ -129,6 +131,16 @@ class Cookie implements CookieInterface
         }
 
         $this->ttl = $ttl;
+    }
+
+    public function isSession(): bool
+    {
+        return $this->session;
+    }
+
+    public function setSession(bool $session): void
+    {
+        $this->session = $session;
     }
 
     public function getLastSeenAt(): ?\DateTimeInterface

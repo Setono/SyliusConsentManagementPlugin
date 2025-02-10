@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
-use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
@@ -12,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Webmozart\Assert\Assert;
@@ -32,12 +32,13 @@ final class CookieType extends AbstractResourceType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var mixed|CookieInterface $data */
-        $data = $builder->getData();
-        Assert::isInstanceOf($data, CookieInterface::class);
-
         // todo create service choice type instead
         $builder
+            ->add('name', TextType::class, [
+                'label' => 'sylius.ui.name',
+                'disabled' => true,
+                'required' => false,
+            ])
             ->add('ttl', DateIntervalType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.ttl',
                 'with_hours' => true,
@@ -45,9 +46,7 @@ final class CookieType extends AbstractResourceType
             ])
             ->add('session', CheckboxType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.session',
-                'mapped' => false,
                 'required' => false,
-                'data' => $data->getTtl() === null,
             ])
             ->add('service', EntityType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.service',
@@ -69,7 +68,7 @@ final class CookieType extends AbstractResourceType
                     return;
                 }
 
-                unset($data['ttl']);
+                $data['ttl'] = null;
 
                 $event->setData($data);
             })

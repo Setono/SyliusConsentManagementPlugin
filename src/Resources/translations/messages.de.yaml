@@ -83,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Verwalten Sie Ihren Dienst, der eine Zustimmung benötigt
         services: Dienstleistungen
         statistics: Statistiken
+        session: Session
         session_cookie_information: Ein Session-Cookie ist eine Art von Cookie, das verwendet wird, um Daten über die Sitzung eines Benutzers auf einer Website zu speichern. Im Gegensatz zu persistenten Cookies existieren Session-Cookies nur vorübergehend, während der Benutzer auf der Website navigiert.
         ttl: Time to live
         url: URL

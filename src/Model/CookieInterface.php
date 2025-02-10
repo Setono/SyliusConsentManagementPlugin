@@ -51,6 +51,10 @@ interface CookieInterface extends ResourceInterface, TimestampableInterface, Tra
 
     public function setTtl(null|string|\DateInterval $ttl): void;
 
+    public function isSession(): bool;
+
+    public function setSession(bool $session): void;
+
     public function getLastSeenAt(): ?\DateTimeInterface;
 
     public function setLastSeenAt(?\DateTimeInterface $lastSeenAt): void;
