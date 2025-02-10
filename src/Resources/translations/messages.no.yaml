@@ -72,6 +72,7 @@ setono_sylius_consent_management:
         cookie_subheader: Administrer informasjonskapsler
         cookies: Informasjonskapsler
         ip: IP addresse
+        last_seen_at: Last seen
         name: Navn
         marketing: Markedsføring
         missing: Savnet

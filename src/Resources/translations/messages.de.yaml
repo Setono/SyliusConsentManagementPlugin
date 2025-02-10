@@ -72,6 +72,7 @@ setono_sylius_consent_management:
         cookie_subheader: Cookies verwalten
         cookies: Cookies
         ip: IP Addresse
+        last_seen_at: Last seen
         name: Name
         marketing: Marketing
         missing: Fehlt

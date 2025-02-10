@@ -182,6 +182,14 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                                 ],
                             ],
                         ],
+                        'lastSeenAt' => [
+                            'type' => 'datetime',
+                            'label' => 'setono_sylius_consent_management.ui.last_seen_at',
+                            'sortable' => null,
+                            'options' => [
+                                'format' => 'Y-m-d',
+                            ],
+                        ],
                     ],
                     'filters' => [
                         'search' => [
