@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
+use Setono\SyliusConsentManagementPlugin\Model\Cookie;
+use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Workflow\CookieWorkflow;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -179,6 +181,17 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'options' => [
                                 'fields' => ['name'],
                             ],
+                        ],
+                        'state' => [
+                            'type' => 'select',
+                            'label' => 'sylius.ui.state',
+                            'form_options' => [
+                                'choices' => array_combine(
+                                    array_map(static fn (string $state): string => sprintf('setono_sylius_consent_management.ui.%s', $state), Cookie::getStates()),
+                                    Cookie::getStates(),
+                                ),
+                            ],
+                            'default_value' => CookieInterface::STATE_CONFIRMED,
                         ],
                     ],
                     'actions' => [

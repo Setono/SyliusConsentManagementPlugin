@@ -87,6 +87,17 @@ class Cookie implements CookieInterface
         $this->state = $state;
     }
 
+    /**
+     * @return non-empty-list<string>
+     */
+    public static function getStates(): array
+    {
+        return [
+            self::STATE_PENDING,
+            self::STATE_CONFIRMED,
+        ];
+    }
+
     public function getSamples(): int
     {
         return $this->samples;

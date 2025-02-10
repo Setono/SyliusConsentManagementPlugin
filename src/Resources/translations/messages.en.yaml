@@ -67,6 +67,7 @@ setono_sylius_consent_management:
         category_header: Categories
         category_subheader: Manage your categories
         client_id: Client id
+        confirmed: Confirmed
         consent_entries: Consent entries
         consent_entry_header: Consent entries
         consent_entry_search: Search for a client id or an IP address
@@ -79,6 +80,7 @@ setono_sylius_consent_management:
         marketing: Marketing
         missing: Missing
         open_in_new_tab: Open in new tab
+        pending: Pending
         preferences: Preferences
         service: Service
         service_header: Services
