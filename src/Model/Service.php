@@ -84,6 +84,16 @@ class Service implements ServiceInterface
         $this->getTranslation()->setDescription($description);
     }
 
+    public function getPrivacyPolicyUrl(): ?string
+    {
+        return $this->getTranslation()->getPrivacyPolicyUrl();
+    }
+
+    public function setPrivacyPolicyUrl(?string $privacyPolicyUrl): void
+    {
+        $this->getTranslation()->setPrivacyPolicyUrl($privacyPolicyUrl);
+    }
+
     /**
      * @return ServiceTranslationInterface
      */

@@ -26,6 +26,10 @@ interface ServiceInterface extends ResourceInterface, TimestampableInterface, Tr
 
     public function setDescription(?string $description): void;
 
+    public function getPrivacyPolicyUrl(): ?string;
+
+    public function setPrivacyPolicyUrl(?string $privacyPolicyUrl): void;
+
     /**
      * @return Collection<array-key, CookieInterface>
      */
