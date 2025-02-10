@@ -11,25 +11,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 use Webmozart\Assert\Assert;
 
 final class SampleCookiesSubscriber implements EventSubscriberInterface
 {
-    /**
-     * The sample rate can be between 0.0001 and 1. This means that it can be set to collect cookie samples
-     * between every 10,000th visit and every visit
-     */
     private readonly float $sampleRate;
 
     public function __construct(
         private readonly CookieRepositoryInterface $cookieRepository,
         private readonly CookieFactoryInterface $cookieFactory,
-        private readonly FirewallMap $firewallMap,
+        private readonly FirewallMapInterface $firewallMap,
         /** @var array<array-key, string> $firewalls */
         private readonly array $firewalls,
         float $sampleRate,
     ) {
-        Assert::greaterThanEq($sampleRate, 0.0001);
         Assert::lessThanEq($sampleRate, 1);
 
         $this->sampleRate = $sampleRate;
@@ -71,7 +67,11 @@ final class SampleCookiesSubscriber implements EventSubscriberInterface
 
     private function collectSample(Request $request): bool
     {
-        $sampleRateResult = random_int(1, 10000) / 10000 <= $this->sampleRate;
+        $sampleRateResult = random_int(1, mt_getrandmax()) / mt_getrandmax() <= $this->sampleRate;
+
+        if (!$this->firewallMap instanceof FirewallMap) {
+            return $sampleRateResult;
+        }
 
         $firewallConfig = $this->firewallMap->getFirewallConfig($request);
         if (null === $firewallConfig) {
