@@ -210,6 +210,17 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             ],
                             'default_value' => CookieInterface::STATE_CONFIRMED,
                         ],
+                        'service' => [
+                            'type' => 'entity',
+                            'label' => 'setono_sylius_consent_management.ui.service',
+                            'form_options' => [
+                                'class' => '%setono_sylius_consent_management.model.service.class%',
+                            ],
+                        ],
+                        'session' => [
+                            'type' => 'boolean',
+                            'label' => 'setono_sylius_consent_management.ui.session',
+                        ],
                     ],
                     'actions' => [
                         'main' => [
@@ -221,6 +232,11 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'update' => [
                                 'type' => 'update',
                             ],
+                            'delete' => [
+                                'type' => 'delete',
+                            ],
+                        ],
+                        'bulk' => [
                             'delete' => [
                                 'type' => 'delete',
                             ],
