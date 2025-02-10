@@ -6,15 +6,14 @@ namespace Setono\SyliusConsentManagementPlugin\Twig;
 
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
-use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\ConsentedCategoriesProviderInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class ConsentRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly ConsentCheckerInterface $consentChecker,
-        private readonly CategoryRepositoryInterface $categoryRepository,
+        private readonly ConsentedCategoriesProviderInterface $consentedCategoriesProvider,
     ) {
     }
 
@@ -62,17 +61,9 @@ final class ConsentRuntime implements RuntimeExtensionInterface
 
     public function consentedCategoriesScriptTag(): string
     {
-        $categories = [];
-
-        /** @var CategoryInterface $category */
-        foreach ($this->categoryRepository->findAll() as $category) {
-            if (!$this->consentChecker->isGranted((string) $category->getCode())) {
-                continue;
-            }
-
-            $categories[] = $category->getCode();
-        }
-
-        return sprintf('<script type="application/json" id="sscm-consented-categories-json">%s</script>', json_encode($categories, \JSON_THROW_ON_ERROR));
+        return sprintf(
+            '<script type="application/json" id="sscm-consented-categories-json">%s</script>',
+            json_encode($this->consentedCategoriesProvider->getCategories(), \JSON_THROW_ON_ERROR),
+        );
     }
 }

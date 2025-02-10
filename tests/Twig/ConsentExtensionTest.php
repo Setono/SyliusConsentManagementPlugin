@@ -8,8 +8,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\ConsentBundle\Checker\StaticConsentChecker;
-use Setono\SyliusConsentManagementPlugin\Model\Category;
-use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\ConsentedCategoriesProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\ConsentExtension;
 use Setono\SyliusConsentManagementPlugin\Twig\ConsentRuntime;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
@@ -32,19 +31,13 @@ final class ConsentExtensionTest extends IntegrationTestCase
             DefaultConsents::CONSENT_STATISTICAL => true,
         ]);
 
-        $category1 = new Category();
-        $category1->setCode(DefaultConsents::CONSENT_FUNCTIONAL);
+        $consentedCategoriesProvider = $this->prophesize(ConsentedCategoriesProviderInterface::class);
+        $consentedCategoriesProvider->getCategories()->willReturn([DefaultConsents::CONSENT_FUNCTIONAL, DefaultConsents::CONSENT_STATISTICAL]);
 
-        $category2 = new Category();
-        $category2->setCode(DefaultConsents::CONSENT_STATISTICAL);
-
-        $categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
-        $categoryRepository->findAll()->willReturn([$category1, $category2]);
-
-        $runtimeLoader = new class($consentChecker, $categoryRepository->reveal()) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($consentChecker, $consentedCategoriesProvider->reveal()) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly ConsentCheckerInterface $consentChecker,
-                private readonly CategoryRepositoryInterface $categoryRepository,
+                private readonly ConsentedCategoriesProviderInterface $consentedCategoriesProvider,
             ) {
             }
 
@@ -57,7 +50,7 @@ final class ConsentExtensionTest extends IntegrationTestCase
 
                 return new ConsentRuntime(
                     $this->consentChecker,
-                    $this->categoryRepository,
+                    $this->consentedCategoriesProvider,
                 );
             }
         };

@@ -8,7 +8,7 @@
 
         <service id="Setono\SyliusConsentManagementPlugin\Twig\ConsentRuntime">
             <argument type="service" id="Setono\Consent\ConsentCheckerInterface"/>
-            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\ConsentedCategoriesProviderInterface"/>
 
             <tag name="twig.runtime"/>
         </service>
