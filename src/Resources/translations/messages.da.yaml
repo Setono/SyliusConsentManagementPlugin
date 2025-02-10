@@ -18,6 +18,7 @@ setono_sylius_consent_management:
             description: Beskrivelse
             service: Tjeneste
             service_placeholder: Vælg en tjeneste...
+            session: Session
             ttl: Levetid
         service:
             categories:
@@ -82,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Manage your service that needs consent
         services: Tjeneste
         statistics: Statistiske
+        session_cookie_information: En sessionscookie er en type cookie, der bruges til at gemme data om en brugers session på en hjemmeside. I modsætning til vedvarende cookies eksisterer sessionscookies kun midlertidigt, mens brugeren navigerer på hjemmesiden.
         ttl: Levetid
         url: URL
         user_agent: Brugeragent (browser)

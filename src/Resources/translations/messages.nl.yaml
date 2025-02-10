@@ -18,6 +18,7 @@ setono_sylius_consent_management:
             description: Beschrijving
             service: Dienst
             service_placeholder: Kies een dienst...
+            session: Session
             ttl: Time to live
         service:
             categories:
@@ -82,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Beheer uw service waarvoor toestemming nodig is
         services: Diensten
         statistics: Statistieken
+        session_cookie_information: Een sessiecookie is een soort cookie die wordt gebruikt om gegevens over de sessie van een gebruiker op een website op te slaan. In tegenstelling tot permanente cookies bestaan sessiecookies alleen tijdelijk terwijl de gebruiker over de website navigeert.
         ttl: Time to live
         url: URL
         user_agent: User-agent (browser)

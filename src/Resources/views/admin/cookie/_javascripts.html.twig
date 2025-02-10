@@ -1,0 +1,8 @@
+<script>
+const session = document.getElementById('setono_sylius_consent_management_cookie_session');
+session.addEventListener('change', (e) => {
+    const ttlRow = document.getElementById('form-row-ttl');
+
+    document.getElementById('form-row-ttl').style.display = e.currentTarget.checked ? 'none' : 'block';
+});
+</script>

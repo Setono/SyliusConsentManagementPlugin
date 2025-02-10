@@ -4,7 +4,13 @@
 <div class="ui two column stackable grid">
     <div class="column">
         <div class="ui segment">
-            {{ form_row(form.ttl) }}
+            <div class="ui info message">
+                {{ 'setono_sylius_consent_management.ui.session_cookie_information'|trans }}
+            </div>
+            {{ form_row(form.session) }}
+            <div id="form-row-ttl" style="margin-bottom: 1em; display: {{ form.session.vars.data ? 'none' : 'block' }}">
+                {{ form_row(form.ttl) }}
+            </div>
             {{ form_row(form.service) }}
         </div>
     </div>

@@ -18,6 +18,7 @@ setono_sylius_consent_management:
             description: Beskrivelse
             service: Tjeneste
             service_placeholder: Velg en tjeneste...
+            session: Session
             ttl: Time to live
         service:
             categories:
@@ -82,6 +83,7 @@ setono_sylius_consent_management:
         service_subheader: Administrer tjenesten din som trenger samtykke
         services: Tjenester
         statistics: Statistikk
+        session_cookie_information: En sesjonsinformasjonskapsel er en type informasjonskapsel som brukes til å lagre data om en brukers sesjon på et nettsted. I motsetning til vedvarende informasjonskapsler eksisterer sesjonskapsler kun midlertidig mens brukeren navigerer på nettstedet.
         ttl: Time to live
         url: URL
         user_agent: User agent

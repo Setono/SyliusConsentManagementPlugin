@@ -310,6 +310,13 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         ],
                     ],
                 ],
+                'setono_sylius_consent_management.admin.cookie.update.javascripts' => [
+                    'blocks' => [
+                        'setono_sylius_consent_management.javascripts' => [
+                            'template' => '@SetonoSyliusConsentManagementPlugin/admin/cookie/_javascripts.html.twig',
+                        ],
+                    ],
+                ],
             ],
         ]);
     }

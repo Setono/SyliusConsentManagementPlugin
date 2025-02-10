@@ -18,6 +18,7 @@ setono_sylius_consent_management:
             description: Description
             service: Service
             service_placeholder: Choose a service...
+            session: Session
             ttl: Time to live
         service:
             categories:
@@ -84,6 +85,7 @@ setono_sylius_consent_management:
         service_search: Search by code or name
         service_subheader: Manage your service that needs consent
         services: Services
+        session_cookie_information: A session cookie is a type of cookie that is used to store data about a user's session on a website. Unlike persistent cookies, session cookies exist only temporarily while the user is navigating a website.
         statistics: Statistics
         ttl: Time to live
         url: URL
