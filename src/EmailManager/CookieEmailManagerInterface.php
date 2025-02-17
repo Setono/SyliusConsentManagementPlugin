@@ -9,7 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 interface CookieEmailManagerInterface
 {
     /**
-     * @param array<array-key, CookieInterface> $cookies
+     * @param non-empty-list<CookieInterface> $cookies
      */
     public function sendNewCookiesEmail(array $cookies): void;
 }

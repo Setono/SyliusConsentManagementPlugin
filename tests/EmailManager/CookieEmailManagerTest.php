@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManager;
 use Setono\SyliusConsentManagementPlugin\EmailManager\Emails;
+use Setono\SyliusConsentManagementPlugin\Model\Cookie;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 
 /**
@@ -22,12 +24,14 @@ final class CookieEmailManagerTest extends TestCase
      */
     public function it_sends(): void
     {
-        $sender = $this->prophesize(SenderInterface::class);
-        $sender->send(Emails::NEW_COOKIES, ['johndoe@example.com'], ['cookies' => []])
-            ->shouldBeCalled()
-        ;
+        $cookies = [new Cookie()];
 
-        $emailManager = new CookieEmailManager($sender->reveal(), ['johndoe@example.com']);
-        $emailManager->sendNewCookiesEmail([]);
+        $sender = $this->prophesize(SenderInterface::class);
+        $sender->send(Emails::NEW_COOKIES, ['johndoe@example.com'], ['cookies' => $cookies])->shouldBeCalled();
+
+        $channelRepository = $this->prophesize(ChannelRepositoryInterface::class);
+
+        $emailManager = new CookieEmailManager($sender->reveal(), $channelRepository->reveal(), ['johndoe@example.com']);
+        $emailManager->sendNewCookiesEmail($cookies);
     }
 }
