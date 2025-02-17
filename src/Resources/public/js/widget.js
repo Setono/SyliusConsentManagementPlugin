@@ -58,6 +58,26 @@ class ConsentWidget {
             throw new Error('Widget element not found. Selector was: ' + this.#options.selector.widget);
         }
 
+        this.#widget.querySelectorAll('button[data-toggle]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                button.setAttribute('aria-expanded', 'true');
+
+                const selector = event.currentTarget.dataset.toggle;
+                if(typeof selector === 'undefined') {
+                    return;
+                }
+
+                const element = document.querySelector(selector);
+                if(null === element) {
+                    throw new Error('Element not found. Selector was: ' + selector);
+                }
+
+                button.setAttribute('aria-expanded', element.classList.toggle('sscm-show') ? 'true' : 'false');
+            })
+        });
+
         this.#widget.querySelector('form').addEventListener('submit', (event) => {
             event.preventDefault();
 

@@ -64,6 +64,16 @@
     margin: 10px 0;
 }
 
+.sscm-category-name {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.sscm-category-services {
+    display: none;
+}
+
 .sscm-buttons {
     display: flex;
     justify-content: center;
@@ -101,4 +111,20 @@
 .sscm-checkbox {
     display: flex;
     flex-direction: column;
+}
+
+.sscm-show {
+    display: block !important;
+}
+
+.sscm-widget button[data-toggle] {
+    all: unset;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.sscm-widget button[data-toggle][aria-expanded="true"] {
+    transform: rotate(90deg);
 }

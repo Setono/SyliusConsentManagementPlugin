@@ -10,17 +10,26 @@
                     <li>
                         {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}
                         {% set category = form.consentedCategories.vars.choices[key].data %}
-                        <strong>{{ category.name }}</strong><br>
+
+                        <div class="sscm-category-name">
+                            <strong>{{ category.name }}</strong>
+                            <button type="button" data-toggle="#sscm-category-{{ category.id }}" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                            </button>
+                        </div>
+
                         {{ category.description }}
 
-                        {% set services = category.servicesWithAtLeastOneCookie %}
-                        {% if services|length > 0 %}
-                            <ul>
-                                {% for service in category.servicesWithAtLeastOneCookie %}
-                                    <li>{{ service.name }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+                        <div class="sscm-category-services" id="sscm-category-{{ category.id }}">
+                            {% set services = category.servicesWithAtLeastOneCookie %}
+                            {% if services|length > 0 %}
+                                <ul>
+                                    {% for service in category.servicesWithAtLeastOneCookie %}
+                                        <li>{{ service.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
