@@ -10,10 +10,5 @@
                 <option name="groups">setono_sylius_consent_management</option>
             </constraint>
         </property>
-        <property name="description">
-            <constraint name="NotBlank">
-                <option name="groups">setono_sylius_consent_management</option>
-            </constraint>
-        </property>
     </class>
 </constraint-mapping>
