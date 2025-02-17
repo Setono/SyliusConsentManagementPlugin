@@ -38,14 +38,10 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
             return;
         }
 
-        /**
-         * @var string $name
-         * @var mixed $value
-         */
-        foreach ($request->cookies->all() as $name => $value) {
-            $cookie = $this->cookieRepository->findOneByName($name);
+        foreach ($request->cookies->all() as $name => $_) {
+            $cookie = $this->cookieRepository->findOneByName((string) $name);
             if (null === $cookie) {
-                $cookie = $this->cookieFactory->createWithData($name, $request->getUri());
+                $cookie = $this->cookieFactory->createWithData((string) $name, $request->getUri());
             }
             $cookie->incrementSamples();
             $cookie->setLastSeenAt(new \DateTimeImmutable());
