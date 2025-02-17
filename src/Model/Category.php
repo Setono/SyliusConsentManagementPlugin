@@ -91,7 +91,7 @@ class Category implements CategoryInterface
 
     public function setPosition(?int $position): void
     {
-        $this->position = (int) $position;
+        $this->position = $position ?? 0;
     }
 
     public function getServices(): Collection
