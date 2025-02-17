@@ -99,6 +99,20 @@ class Category implements CategoryInterface
         return $this->services;
     }
 
+    public function getServicesWithAtLeastOneCookie(): Collection
+    {
+        /** @var ArrayCollection<array-key, ServiceInterface> $services */
+        $services = new ArrayCollection();
+
+        foreach ($this->services as $service) {
+            if ($service->getCookies()->count() > 0) {
+                $services->add($service);
+            }
+        }
+
+        return $services;
+    }
+
     public function addService(ServiceInterface $service): void
     {
         if (!$this->hasService($service)) {

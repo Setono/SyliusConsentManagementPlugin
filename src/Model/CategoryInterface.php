@@ -31,6 +31,11 @@ interface CategoryInterface extends PositionAwareInterface, ResourceInterface, T
      */
     public function getServices(): Collection;
 
+    /**
+     * @return Collection<array-key, ServiceInterface>
+     */
+    public function getServicesWithAtLeastOneCookie(): Collection;
+
     public function addService(ServiceInterface $service): void;
 
     public function removeService(ServiceInterface $service): void;

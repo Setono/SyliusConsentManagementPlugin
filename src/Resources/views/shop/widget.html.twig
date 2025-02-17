@@ -13,9 +13,14 @@
                         <strong>{{ category.name }}</strong><br>
                         {{ category.description }}
 
-                        {% for service in category.services %}
-                            {{ service.name }}
-                        {% endfor %}
+                        {% set services = category.servicesWithAtLeastOneCookie %}
+                        {% if services|length > 0 %}
+                            <ul>
+                                {% for service in category.servicesWithAtLeastOneCookie %}
+                                    <li>{{ service.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
