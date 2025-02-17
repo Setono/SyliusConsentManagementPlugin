@@ -50,5 +50,7 @@ interface ConsentEntryInterface extends ResourceInterface, TimestampableInterfac
 
     public function addConsentedCategory(CategoryInterface|string $consentedCategory): void;
 
+    public function removeConsentedCategory(CategoryInterface|string $consentedCategory): void;
+
     public function populateFromFormerConsent(FormerConsent $formerConsent): void;
 }

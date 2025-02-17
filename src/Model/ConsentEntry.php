@@ -104,6 +104,23 @@ class ConsentEntry implements ConsentEntryInterface
         $this->consentedCategories[] = $consentedCategory;
     }
 
+    public function removeConsentedCategory(CategoryInterface|string $consentedCategory): void
+    {
+        if ($consentedCategory instanceof CategoryInterface) {
+            $consentedCategory = (string) $consentedCategory->getCode();
+        }
+
+        $consentedCategories = $this->getConsentedCategories();
+
+        $key = array_search($consentedCategory, $consentedCategories, true);
+        if (false === $key) {
+            return;
+        }
+
+        unset($consentedCategories[$key]);
+        $this->consentedCategories = array_values($consentedCategories);
+    }
+
     public function populateFromFormerConsent(FormerConsent $formerConsent): void
     {
         if ($formerConsent->marketingGranted) {
