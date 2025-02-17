@@ -15,4 +15,9 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     public function findAll(): array;
 
     public function findOneByCode(string $code): ?CategoryInterface;
+
+    /**
+     * @return list<CategoryInterface>
+     */
+    public function findNecessary(): array;
 }

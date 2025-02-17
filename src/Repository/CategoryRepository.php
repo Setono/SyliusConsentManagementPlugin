@@ -33,4 +33,20 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
         return $obj;
     }
+
+    public function findNecessary(): array
+    {
+        $objs = $this
+            ->createQueryBuilder('o')
+            ->addOrderBy('o.position', 'ASC')
+            ->andWhere('o.necessary = true')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        Assert::isList($objs);
+        Assert::allIsInstanceOf($objs, Category::class);
+
+        return $objs;
+    }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
+use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
@@ -64,10 +65,16 @@ final class ConsentEntryType extends AbstractResourceType
             ->addModelTransformer(new CallbackTransformer(
                 function (?array $categories): array {
                     if (null === $categories) {
-                        return [];
+                        $categories = [];
                     }
 
-                    return array_map(fn (string $category) => $this->categoryRepository->findOneByCode($category), $categories);
+                    foreach ($this->categoryRepository->findNecessary() as $category) {
+                        if (!in_array((string) $category->getCode(), $categories, true)) {
+                            $categories[] = $category;
+                        }
+                    }
+
+                    return array_map(fn (CategoryInterface|string $category) => $category instanceof CategoryInterface ? $category : $this->categoryRepository->findOneByCode($category), $categories);
                 },
                 function (?array $value): ?array {
                     return $value;
