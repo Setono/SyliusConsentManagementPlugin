@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
+use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
@@ -33,11 +34,19 @@ final class CookieType extends AbstractResourceType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // todo create service choice type instead
+
+        $nameDisabled = false;
+
+        /** @var mixed $cookie */
+        $cookie = $builder->getData();
+        if ($cookie instanceof CookieInterface) {
+            $nameDisabled = $cookie->getId() !== null;
+        }
         $builder
             ->add('name', TextType::class, [
                 'label' => 'sylius.ui.name',
-                'disabled' => true,
-                'required' => false,
+                'disabled' => $nameDisabled,
+                'required' => !$nameDisabled,
             ])
             ->add('ttl', DateIntervalType::class, [
                 'label' => 'setono_sylius_consent_management.form.cookie.ttl',
