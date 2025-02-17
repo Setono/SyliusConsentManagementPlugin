@@ -20,9 +20,7 @@
 
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesClientSideSubscriber">
             <argument type="service" id="twig"/>
-            <argument type="service" id="security.firewall.map"/>
-            <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
-            <argument>%setono_sylius_consent_management.sampling.rate%</argument>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
@@ -30,9 +28,7 @@
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
-            <argument type="service" id="security.firewall.map"/>
-            <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
-            <argument>%setono_sylius_consent_management.sampling.rate%</argument>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>

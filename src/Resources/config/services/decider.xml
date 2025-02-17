@@ -2,6 +2,17 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <!-- Sample -->
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDecider"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDecider">
+            <argument type="service" id="security.firewall.map"/>
+            <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
+            <argument>%setono_sylius_consent_management.sampling.rate%</argument>
+        </service>
+
+        <!-- Widget display -->
         <service id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"
                  alias="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CompositeWidgetDisplayDecider"/>
 
