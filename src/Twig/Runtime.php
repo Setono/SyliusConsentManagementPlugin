@@ -29,7 +29,7 @@ final class Runtime implements RuntimeExtensionInterface
     {
         $request = $request ?? $this->requestStack->getMainRequest();
         if (null === $request) {
-            return true;
+            return false;
         }
 
         return $this->widgetDisplayDecider->display($request);

@@ -7,6 +7,9 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\Consent\DefaultConsents;
+use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManager;
+use Setono\SyliusConsentManagementPlugin\Decider\CompositeWidgetDisplayDecider;
+use Setono\SyliusConsentManagementPlugin\Decider\CookieBasedWidgetDisplayDecider;
 use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
@@ -15,7 +18,6 @@ use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Test\IntegrationTestCase;
@@ -43,14 +45,14 @@ final class ExtensionTest extends IntegrationTestCase
         $categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
-        $widgetDisplayDecider = $this->prophesize(WidgetDisplayDeciderInterface::class);
-        $widgetDisplayDecider->display(Argument::type(Request::class))->willReturn(true);
+        $widgetDisplayDecider = new CompositeWidgetDisplayDecider();
+        $widgetDisplayDecider->add(new CookieBasedWidgetDisplayDecider(new WidgetCookieManager('sscm_widget')));
 
         $widgetRenderer = $this->prophesize(WidgetRendererInterface::class);
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($widgetConfigProvider->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider->reveal(), $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($widgetConfigProvider->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider, $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
                 private readonly CategoryRepositoryInterface $categoryRepository,
