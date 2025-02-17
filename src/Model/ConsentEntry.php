@@ -97,6 +97,10 @@ class ConsentEntry implements ConsentEntryInterface
             $consentedCategory = (string) $consentedCategory->getCode();
         }
 
+        if (in_array($consentedCategory, $this->consentedCategories, true)) {
+            return;
+        }
+
         $this->consentedCategories[] = $consentedCategory;
     }
 
