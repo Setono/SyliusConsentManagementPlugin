@@ -22,7 +22,8 @@ final class ConsentedCategoriesProvider implements ConsentedCategoriesProviderIn
 
         foreach ($this->categoryRepository->findAll() as $category) {
             $code = (string) $category->getCode();
-            $categories[$code] = $this->consentChecker->isGranted($code);
+
+            $categories[$code] = $category->isNecessary() ?: $this->consentChecker->isGranted($code);
         }
 
         if (!$onlyGranted) {
