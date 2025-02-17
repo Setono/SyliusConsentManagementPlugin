@@ -9,8 +9,6 @@ Inspiration to some choices made in this plugin is based on the guidelines in th
 
 ## Installation
 
-Install the package via composer:
-
 ```shell
 composer require setono/sylius-consent-management-plugin
 ```
@@ -27,20 +25,10 @@ Add the bundle to `bundles.php` if not done automatically. Be sure to add this l
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
 ```
 
-Create the file `config/packages/setono_sylius_consent_management.yaml` and add the following:
-
-```yaml
-# config/packages/setono_sylius_consent_management.yaml
-setono_sylius_consent_management:
-    notify:
-        - "johndoe@setono.com"
-```
-
 ### Build assets
 
 ```shell
 php bin/console assets:install
-php bin/console sylius:theme:assets:install
 ```
 
 ### Add migration
@@ -62,26 +50,14 @@ setono_sylius_consent_management:
 
 ### Update the layout
 
-From the test layout, you can copy those important parts 
+You need to inject the consent widget somewhere in your page (preferably before `</body>`):
 
 ```html
-<head>
-    <!-- ... -->
-    {{ sscm_consent_tag() }}
-    <!-- ... -->
-</head>
+<!-- ... -->
 
-{% block footer %}
-    <!-- ... -->
-    {{ render(path('setono_sylius_consent_management_shop_partial_consent_widget')) }}
-    <!-- ... -->
-{% endblock %}
-    
-{% block javascripts %}
-    <!-- ... -->
-    <script src="{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js') }}" async></script>
-    <!-- ... -->
-{% endblock %}
+{{ sscm_widget() }}
+</body>
+</html>
 ```
 
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
