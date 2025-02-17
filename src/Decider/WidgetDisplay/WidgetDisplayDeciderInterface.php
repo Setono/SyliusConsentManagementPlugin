@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Decider;
+namespace Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay;
 
 use Symfony\Component\HttpFoundation\Request;
 

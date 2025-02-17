@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin;
 
 use Setono\CompositeCompilerPass\CompositeCompilerPass;
-use Setono\SyliusConsentManagementPlugin\Decider\CompositeWidgetDisplayDecider;
+use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CompositeWidgetDisplayDecider;
 use Setono\SyliusConsentManagementPlugin\DependencyInjection\Compiler\RegisterPlatformsPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
