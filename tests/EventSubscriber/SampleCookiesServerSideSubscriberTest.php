@@ -51,6 +51,7 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
         ]);
 
         $this->requestEvent = $this->prophesize(RequestEvent::class);
+        $this->requestEvent->isMainRequest()->willReturn(true);
         $this->requestEvent->getRequest()->willReturn($request);
     }
 
@@ -83,8 +84,6 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
      */
     public function it_samples_if_firewall_is_not_expected_instance(): void
     {
-        $this->requestEvent->isMainRequest()->willReturn(true);
-
         $this->cookieRepository->findOneByName(Argument::type('string'))->willReturn(new Cookie());
         $this->cookieRepository->add(Argument::type(Cookie::class))->shouldBeCalledTimes(2);
 
@@ -96,6 +95,9 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
      */
     public function it_samples_if_firewall_is_expected_instance(): void
     {
+        $this->cookieRepository->findOneByName(Argument::type('string'))->willReturn(new Cookie());
+        $this->cookieRepository->add(Argument::type(Cookie::class))->shouldBeCalledTimes(2);
+
         $this->createSubscriber()->sample($this->requestEvent->reveal());
     }
 
@@ -109,6 +111,9 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
             ->willReturn(new FirewallConfig('shop', 'user_checker'))
             ->shouldBeCalledOnce()
         ;
+
+        $this->cookieRepository->findOneByName(Argument::type('string'))->willReturn(new Cookie());
+        $this->cookieRepository->add(Argument::type(Cookie::class))->shouldBeCalledTimes(2);
 
         $this->createSubscriber()->sample($this->requestEvent->reveal());
     }
@@ -131,7 +136,6 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
     {
         self::$randomInt = mt_getrandmax();
 
-        $this->requestEvent->isMainRequest()->willReturn(true);
         $this->requestEvent->getRequest()->shouldBeCalled();
 
         $this->cookieRepository->findOneByName(Argument::any())->shouldNotBeCalled();
