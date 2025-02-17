@@ -19,7 +19,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @var array{sampling: array{rate: float, firewalls: array<array-key, string>}, notify: array<array-key, string>, driver: string, resources: array<string, mixed>} $config
+         * @var array{sampling: array{rate: float, firewalls: list<string>}, notify: list<string>, driver: string, resources: array<string, mixed>} $config
          *
          * @psalm-suppress PossiblyNullArgument
          */
@@ -332,7 +332,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
 
         $container->prependExtensionConfig('sylius_mailer', [
             'emails' => [
-                'new_cookies' => [
+                'setono_sylius_consent_management__new_cookies' => [
                     'subject' => 'setono_sylius_consent_management.emails.new_cookies.subject',
                     'template' => '@SetonoSyliusConsentManagementPlugin/email/new_cookies.html.twig',
                 ],

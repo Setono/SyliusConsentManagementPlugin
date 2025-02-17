@@ -45,10 +45,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                // todo allow this to be empty and use the channel email as a fallback
                 ->arrayNode('notify')
-                    ->requiresAtLeastOneElement()
-                    ->isRequired()
                     ->info('A list of emails to notify when a new cookie is discovered')
                     ->scalarPrototype()->end()
                 ->end()
