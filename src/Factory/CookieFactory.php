@@ -41,6 +41,36 @@ final class CookieFactory implements CookieFactoryInterface
         return $obj;
     }
 
+    public function createFromSample(mixed $sample): CookieInterface
+    {
+        if (!is_array($sample)) {
+            throw new \InvalidArgumentException('The sample must be an array');
+        }
+
+        if (!array_key_exists('name', $sample) || !array_key_exists('expires', $sample)) {
+            throw new \InvalidArgumentException('The sample must contain the keys "name" and "expires"');
+        }
+
+        if (!is_string($sample['name']) || '' === $sample['name']) {
+            throw new \InvalidArgumentException('The sample key "name" must be a non-empty string');
+        }
+
+        if (null !== $sample['expires'] && !is_numeric($sample['expires'])) {
+            throw new \InvalidArgumentException('The sample key "expires" must be null or numeric');
+        }
+
+        $cookie = $this->createNew();
+        $cookie->setName($sample['name']);
+
+        if (null === $sample['expires']) {
+            $cookie->setSession(true);
+        } else {
+            $cookie->setTtl(self::timestampToInterval((int) ($sample['expires'] / 1000)));
+        }
+
+        return $cookie;
+    }
+
     private function resolveUrl(): ?string
     {
         $request = $this->requestStack->getMainRequest();
@@ -53,5 +83,13 @@ final class CookieFactory implements CookieFactoryInterface
         }
 
         return $request->headers->get('referer');
+    }
+
+    private static function timestampToInterval(int $timestamp): \DateInterval
+    {
+        $now = new \DateTimeImmutable();
+        $then = new \DateTimeImmutable('@' . $timestamp);
+
+        return $now->diff($then);
     }
 }
