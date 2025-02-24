@@ -15,7 +15,7 @@
                     {% endif %}
                 </div>
 
-                {{ category.description }}
+                {{ category.description|markdown_to_html }}
 
                 {% if services|length > 0 %}
                     <div class="sscm-services" id="sscm-category-{{ category.id }}">
@@ -33,7 +33,7 @@
                                         {% endif %}
                                     </div>
                                     {% if service.description %}
-                                        <div class="sscm-service-description">{{ service.description }}</div>
+                                        <div class="sscm-service-description">{{ service.description|markdown_to_html }}</div>
                                     {% endif %}
 
                                     {% if cookies|length > 0 %}
@@ -51,7 +51,7 @@
                                                     {# @var cookie \Setono\SyliusConsentManagementPlugin\Model\CookieInterface #}
                                                     <tr>
                                                         <td>{{ cookie.name }}</td>
-                                                        <td>{{ cookie.description ?? 'Not available' }}</td>
+                                                        <td>{{ cookie.description ? cookie.description|markdown_to_html : 'Not available' }}</td>
                                                         <td>{{ cookie.ttl|date }}</td>
                                                     </tr>
                                                 {% endfor %}
