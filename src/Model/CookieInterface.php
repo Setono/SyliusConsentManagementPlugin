@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
+use Sylius\Component\Channel\Model\ChannelsAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface CookieInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface, \Stringable
+interface CookieInterface extends ResourceInterface, ChannelsAwareInterface, TimestampableInterface, TranslatableInterface, \Stringable
 {
     public const STATE_PENDING = 'pending';
 

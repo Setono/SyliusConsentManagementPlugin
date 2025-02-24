@@ -72,6 +72,7 @@ setono_sylius_consent_management:
         consent_entry_header: Consent entries
         consent_entry_search: Search for a client id or an IP address
         consent_entry_subheader: List of consent entries
+        cookie_channels_information: You can add channels for both services and cookies, however, if you add a channel on a cookie that is not present on the related service, the channel will also be added to that service.
         cookie_header: Cookies
         cookie_subheader: Manage cookies
         cookies: Cookies

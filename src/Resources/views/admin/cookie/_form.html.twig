@@ -16,6 +16,12 @@
         </div>
     </div>
     <div class="column">
+        <div class="ui segment">
+            <div class="ui info message">
+                {{ 'setono_sylius_consent_management.ui.cookie_channels_information'|trans }}
+            </div>
+            {{ form_row(form.channels) }}
+        </div>
         {{ translationForm(form.translations) }}
     </div>
 </div>

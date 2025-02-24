@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
 use Sylius\Component\Resource\Model\TranslationInterface;
@@ -28,9 +29,13 @@ class Service implements ServiceInterface
     /** @var Collection<array-key, CookieInterface> */
     protected Collection $cookies;
 
+    /** @var Collection<array-key, ChannelInterface> */
+    protected Collection $channels;
+
     public function __construct()
     {
         $this->cookies = new ArrayCollection();
+        $this->channels = new ArrayCollection();
         $this->translations = new ArrayCollection();
     }
 
@@ -129,6 +134,30 @@ class Service implements ServiceInterface
     public function hasCookie(CookieInterface $cookie): bool
     {
         return $this->cookies->contains($cookie);
+    }
+
+    public function getChannels(): Collection
+    {
+        return $this->channels;
+    }
+
+    public function addChannel(ChannelInterface $channel): void
+    {
+        if (!$this->hasChannel($channel)) {
+            $this->channels->add($channel);
+        }
+    }
+
+    public function removeChannel(ChannelInterface $channel): void
+    {
+        if ($this->hasChannel($channel)) {
+            $this->channels->removeElement($channel);
+        }
+    }
+
+    public function hasChannel(ChannelInterface $channel): bool
+    {
+        return $this->channels->contains($channel);
     }
 
     protected function createTranslation(): ServiceTranslationInterface

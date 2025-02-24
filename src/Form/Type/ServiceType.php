@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
+use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\EventSubscriber\AddCodeFormSubscriber;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
@@ -16,6 +17,12 @@ final class ServiceType extends AbstractResourceType
         $builder
             ->addEventSubscriber(new AddCodeFormSubscriber())
             ->add('category', CategoryChoiceType::class)
+            ->add('channels', ChannelChoiceType::class, [
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'sylius.ui.channels',
+            ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => ServiceTranslationType::class,
                 'label' => 'sylius.ui.translations',

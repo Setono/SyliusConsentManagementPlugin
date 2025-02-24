@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelsAwareInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 
-interface ServiceInterface extends ResourceInterface, TimestampableInterface, TranslatableInterface, CodeAwareInterface, \Stringable
+interface ServiceInterface extends ResourceInterface, ChannelsAwareInterface, TimestampableInterface, TranslatableInterface, CodeAwareInterface, \Stringable
 {
     public function getId(): ?int;
 

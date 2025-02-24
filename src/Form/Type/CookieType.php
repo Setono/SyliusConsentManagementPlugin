@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ServiceInterface;
+use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -63,6 +64,12 @@ final class CookieType extends AbstractResourceType
                 'class' => $this->serviceClass,
                 'choice_label' => 'name',
                 'required' => false,
+            ])
+            ->add('channels', ChannelChoiceType::class, [
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'sylius.ui.channels',
             ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => CookieTranslationType::class,
