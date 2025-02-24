@@ -9,6 +9,10 @@
             <argument type="service" id="sylius.email_sender"/>
             <argument type="service" id="sylius.repository.channel"/>
             <argument>%setono_sylius_consent_management.notify%</argument>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
         </service>
     </services>
 </container>
