@@ -10,8 +10,6 @@
                     <li>
                         {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}
                         {% set category = form.consentedCategories.vars.choices[key].data %}
-
-                        {# @var services \Setono\SyliusConsentManagementPlugin\Model\ServiceInterface[] #}
                         {% set services = category.services(sylius.channel) %}
 
                         <div class="sscm-category-name">
@@ -29,6 +27,7 @@
                             <div class="sscm-services" id="sscm-category-{{ category.id }}">
                                 <ul>
                                     {% for service in services %}
+                                        {# @var service \Setono\SyliusConsentManagementPlugin\Model\ServiceInterface #}
                                         {% set cookies = service.cookies(sylius.channel) %}
                                         <li>
                                             <div class="sscm-service-name">
@@ -45,11 +44,26 @@
 
                                             {% if cookies|length > 0 %}
                                                 <div class="sscm-cookies" id="sscm-cookies-{{ service.id }}">
-                                                    <ul>
-                                                        {% for cookie in cookies %}
-                                                            <li>{{ cookie.name }}</li>
-                                                        {% endfor %}
-                                                    </ul>
+                                                    {# TODO: Translate table headers #}
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Description</th>
+                                                                <th>Expires</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for cookie in cookies %}
+                                                                {# @var cookie \Setono\SyliusConsentManagementPlugin\Model\CookieInterface #}
+                                                                <tr>
+                                                                    <td>{{ cookie.name }}</td>
+                                                                    <td>{{ cookie.description ?? 'Not available' }}</td>
+                                                                    <td>{{ cookie.ttl|date }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             {% endif %}
                                         </li>
