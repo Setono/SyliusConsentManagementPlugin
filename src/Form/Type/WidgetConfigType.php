@@ -35,6 +35,7 @@ final class WidgetConfigType extends AbstractResourceType
             ->add('acceptAllButtonLabel', TextType::class, [
                 'label' => 'setono_sylius_consent_management.form.widget_config.accept_all_button_label',
             ])
+            ->add('layout', LayoutType::class)
         ;
     }
 

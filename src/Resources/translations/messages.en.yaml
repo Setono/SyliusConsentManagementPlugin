@@ -20,6 +20,25 @@ setono_sylius_consent_management:
             service_placeholder: Choose a service...
             session: Session
             ttl: Time to live
+        layout:
+            background_color: "Background color of the widget"
+            background_color_placeholder: "#fff"
+            border_radius: "Default border radius"
+            border_radius_placeholder: "10px"
+            button_accept_all_background_color: "Background color for the 'Accept all' button"
+            button_accept_all_background_color_placeholder: "green"
+            button_accept_all_color: "Text color for the 'Accept All' button"
+            button_accept_all_color_placeholder: "#fff"
+            button_accept_selected_background_color: "Background color for the 'Accept selected' button"
+            button_accept_selected_background_color_placeholder: "#fff"
+            button_accept_selected_color: "Text color for the 'Accept Selected' button"
+            button_accept_selected_color_placeholder: "#000"
+            button_border_radius: "Border radius for the buttons"
+            button_border_radius_placeholder: "5px"
+            button_padding: "Padding for the buttons"
+            button_padding_placeholder: "7px 14px"
+            max_width: "Maximum width of the widget"
+            max_width_placeholder: "600px"
         service:
             categories:
                 marketing: Marketing

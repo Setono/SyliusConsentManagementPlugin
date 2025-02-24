@@ -32,4 +32,8 @@ interface WidgetConfigInterface extends ResourceInterface, ChannelAwareInterface
     public function getAcceptAllButtonLabel(): ?string;
 
     public function setAcceptAllButtonLabel(?string $acceptAllButtonLabel): void;
+
+    public function getLayout(): array;
+
+    public function setLayout(?array $layout): void;
 }

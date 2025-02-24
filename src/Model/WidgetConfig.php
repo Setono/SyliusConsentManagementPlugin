@@ -26,6 +26,8 @@ class WidgetConfig implements WidgetConfigInterface
 
     protected ?string $acceptAllButtonLabel = null;
 
+    protected ?array $layout = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,5 +91,19 @@ class WidgetConfig implements WidgetConfigInterface
     public function setAcceptAllButtonLabel(?string $acceptAllButtonLabel): void
     {
         $this->acceptAllButtonLabel = $acceptAllButtonLabel;
+    }
+
+    public function getLayout(): array
+    {
+        return $this->layout ?? [];
+    }
+
+    public function setLayout(?array $layout): void
+    {
+        if ([] === $layout) {
+            $layout = null;
+        }
+
+        $this->layout = $layout;
     }
 }

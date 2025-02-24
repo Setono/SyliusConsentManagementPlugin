@@ -71,7 +71,7 @@ setono_sylius_consent_management_admin_widget_config:
         section: admin
         alias: setono_sylius_consent_management.widget_config
         templates: "@SyliusAdmin\\Crud"
-        redirect: index
+        redirect: update
         permission: true
         grid: setono_sylius_consent_management_admin_widget_config
         vars:

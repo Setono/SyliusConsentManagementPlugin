@@ -23,6 +23,7 @@
         <field name="body" type="text"/>
         <field name="acceptSelectedButtonLabel" type="string"/>
         <field name="acceptAllButtonLabel" type="string"/>
+        <field name="layout" type="json" nullable="true"/>
 
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
