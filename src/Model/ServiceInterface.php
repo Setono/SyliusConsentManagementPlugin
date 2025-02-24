@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Channel\Model\ChannelsAwareInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
@@ -32,9 +33,11 @@ interface ServiceInterface extends ResourceInterface, ChannelsAwareInterface, Ti
     public function setPrivacyPolicyUrl(?string $privacyPolicyUrl): void;
 
     /**
+     * @param ChannelInterface|null $channel if the channel is set, the returned collection will only contain cookies with the given channel
+     *
      * @return Collection<array-key, CookieInterface>
      */
-    public function getCookies(): Collection;
+    public function getCookies(ChannelInterface $channel = null): Collection;
 
     public function addCookie(CookieInterface $cookie): void;
 

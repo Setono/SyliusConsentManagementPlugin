@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\TranslatableTrait;
 use Sylius\Component\Resource\Model\TranslationInterface;
@@ -94,23 +95,13 @@ class Category implements CategoryInterface
         $this->position = $position ?? 0;
     }
 
-    public function getServices(): Collection
+    public function getServices(ChannelInterface $channel = null): Collection
     {
-        return $this->services;
-    }
-
-    public function getServicesWithAtLeastOneCookie(): Collection
-    {
-        /** @var ArrayCollection<array-key, ServiceInterface> $services */
-        $services = new ArrayCollection();
-
-        foreach ($this->services as $service) {
-            if ($service->getCookies()->count() > 0) {
-                $services->add($service);
-            }
+        if (null === $channel) {
+            return $this->services;
         }
 
-        return $services;
+        return $this->services->filter(fn (ServiceInterface $service): bool => $service->hasChannel($channel));
     }
 
     public function addService(ServiceInterface $service): void

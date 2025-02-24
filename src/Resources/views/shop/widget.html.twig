@@ -11,25 +11,52 @@
                         {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}
                         {% set category = form.consentedCategories.vars.choices[key].data %}
 
+                        {# @var services \Setono\SyliusConsentManagementPlugin\Model\ServiceInterface[] #}
+                        {% set services = category.services(sylius.channel) %}
+
                         <div class="sscm-category-name">
                             <strong>{{ category.name }}</strong>
-                            <button type="button" data-toggle="#sscm-category-{{ category.id }}" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
-                            </button>
+                            {% if services|length > 0 %}
+                                <button type="button" data-toggle="#sscm-category-{{ category.id }}" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                                </button>
+                            {% endif %}
                         </div>
 
                         {{ category.description }}
 
-                        <div class="sscm-category-services" id="sscm-category-{{ category.id }}">
-                            {% set services = category.servicesWithAtLeastOneCookie %}
-                            {% if services|length > 0 %}
+                        {% if services|length > 0 %}
+                            <div class="sscm-services" id="sscm-category-{{ category.id }}">
                                 <ul>
-                                    {% for service in category.servicesWithAtLeastOneCookie %}
-                                        <li>{{ service.name }}</li>
+                                    {% for service in services %}
+                                        {% set cookies = service.cookies(sylius.channel) %}
+                                        <li>
+                                            <div class="sscm-service-name">
+                                                {{ service.name }}
+                                                {% if cookies|length > 0 %}
+                                                    <button type="button" data-toggle="#sscm-cookies-{{ service.id }}" aria-expanded="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                            {% if service.description %}
+                                                <div class="sscm-service-description">{{ service.description }}</div>
+                                            {% endif %}
+
+                                            {% if cookies|length > 0 %}
+                                                <div class="sscm-cookies" id="sscm-cookies-{{ service.id }}">
+                                                    <ul>
+                                                        {% for cookie in cookies %}
+                                                            <li>{{ cookie.name }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        </li>
                                     {% endfor %}
                                 </ul>
-                            {% endif %}
-                        </div>
+                            </div>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

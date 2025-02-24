@@ -70,8 +70,25 @@
     align-items: center;
 }
 
-.sscm-category-services {
+.sscm-services {
     display: none;
+    padding-left: 20px;
+}
+
+.sscm-services ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sscm-service-name {
+    font-weight: bold;
+    display: flex;
+}
+
+.sscm-cookies {
+    display: none;
+    padding-left: 20px;
 }
 
 .sscm-buttons {
@@ -120,11 +137,11 @@
 .sscm-widget button[data-toggle] {
     all: unset;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
     text-align: center;
+    display: flex;
+    align-items: center;
 }
 
-.sscm-widget button[data-toggle][aria-expanded="true"] {
+.sscm-widget button[data-toggle][aria-expanded="true"] svg {
     transform: rotate(90deg);
 }

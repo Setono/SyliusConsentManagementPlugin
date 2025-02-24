@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Model;
 
 use Doctrine\Common\Collections\Collection;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
@@ -30,14 +31,11 @@ interface CategoryInterface extends ResourceInterface, TranslatableInterface, Co
     public function setPosition(?int $position): void;
 
     /**
+     * @param ChannelInterface|null $channel if the channel is set, the returned collection will only contain services with the given channel
+     *
      * @return Collection<array-key, ServiceInterface>
      */
-    public function getServices(): Collection;
-
-    /**
-     * @return Collection<array-key, ServiceInterface>
-     */
-    public function getServicesWithAtLeastOneCookie(): Collection;
+    public function getServices(ChannelInterface $channel = null): Collection;
 
     public function addService(ServiceInterface $service): void;
 

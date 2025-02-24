@@ -110,9 +110,13 @@ class Service implements ServiceInterface
         return $translation;
     }
 
-    public function getCookies(): Collection
+    public function getCookies(ChannelInterface $channel = null): Collection
     {
-        return $this->cookies;
+        if (null === $channel) {
+            return $this->cookies;
+        }
+
+        return $this->cookies->filter(fn (CookieInterface $cookie): bool => $cookie->hasChannel($channel));
     }
 
     public function addCookie(CookieInterface $cookie): void
