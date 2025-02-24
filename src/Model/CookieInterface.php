@@ -30,7 +30,7 @@ interface CookieInterface extends ResourceInterface, ChannelsAwareInterface, Tim
      */
     public function getUrl(): ?string;
 
-    public function setUrl(string $url): void;
+    public function setUrl(?string $url): void;
 
     public function getState(): ?string;
 

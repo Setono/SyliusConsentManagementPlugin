@@ -41,7 +41,7 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         foreach ($request->cookies->all() as $name => $_) {
             $cookie = $this->cookieRepository->findOneByName((string) $name);
             if (null === $cookie) {
-                $cookie = $this->cookieFactory->createWithData((string) $name, $request->getUri());
+                $cookie = $this->cookieFactory->createWithName((string) $name);
             }
             $cookie->incrementSamples();
             $cookie->setLastSeenAt(new \DateTimeImmutable());

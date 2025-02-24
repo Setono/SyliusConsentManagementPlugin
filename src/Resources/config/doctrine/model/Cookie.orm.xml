@@ -12,7 +12,7 @@
         </id>
 
         <field name="name" column="name" type="string" unique="true"/>
-        <field name="url" type="string"/>
+        <field name="url" type="string" nullable="true"/>
         <field name="state" type="string"/>
         <field name="samples" type="integer"/>
         <field name="ttl" type="string" nullable="true"/>

@@ -44,7 +44,7 @@ final class SampleController
                  *
                  * @psalm-suppress MixedArgument
                  */
-                $obj = $this->cookieFactory->createWithData($cookie['name'], self::resolveUrl($request));
+                $obj = $this->cookieFactory->createWithName($cookie['name']);
                 if (null === $cookie['expires']) {
                     $obj->setSession(true);
                 } else {
@@ -64,16 +64,6 @@ final class SampleController
         }
 
         return new Response(status: Response::HTTP_NO_CONTENT);
-    }
-
-    private static function resolveUrl(Request $request): string
-    {
-        $referrer = $request->headers->get('referer');
-        if (null !== $referrer && '' !== $referrer) {
-            return $referrer;
-        }
-
-        return $request->getUri();
     }
 
     private static function timestampToInterval(int $timestamp): \DateInterval

@@ -13,8 +13,10 @@ use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSide
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
+use Sylius\Component\Channel\Context\CompositeChannelContext;
 use Sylius\Resource\Factory\Factory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -53,7 +55,7 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
 
         $this->subscriber = new SampleCookiesServerSideSubscriber(
             $this->cookieRepository->reveal(),
-            new CookieFactory(new Factory(Cookie::class)),
+            new CookieFactory(new Factory(Cookie::class), new CompositeChannelContext(), new RequestStack()),
             $this->sampleDecider->reveal(),
         );
     }

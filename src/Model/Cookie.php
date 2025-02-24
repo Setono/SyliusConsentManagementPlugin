@@ -80,7 +80,7 @@ class Cookie implements CookieInterface
         return $this->url;
     }
 
-    public function setUrl(string $url): void
+    public function setUrl(?string $url): void
     {
         $this->url = $url;
     }

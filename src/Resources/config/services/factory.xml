@@ -24,6 +24,8 @@
                  class="Setono\SyliusConsentManagementPlugin\Factory\CookieFactory"
                  decorates="setono_sylius_consent_management.factory.cookie" decoration-priority="128">
             <argument type="service" id="setono_sylius_consent_management.custom_factory.cookie.inner"/>
+            <argument type="service" id="sylius.context.channel"/>
+            <argument type="service" id="request_stack"/>
         </service>
 
         <service id="setono_sylius_consent_management.custom_factory.widget_config"
