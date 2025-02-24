@@ -43,6 +43,13 @@
     overflow: hidden;
 }
 
+.sscm-widget ul {
+    list-style-type: none;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+}
+
 .sscm-heading {
     font-size: 30px;
     text-align: center;
@@ -55,9 +62,6 @@
 
 .sscm-categories {
     margin: 20px;
-    padding: 0;
-    list-style-type: none;
-    list-style-position: inside;
 }
 
 .sscm-categories li {
@@ -117,6 +121,11 @@
     color: var(--sscm-button-accept-selected-color);
     background-color: var(--sscm-button-accept-selected-background-color);
     border: 1px solid var(--sscm-button-accept-selected-background-color);
+}
+
+.sscm-checkboxes-container {
+    padding: 5px 20px 20px;
+    background-color: #f8f8f8;
 }
 
 .sscm-checkboxes {

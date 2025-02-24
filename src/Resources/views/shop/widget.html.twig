@@ -3,93 +3,11 @@
 <div class="sscm-widget-container">
     <div class="sscm-widget-centering">
         <div class="sscm-widget">
-            <div class="sscm-heading">{{ widgetConfiguration.heading }}</div>
-            <div class="sscm-body">{{ widgetConfiguration.body|markdown_to_html }}</div>
-            <ul class="sscm-categories">
-                {% for key, choice_form in form.consentedCategories %}
-                    <li>
-                        {# @var category \Setono\SyliusConsentManagementPlugin\Model\CategoryInterface #}
-                        {% set category = form.consentedCategories.vars.choices[key].data %}
-                        {% set services = category.services(sylius.channel) %}
-
-                        <div class="sscm-category-name">
-                            <strong>{{ category.name }}</strong>
-                            {% if services|length > 0 %}
-                                <button type="button" data-toggle="#sscm-category-{{ category.id }}" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
-                                </button>
-                            {% endif %}
-                        </div>
-
-                        {{ category.description }}
-
-                        {% if services|length > 0 %}
-                            <div class="sscm-services" id="sscm-category-{{ category.id }}">
-                                <ul>
-                                    {% for service in services %}
-                                        {# @var service \Setono\SyliusConsentManagementPlugin\Model\ServiceInterface #}
-                                        {% set cookies = service.cookies(sylius.channel) %}
-                                        <li>
-                                            <div class="sscm-service-name">
-                                                {{ service.name }}
-                                                {% if cookies|length > 0 %}
-                                                    <button type="button" data-toggle="#sscm-cookies-{{ service.id }}" aria-expanded="false">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"/></svg>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
-                                            {% if service.description %}
-                                                <div class="sscm-service-description">{{ service.description }}</div>
-                                            {% endif %}
-
-                                            {% if cookies|length > 0 %}
-                                                <div class="sscm-cookies" id="sscm-cookies-{{ service.id }}">
-                                                    {# TODO: Translate table headers #}
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Description</th>
-                                                                <th>Expires</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for cookie in cookies %}
-                                                                {# @var cookie \Setono\SyliusConsentManagementPlugin\Model\CookieInterface #}
-                                                                <tr>
-                                                                    <td>{{ cookie.name }}</td>
-                                                                    <td>{{ cookie.description ?? 'Not available' }}</td>
-                                                                    <td>{{ cookie.ttl|date }}</td>
-                                                                </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            {% endif %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-            <div class="sscm-buttons">
-                <button type="submit" data-action="acceptSelected" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-accept-selected">{{ widgetConfiguration.acceptSelectedButtonLabel }}</button>
-                <button type="submit" data-action="acceptAll" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-accept-all">{{ widgetConfiguration.acceptAllButtonLabel }}</button>
-            </div>
-            <div style="padding: 5px 20px 20px; background-color: #f8f8f8">
-                {{ form_start(form, { 'action': path('setono_sylius_consent_management_shop_update_consent'), 'attr': { 'id': form.vars.id } }) }}
-                <div class="sscm-checkboxes">
-                    {% for key, choice_form in form.consentedCategories %}
-                        <div class="sscm-checkbox">
-                            {{ form_label(choice_form) }}
-                            {{ form_widget(choice_form) }}
-                        </div>
-                    {% endfor %}
-                </div>
-                {{ form_end(form) }}
-            </div>
+            {{ include('@SetonoSyliusConsentManagementPlugin/shop/widget/_heading.html.twig') }}
+            {{ include('@SetonoSyliusConsentManagementPlugin/shop/widget/_body.html.twig') }}
+            {{ include('@SetonoSyliusConsentManagementPlugin/shop/widget/_categories.html.twig') }}
+            {{ include('@SetonoSyliusConsentManagementPlugin/shop/widget/_buttons.html.twig') }}
+            {{ include('@SetonoSyliusConsentManagementPlugin/shop/widget/_checkboxes.html.twig') }}
         </div>
     </div>
 </div>

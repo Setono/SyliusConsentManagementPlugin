@@ -1,0 +1,5 @@
+{# @var widgetConfiguration \Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface #}
+<div class="sscm-buttons">
+    <button type="submit" data-action="acceptSelected" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-accept-selected">{{ widgetConfiguration.acceptSelectedButtonLabel }}</button>
+    <button type="submit" data-action="acceptAll" form="{{ form.vars.id }}" class="sscm-btn sscm-btn-accept-all">{{ widgetConfiguration.acceptAllButtonLabel }}</button>
+</div>

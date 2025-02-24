@@ -1,0 +1,12 @@
+<div class="sscm-checkboxes-container">
+    {{ form_start(form, { 'action': path('setono_sylius_consent_management_shop_update_consent'), 'attr': { 'id': form.vars.id } }) }}
+    <div class="sscm-checkboxes">
+        {% for key, choice_form in form.consentedCategories %}
+            <div class="sscm-checkbox">
+                {{ form_label(choice_form) }}
+                {{ form_widget(choice_form) }}
+            </div>
+        {% endfor %}
+    </div>
+    {{ form_end(form) }}
+</div>
