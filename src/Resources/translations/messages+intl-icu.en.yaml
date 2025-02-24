@@ -1,0 +1,33 @@
+setono_sylius_consent_management:
+    ui:
+        date_interval:
+            y: >-
+                {value, plural,
+                    =1    {year}
+                    other {years}
+                }
+            m: >-
+                {value, plural,
+                    =1    {month}
+                    other {months}
+                }
+            d: >-
+                {value, plural,
+                    =1    {day}
+                    other {days}
+                }
+            h: >-
+                {value, plural,
+                    =1    {hour}
+                    other {hours}
+                }
+            i: >-
+                {value, plural,
+                    =1    {minute}
+                    other {minutes}
+                }
+            s: >-
+                {value, plural,
+                    =1    {second}
+                    other {seconds}
+                }
