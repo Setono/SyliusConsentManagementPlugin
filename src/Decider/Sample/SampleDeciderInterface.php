@@ -12,5 +12,8 @@ interface SampleDeciderInterface
 
     public const CONTEXT_CLIENT_SIDE = 'client_side';
 
+    /**
+     * @param self::CONTEXT_* $context
+     */
     public function sample(Request $request, string $context): bool;
 }
