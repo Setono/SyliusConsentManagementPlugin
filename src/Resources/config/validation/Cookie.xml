@@ -5,6 +5,12 @@
                     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd"
 >
     <class name="Setono\SyliusConsentManagementPlugin\Model\Cookie">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">
+                <value>name</value>
+            </option>
+            <option name="groups">setono_sylius_consent_management</option>
+        </constraint>
         <property name="ttl">
             <constraint name="When">
                 <option name="expression">!this.isSession()</option>
