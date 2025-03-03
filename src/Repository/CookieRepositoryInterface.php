@@ -15,4 +15,6 @@ interface CookieRepositoryInterface extends RepositoryInterface
      * @return list<CookieInterface>
      */
     public function findStaleCookies(string $staleThreshold): array;
+
+    public function prune(): void;
 }

@@ -37,4 +37,17 @@ class CookieRepository extends EntityRepository implements CookieRepositoryInter
 
         return $objs;
     }
+
+    public function prune(): void
+    {
+        $this->createQueryBuilder('o')
+            ->delete()
+            ->andWhere('o.state = :state')
+            ->andWhere('o.updatedAt < :threshold')
+            ->setParameter('state', CookieInterface::STATE_PENDING)
+            ->setParameter('threshold', new \DateTimeImmutable('-1 month'))
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }
