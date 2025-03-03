@@ -6,8 +6,8 @@ setono_sylius_consent_management:
             subject: "There are stale cookies in your store"
     form:
         category:
-            name: Name
             description: Description
+            name: Name
             necessary: Necessary
         category_choice:
             label: Category
@@ -52,11 +52,11 @@ setono_sylius_consent_management:
             name: Name
             privacy_policy_url: Privacy policy URL
         widget_config:
-            heading: Heading
+            accept_all_button_label: Accept all button label
+            accept_selected_button_label: Accept selected button label
             body: Body
             body_help: By default, the body is rendered as markdown
-            accept_selected_button_label: Accept selected button label
-            accept_all_button_label: Accept all button label
+            heading: Heading
     menu:
         admin:
             main:
@@ -69,23 +69,8 @@ setono_sylius_consent_management:
                     widget_configuration: Widget configuration
     ui:
         bump_last_seen_at: Bump last seen at
-        necessary: Necessary
-        default_categories:
-            marketing:
-                description: Cookies used for marketing purposes
-                name: Marketing
-            functional:
-                description: Cookies used for functional purposes
-                name: Preferences
-            statistical:
-                description: Cookies used for statistical purposes
-                name: Statistics
-            necessary:
-                description: Necessary cookies are essential for the website to function properly
-                name: Necessary
-        create_default_categories: Create default categories
-        category: Category
         categories: Categories
+        category: Category
         category_header: Categories
         category_subheader: Manage your categories
         client_id: Client id
@@ -98,11 +83,26 @@ setono_sylius_consent_management:
         cookie_header: Cookies
         cookie_subheader: Manage cookies
         cookies: Cookies
+        create_default_categories: Create default categories
+        default_categories:
+            functional:
+                description: Cookies used for functional purposes
+                name: Preferences
+            marketing:
+                description: Cookies used for marketing purposes
+                name: Marketing
+            necessary:
+                description: Necessary cookies are essential for the website to function properly
+                name: Necessary
+            statistical:
+                description: Cookies used for statistical purposes
+                name: Statistics
         ip: IP address
         last_seen_at: Last seen
-        name: Name
         marketing: Marketing
         missing: Missing
+        name: Name
+        necessary: Necessary
         open_in_new_tab: Open in new tab
         pending: Pending
         preferences: Preferences
@@ -129,15 +129,12 @@ setono_sylius_consent_management:
             save: Save
             settings: Cookie settings
         widget_config_defaults:
-            heading: We use cookies
-            body: We use cookies to give you the best possible experience on our store. You can find more information about the cookies we use and how to manage them in the settings.
-            accept_selected_button: Accept selected
             accept_all_button: Accept all
-        widget_configs: Widget configurations
+            accept_selected_button: Accept selected
+            body: We use cookies to give you the best possible experience on our store. You can find more information about the cookies we use and how to manage them in the settings.
+            heading: We use cookies
         widget_config_header: Widget configuration
-        widget_config_subheader: Manage the configuration of widgets on your different channels
         widget_config_information:
-            heading: How widget configurations work
             body: |
                 <p>
                     When a user visits your store, the plugin will query the database to see if there is a matching pair with
@@ -147,3 +144,6 @@ setono_sylius_consent_management:
                     If there is a match, the widget configuration for that pair will be used to display the texts etc. in the consent widget.
                     If there's no match, a pair will be created with the given channel and locale, and the default configuration will be used.
                 </p>
+            heading: How widget configurations work
+        widget_config_subheader: Manage the configuration of widgets on your different channels
+        widget_configs: Widget configurations
