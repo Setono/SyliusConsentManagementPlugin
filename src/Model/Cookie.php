@@ -41,6 +41,7 @@ class Cookie implements CookieInterface
 
     public function __construct()
     {
+        $this->lastSeenAt = new \DateTimeImmutable();
         $this->channels = new ArrayCollection();
         $this->translations = new ArrayCollection();
     }
