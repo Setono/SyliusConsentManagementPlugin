@@ -34,6 +34,8 @@
 
         <!-- Grid -->
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Grid\AddCreateDefaultCategoriesButtonSubscriber">
+            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
+
             <tag name="kernel.event_subscriber"/>
         </service>
 

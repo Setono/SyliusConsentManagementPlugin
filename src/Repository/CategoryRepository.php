@@ -49,4 +49,13 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
 
         return $objs;
     }
+
+    public function hasOne(): bool
+    {
+        return (int) $this->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->getQuery()
+                ->getSingleScalarResult() > 0
+        ;
+    }
 }

@@ -20,4 +20,9 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * @return list<CategoryInterface>
      */
     public function findNecessary(): array;
+
+    /**
+     * Returns true if one or more categories exist
+     */
+    public function hasOne(): bool;
 }
