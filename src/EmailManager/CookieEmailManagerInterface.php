@@ -12,4 +12,9 @@ interface CookieEmailManagerInterface
      * @param non-empty-list<CookieInterface> $cookies
      */
     public function sendNewCookiesEmail(array $cookies): void;
+
+    /**
+     * @param non-empty-list<CookieInterface> $cookies
+     */
+    public function sendStaleCookiesEmail(array $cookies): void;
 }

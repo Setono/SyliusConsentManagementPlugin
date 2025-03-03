@@ -3,6 +3,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <imports>
         <import resource="services/checker.xml"/>
+        <import resource="services/command.xml"/>
         <import resource="services/controller.xml"/>
         <import resource="services/cookie.xml"/>
         <import resource="services/decider.xml"/>
@@ -12,6 +13,7 @@
         <import resource="services/factory.xml"/>
         <import resource="services/fixture.xml"/>
         <import resource="services/form.xml"/>
+        <import resource="services/grid.xml"/>
         <import resource="services/menu.xml"/>
         <import resource="services/platform.xml"/>
         <import resource="services/provider.xml"/>

@@ -20,4 +20,21 @@ class CookieRepository extends EntityRepository implements CookieRepositoryInter
 
         return $obj;
     }
+
+    public function findStaleCookies(string $staleThreshold): array
+    {
+        $objs = $this->createQueryBuilder('o')
+            ->andWhere('o.state = :state')
+            ->andWhere('o.lastSeenAt < :threshold')
+            ->setParameter('state', CookieInterface::STATE_CONFIRMED)
+            ->setParameter('threshold', new \DateTimeImmutable($staleThreshold))
+            ->getQuery()
+            ->getResult()
+        ;
+
+        Assert::isList($objs);
+        Assert::allIsInstanceOf($objs, CookieInterface::class);
+
+        return $objs;
+    }
 }

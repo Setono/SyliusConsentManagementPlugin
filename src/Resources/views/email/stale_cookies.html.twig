@@ -1,0 +1,13 @@
+{# @var cookies \Setono\SyliusConsentManagementPlugin\Model\CookieInterface[] #}
+{% block subject %}
+    {{ 'setono_sylius_consent_management.email.stale_cookies.subject'|trans() }}
+{% endblock %}
+
+{% block body %}
+    <p>Hi</p>
+    <p>Stale cookies have been discovered in your store:</p>
+    {% set url = url('setono_sylius_consent_management_admin_cookie_index', { criteria: { stale: 'true' }}) %}
+    <p><a href="{{ url }}" target="_blank">{{ url }}</a></p>
+    <p>Handling stale cookies isn't critical but is essential for good data management hygiene.</p>
+    <p>This email was sent automatically by the Sylius Consent Management Plugin</p>
+{% endblock %}

@@ -39,6 +39,21 @@ final class CookieEmailManager implements CookieEmailManagerInterface, LoggerAwa
         ]);
     }
 
+    public function sendStaleCookiesEmail(array $cookies): void
+    {
+        $emails = $this->resolveEmails();
+        if ([] === $emails) {
+            $this->logger->error('No emails configured for sending notification about newly found cookies');
+
+            return;
+        }
+
+        /** @psalm-suppress DeprecatedMethod */
+        $this->emailSender->send(Emails::STALE_COOKIES, $emails, [
+            'cookies' => $cookies,
+        ]);
+    }
+
     /**
      * @return list<string>
      */

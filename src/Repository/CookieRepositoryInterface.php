@@ -10,4 +10,9 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 interface CookieRepositoryInterface extends RepositoryInterface
 {
     public function findOneByName(string $name): ?CookieInterface;
+
+    /**
+     * @return list<CookieInterface>
+     */
+    public function findStaleCookies(string $staleThreshold): array;
 }

@@ -8,6 +8,8 @@ final class Emails
 {
     public const NEW_COOKIES = 'setono_sylius_consent_management__new_cookies';
 
+    public const STALE_COOKIES = 'setono_sylius_consent_management__stale_cookies';
+
     private function __construct()
     {
     }

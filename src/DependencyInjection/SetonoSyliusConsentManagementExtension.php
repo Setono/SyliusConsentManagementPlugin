@@ -57,6 +57,9 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                 'bulk_action' => [
                     'bump_last_seen_at' => '@SetonoSyliusConsentManagementPlugin/admin/grid/bulk_action/bump_last_seen_at.html.twig',
                 ],
+                'filter' => [
+                    'stale' => '@SetonoSyliusConsentManagementPlugin/admin/grid/filter/stale.html.twig',
+                ],
             ],
             'grids' => [
                 'setono_sylius_consent_management_admin_category' => [
@@ -232,6 +235,10 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'type' => 'boolean',
                             'label' => 'setono_sylius_consent_management.ui.session',
                         ],
+                        'stale' => [
+                            'type' => 'stale',
+                            'label' => 'setono_sylius_consent_management.ui.stale',
+                        ],
                     ],
                     'actions' => [
                         'main' => [
@@ -350,6 +357,10 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                 'setono_sylius_consent_management__new_cookies' => [
                     'subject' => 'setono_sylius_consent_management.emails.new_cookies.subject',
                     'template' => '@SetonoSyliusConsentManagementPlugin/email/new_cookies.html.twig',
+                ],
+                'setono_sylius_consent_management__stale_cookies' => [
+                    'subject' => 'setono_sylius_consent_management.emails.stale_cookies.subject',
+                    'template' => '@SetonoSyliusConsentManagementPlugin/email/stale_cookies.html.twig',
                 ],
             ],
         ]);

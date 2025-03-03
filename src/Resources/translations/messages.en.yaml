@@ -2,6 +2,8 @@ setono_sylius_consent_management:
     email:
         new_cookies:
             subject: "IMPORTANT: New cookies discovered in your store"
+        stale_cookies:
+            subject: "There are stale cookies in your store"
     form:
         category:
             name: Name
