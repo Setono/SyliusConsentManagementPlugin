@@ -71,6 +71,9 @@ setono_sylius_consent_management:
         bump_last_seen_at: Bump last seen at
         categories: Categories
         category: Category
+        category_code_information:
+            body: "The code is used in your application code to check if the user has given consent to the category.<br>E.g., in a Twig template:"
+            code: "Output '%code%' related content"
         category_header: Categories
         category_subheader: Manage your categories
         client_id: Client id
