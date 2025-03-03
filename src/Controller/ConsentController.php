@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Event\ConsentUpdated;
 use Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
@@ -34,6 +36,7 @@ final class ConsentController
         Request $request,
         WidgetCookieManagerInterface $consentWidgetCookieManager,
         ConsentEntryTypeFactoryInterface $consentEntryTypeFactory,
+        EventDispatcherInterface $eventDispatcher,
     ): JsonResponse {
         $form = $consentEntryTypeFactory->createNew($request);
         $form->handleRequest($request);
@@ -51,6 +54,8 @@ final class ConsentController
 
         $response = new JsonResponse($consentEntry->getConsentedCategories());
         $consentWidgetCookieManager->write($response);
+
+        $eventDispatcher->dispatch(new ConsentUpdated($consentEntry->getConsentedCategories()));
 
         return $response;
     }
