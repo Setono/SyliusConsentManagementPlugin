@@ -1,0 +1,9 @@
+{% import '@SyliusUi/Macro/buttons.html.twig' as buttons %}
+
+{% set path = path('setono_sylius_consent_management_admin_bump_last_seen_at') %}
+
+<form action="{{ path }}" method="post">
+    <button class="ui blue labeled icon button" type="submit" data-bulk-action-requires-confirmation disabled>
+        <i class="icon sync"></i> {{'setono_sylius_consent_management.ui.bump_last_seen_at'|trans }}
+    </button>
+</form>

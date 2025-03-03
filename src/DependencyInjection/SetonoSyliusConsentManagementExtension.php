@@ -53,6 +53,11 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         ]);
 
         $container->prependExtensionConfig('sylius_grid', [
+            'templates' => [
+                'bulk_action' => [
+                    'bump_last_seen_at' => '@SetonoSyliusConsentManagementPlugin/admin/grid/bulk_action/bump_last_seen_at.html.twig',
+                ],
+            ],
             'grids' => [
                 'setono_sylius_consent_management_admin_category' => [
                     'driver' => [
@@ -245,6 +250,10 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         'bulk' => [
                             'delete' => [
                                 'type' => 'delete',
+                            ],
+                            'bump_last_seen_at' => [
+                                'type' => 'bump_last_seen_at',
+                                'label' => 'setono_sylius_consent_management.ui.bump_last_seen_at',
                             ],
                         ],
                     ],

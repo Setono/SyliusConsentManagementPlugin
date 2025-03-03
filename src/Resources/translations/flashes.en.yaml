@@ -1,0 +1,3 @@
+setono_sylius_consent_management:
+    cookies_bumped: Cookies' last seen date was bumped
+    cookie_not_found: One of the cookies in the bulk action wasn't found

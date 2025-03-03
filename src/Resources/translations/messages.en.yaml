@@ -66,6 +66,7 @@ setono_sylius_consent_management:
                     services: Services
                     widget_configuration: Widget configuration
     ui:
+        bump_last_seen_at: Bump last seen at
         necessary: Necessary
         default_categories:
             marketing:
