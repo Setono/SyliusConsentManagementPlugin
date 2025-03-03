@@ -22,13 +22,10 @@ final class WidgetCookieManager implements WidgetCookieManagerInterface
     public function write(Response $response): void
     {
         $response->headers->setCookie(Cookie::create(
-            $this->cookieName,
-            '1',
-            new \DateTime('+365 days'),
-            '/',
-            null,
-            null,
-            false,
+            name: $this->cookieName,
+            value: '1',
+            expire: new \DateTime('+365 days'),
+            httpOnly: false,
         ));
     }
 }
