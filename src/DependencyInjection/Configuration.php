@@ -46,7 +46,7 @@ final class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('notify')
-                    ->info('A list of emails to notify when a new cookie is discovered')
+                    ->info('A list of emails to notify when a new cookie is discovered. If this is empty, the first channel with an email will be used.')
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('sampling')
