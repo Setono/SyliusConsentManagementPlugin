@@ -8,6 +8,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * The children of this form are by default rendered as CSS variables in the frontend.
+ *
+ * The children's names are converted to snake case and prefixed with '--sscm-widget-'.
+ *
+ * For example, the backgroundColor will be rendered as '--sscm-widget-background-color: <value>;'
+ */
 final class LayoutType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
