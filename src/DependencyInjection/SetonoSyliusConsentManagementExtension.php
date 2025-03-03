@@ -131,6 +131,21 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'type' => 'string',
                             'label' => 'setono_sylius_consent_management.ui.user_agent',
                         ],
+                        'consentedCategories' => [
+                            'type' => 'twig',
+                            'label' => 'setono_sylius_consent_management.ui.consented_categories',
+                            'options' => [
+                                'template' => '@SetonoSyliusConsentManagementPlugin/admin/grid/field/consented_categories.html.twig',
+                            ],
+                        ],
+                        'createdAt' => [
+                            'type' => 'datetime',
+                            'label' => 'sylius.ui.created_at',
+                        ],
+                        'updatedAt' => [
+                            'type' => 'datetime',
+                            'label' => 'sylius.ui.created_at',
+                        ],
                     ],
                     'filters' => [
                         'search' => [
@@ -138,6 +153,13 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                             'label' => 'setono_sylius_consent_management.ui.consent_entry_search',
                             'options' => [
                                 'fields' => ['clientId', 'ip'],
+                            ],
+                        ],
+                    ],
+                    'actions' => [
+                        'item' => [
+                            'delete' => [
+                                'type' => 'delete',
                             ],
                         ],
                     ],

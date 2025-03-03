@@ -78,6 +78,7 @@ setono_sylius_consent_management:
         category_subheader: Manage your categories
         client_id: Client id
         confirmed: Confirmed
+        consented_categories: Consented categories
         consent_entries: Consent entries
         consent_entry_header: Consent entries
         consent_entry_search: Search for a client id or an IP address
