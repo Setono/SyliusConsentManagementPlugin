@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
+use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Workflow\CookieWorkflow;
@@ -29,6 +30,11 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         $container->setParameter('setono_sylius_consent_management.sampling.rate', $config['sampling']['rate']);
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
         $container->setParameter('setono_sylius_consent_management.notify', $config['notify']);
+
+        $container
+            ->registerForAutoconfiguration(WidgetDisplayDeciderInterface::class)
+            ->addTag('setono_sylius_consent_management.widget_display_decider')
+        ;
 
         $this->registerResources(
             'setono_sylius_consent_management',
