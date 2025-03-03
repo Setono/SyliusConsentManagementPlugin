@@ -136,3 +136,14 @@ setono_sylius_consent_management:
         widget_configs: Widget configurations
         widget_config_header: Widget configuration
         widget_config_subheader: Manage the configuration of widgets on your different channels
+        widget_config_information:
+            heading: How widget configurations work
+            body: |
+                <p>
+                    When a user visits your store, the plugin will query the database to see if there is a matching pair with
+                    the channel (e.g. <strong>%channel%</strong>) and the locale (e.g. <strong>%locale%</strong>).
+                </p>
+                <p>
+                    If there is a match, the widget configuration for that pair will be used to display the texts etc. in the consent widget.
+                    If there's no match, a pair will be created with the given channel and locale, and the default configuration will be used.
+                </p>

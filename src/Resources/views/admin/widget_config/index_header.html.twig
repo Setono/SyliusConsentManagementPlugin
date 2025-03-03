@@ -1,17 +1,7 @@
-{# todo translate this text #}
 <div class="ui icon info message">
     <i class="info circle icon"></i>
     <div class="content">
-        <div class="header">
-            How widget configurations work
-        </div>
-        <p>
-            When a user visits your store, the plugin will query the database to see if there is a matching pair with
-            the channel (e.g. <strong>{{ sylius.channel.name }}</strong>) and the locale (e.g. <strong>{{ sylius.localeCode }}</strong>).
-        </p>
-        <p>
-            If there is a match, the widget configuration for that pair will be used to display the texts etc. in the consent widget.
-            If there's no match, a pair will be created with the given channel and locale and the default configuration will be used.
-        </p>
+        <div class="header">{{ 'setono_sylius_consent_management.ui.widget_config_information.heading'|trans }}</div>
+        {{ 'setono_sylius_consent_management.ui.widget_config_information.body'|trans({ '%channel%': sylius.channel.name, '%locale%': sylius.localeCode })|raw }}
     </div>
 </div>
