@@ -22,6 +22,7 @@ setono_sylius_consent_management_admin_category:
             all:
                 header: setono_sylius_consent_management.ui.category_header
                 subheader: setono_sylius_consent_management.ui.category_subheader
+                icon: folder
                 templates:
                     form: "@SetonoSyliusConsentManagementPlugin/admin/category/_form.html.twig"
     type: sylius.resource
@@ -38,6 +39,7 @@ setono_sylius_consent_management_admin_consent_entry:
             all:
                 header: setono_sylius_consent_management.ui.consent_entry_header
                 subheader: setono_sylius_consent_management.ui.consent_entry_subheader
+                icon: list alternate outline   
     type: sylius.resource
 
 setono_sylius_consent_management_admin_cookie:
@@ -52,6 +54,7 @@ setono_sylius_consent_management_admin_cookie:
             all:
                 header: setono_sylius_consent_management.ui.cookie_header
                 subheader: setono_sylius_consent_management.ui.cookie_subheader
+                icon: user secret
                 templates:
                     form: "@SetonoSyliusConsentManagementPlugin/admin/cookie/_form.html.twig"
     type: sylius.resource
@@ -68,6 +71,7 @@ setono_sylius_consent_management_admin_service:
             all:
                 header: setono_sylius_consent_management.ui.service_header
                 subheader: setono_sylius_consent_management.ui.service_subheader
+                icon: cogs
                 templates:
                     form: "@SetonoSyliusConsentManagementPlugin/admin/service/_form.html.twig"
     type: sylius.resource
@@ -84,6 +88,7 @@ setono_sylius_consent_management_admin_widget_config:
             all:
                 header: setono_sylius_consent_management.ui.widget_config_header
                 subheader: setono_sylius_consent_management.ui.widget_config_subheader
+                icon: cog
                 templates:
                     form: "@SetonoSyliusConsentManagementPlugin/admin/widget_config/_form.html.twig"
     type: sylius.resource
