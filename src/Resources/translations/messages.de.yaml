@@ -80,7 +80,7 @@ setono_sylius_consent_management:
         preferences: Einstellungen
         service: Dienst
         service_header: Dienstleistungen
-        service_search: Search by code or name # @todo Fix
+        service_search: Search by code or name
         service_subheader: Verwalten Sie Ihren Dienst, der eine Zustimmung benötigt
         services: Dienstleistungen
         statistics: Statistiken
@@ -94,6 +94,6 @@ setono_sylius_consent_management:
             introduction: "%channel% verwende Cookies, um Ihnen das bestmögliche Erlebnis in unserem Shop zu bieten"
             more_information: Mehr Informationen
             save: Speichern
-        widget_configs: Widget configurations # todo translate
-        widget_config_header: Widget configuration # todo translate
-        widget_config_subheader: Manage the configuration of widgets on your different channels # todo translate
+        widget_configs: Widget configurations
+        widget_config_header: Widget configuration
+        widget_config_subheader: Manage the configuration of widgets on your different channels

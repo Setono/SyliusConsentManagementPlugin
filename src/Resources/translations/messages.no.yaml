@@ -80,7 +80,7 @@ setono_sylius_consent_management:
         preferences: Preferanser
         service: Tjeneste
         service_header: Tjenester
-        service_search: Search by code or name # @todo Fix
+        service_search: Search by code or name
         service_subheader: Administrer tjenesten din som trenger samtykke
         services: Tjenester
         statistics: Statistikk
@@ -94,6 +94,6 @@ setono_sylius_consent_management:
             introduction: "%channel% bruker informasjonskapsler for å gi deg den best mulige opplevelsen i butikken vår"
             more_information: Mer informasjon
             save: Lagre
-        widget_configs: Widget configurations # todo translate
-        widget_config_header: Widget configuration # todo translate
-        widget_config_subheader: Manage the configuration of widgets on your different channels # todo translate
+        widget_configs: Widget configurations
+        widget_config_header: Widget configuration
+        widget_config_subheader: Manage the configuration of widgets on your different channels
