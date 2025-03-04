@@ -52,7 +52,13 @@
                                                     <tr>
                                                         <td>{{ cookie.name }}</td>
                                                         <td>{{ cookie.description ? cookie.description|markdown_to_html : 'Not available' }}</td>
-                                                        <td>{{ cookie.ttl|sscm_format_date_interval }}</td>
+                                                        <td>
+                                                            {% if cookie.session %}
+                                                                <em>Session</em>
+                                                            {% else %}
+                                                                {{ cookie.ttl|sscm_format_date_interval }}
+                                                            {% endif %}
+                                                        </td>
                                                     </tr>
                                                 {% endfor %}
                                                 </tbody>
