@@ -6,6 +6,8 @@ namespace Setono\SyliusConsentManagementPlugin\Provider\UrlProvider;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Setono\Doctrine\ORMTrait;
+use Setono\SyliusStaticContextsBundle\Context\StaticChannelContext;
+use Setono\SyliusStaticContextsBundle\Context\StaticLocaleContext;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
@@ -23,6 +25,8 @@ final class TrackingUrlProvider implements UrlProviderInterface
         ManagerRegistry $managerRegistry,
         private readonly ProductRepositoryInterface $productRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly StaticChannelContext $staticChannelContext,
+        private readonly StaticLocaleContext $staticLocaleContext,
         /** @var class-string<ChannelInterface> $channelClass */
         private readonly string $channelClass,
         /** @var array<string, string> $trackingUrlPatterns */
@@ -33,22 +37,31 @@ final class TrackingUrlProvider implements UrlProviderInterface
 
     public function getUrls(): iterable
     {
-        foreach ($this->getChannels() as $channel) {
-            $locale = $channel->getDefaultLocale()?->getCode();
-            Assert::notNull($locale);
+        try {
+            foreach ($this->getChannels() as $channel) {
+                $locale = $channel->getDefaultLocale()?->getCode();
+                Assert::notNull($locale);
 
-            /** @var mixed|ProductInterface $product */
-            foreach ($this->productRepository->findLatestByChannel($channel, $locale, 1) as $product) {
-                Assert::isInstanceOf($product, ProductInterface::class);
+                // todo I think it's wrong that these are set here. They should be set in the crawler itself I believe
+                $this->staticChannelContext->setChannel($channel);
+                $this->staticLocaleContext->setLocaleCode($locale);
 
-                foreach ($this->trackingUrlPatterns as $parameter => $value) {
-                    yield $this->urlGenerator->generate(
-                        'sylius_shop_product_show',
-                        ['slug' => $product->getSlug(), '_locale' => $locale, $parameter => $value],
-                        UrlGeneratorInterface::ABSOLUTE_URL,
-                    );
+                /** @var mixed|ProductInterface $product */
+                foreach ($this->productRepository->findLatestByChannel($channel, $locale, 1) as $product) {
+                    Assert::isInstanceOf($product, ProductInterface::class);
+
+                    foreach ($this->trackingUrlPatterns as $parameter => $value) {
+                        yield $this->urlGenerator->generate(
+                            'sylius_shop_product_show',
+                            ['slug' => $product->getSlug(), '_locale' => $locale, $parameter => $value],
+                            UrlGeneratorInterface::ABSOLUTE_URL,
+                        );
+                    }
                 }
             }
+        } finally {
+            $this->staticChannelContext->setChannel(null);
+            $this->staticLocaleContext->setLocaleCode(null);
         }
     }
 

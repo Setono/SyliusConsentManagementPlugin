@@ -62,4 +62,5 @@ return [
     Sylius\Calendar\SyliusCalendarBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Setono\BotDetectionBundle\SetonoBotDetectionBundle::class => ['all' => true],
+    Setono\SyliusStaticContextsBundle\SetonoSyliusStaticContextsBundle::class => ['all' => true],
 ];

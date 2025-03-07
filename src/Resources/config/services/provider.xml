@@ -39,6 +39,8 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="sylius.repository.product"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="Setono\SyliusStaticContextsBundle\Context\StaticChannelContext"/>
+            <argument type="service" id="Setono\SyliusStaticContextsBundle\Context\StaticLocaleContext"/>
             <argument>%sylius.model.channel.class%</argument>
             <argument>%setono_sylius_consent_management.crawler.url_provider.tracking_url_patterns%</argument>
 
