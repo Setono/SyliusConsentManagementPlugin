@@ -45,5 +45,17 @@
 
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <!-- Crawler -->
+        <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler\ModifyUrlSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler\SaveCookiesSubscriber">
+            <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
+            <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
+
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

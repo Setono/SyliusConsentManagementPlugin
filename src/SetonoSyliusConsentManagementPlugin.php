@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin;
 use Setono\CompositeCompilerPass\CompositeCompilerPass;
 use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CompositeWidgetDisplayDecider;
 use Setono\SyliusConsentManagementPlugin\DependencyInjection\Compiler\RegisterPlatformsPass;
+use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\CompositeUrlProvider;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -22,6 +23,12 @@ final class SetonoSyliusConsentManagementPlugin extends AbstractResourceBundle
             CompositeWidgetDisplayDecider::class,
             'setono_sylius_consent_management.widget_display_decider',
         ));
+
+        $container->addCompilerPass(new CompositeCompilerPass(
+            CompositeUrlProvider::class,
+            'setono_sylius_consent_management.url_provider',
+        ));
+
         $container->addCompilerPass(new RegisterPlatformsPass());
 
         parent::build($container);

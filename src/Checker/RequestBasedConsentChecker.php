@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class RequestBasedConsentChecker implements ConsentCheckerInterface
 {
+    public const CONSENT_QUERY_PARAM = '_consent';
+
     public function __construct(
         private readonly ConsentCheckerInterface $decorated,
         private readonly RequestStack $requestStack,

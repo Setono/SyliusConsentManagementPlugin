@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\DependencyInjection;
 use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\UrlProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Workflow\CookieWorkflow;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -14,18 +15,21 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Webmozart\Assert\Assert;
 
 final class SetonoSyliusConsentManagementExtension extends AbstractResourceExtension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @var array{sampling: array{rate: float, firewalls: list<string>}, notify: list<string>, driver: string, resources: array<string, mixed>} $config
+         * @var array{crawler: array{options: array, url_provider: array{tracking_url_patterns: array<string, string>}}, sampling: array{rate: float, firewalls: list<string>}, notify: list<string>, driver: string, resources: array<string, mixed>} $config
          *
          * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        self::configureCrawler($container, $config['crawler']);
 
         $container->setParameter('setono_sylius_consent_management.sampling.rate', $config['sampling']['rate']);
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
@@ -44,6 +48,44 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         );
 
         $loader->load('services.xml');
+    }
+
+    /**
+     * @param array{options: array, url_provider: array{tracking_url_patterns: array}} $config
+     */
+    private static function configureCrawler(ContainerBuilder $container, array $config): void
+    {
+        Assert::allStringNotEmpty(array_keys($config['url_provider']['tracking_url_patterns']), 'The crawler.url_provider.tracking_url_patterns is a key value array where the key is the tracking parameter name and the value is the tracking parameter value.');
+
+        $config['url_provider']['tracking_url_patterns'] = array_filter(array_merge([
+            'utm_source' => 'google',
+            // Google click id
+            'gclid' => 'Cj0KCQiAz6q-BhCfARIsAOezPxnowCvBkAXGO-VaF5BBognk98ki1ZCADOEIvW7mXugI3WEk88drYcoaAh8bEALw_wcB',
+            // Microsoft click id
+            'msclkid' => 'ba84442c382915e41ea923e6947fb257',
+            // Facebook click id
+            'fbclid' => 'IwY2xjawI3i8BleHRuA2FlbQEwAGFkaWQBqxgW86CFQwEdW3LdyPyHuzbp9y3lDXT5IJLpTJlWdZtonH7PB0os5CmUSulCzchR-koK_aem_aZB74XyFCdBR4PYU3ehAiw',
+            // X / Twitter click id
+            'twclid' => '211hvb1a5dsvhhzlxtv3yt7prm',
+            // Instagram share id
+            'igshid' => 'MzRlODBiNWFlZA==',
+            // TikTok click id
+            'ttclid' => 'E_C_P_CrMBC4ZxGk6tRXjjbm0UaFJuYgk_Q2Apz2cxWXKnPuoGiclBo4os6EX9U0-QcKg-1P3PNznMewI6G-gROCH8QToaXp9_WBxqpipD6EJmVZ6XhS4uFl9pFxPGdEwhEW4F7l5SAurguRr7GkRy4kwu9gjfHAQqT0hkuYX_joL4cStfCN5fz3KuOdyoP9AcA39allU5hjfVmm5tDATpKPt90vO1Ckl11jBmq1NydPeiceOLzr7ElXwSBHYyLjA',
+            // Partner id - often used in affiliate marketing
+            'pid' => 'wake-me-up',
+            // Affiliate id
+            'aff_id' => '123456789',
+            // General tracking parameter
+            'ref' => 'google',
+        ], $config['url_provider']['tracking_url_patterns']));
+
+        $container->setParameter('setono_sylius_consent_management.crawler.options', $config['options']);
+        $container->setParameter('setono_sylius_consent_management.crawler.url_provider.tracking_url_patterns', $config['url_provider']['tracking_url_patterns']);
+
+        $container
+            ->registerForAutoconfiguration(UrlProviderInterface::class)
+            ->addTag('setono_sylius_consent_management.url_provider')
+        ;
     }
 
     public function prepend(ContainerBuilder $container): void

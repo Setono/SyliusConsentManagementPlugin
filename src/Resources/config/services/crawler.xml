@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Crawler\CrawlerInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Crawler\Crawler"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Crawler\Crawler">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Factory\PantherClientFactoryInterface"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\UrlProviderInterface"/>
+            <argument>%setono_sylius_consent_management.crawler.options%</argument>
+        </service>
+    </services>
+</container>

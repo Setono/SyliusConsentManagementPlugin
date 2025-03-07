@@ -27,11 +27,24 @@ final class SampleDeciderTest extends TestCase
         $this->firewallMap = $this->prophesize(FirewallMap::class);
     }
 
-    private function createDecider(float $sampleRate, FirewallMapInterface $firewallMap = null): SampleDecider
+    /**
+     * @test
+     *
+     * @dataProvider provideFalsySampleParameters
+     */
+    public function it_does_not_sample_if_sample_parameter_is_falsy(string $sampleParameter): void
     {
-        $firewallMap ??= $this->firewallMap->reveal();
+        self::assertFalse($this->createDecider(0)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+    }
 
-        return new SampleDecider($firewallMap, ['shop'], $sampleRate);
+    /**
+     * @test
+     *
+     * @dataProvider provideTruthySampleParameters
+     */
+    public function it_samples_if_sample_parameter_is_truthy(string $sampleParameter): void
+    {
+        self::assertTrue($this->createDecider(0)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -39,7 +52,7 @@ final class SampleDeciderTest extends TestCase
      */
     public function it_does_not_sample(): void
     {
-        $this->assertFalse($this->createDecider(0)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        self::assertFalse($this->createDecider(0)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -47,7 +60,7 @@ final class SampleDeciderTest extends TestCase
      */
     public function it_does_not_sample_if_context_is_client_side_and_user_agent_is_not_eligible(): void
     {
-        $this->assertFalse($this->createDecider(1)->sample(Request::create(uri: '/', server: ['HTTP_USER_AGENT' => 'Mozilla']), SampleDeciderInterface::CONTEXT_CLIENT_SIDE));
+        self::assertFalse($this->createDecider(1)->sample(Request::create(uri: '/', server: ['HTTP_USER_AGENT' => 'Mozilla']), SampleDeciderInterface::CONTEXT_CLIENT_SIDE));
     }
 
     /**
@@ -55,7 +68,7 @@ final class SampleDeciderTest extends TestCase
      */
     public function it_samples_if_firewall_is_not_expected_type(): void
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->createDecider(1, $this->prophesize(FirewallMapInterface::class)->reveal())
                 ->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE),
         );
@@ -66,7 +79,7 @@ final class SampleDeciderTest extends TestCase
      */
     public function it_samples_if_firewall_config_is_null(): void
     {
-        $this->assertTrue($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        self::assertTrue($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -76,7 +89,7 @@ final class SampleDeciderTest extends TestCase
     {
         $this->firewallMap->getFirewallConfig(Argument::type(Request::class))->willReturn(new FirewallConfig('shop', 'user_checker'));
 
-        $this->assertTrue($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        self::assertTrue($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -86,6 +99,38 @@ final class SampleDeciderTest extends TestCase
     {
         $this->firewallMap->getFirewallConfig(Argument::type(Request::class))->willReturn(new FirewallConfig('admin', 'user_checker'));
 
-        $this->assertFalse($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        self::assertFalse($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+    }
+
+    private function createDecider(float $sampleRate, FirewallMapInterface $firewallMap = null): SampleDecider
+    {
+        $firewallMap ??= $this->firewallMap->reveal();
+
+        return new SampleDecider($firewallMap, ['shop'], $sampleRate);
+    }
+
+    /**
+     * @return \Generator<array-key, array<array-key, string>>
+     */
+    private static function provideFalsySampleParameters(): \Generator
+    {
+        yield ['0'];
+        yield ['false'];
+        yield ['off'];
+        yield ['no'];
+        yield ['n'];
+    }
+
+    /**
+     * @return \Generator<array-key, array<array-key, string>>
+     */
+    private static function provideTruthySampleParameters(): \Generator
+    {
+        yield ['1'];
+        yield ['true'];
+        yield ['on'];
+        yield ['yes'];
+        yield ['y'];
+        yield [''];
     }
 }

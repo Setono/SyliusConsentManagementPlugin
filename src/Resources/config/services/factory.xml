@@ -28,6 +28,13 @@
             <argument type="service" id="request_stack"/>
         </service>
 
+        <service id="Setono\SyliusConsentManagementPlugin\Factory\PantherClientFactoryInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Factory\PantherClientFactory"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Factory\PantherClientFactory">
+            <argument>%kernel.project_dir%/drivers</argument>
+        </service>
+
         <service id="setono_sylius_consent_management.custom_factory.widget_config"
                  class="Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactory"
                  decorates="setono_sylius_consent_management.factory.widget_config" decoration-priority="128">
