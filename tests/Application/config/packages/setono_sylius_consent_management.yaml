@@ -1,2 +1,10 @@
 imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
+
+setono_sylius_consent_management:
+    crawler:
+        options:
+            request_delay: 10
+        url_provider:
+            tracking_url_patterns:
+                utm_source: ~

@@ -10,6 +10,8 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 final class SampleDecider implements SampleDeciderInterface
 {
+    public const SAMPLE_QUERY_PARAMETER = '_sample';
+
     public function __construct(
         private readonly FirewallMapInterface $firewallMap,
         private readonly array $firewalls,
@@ -19,6 +21,14 @@ final class SampleDecider implements SampleDeciderInterface
 
     public function sample(Request $request, string $context): bool
     {
+        if ($request->query->has(self::SAMPLE_QUERY_PARAMETER)) {
+            if (in_array((string) $request->query->get(self::SAMPLE_QUERY_PARAMETER), ['false', '0', 'no', 'n', 'off'], true)) {
+                return false;
+            }
+
+            return true;
+        }
+
         $sampleRateResult = random_int(1, mt_getrandmax()) / mt_getrandmax() <= $this->sampleRate;
 
         if (!$sampleRateResult) {

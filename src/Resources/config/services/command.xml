@@ -2,6 +2,12 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Command\CrawlCommand">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Crawler\CrawlerInterface"/>
+
+            <tag name="console.command"/>
+        </service>
+
         <service id="Setono\SyliusConsentManagementPlugin\Command\PruneCookiesCommand">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
 
