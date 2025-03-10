@@ -26,7 +26,7 @@ final class ConsentWidgetCookieManagerTest extends TestCase
             ],
         );
 
-        $manager = new WidgetCookieManager('cookie_name');
+        $manager = new WidgetCookieManager('cookie_name', '1');
         self::assertTrue($manager->exists($request));
     }
 
@@ -37,7 +37,7 @@ final class ConsentWidgetCookieManagerTest extends TestCase
     {
         $response = new Response();
 
-        $manager = new WidgetCookieManager('cookie_name');
+        $manager = new WidgetCookieManager('cookie_name', '1');
         $manager->write($response);
 
         $cookies = $response->headers->getCookies();

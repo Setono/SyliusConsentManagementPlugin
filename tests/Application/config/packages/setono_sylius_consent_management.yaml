@@ -2,6 +2,8 @@ imports:
     - { resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/app/fixtures.yaml" }
 
 setono_sylius_consent_management:
+    widget:
+        cookie_value: 2
     crawler:
         options:
             request_delay: 10

@@ -22,13 +22,20 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @var array{crawler: array{options: array, url_provider: array{tracking_url_patterns: array<string, string>}}, sampling: array{rate: float, firewalls: list<string>}, notify: list<string>, driver: string, resources: array<string, mixed>} $config
+         * @var array{
+         *     widget: array{cookie_name: string, cookie_value: string},
+         *     crawler: array{options: array, url_provider: array{tracking_url_patterns: array<string, string>}},
+         *     sampling: array{rate: float, firewalls: list<string>},
+         *     notify: list<string>,
+         *     resources: array<string, mixed>
+         * } $config
          *
          * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
+        self::configureWidget($container, $config['widget']);
         self::configureCrawler($container, $config['crawler']);
 
         $container->setParameter('setono_sylius_consent_management.sampling.rate', $config['sampling']['rate']);
@@ -48,6 +55,15 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         );
 
         $loader->load('services.xml');
+    }
+
+    /**
+     * @param array{cookie_name: string, cookie_value: string} $config
+     */
+    private static function configureWidget(ContainerBuilder $container, array $config): void
+    {
+        $container->setParameter('setono_sylius_consent_management.widget.cookie_name', $config['cookie_name']);
+        $container->setParameter('setono_sylius_consent_management.widget.cookie_value', $config['cookie_value']);
     }
 
     /**

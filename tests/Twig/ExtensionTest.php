@@ -47,7 +47,7 @@ final class ExtensionTest extends IntegrationTestCase
         $categoryRepository->findAll()->willReturn([$category1, $category2]);
 
         $widgetDisplayDecider = new CompositeWidgetDisplayDecider();
-        $widgetDisplayDecider->add(new CookieBasedWidgetDisplayDecider(new WidgetCookieManager('sscm_widget')));
+        $widgetDisplayDecider->add(new CookieBasedWidgetDisplayDecider(new WidgetCookieManager('sscm_widget', '1')));
 
         $widgetRenderer = $this->prophesize(WidgetRendererInterface::class);
 

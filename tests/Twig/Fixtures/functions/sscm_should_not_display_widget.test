@@ -4,7 +4,7 @@
 {{ sscm_should_display_widget(request) ? 'true' : 'false' }}
 --DATA--
 return [
-    'request' => \Symfony\Component\HttpFoundation\Request::create('/', 'GET', [], ['sscm_widget' => 1]),
+    'request' => \Symfony\Component\HttpFoundation\Request::create('/', 'GET', [], ['sscm_widget' => '1']),
 ]
 --EXPECT--
 false
