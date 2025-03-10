@@ -42,9 +42,13 @@ final class RequestBasedConsentChecker implements ConsentCheckerInterface
         }
 
         if (is_array($consentQuery)) {
-            return isset($consentQuery[$consent]) && is_string($consentQuery[$consent]) && 1 === (int) $consentQuery[$consent];
+            if (isset($consentQuery[$consent]) && is_numeric($consentQuery[$consent])) {
+                return 1 === (int) $consentQuery[$consent];
+            }
+
+            return $this->decorated->isGranted($consent);
         }
 
-        return 1 === (int) $consentQuery;
+        return is_numeric($consentQuery) ? 1 === (int) $consentQuery : $this->decorated->isGranted($consent);
     }
 }
