@@ -35,6 +35,14 @@
 
         <service id="Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\CompositeUrlProvider"/>
 
+        <service id="Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\HomepageUrlProvider">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="router"/>
+            <argument>%sylius.model.channel.class%</argument>
+
+            <tag name="setono_sylius_consent_management.url_provider"/>
+        </service>
+
         <service id="Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\TrackingUrlProvider">
             <argument type="service" id="doctrine"/>
             <argument type="service" id="sylius.repository.product"/>
