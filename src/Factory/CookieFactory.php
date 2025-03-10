@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Factory;
 
-use League\Uri\Contracts\UriInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\Url;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Sylius\Resource\Factory\FactoryInterface;
@@ -73,11 +73,15 @@ final class CookieFactory implements CookieFactoryInterface
         return $cookie;
     }
 
-    public function createFromBrowserKitCookie(BrowserKitCookie $cookie, UriInterface|string $url): CookieInterface
+    public function createFromBrowserKitCookie(BrowserKitCookie $cookie, Url $url): CookieInterface
     {
         $entity = $this->createNew();
         $entity->setUrl((string) $url);
         $entity->setName($cookie->getName());
+
+        if (null !== $url->channel) {
+            $entity->addChannel($url->channel);
+        }
 
         $expires = $cookie->getExpiresTime();
 

@@ -22,7 +22,7 @@ final class ModifyUrlSubscriber implements EventSubscriberInterface
 
     public function modify(WillCrawl $event): void
     {
-        $event->url = Uri::createFromUri(UriModifier::appendQuery($event->url, sprintf(
+        $event->url->value = Uri::createFromUri(UriModifier::appendQuery($event->url->value, sprintf(
             '%s=1&%s=0',
             RequestBasedConsentChecker::CONSENT_QUERY_PARAM,
             SampleDecider::SAMPLE_QUERY_PARAMETER,

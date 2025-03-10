@@ -7,7 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Provider\UrlProvider;
 interface UrlProviderInterface
 {
     /**
-     * @return iterable<string>
+     * @return iterable<Url>
      */
     public function getUrls(): iterable;
 }

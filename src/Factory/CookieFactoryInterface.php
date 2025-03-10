@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Factory;
 
-use League\Uri\Contracts\UriInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\Url;
 use Sylius\Resource\Factory\FactoryInterface;
 use Symfony\Component\BrowserKit\Cookie as BrowserKitCookie;
 
@@ -20,5 +20,5 @@ interface CookieFactoryInterface extends FactoryInterface
      */
     public function createFromSample(mixed $sample): CookieInterface;
 
-    public function createFromBrowserKitCookie(BrowserKitCookie $cookie, UriInterface|string $url): CookieInterface;
+    public function createFromBrowserKitCookie(BrowserKitCookie $cookie, Url $url): CookieInterface;
 }

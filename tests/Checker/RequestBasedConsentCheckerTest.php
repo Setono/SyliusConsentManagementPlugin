@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\ConsentBundle\Checker\StaticConsentChecker;
@@ -14,6 +15,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class RequestBasedConsentCheckerTest extends TestCase
 {
+    use ProphecyTrait;
+
+    private ConsentCheckerInterface $decoratedChecker;
+
+    private RequestStack $requestStack;
+    private RequestBasedConsentChecker $checker;
+
+    protected function setUp(): void
+    {
+        $this->decoratedChecker = $this->prophesize(ConsentCheckerInterface::class);
+
+        $this->checker = new RequestBasedConsentChecker($this->decoratedChecker->reveal());
+    }
+
     /**
      * @test
      */

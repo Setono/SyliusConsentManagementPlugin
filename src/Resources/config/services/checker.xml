@@ -9,15 +9,17 @@
             <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker"
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\SessionCachedConsentChecker"
                  decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="300">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker.inner"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\SessionCachedConsentChecker.inner"/>
             <argument type="service" id="request_stack"/>
+
+            <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Checker\SessionCachedConsentChecker"
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker"
                  decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="200">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\SessionCachedConsentChecker.inner"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker.inner"/>
             <argument type="service" id="request_stack"/>
         </service>
 
