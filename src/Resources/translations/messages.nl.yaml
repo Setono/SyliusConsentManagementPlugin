@@ -58,7 +58,6 @@ setono_sylius_consent_management:
             necessary:
                 description: Noodzakelijke cookies zijn essentieel voor de goede werking van de website
                 name: Vereist
-        create_default_categories: Standaardcategorieën maken
         category: Categorie
         categories: Categorieën
         category_header: Categorieën

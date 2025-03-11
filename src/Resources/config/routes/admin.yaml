@@ -1,9 +1,3 @@
-setono_sylius_consent_management_admin_create_default_categories:
-    path: /create-default-categories
-    methods: GET
-    defaults:
-        _controller: Setono\SyliusConsentManagementPlugin\Controller\Admin\CreateDefaultCategoriesAction
-        
 setono_sylius_consent_management_admin_bump_last_seen_at:
     path: /cookies/bump-last-seen-at
     methods: POST

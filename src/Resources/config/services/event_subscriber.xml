@@ -32,13 +32,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <!-- Grid -->
-        <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Grid\AddCreateDefaultCategoriesButtonSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.repository.category"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <!-- Workflow -->
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Workflow\NotifyAboutCookiesSubscriber">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManagerInterface"/>

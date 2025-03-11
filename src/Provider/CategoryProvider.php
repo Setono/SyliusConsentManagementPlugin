@@ -6,24 +6,31 @@ namespace Setono\SyliusConsentManagementPlugin\Provider;
 
 use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Factory\CategoryFactoryInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterface
+final class CategoryProvider implements CategoryProviderInterface
 {
     public function __construct(
+        private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly CategoryFactoryInterface $categoryFactory,
         private readonly RepositoryInterface $localeRepository,
         private readonly TranslatorInterface $translator,
     ) {
     }
 
-    public function getCategories(): \Generator
+    public function getCategories(): array
     {
-        $defaultCategories = array_merge(DefaultConsents::all(), ['necessary']);
+        $categories = $this->categoryRepository->findAll();
+        if ([] !== $categories) {
+            return $categories;
+        }
 
-        foreach ($defaultCategories as $defaultCategory) {
+        $defaultConsents = array_merge(DefaultConsents::all(), ['necessary']);
+
+        foreach ($defaultConsents as $defaultConsent) {
             $translations = [];
 
             /** @var LocaleInterface $locale */
@@ -32,13 +39,13 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
 
                 $translations[$localeCode] = [
                     'name' => $this->translator->trans(
-                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.name', $defaultCategory),
+                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.name', $defaultConsent),
                         [],
                         null,
                         $localeCode,
                     ),
                     'description' => $this->translator->trans(
-                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.description', $defaultCategory),
+                        sprintf('setono_sylius_consent_management.ui.default_categories.%s.description', $defaultConsent),
                         [],
                         null,
                         $localeCode,
@@ -46,7 +53,12 @@ final class DefaultCategoriesProvider implements DefaultCategoriesProviderInterf
                 ];
             }
 
-            yield $this->categoryFactory->createWithData($defaultCategory, $translations, 'necessary' === $defaultCategory);
+            $category = $this->categoryFactory->createWithData($defaultConsent, $translations, 'necessary' === $defaultConsent);
+            $this->categoryRepository->add($category);
+
+            $categories[] = $category;
         }
+
+        return $categories;
     }
 }

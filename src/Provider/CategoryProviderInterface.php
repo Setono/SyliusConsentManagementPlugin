@@ -6,10 +6,10 @@ namespace Setono\SyliusConsentManagementPlugin\Provider;
 
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 
-interface DefaultCategoriesProviderInterface
+interface CategoryProviderInterface
 {
     /**
-     * @return iterable<CategoryInterface>
+     * @return array<array-key, CategoryInterface>
      */
-    public function getCategories(): iterable;
+    public function getCategories(): array;
 }
