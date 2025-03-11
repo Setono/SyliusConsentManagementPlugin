@@ -177,7 +177,7 @@ jobs:
         steps:
             -   name: "Start MySQL"
                 run: "sudo /etc/init.d/mysql start"
-            
+
             -   name: "Checkout"
                 uses: "actions/checkout@v4"
 
@@ -201,9 +201,9 @@ jobs:
 
             -   name: "Create database schema"
                 run: "(cd tests/Application && bin/console doctrine:schema:create -vvv)"
-                
+
             -   name: "Run phpunit"
-                run: "composer phpunit"
+                run: "vendor/bin/phpunit --testsuite unit"
 
     integration-tests:
         name: "Integration tests (PHP${{ matrix.php-version }} | Deps: ${{ matrix.dependencies }} | SF${{ matrix.symfony }})"
@@ -230,7 +230,7 @@ jobs:
 
             -   name: "Checkout"
                 uses: "actions/checkout@v4"
-
+                
             -   name: "Setup PHP, with composer and extensions"
                 uses: "shivammathur/setup-php@v2"
                 with:
@@ -246,6 +246,17 @@ jobs:
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
 
+            -   name: "Setup node"
+                uses: "actions/setup-node@v4"
+                with:
+                    node-version: 18
+
+            -   name: "Install node packages"
+                run: "(cd tests/Application && yarn install)"
+                
+            -   name: "Build node packages"
+                run: "(cd tests/Application && yarn build)"
+
             -   name: "Lint container"
                 run: "(cd tests/Application && bin/console lint:container)"
 
@@ -257,6 +268,23 @@ jobs:
 
             -   name: "Validate Doctrine mapping"
                 run: "(cd tests/Application && bin/console doctrine:schema:validate -vvv)" # The verbose flag will show 'missing' SQL statements, if any
+
+            -   name: "Load fixtures"
+                run: "(cd tests/Application && bin/console sylius:fixtures:load -n -vvv)"
+                
+            -   name: "Install assets"
+                run: "(cd tests/Application && bin/console assets:install)"
+
+            -   name: "Run phpunit"
+                run: "vendor/bin/phpunit --testsuite functional"
+
+            -   name: "Upload screenshots"
+                uses: "actions/upload-artifact@v4"
+                if: "failure()"
+                with:
+                    name: "Panther screenshots"
+                    path: "var/error-screenshots/"
+                    if-no-files-found: "ignore"
 
     mutation-tests:
         name: "Mutation tests"
@@ -274,7 +302,7 @@ jobs:
         steps:
             -   name: "Start MySQL"
                 run: "sudo /etc/init.d/mysql start"
-            
+
             -   name: "Checkout"
                 uses: "actions/checkout@v4"
 
@@ -289,7 +317,7 @@ jobs:
                 uses: "ramsey/composer-install@v3"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-                    
+
             -   name: "Create database"
                 run: "(cd tests/Application && bin/console doctrine:database:create -vvv)"
 
@@ -315,7 +343,7 @@ jobs:
         steps:
             -   name: "Start MySQL"
                 run: "sudo /etc/init.d/mysql start"
-            
+
             -   name: "Checkout"
                 uses: "actions/checkout@v4"
 
@@ -330,7 +358,7 @@ jobs:
                 uses: "ramsey/composer-install@v3"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-                    
+
             -   name: "Create database"
                 run: "(cd tests/Application && bin/console doctrine:database:create -vvv)"
 

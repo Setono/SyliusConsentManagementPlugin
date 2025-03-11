@@ -27,7 +27,7 @@
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "setono/bot-detection-bundle": "^1.13",
         "setono/client": "^1.1",
-        "setono/client-bundle": "^1.0",
+        "setono/client-bundle": "^1.1",
         "setono/composite-compiler-pass": "^1.2",
         "setono/consent-bundle": "^1.2",
         "setono/consent-contracts": "^1.1",
@@ -69,7 +69,7 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "api-platform/core": "^2.5",
+        "api-platform/core": "^2.7",
         "babdev/pagerfanta-bundle": "^3.8",
         "behat/behat": "^3.14",
         "doctrine/doctrine-bundle": "^2.7",
@@ -85,7 +85,7 @@
         "setono/code-quality-pack": "^2.8.3",
         "setono/sylius-behat-pack": "^0.2.2",
         "shipmonk/composer-dependency-analyser": "^1.8.2",
-        "sylius/sylius": "~1.12.13",
+        "sylius/sylius": "~1.12.19",
         "symfony/debug-bundle": "^6.4 || ^7.0",
         "symfony/dotenv": "^6.4 || ^7.0",
         "symfony/intl": "^6.4 || ^7.0",
