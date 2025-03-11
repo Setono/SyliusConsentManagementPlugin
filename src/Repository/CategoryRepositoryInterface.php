@@ -13,16 +13,4 @@ use Sylius\Resource\Doctrine\Persistence\RepositoryInterface;
 interface CategoryRepositoryInterface extends RepositoryInterface
 {
     public function findAll(): array;
-
-    public function findOneByCode(string $code): ?CategoryInterface;
-
-    /**
-     * @return list<CategoryInterface>
-     */
-    public function findNecessary(): array;
-
-    /**
-     * Returns true if one or more categories exist
-     */
-    public function hasOne(): bool;
 }
