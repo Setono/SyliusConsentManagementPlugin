@@ -27,7 +27,7 @@
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "setono/bot-detection-bundle": "^1.13",
         "setono/client": "^1.1",
-        "setono/client-bundle": "^1.0@beta",
+        "setono/client-bundle": "^1.0",
         "setono/composite-compiler-pass": "^1.2",
         "setono/consent-bundle": "^1.2",
         "setono/consent-contracts": "^1.1",
