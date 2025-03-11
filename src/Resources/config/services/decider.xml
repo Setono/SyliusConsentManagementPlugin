@@ -24,12 +24,6 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CachedWidgetDisplayDecider.inner"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\SessionCachedWidgetDisplayDecider"
-                 decorates="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"
-                 decoration-priority="128">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\SessionCachedWidgetDisplayDecider.inner"/>
-        </service>
-
         <service id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CookieBasedWidgetDisplayDecider">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface"/>
 
