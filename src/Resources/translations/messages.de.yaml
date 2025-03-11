@@ -58,7 +58,6 @@ setono_sylius_consent_management:
             necessary:
                 description: Notwendige Cookies sind für das ordnungsgemäße Funktionieren der Website unerlässlich
                 name: Notwendig
-        create_default_categories: Standardkategorien erstellen
         category: Kategorie
         categories: Katogorien
         category_header: Kategorien

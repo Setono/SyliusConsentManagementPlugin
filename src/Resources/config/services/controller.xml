@@ -5,12 +5,6 @@
         <defaults public="true"/>
 
         <!-- Admin related -->
-        <service id="Setono\SyliusConsentManagementPlugin\Controller\Admin\CreateDefaultCategoriesAction">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\DefaultCategoriesProviderInterface"/>
-            <argument type="service" id="router"/>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="Setono\SyliusConsentManagementPlugin\Controller\Admin\BumpLastSeenAtAction">
             <argument type="service" id="doctrine"/>
             <argument type="service" id="router"/>

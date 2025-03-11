@@ -58,7 +58,6 @@ setono_sylius_consent_management:
             necessary:
                 description: Nödvändiga cookies är väsentliga för att webbplatsen ska fungera korrekt
                 name: Nödvändig
-        create_default_categories: Skapa standardkategorier
         category: Kategori
         categories: Kategorier
         category_header: Kategorier

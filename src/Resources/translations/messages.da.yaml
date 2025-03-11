@@ -45,7 +45,6 @@ setono_sylius_consent_management:
                     widget_configuration: Widget-indstillinger
     ui:
         necessary: Obligatorisk
-        create_default_categories: Opret standard kategorier
         default_categories:
             marketing:
                 description: Cookies brugt til markedsføringsformål

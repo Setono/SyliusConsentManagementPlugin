@@ -87,7 +87,6 @@ setono_sylius_consent_management:
         cookie_header: Cookies
         cookie_subheader: Manage cookies
         cookies: Cookies
-        create_default_categories: Create default categories
         default_categories:
             functional:
                 description: Cookies used for functional purposes
