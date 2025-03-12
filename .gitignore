@@ -1,4 +1,6 @@
 /.build/
+/drivers
+/var
 /vendor/
 /node_modules/
 /composer.lock
