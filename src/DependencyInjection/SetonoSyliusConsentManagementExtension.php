@@ -202,7 +202,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                         ],
                         'updatedAt' => [
                             'type' => 'datetime',
-                            'label' => 'sylius.ui.updated_at',
+                            'label' => 'setono_sylius_consent_management.ui.updated_at',
                         ],
                     ],
                     'filters' => [

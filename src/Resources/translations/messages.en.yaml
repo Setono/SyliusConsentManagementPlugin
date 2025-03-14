@@ -118,6 +118,7 @@ setono_sylius_consent_management:
         session_cookie_information: A session cookie is a type of cookie that is used to store data about a user's session on a website. Unlike persistent cookies, session cookies exist only temporarily while the user is navigating a website.
         statistics: Statistics
         ttl: Time to live
+        updated_at: Updated at
         url: URL
         user_agent: User agent
         widget:
