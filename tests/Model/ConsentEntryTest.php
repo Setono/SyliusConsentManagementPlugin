@@ -6,7 +6,6 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Model;
 
 use PHPUnit\Framework\TestCase;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
-use Setono\SyliusConsentManagementPlugin\Model\FormerConsent;
 
 /**
  * @covers \Setono\SyliusConsentManagementPlugin\Model\ConsentEntry
@@ -29,23 +28,5 @@ final class ConsentEntryTest extends TestCase
         self::assertSame('user agent', $consentEntry->getUserAgent());
         self::assertSame('https://example.com', $consentEntry->getUrl());
         self::assertSame('192.168.1.1', $consentEntry->getIp());
-    }
-
-    /**
-     * @test
-     */
-    public function it_populates_from_former_consent(): void
-    {
-        $formerConsent = new FormerConsent(true, true, true);
-        $formerConsent->url = 'https://example.com';
-        $formerConsent->userAgent = 'Chr0me';
-        $formerConsent->ip = '127.0.0.1';
-
-        $consentEntry = new ConsentEntry();
-        $consentEntry->populateFromFormerConsent($formerConsent);
-
-        self::assertSame('https://example.com', $consentEntry->getUrl());
-        self::assertSame('Chr0me', $consentEntry->getUserAgent());
-        self::assertSame('127.0.0.1', $consentEntry->getIp());
     }
 }
