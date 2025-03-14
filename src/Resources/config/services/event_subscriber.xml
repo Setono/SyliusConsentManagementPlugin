@@ -6,17 +6,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_consent_management.event_subscriber.former_consent_platform"
-                 class="Setono\SyliusConsentManagementPlugin\EventSubscriber\FormerConsentPlatformSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.platform.registry"/>
-            <argument type="service" id="Setono\ClientBundle\Context\ClientContextInterface"/>
-            <argument type="service" id="setono_sylius_consent_management.repository.consent_entry"/>
-            <argument type="service" id="setono_sylius_consent_management.factory.consent_entry"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesClientSideSubscriber">
             <argument type="service" id="twig"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>

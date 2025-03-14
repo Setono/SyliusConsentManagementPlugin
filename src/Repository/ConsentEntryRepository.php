@@ -15,7 +15,7 @@ class ConsentEntryRepository extends EntityRepository implements ConsentEntryRep
     {
         $result = $this->createQueryBuilder('o')
             ->andWhere('o.clientId = :clientId')
-            ->setParameter('clientId', $client)
+            ->setParameter('clientId', $client->id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
