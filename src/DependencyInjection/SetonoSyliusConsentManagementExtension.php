@@ -447,6 +447,14 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
 
         $container->prependExtensionConfig('sylius_ui', [
             'events' => [
+                'setono_sylius_consent_management.admin.consent_entry.index' => [
+                    'blocks' => [
+                        'statistics' => [
+                            'template' => '@SetonoSyliusConsentManagementPlugin/admin/consent_entry/statistics.html.twig',
+                            'priority' => 15,
+                        ],
+                    ],
+                ],
                 'setono_sylius_consent_management.admin.widget_config.index' => [
                     'blocks' => [
                         'index_header' => [

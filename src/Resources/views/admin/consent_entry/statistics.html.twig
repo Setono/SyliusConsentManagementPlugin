@@ -1,0 +1,38 @@
+{% set header_styles = 'font-size: 80px; font-weight: bold; line-height: 100px' %}
+{% set caption_styles = 'font-size: 20px' %}
+
+{% set time_threshold = '-30 days' %}
+{% set consent_entry_count = sscm_consent_entry_count() %}
+{% set consent_entry_count_last_30_days = sscm_consent_entry_count(time_threshold) %}
+{% set consented_count = sscm_consented_count() %}
+{% set consented_count_last_30_days = sscm_consented_count(time_threshold) %}
+
+<div class="ui four column stackable grid">
+    <div class="column">
+        <div class="ui segment" style="text-align: center;">
+            <div style="{{ header_styles }}">{{ consent_entry_count }}</div>
+            <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consent_entries'|trans|lower }}</div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="ui segment" style="text-align: center;">
+            <div style="{{ header_styles }}">{{ consented_count }} / {{ (consented_count / consent_entry_count * 100)|round }}%</div>
+            <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consented'|trans|lower }}</div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="ui segment" style="text-align: center;">
+            <div style="{{ header_styles }}">{{ consent_entry_count_last_30_days }}</div>
+            <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consent_entries_last_30_days'|trans|lower }}</div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="ui segment" style="text-align: center;">
+            <div style="{{ header_styles }}">{{ consented_count_last_30_days }} / {{ (consented_count_last_30_days / consent_entry_count_last_30_days * 100)|round }}%</div>
+            <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consented_last_30_days'|trans|lower }}</div>
+        </div>
+    </div>
+</div>

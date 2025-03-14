@@ -11,5 +11,10 @@
         <service id="Setono\SyliusConsentManagementPlugin\EventListener\Doctrine\ORMTranslatableListener">
             <tag name="doctrine.event_listener" event="loadClassMetadata"/>
         </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\EventListener\Doctrine\SortConsentedCategoriesListener">
+            <tag name="doctrine.event_listener" event="prePersist"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+        </service>
     </services>
 </container>
