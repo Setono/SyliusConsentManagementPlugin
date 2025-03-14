@@ -50,14 +50,12 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
 
     public function consentedCount(string $timeThreshold = null): int
     {
-        $json = json_encode($this->getCategories(), \JSON_THROW_ON_ERROR);
-
         $qb = $this->getManager($this->consentEntryClass)
             ->createQueryBuilder()
             ->select('COUNT(o)')
             ->from($this->consentEntryClass, 'o')
-            ->andWhere('o.consentedCategories = :json')
-            ->setParameter('json', $json)
+            ->andWhere('o.consentedCategories = :consentedCategories')
+            ->setParameter('consentedCategories', implode(',', $this->getCategories()))
         ;
 
         if (null !== $timeThreshold) {
