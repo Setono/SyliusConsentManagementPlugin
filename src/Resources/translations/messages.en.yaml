@@ -78,8 +78,11 @@ setono_sylius_consent_management:
         category_subheader: Manage your categories
         client_id: Client id
         confirmed: Confirmed
+        consented: Consented
         consented_categories: Consented categories
+        consented_last_30_days: Consented last 30 days
         consent_entries: Consent entries
+        consent_entries_last_30_days: Consent entries last 30 days
         consent_entry_header: Consent entries
         consent_entry_search: Search for a client id or an IP address
         consent_entry_subheader: List of consent entries

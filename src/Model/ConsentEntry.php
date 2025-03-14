@@ -82,6 +82,8 @@ class ConsentEntry implements ConsentEntryInterface
             return;
         }
 
+        $this->consentedCategories = [];
+
         foreach ($consentedCategories as $consentedCategory) {
             $this->addConsentedCategory($consentedCategory);
         }
