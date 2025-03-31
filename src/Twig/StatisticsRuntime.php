@@ -88,7 +88,7 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
 
         $codes = array_map(static fn (array $row): string => $row['code'], $codes);
 
-        sort($codes);
+        sort($codes, \SORT_STRING);
 
         return $codes;
     }
