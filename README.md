@@ -3,18 +3,13 @@
 [![Build Status][ico-github-actions]][link-github-actions]
 
 This plugin will create a consent dialog that every user will see. The user is given the option to accept all 'services'
-or edit their choice by clicking a 'More information' button.
-
-Inspiration to some choices made in this plugin is based on the guidelines in this document: https://gdpr.eu/cookies.
+or necessary services.
 
 ## Installation
 
 ```shell
 composer require setono/sylius-consent-management-plugin
 ```
-
-**NOTICE** that this plugin uses the `twig/markdown-extra`, `twig/extra-bundle`, and `league/commonmark` to render the widget with Markdown.
-It should work out of the box with the Symfony Flex recipe, but if you're not using Symfony Flex, you should install the bundle manually.
 
 ### Register bundle
 
