@@ -1,9 +1,9 @@
 /**
  * @typedef {Object} ConsentManagerOptions
- * @property {Object} selector
- * @property {string} selector.categories - Selector for the consented categories element
+ * @property {Boolean} displayWidget
+ * @property {String[]} consentedCategories
  */
-class ConsentManager {
+export default class ConsentManager {
     /**
      * @type {ConsentManagerOptions}
      */
@@ -14,25 +14,14 @@ class ConsentManager {
      */
     constructor(options = {}) {
         this.#options = Object.assign({
-                selector: {
-                    categories: '#sscm-consented-categories-json',
-                },
-            },
-            options
-        );
+            displayWidget: false,
+            consentedCategories: [],
+        }, options);
 
-        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', this.#init.bind(this)) : this.#init();
-    }
-
-    #init() {
-        const categoriesElement = document.querySelector(this.#options.selector.categories);
-        if(null === categoriesElement) {
-            throw new Error('Categories element not found. Selector was: ' + this.#options.selector.categories);
-        }
-
-        const categories = JSON.parse(categoriesElement.textContent);
-        if(!Array.isArray(categories)) {
-            throw new Error('Categories element does not contain a valid JSON array');
+        if(this.#options.displayWidget) {
+            import('./consent_widget.js').then((module) => {
+                new module.default(window.sscmWidgetOptions || {});
+            });
         }
 
         /**
@@ -46,11 +35,11 @@ class ConsentManager {
             this.#loadScripts(event.detail.categories);
         });
 
-        this.#dispatchEvents(categories);
+        this.#dispatchEvents(this.#options.consentedCategories);
     }
 
     /**
-     * @param {Array<string>} categories
+     * @param {string[]} categories
      */
     #dispatchEvents(categories) {
         document.dispatchEvent(new CustomEvent('sscm:consent:granted', {
@@ -68,7 +57,7 @@ class ConsentManager {
     }
 
     /**
-     * @param {Array<string>} categories
+     * @param {string[]} categories
      */
     #dispatchDatalayerEvents(categories) {
         if (undefined === window.dataLayer) {
@@ -81,7 +70,7 @@ class ConsentManager {
     }
 
     /**
-     * @param {Array<string>} categories
+     * @param {string[]} categories
      */
     #loadScripts(categories) {
         const scripts = document.querySelectorAll('script[data-sscm-consent]');
@@ -102,5 +91,3 @@ class ConsentManager {
         });
     }
 }
-
-new ConsentManager(window.sscmManager || {});

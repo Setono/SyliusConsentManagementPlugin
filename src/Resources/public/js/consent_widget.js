@@ -5,10 +5,10 @@
  * @property {string} selector.backdrop - Selector for the backdrop element
  * @property {string} selector.widget - Selector for the widget container
  * @property {Object} callback
- * @property {Function} callback.acceptAll - Callback function to call when the accept all button is clicked. The first argument is the consent widget object
- * @property {Function} callback.acceptSelected - Callback function to call when the accept selected button is clicked. The first argument is the consent widget object
+ * @property {Function} callback.acceptAll - Callback function to call when the 'Accept all' button is clicked. The first argument is the consent widget object
+ * @property {Function} callback.acceptSelected - Callback function to call when the 'Accept selected' button is clicked. The first argument is the consent widget object
  */
-class ConsentWidget {
+export default class ConsentWidget {
     /**
      * @type {ConsentWidgetOptions}
      */
@@ -44,10 +44,6 @@ class ConsentWidget {
             options
         );
 
-        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', this.#init.bind(this)) : this.#init();
-    }
-
-    #init() {
         this.#backdrop = document.querySelector(this.#options.selector.backdrop);
         if(null === this.#backdrop) {
             throw new Error('Backdrop element not found. Selector was: ' + this.#options.selector.backdrop);
@@ -127,5 +123,3 @@ class ConsentWidget {
         });
     }
 }
-
-new ConsentWidget(window.sscmWidget || {});

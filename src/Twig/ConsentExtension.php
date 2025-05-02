@@ -18,7 +18,7 @@ final class ConsentExtension extends AbstractExtension
             new TwigFunction('sscm_statistics_granted', [ConsentRuntime::class, 'statisticalGranted']),
             new TwigFunction('sscm_script_tag', [ConsentRuntime::class, 'scriptTag'], ['is_safe' => ['html']]),
             new TwigFunction('sscm_script_tag_attributes', [ConsentRuntime::class, 'scriptTagAttributes'], ['is_safe' => ['html']]),
-            new TwigFunction('sscm_consented_categories_script_tag', [ConsentRuntime::class, 'consentedCategoriesScriptTag'], ['is_safe' => ['html']]),
+            new TwigFunction('sscm_consented_categories_json', [ConsentRuntime::class, 'consentedCategoriesJson'], ['is_safe' => ['html']]),
         ];
     }
 }

@@ -1,8 +1,8 @@
 --TEST--
-"sscm_consented_categories_script_tag" function
+"sscm_consented_categories_json" function
 --TEMPLATE--
-{{ sscm_consented_categories_script_tag() }}
+{{ sscm_consented_categories_json() }}
 --DATA--
 return []
 --EXPECT--
-<script type="application/json" id="sscm-consented-categories-json">["functional","statistical"]</script>
+["functional","statistical"]
