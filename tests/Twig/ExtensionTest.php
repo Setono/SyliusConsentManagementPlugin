@@ -15,7 +15,6 @@ use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,9 +42,6 @@ final class ExtensionTest extends IntegrationTestCase
         $category2 = new Category();
         $category2->setCode(DefaultConsents::CONSENT_STATISTICAL);
 
-        $categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
-        $categoryRepository->findAll()->willReturn([$category1, $category2]);
-
         $widgetDisplayDecider = new CompositeWidgetDisplayDecider();
         $widgetDisplayDecider->add(new CookieBasedWidgetDisplayDecider(new WidgetCookieManager('sscm_widget', '1')));
 
@@ -53,10 +49,9 @@ final class ExtensionTest extends IntegrationTestCase
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($widgetConfigProvider->reveal(), $categoryRepository->reveal(), $widgetDisplayDecider, $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($widgetConfigProvider->reveal(), $widgetDisplayDecider, $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-                private readonly CategoryRepositoryInterface $categoryRepository,
                 private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
                 private readonly WidgetRendererInterface $widgetRenderer,
                 private readonly RequestStack $requestStack,
@@ -72,7 +67,6 @@ final class ExtensionTest extends IntegrationTestCase
 
                 return new Runtime(
                     $this->widgetConfigProvider,
-                    $this->categoryRepository,
                     $this->widgetDisplayDecider,
                     $this->widgetRenderer,
                     $this->requestStack,

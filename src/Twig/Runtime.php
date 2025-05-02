@@ -8,7 +8,6 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeci
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,7 +18,6 @@ final class Runtime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
-        private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
         private readonly WidgetRendererInterface $widgetRenderer,
         private readonly RequestStack $requestStack,
@@ -70,11 +68,6 @@ final class Runtime implements RuntimeExtensionInterface
         }
 
         return sprintf("<style>\n.sscm-widget {\n%s\n}\n</style>", implode("\n", $ret));
-    }
-
-    public function categories(): array
-    {
-        return $this->categoryRepository->findAll();
     }
 
     /**
