@@ -17,9 +17,13 @@
             <tag name="twig.runtime"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Twig\Extension">
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\DateExtension">
             <argument type="service" id="translator"/>
 
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\Extension">
             <tag name="twig.extension"/>
         </service>
 

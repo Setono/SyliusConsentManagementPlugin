@@ -18,7 +18,6 @@ use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\Extension;
 use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Test\IntegrationTestCase;
 use Webmozart\Assert\Assert;
@@ -80,7 +79,7 @@ final class ExtensionTest extends IntegrationTestCase
     public function getExtensions(): array
     {
         return [
-            new Extension($this->prophesize(TranslatorInterface::class)->reveal()),
+            new Extension(),
         ];
     }
 
