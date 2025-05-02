@@ -65,18 +65,18 @@ final class ConsentRuntime implements RuntimeExtensionInterface, LoggerAwareInte
         return '';
     }
 
-    public function consentedCategoriesScriptTag(): string
+    /**
+     * Returns a JSON string like so ["necessary", "functional"]
+     */
+    public function consentedCategoriesJson(): string
     {
         try {
-            return sprintf(
-                '<script type="application/json" id="sscm-consented-categories-json">%s</script>',
-                json_encode($this->consentedCategoriesProvider->getCategories(), \JSON_THROW_ON_ERROR),
-            );
+            return json_encode($this->consentedCategoriesProvider->getCategories(), \JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
             $this->logger->error('Failed to encode consented categories', ['exception' => $e]);
         }
 
-        return '';
+        return '[]';
     }
 
     public function setLogger(LoggerInterface $logger): void
