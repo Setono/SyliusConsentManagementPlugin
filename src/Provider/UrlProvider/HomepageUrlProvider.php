@@ -14,7 +14,7 @@ final class HomepageUrlProvider extends AbstractUrlProvider
             $locale = $channel->getDefaultLocale()?->getCode();
             Assert::notNull($locale);
 
-            yield new Url($this->urlGenerator->generate('sylius_shop_homepage', ['_locale' => $locale]), $channel, $locale);
+            yield new Url($this->generateUrl($channel, $locale, 'sylius_shop_homepage'), $channel, $locale);
         }
     }
 }

@@ -44,4 +44,16 @@ abstract class AbstractUrlProvider implements UrlProviderInterface
 
         return $channels;
     }
+
+    protected function generateUrl(ChannelInterface $channel, string $locale, string $route, array $parameters = []): string
+    {
+        $parameters['_locale'] = $locale;
+
+        $hostname = $channel->getHostname();
+        if (null === $hostname) {
+            return $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
+        return sprintf('https://%s/%s', $hostname, $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH));
+    }
 }
