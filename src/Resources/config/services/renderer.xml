@@ -10,5 +10,12 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
             <argument type="service" id="twig"/>
         </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRendererInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRenderer"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRenderer">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
+        </service>
     </services>
 </container>

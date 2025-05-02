@@ -47,6 +47,7 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRendererInterface"/>
             <argument type="service" id="request_stack"/>
 
             <tag name="twig.runtime"/>
