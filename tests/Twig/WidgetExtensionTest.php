@@ -15,18 +15,18 @@ use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
-use Setono\SyliusConsentManagementPlugin\Twig\Extension;
-use Setono\SyliusConsentManagementPlugin\Twig\Runtime;
+use Setono\SyliusConsentManagementPlugin\Twig\WidgetExtension;
+use Setono\SyliusConsentManagementPlugin\Twig\WidgetRuntime;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 use Twig\Test\IntegrationTestCase;
 use Webmozart\Assert\Assert;
 
 /**
- * @covers \Setono\SyliusConsentManagementPlugin\Twig\Extension
- * @covers \Setono\SyliusConsentManagementPlugin\Twig\Runtime
+ * @covers \Setono\SyliusConsentManagementPlugin\Twig\WidgetExtension
+ * @covers \Setono\SyliusConsentManagementPlugin\Twig\WidgetRuntime
  */
-final class ExtensionTest extends IntegrationTestCase
+final class WidgetExtensionTest extends IntegrationTestCase
 {
     use ProphecyTrait;
 
@@ -60,11 +60,11 @@ final class ExtensionTest extends IntegrationTestCase
             /**
              * @param string $class
              */
-            public function load($class): Runtime
+            public function load($class): WidgetRuntime
             {
-                Assert::same($class, Runtime::class);
+                Assert::same($class, WidgetRuntime::class);
 
-                return new Runtime(
+                return new WidgetRuntime(
                     $this->widgetConfigProvider,
                     $this->widgetDisplayDecider,
                     $this->widgetRenderer,
@@ -79,12 +79,12 @@ final class ExtensionTest extends IntegrationTestCase
     public function getExtensions(): array
     {
         return [
-            new Extension(),
+            new WidgetExtension(),
         ];
     }
 
     protected function getFixturesDir(): string
     {
-        return __DIR__ . '/Fixtures/';
+        return __DIR__ . '/WidgetFixtures/';
     }
 }

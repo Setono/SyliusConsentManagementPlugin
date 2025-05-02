@@ -2,6 +2,7 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <!-- Consent -->
         <service id="Setono\SyliusConsentManagementPlugin\Twig\ConsentExtension">
             <tag name="twig.extension"/>
         </service>
@@ -17,25 +18,14 @@
             <tag name="twig.runtime"/>
         </service>
 
+        <!-- Date -->
         <service id="Setono\SyliusConsentManagementPlugin\Twig\DateExtension">
             <argument type="service" id="translator"/>
 
             <tag name="twig.extension"/>
         </service>
 
-        <service id="Setono\SyliusConsentManagementPlugin\Twig\Extension">
-            <tag name="twig.extension"/>
-        </service>
-
-        <service id="Setono\SyliusConsentManagementPlugin\Twig\Runtime">
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface"/>
-            <argument type="service" id="request_stack"/>
-
-            <tag name="twig.runtime"/>
-        </service>
-
+        <!-- Statistics -->
         <service id="Setono\SyliusConsentManagementPlugin\Twig\StatisticsExtension">
             <tag name="twig.extension"/>
         </service>
@@ -44,6 +34,20 @@
             <argument type="service" id="doctrine"/>
             <argument>%setono_sylius_consent_management.model.category.class%</argument>
             <argument>%setono_sylius_consent_management.model.consent_entry.class%</argument>
+
+            <tag name="twig.runtime"/>
+        </service>
+
+        <!-- Widget -->
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\WidgetExtension">
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Twig\WidgetRuntime">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface"/>
+            <argument type="service" id="request_stack"/>
 
             <tag name="twig.runtime"/>
         </service>

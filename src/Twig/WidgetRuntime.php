@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use function Symfony\Component\String\u;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final class Runtime implements RuntimeExtensionInterface
+final class WidgetRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
