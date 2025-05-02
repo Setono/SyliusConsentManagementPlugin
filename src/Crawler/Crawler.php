@@ -57,7 +57,11 @@ final class Crawler implements CrawlerInterface, LoggerAwareInterface
 
             $this->logger->info('Crawling {url}', ['url' => (string) $willCrawl->url]);
 
-            $client->request('GET', (string) $willCrawl->url);
+            try {
+                $client->request('GET', (string) $willCrawl->url);
+            } catch (\Throwable $e) {
+                throw new \RuntimeException(sprintf('Failed to crawl %s. Error was: %s', $willCrawl->url, $e->getMessage()), 0, $e);
+            }
 
             if ($this->options['wait_for_document_ready'] > 0) {
                 $this->logger->info('Will wait a maximum of {delay} seconds document ready', ['delay' => $this->options['wait_for_document_ready']]);
