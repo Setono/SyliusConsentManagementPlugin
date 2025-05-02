@@ -17,7 +17,13 @@
 
     <div class="column">
         <div class="ui segment" style="text-align: center;">
-            <div style="{{ header_styles }}">{{ consented_count }} / {{ (consented_count / consent_entry_count * 100)|round }}%</div>
+            <div style="{{ header_styles }}">
+                {% if consent_entry_count == 0 %}
+                    0%
+                {% else %}
+                    {{ consented_count }} / {{ (consented_count / consent_entry_count * 100)|round }}%
+                {% endif %}
+            </div>
             <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consented'|trans|lower }}</div>
         </div>
     </div>
@@ -31,7 +37,13 @@
 
     <div class="column">
         <div class="ui segment" style="text-align: center;">
-            <div style="{{ header_styles }}">{{ consented_count_last_30_days }} / {{ (consented_count_last_30_days / consent_entry_count_last_30_days * 100)|round }}%</div>
+            <div style="{{ header_styles }}">
+                {% if consent_entry_count_last_30_days == 0 %}
+                    0%
+                {% else %}
+                    {{ consented_count_last_30_days }} / {{ (consented_count_last_30_days / consent_entry_count_last_30_days * 100)|round }}%
+                {% endif %}
+            </div>
             <div style="{{ caption_styles }}">{{ 'setono_sylius_consent_management.ui.consented_last_30_days'|trans|lower }}</div>
         </div>
     </div>
