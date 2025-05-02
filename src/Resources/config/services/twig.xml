@@ -10,6 +10,10 @@
             <argument type="service" id="Setono\Consent\ConsentCheckerInterface"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Provider\ConsentedCategoriesProviderInterface"/>
 
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
+
             <tag name="twig.runtime"/>
         </service>
 

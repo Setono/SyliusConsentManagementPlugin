@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Twig;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Setono\Consent\ConsentCheckerInterface;
 use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Provider\ConsentedCategoriesProviderInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final class ConsentRuntime implements RuntimeExtensionInterface
+final class ConsentRuntime implements RuntimeExtensionInterface, LoggerAwareInterface
 {
+    private LoggerInterface $logger;
+
     public function __construct(
         private readonly ConsentCheckerInterface $consentChecker,
         private readonly ConsentedCategoriesProviderInterface $consentedCategoriesProvider,
     ) {
+        $this->logger = new NullLogger();
     }
 
     public function isGranted(string $consent): bool
@@ -61,9 +67,20 @@ final class ConsentRuntime implements RuntimeExtensionInterface
 
     public function consentedCategoriesScriptTag(): string
     {
-        return sprintf(
-            '<script type="application/json" id="sscm-consented-categories-json">%s</script>',
-            json_encode($this->consentedCategoriesProvider->getCategories(), \JSON_THROW_ON_ERROR),
-        );
+        try {
+            return sprintf(
+                '<script type="application/json" id="sscm-consented-categories-json">%s</script>',
+                json_encode($this->consentedCategoriesProvider->getCategories(), \JSON_THROW_ON_ERROR),
+            );
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed to encode consented categories', ['exception' => $e]);
+        }
+
+        return '';
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 }
