@@ -45,7 +45,7 @@ setono_sylius_consent_management:
 
 ### Update the layout
 
-You need to inject the consent widget somewhere in your page (preferably before `</body>`):
+For the consent widget to be rendered, you will need to add the `sscm_widget()` function somewhere on your page (preferably before `</body>`):
 
 ```html
 <!-- ... -->
@@ -53,6 +53,7 @@ You need to inject the consent widget somewhere in your page (preferably before 
 {{ sscm_widget() }}
 </body>
 </html>
+
 ```
 
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
