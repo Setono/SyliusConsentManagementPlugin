@@ -15,6 +15,7 @@ use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
+use Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRendererInterface;
 use Setono\SyliusConsentManagementPlugin\Twig\WidgetExtension;
 use Setono\SyliusConsentManagementPlugin\Twig\WidgetRuntime;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,14 +46,16 @@ final class WidgetExtensionTest extends IntegrationTestCase
         $widgetDisplayDecider->add(new CookieBasedWidgetDisplayDecider(new WidgetCookieManager('sscm_widget', '1')));
 
         $widgetRenderer = $this->prophesize(WidgetRendererInterface::class);
+        $widgetStyleRenderer = $this->prophesize(WidgetStyleRendererInterface::class);
 
         $requestStack = new RequestStack();
 
-        $runtimeLoader = new class($widgetConfigProvider->reveal(), $widgetDisplayDecider, $widgetRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
+        $runtimeLoader = new class($widgetConfigProvider->reveal(), $widgetDisplayDecider, $widgetRenderer->reveal(), $widgetStyleRenderer->reveal(), $requestStack) implements RuntimeLoaderInterface {
             public function __construct(
                 private readonly WidgetConfigProviderInterface $widgetConfigProvider,
                 private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
                 private readonly WidgetRendererInterface $widgetRenderer,
+                private readonly WidgetStyleRendererInterface $widgetStyleRenderer,
                 private readonly RequestStack $requestStack,
             ) {
             }
@@ -68,6 +71,7 @@ final class WidgetExtensionTest extends IntegrationTestCase
                     $this->widgetConfigProvider,
                     $this->widgetDisplayDecider,
                     $this->widgetRenderer,
+                    $this->widgetStyleRenderer,
                     $this->requestStack,
                 );
             }

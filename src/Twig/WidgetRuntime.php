@@ -8,10 +8,10 @@ use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeci
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface;
 use Setono\SyliusConsentManagementPlugin\Renderer\WidgetRendererInterface;
+use Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRendererInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use function Symfony\Component\String\u;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class WidgetRuntime implements RuntimeExtensionInterface
@@ -20,6 +20,7 @@ final class WidgetRuntime implements RuntimeExtensionInterface
         private readonly WidgetConfigProviderInterface $widgetConfigProvider,
         private readonly WidgetDisplayDeciderInterface $widgetDisplayDecider,
         private readonly WidgetRendererInterface $widgetRenderer,
+        private readonly WidgetStyleRendererInterface $widgetStyleRenderer,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -55,52 +56,6 @@ final class WidgetRuntime implements RuntimeExtensionInterface
 
     public function widgetLayoutStyleTag(): string
     {
-        $layout = $this->filterLayout($this->widgetConfig()->getLayout());
-
-        if ([] === $layout) {
-            return '';
-        }
-
-        $ret = [];
-
-        foreach ($layout as $directive => $value) {
-            $ret[] = sprintf('--sscm-widget-%s: %s;', u($directive)->snake()->replace('_', '-'), self::castScalar($value));
-        }
-
-        return sprintf("<style>\n.sscm-widget {\n%s\n}\n</style>", implode("\n", $ret));
-    }
-
-    /**
-     * @return array<string, scalar>
-     */
-    private function filterLayout(array $layout): array
-    {
-        $ret = [];
-
-        foreach ($layout as $directive => $value) {
-            if (!is_string($directive) || !is_scalar($value)) {
-                continue;
-            }
-
-            if ('' === $value) {
-                continue;
-            }
-
-            $ret[$directive] = $value;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param scalar $value
-     */
-    private static function castScalar(mixed $value): string
-    {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-
-        return (string) $value;
+        return $this->widgetStyleRenderer->render();
     }
 }
