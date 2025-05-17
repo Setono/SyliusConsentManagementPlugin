@@ -1,0 +1,14 @@
+{% if sscm_should_display_widget() %}
+    {{ sscm_widget_layout_style_tag() }}
+    <link rel="stylesheet" href="{{ asset('bundles/setonosyliusconsentmanagementplugin/css/widget.css') }}">
+{% endif %}
+<script type="module">
+    import ConsentManager from "{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-manager.js') }}";
+
+    const options = Object.assign({
+        consentedCategories: {{ sscm_consented_categories_json() }},
+        displayWidget: {{ sscm_should_display_widget() ? 'true' : 'false' }},
+    }, window.sscmManagerOptions || {});
+
+    window.sscmManager = new ConsentManager(options);
+</script>

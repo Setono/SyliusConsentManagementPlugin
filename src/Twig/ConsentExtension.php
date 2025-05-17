@@ -11,6 +11,7 @@ final class ConsentExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {
+        /** @psalm-suppress InvalidArgument */
         return [
             new TwigFunction('sscm_is_granted', [ConsentRuntime::class, 'isGranted']),
             new TwigFunction('sscm_functional_granted', [ConsentRuntime::class, 'functionalGranted']),

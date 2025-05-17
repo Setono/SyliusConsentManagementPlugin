@@ -1,7 +1,7 @@
 /**
- * @typedef {Object} ConsentManagerOptions
- * @property {Boolean} displayWidget
- * @property {String[]} consentedCategories
+ * @typedef {object} ConsentManagerOptions
+ * @property {boolean} displayWidget
+ * @property {string[]} consentedCategories
  */
 export default class ConsentManager {
     /**
@@ -19,8 +19,8 @@ export default class ConsentManager {
         }, options);
 
         if(this.#options.displayWidget) {
-            import('./consent_widget.js').then((module) => {
-                new module.default(window.sscmWidgetOptions || {});
+            import('./consent-widget.js').then((module) => {
+                window.sscmWidget = new module.default(window.sscmWidgetOptions || {});
             });
         }
 
