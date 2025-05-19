@@ -1,6 +1,7 @@
 # Sylius Consent Management Plugin
 
 [![Build Status][ico-github-actions]][link-github-actions]
+[![Code Coverage][ico-code-coverage]][link-code-coverage]
 
 This plugin will create a consent dialog that every user will see. The user is given the option to accept all 'services'
 or necessary services.
@@ -64,5 +65,7 @@ The `sscm_widget()` will output the actual HTML needed to render the widget. It'
 will only render what's necessary, so in this case if the user has already seen the widget, it will output an empty string.
 
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
+[ico-code-coverage]: https://codecov.io/gh/Setono/SyliusConsentManagementPlugin/graph/badge.svg?token=C19PGH2X31
 
 [link-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/actions
+[link-code-coverage]: https://codecov.io/gh/Setono/SyliusConsentManagementPlugin
