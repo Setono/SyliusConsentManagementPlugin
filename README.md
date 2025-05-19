@@ -20,7 +20,7 @@ Add the bundle to `bundles.php` if not done automatically. Be sure to add this l
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
 ```
 
-### Build assets
+### Install assets
 
 ```shell
 php bin/console assets:install
@@ -43,18 +43,25 @@ setono_sylius_consent_management:
     resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes.yaml"
 ```
 
+If your store doesn't use locales, there's also a route file for that:
+
+```yaml
+# config/routes/setono_sylius_consent_management.yaml
+setono_sylius_consent_management:
+    resource: "@SetonoSyliusConsentManagementPlugin/Resources/config/routes_no_locale.yaml"
+```
+
 ### Update the layout
 
-For the consent widget to be rendered, you will need to add the `sscm_widget()` function somewhere on your page (preferably before `</body>`):
+For everything to work there are two Twig functions you need to call: `sscm_resources()` and `sscm_widget()`.
+The `sscm_resources()` should be called in your `<head>` section while the `sscm_widget()` should be called just before
+the `</body>`.
 
-```html
-<!-- ... -->
+The `sscm_resources()` function will output the JS and CSS needed to render the widget. It will only output what's
+necessary, so you don't have to worry about bloating your page with unused JS or CSS.
 
-{{ sscm_widget() }}
-</body>
-</html>
-
-```
+The `sscm_widget()` will output the actual HTML needed to render the widget. It's also true for this function that it
+will only render what's necessary, so in this case if the user has already seen the widget, it will output an empty string.
 
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
 

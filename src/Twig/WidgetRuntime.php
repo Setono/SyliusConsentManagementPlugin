@@ -12,6 +12,7 @@ use Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRendererInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class WidgetRuntime implements RuntimeExtensionInterface
@@ -23,6 +24,11 @@ final class WidgetRuntime implements RuntimeExtensionInterface
         private readonly WidgetStyleRendererInterface $widgetStyleRenderer,
         private readonly RequestStack $requestStack,
     ) {
+    }
+
+    public function resources(Environment $twig): string
+    {
+        return $twig->render('@SetonoSyliusConsentManagementPlugin/shop/resources.html.twig');
     }
 
     public function shouldDisplayWidget(Request $request = null): bool

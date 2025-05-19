@@ -14,6 +14,7 @@ final class StatisticsExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {
+        /** @psalm-suppress InvalidArgument */
         return [
             new TwigFunction('sscm_consent_entry_count', [StatisticsRuntime::class, 'consentEntryCount']),
             new TwigFunction('sscm_consented_count', [StatisticsRuntime::class, 'consentedCount']),

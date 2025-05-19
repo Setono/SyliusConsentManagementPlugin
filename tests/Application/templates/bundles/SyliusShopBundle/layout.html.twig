@@ -1,83 +1,82 @@
 <!DOCTYPE html>
-
 <html lang="{{ app.request.locale|slice(0, 2) }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>{% block title %}{{ sylius.channel.name }}{% endblock %}</title>
+        <title>{% block title %}{{ sylius.channel.name }}{% endblock %}</title>
 
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    {% block metatags %}
-    {% endblock %}
+        {% block metatags %}
+        {% endblock %}
 
-    {% block stylesheets %}
-        {{ sylius_template_event('sylius.shop.layout.stylesheets') }}
-    {% endblock %}
+        {% block stylesheets %}
+            {{ sylius_template_event('sylius.shop.layout.stylesheets') }}
+        {% endblock %}
 
-    {{ sylius_template_event('sylius.shop.layout.head') }}
+        {{ sylius_template_event('sylius.shop.layout.head') }}
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-KJHCKT9');</script>
-    <!-- End Google Tag Manager -->
-</head>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-KJHCKT9');</script>
+        <!-- End Google Tag Manager -->
 
-<body class="pushable">
-{{ sylius_template_event('sylius.shop.layout.before_body') }}
-<div class="pusher">
-    {% block top %}
-        <div id="menu" class="ui large sticky inverted stackable menu">
-            {{ sylius_template_event('sylius.shop.layout.topbar') }}
+        {{ sscm_resources() }}
+    </head>
+    <body class="pushable">
+        {{ sylius_template_event('sylius.shop.layout.before_body') }}
+        <div class="pusher">
+            {% block top %}
+                <div id="menu" class="ui large sticky inverted stackable menu">
+                    {{ sylius_template_event('sylius.shop.layout.topbar') }}
+                </div>
+            {% endblock %}
+
+            <div class="ui container">
+                {% block header %}
+                    <header>
+                        {{ sylius_template_event('sylius.shop.layout.header') }}
+                    </header>
+                {% endblock %}
+
+                {% include '@SyliusShop/_flashes.html.twig' %}
+
+                {{ sylius_template_event('sylius.shop.layout.before_content') }}
+                {% block content %}
+                {% endblock %}
+
+                {{ sylius_template_event('sylius.shop.layout.after_content') }}
+            </div>
+
+            {% block footer %}
+                {% include '@SyliusShop/_footer.html.twig' %}
+            {% endblock %}
         </div>
-    {% endblock %}
 
-    <div class="ui container">
-        {% block header %}
-            <header>
-                {{ sylius_template_event('sylius.shop.layout.header') }}
-            </header>
+        {% block javascripts %}
+            {{ sylius_template_event('sylius.shop.layout.javascripts') }}
+
+            {{ sscm_script_tag(asset('js/functional.js'), 'functional') }}
+            {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
+            {{ sscm_script_tag(asset('js/statistical.js'), 'statistical') }}
+
+            <script{{ sscm_script_tag_attributes('functional') }}>
+                console.info('Inline script: Functional granted');
+            </script>
+            <script{{ sscm_script_tag_attributes('marketing') }}>
+                console.info('Inline script: Marketing granted');
+            </script>
+            <script{{ sscm_script_tag_attributes('statistical') }}>
+                console.info('Inline script: Statistical granted');
+            </script>
         {% endblock %}
 
-        {% include '@SyliusShop/_flashes.html.twig' %}
-
-        {{ sylius_template_event('sylius.shop.layout.before_content') }}
-        {% block content %}
-        {% endblock %}
-
-        {{ sylius_template_event('sylius.shop.layout.after_content') }}
-    </div>
-
-    {% block footer %}
-        {% include '@SyliusShop/_footer.html.twig' %}
-    {% endblock %}
-
-    {{ sscm_widget() }}
-</div>
-
-{% block javascripts %}
-    {{ sylius_template_event('sylius.shop.layout.javascripts') }}
-
-    {{ sscm_script_tag(asset('js/functional.js'), 'functional') }}
-    {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
-    {{ sscm_script_tag(asset('js/statistical.js'), 'statistical') }}
-
-    <script{{ sscm_script_tag_attributes('functional') }}>
-        console.info('Inline script: Functional granted');
-    </script>
-    <script{{ sscm_script_tag_attributes('marketing') }}>
-        console.info('Inline script: Marketing granted');
-    </script>
-    <script{{ sscm_script_tag_attributes('statistical') }}>
-        console.info('Inline script: Statistical granted');
-    </script>
-{% endblock %}
-
-{% include '@SyliusUi/Modal/_confirmation.html.twig' %}
-{{ sylius_template_event('sylius.shop.layout.after_body') }}
-</body>
+        {% include '@SyliusUi/Modal/_confirmation.html.twig' %}
+        {{ sylius_template_event('sylius.shop.layout.after_body') }}
+        {{ sscm_widget() }}
+    </body>
 </html>
