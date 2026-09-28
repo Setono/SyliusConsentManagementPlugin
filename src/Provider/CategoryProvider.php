@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Provider;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry;
 use Setono\Consent\DefaultConsents;
 use Setono\SyliusConsentManagementPlugin\Factory\CategoryFactoryInterface;
+use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -18,6 +21,7 @@ final class CategoryProvider implements CategoryProviderInterface
         private readonly CategoryFactoryInterface $categoryFactory,
         private readonly RepositoryInterface $localeRepository,
         private readonly TranslatorInterface $translator,
+        private readonly ?ManagerRegistry $managerRegistry = null,
     ) {
     }
 
@@ -27,6 +31,27 @@ final class CategoryProvider implements CategoryProviderInterface
         if ([] !== $categories) {
             return $categories;
         }
+
+        try {
+            return $this->createDefaultCategories();
+        } catch (UniqueConstraintViolationException $e) {
+            // A concurrent request (typically right after installing the plugin) created the categories first.
+            // The failed flush closed the entity manager, so it is reset before the categories created by the other request are read
+            $categories = $this->resetManager() ? $this->categoryRepository->findAll() : [];
+            if ([] === $categories) {
+                throw $e;
+            }
+
+            return $categories;
+        }
+    }
+
+    /**
+     * @return non-empty-list<CategoryInterface>
+     */
+    private function createDefaultCategories(): array
+    {
+        $categories = [];
 
         $defaultConsents = array_merge(DefaultConsents::all(), ['necessary']);
 
@@ -60,5 +85,23 @@ final class CategoryProvider implements CategoryProviderInterface
         }
 
         return $categories;
+    }
+
+    private function resetManager(): bool
+    {
+        if (null === $this->managerRegistry) {
+            return false;
+        }
+
+        $manager = $this->managerRegistry->getManagerForClass($this->categoryRepository->getClassName());
+        foreach ($this->managerRegistry->getManagers() as $name => $registeredManager) {
+            if (null !== $manager && $registeredManager === $manager) {
+                $this->managerRegistry->resetManager($name);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

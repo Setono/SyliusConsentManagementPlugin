@@ -18,6 +18,7 @@
             <argument type="service" id="setono_sylius_consent_management.factory.category"/>
             <argument type="service" id="sylius.repository.locale"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="doctrine"/>
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProviderInterface"
@@ -28,6 +29,7 @@
             <argument type="service" id="setono_sylius_consent_management.factory.widget_config"/>
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="sylius.context.locale"/>
+            <argument type="service" id="doctrine"/>
         </service>
 
         <!-- Url Provider -->
