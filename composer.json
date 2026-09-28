@@ -98,6 +98,9 @@
             "ocramius/package-versions": true,
             "symfony/thanks": false
         },
+        "audit": {
+            "block-insecure": false
+        },
         "sort-packages": true
     },
     "extra": {
