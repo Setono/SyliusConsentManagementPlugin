@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Provider;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry;
 use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfigInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\WidgetConfigRepositoryInterface;
@@ -18,6 +20,7 @@ final class WidgetConfigProvider implements WidgetConfigProviderInterface
         private readonly WidgetConfigFactoryInterface $widgetConfigFactory,
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
+        private readonly ?ManagerRegistry $managerRegistry = null,
     ) {
     }
 
@@ -27,12 +30,43 @@ final class WidgetConfigProvider implements WidgetConfigProviderInterface
         $locale = $locale ?? $this->localeContext->getLocaleCode();
 
         $widgetConfig = $this->widgetConfigRepository->findOneByChannelAndLocale($channel, $locale);
-        if (null === $widgetConfig) {
-            $widgetConfig = $this->widgetConfigFactory->createFromChannelAndLocale($channel, $locale);
+        if (null !== $widgetConfig) {
+            return $widgetConfig;
+        }
 
+        $widgetConfig = $this->widgetConfigFactory->createFromChannelAndLocale($channel, $locale);
+
+        try {
             $this->widgetConfigRepository->add($widgetConfig);
+        } catch (UniqueConstraintViolationException $e) {
+            // A concurrent request (typically right after installing or adding a locale) created the config first.
+            // The failed flush closed the entity manager, so it is reset before the config created by the other request is read
+            $existingWidgetConfig = $this->resetManagerFor($widgetConfig) ? $this->widgetConfigRepository->findOneByChannelAndLocale($channel, $locale) : null;
+            if (null === $existingWidgetConfig) {
+                throw $e;
+            }
+
+            return $existingWidgetConfig;
         }
 
         return $widgetConfig;
+    }
+
+    private function resetManagerFor(object $object): bool
+    {
+        if (null === $this->managerRegistry) {
+            return false;
+        }
+
+        $manager = $this->managerRegistry->getManagerForClass($object::class);
+        foreach ($this->managerRegistry->getManagers() as $name => $registeredManager) {
+            if (null !== $manager && $registeredManager === $manager) {
+                $this->managerRegistry->resetManager($name);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }
