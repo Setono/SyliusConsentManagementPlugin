@@ -8,7 +8,7 @@
     <p>New cookies has been discovered in your store:</p>
     <ul>
     {% for cookie in cookies %}
-        <li><a href="{{ url('setono_sylius_consent_management_admin_cookie_update', { 'id': cookie.id }) }}">{{ cookie.name }}</li>
+        <li><a href="{{ url('setono_sylius_consent_management_admin_cookie_update', { 'id': cookie.id }) }}">{{ cookie.name }}</a></li>
     {% endfor %}
     </ul>
     <p>It's important to add these cookies to relevant services to be GDPR-compliant.</p>
