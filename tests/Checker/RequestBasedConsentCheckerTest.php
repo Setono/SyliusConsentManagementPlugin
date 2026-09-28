@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Setono\Consent\ConsentCheckerInterface;
+use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner;
 use Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,7 +30,8 @@ final class RequestBasedConsentCheckerTest extends TestCase
 
         $this->requestStack = new RequestStack();
 
-        $this->checker = new RequestBasedConsentChecker($this->decoratedChecker->reveal(), $this->requestStack);
+        // The overrides are always honoured in debug mode. See the it_*_in_production tests for signed overrides
+        $this->checker = new RequestBasedConsentChecker($this->decoratedChecker->reveal(), $this->requestStack, debug: true);
     }
 
     /**
@@ -69,5 +71,56 @@ final class RequestBasedConsentCheckerTest extends TestCase
         $this->requestStack->push(Request::create('https://example.com/?_consent[statistical]=1'));
         $this->decoratedChecker->isGranted('functional')->shouldBeCalled();
         $this->checker->isGranted('functional');
+    }
+
+    /**
+     * @test
+     */
+    public function it_ignores_unsigned_grants_in_production(): void
+    {
+        $this->requestStack->push(Request::create('https://example.com/?_consent=1'));
+        $this->decoratedChecker->isGranted('marketing')->willReturn(false);
+
+        self::assertFalse($this->createProductionChecker()->isGranted('marketing'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_honours_denials_in_production(): void
+    {
+        $this->requestStack->push(Request::create('https://example.com/?_consent[marketing]=0'));
+        $this->decoratedChecker->isGranted('marketing')->willReturn(true);
+
+        self::assertFalse($this->createProductionChecker()->isGranted('marketing'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_honours_signed_grants_in_production(): void
+    {
+        $query = (new ConsentOverrideSigner('secret'))->sign('1', new \DateTimeImmutable('+1 hour'));
+        $this->requestStack->push(Request::create('https://example.com/?' . http_build_query($query)));
+        $this->decoratedChecker->isGranted('marketing')->willReturn(false);
+
+        self::assertTrue($this->createProductionChecker()->isGranted('marketing'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_ignores_grants_signed_with_another_secret_in_production(): void
+    {
+        $query = (new ConsentOverrideSigner('another secret'))->sign('1', new \DateTimeImmutable('+1 hour'));
+        $this->requestStack->push(Request::create('https://example.com/?' . http_build_query($query)));
+        $this->decoratedChecker->isGranted('marketing')->willReturn(false);
+
+        self::assertFalse($this->createProductionChecker()->isGranted('marketing'));
+    }
+
+    private function createProductionChecker(): RequestBasedConsentChecker
+    {
+        return new RequestBasedConsentChecker($this->decoratedChecker->reveal(), $this->requestStack, new ConsentOverrideSigner('secret'), false);
     }
 }
