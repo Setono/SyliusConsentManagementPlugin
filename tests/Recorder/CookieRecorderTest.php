@@ -55,7 +55,7 @@ final class CookieRecorderTest extends TestCase
         $existingCookie = self::createCookie('_ga', 2);
         $newCookie = self::createCookie('_fbp');
 
-        $this->cookieRepository->findByNames(['_ga', '_fbp'])->willReturn(['_ga' => $existingCookie]);
+        $this->cookieRepository->findBy(['name' => ['_ga', '_fbp']])->willReturn([$existingCookie]);
         $this->entityManager->persist($newCookie)->shouldBeCalledOnce();
         $this->entityManager->persist($existingCookie)->shouldNotBeCalled();
         $this->entityManager->flush()->shouldBeCalledOnce();
@@ -76,7 +76,7 @@ final class CookieRecorderTest extends TestCase
         $newCookie = self::createCookie('_fbp');
         $concurrentlyCreatedCookie = self::createCookie('_fbp', 1);
 
-        $this->cookieRepository->findByNames(['_fbp'])->willReturn([], ['_fbp' => $concurrentlyCreatedCookie]);
+        $this->cookieRepository->findBy(['name' => ['_fbp']])->willReturn([], [$concurrentlyCreatedCookie]);
 
         $flushes = 0;
         $this->entityManager->persist($newCookie)->shouldBeCalledOnce();
@@ -99,7 +99,7 @@ final class CookieRecorderTest extends TestCase
      */
     public function it_logs_failures_instead_of_throwing_and_resets_a_closed_entity_manager(): void
     {
-        $this->cookieRepository->findByNames(['_ga'])->willReturn([]);
+        $this->cookieRepository->findBy(['name' => ['_ga']])->willReturn([]);
         $this->entityManager->persist(Argument::any())->shouldBeCalled();
         $this->entityManager->flush()->willThrow(new \RuntimeException('Lock wait timeout exceeded'));
         $this->entityManager->isOpen()->willReturn(false);
@@ -117,7 +117,7 @@ final class CookieRecorderTest extends TestCase
      */
     public function it_skips_names_that_do_not_fit_the_database_column(): void
     {
-        $this->cookieRepository->findByNames(['_ga'])->willReturn([])->shouldBeCalledOnce();
+        $this->cookieRepository->findBy(['name' => ['_ga']])->willReturn([])->shouldBeCalledOnce();
         $this->entityManager->persist(Argument::any())->shouldBeCalledOnce();
         $this->entityManager->flush()->shouldBeCalledOnce();
 
@@ -132,7 +132,7 @@ final class CookieRecorderTest extends TestCase
      */
     public function it_handles_numeric_cookie_names(): void
     {
-        $this->cookieRepository->findByNames(['123'])->willReturn([])->shouldBeCalledOnce();
+        $this->cookieRepository->findBy(['name' => ['123']])->willReturn([])->shouldBeCalledOnce();
         $this->entityManager->persist(Argument::any())->shouldBeCalledOnce();
         $this->entityManager->flush()->shouldBeCalledOnce();
 
@@ -145,7 +145,7 @@ final class CookieRecorderTest extends TestCase
      */
     public function it_does_nothing_without_cookies(): void
     {
-        $this->cookieRepository->findByNames(Argument::any())->shouldNotBeCalled();
+        $this->cookieRepository->findBy(Argument::cetera())->shouldNotBeCalled();
         $this->entityManager->flush()->shouldNotBeCalled();
 
         $this->recorder->record([]);

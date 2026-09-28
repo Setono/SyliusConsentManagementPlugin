@@ -65,7 +65,13 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
     private function doRecord(array $cookies): void
     {
         $manager = $this->getManager();
-        $existingCookies = $this->cookieRepository->findByNames(array_map('strval', array_keys($cookies)));
+        // findBy() with a list of values results in a single IN query
+        $existingCookies = [];
+        foreach ($this->cookieRepository->findBy(['name' => array_map('strval', array_keys($cookies))]) as $existingCookie) {
+            Assert::isInstanceOf($existingCookie, CookieInterface::class);
+            $existingCookies[(string) $existingCookie->getName()] = $existingCookie;
+        }
+
         $now = new \DateTimeImmutable();
 
         foreach ($cookies as $name => $newCookie) {
