@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 final class SampleController
 {
     public function __construct(
-        private readonly CookieRepositoryInterface $cookieRepository,
+        private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
     ) {
     }
@@ -29,23 +29,19 @@ final class SampleController
             throw new BadRequestHttpException();
         }
 
+        $samples = [];
         foreach ($cookies as $cookie) {
             $cookie = self::assertCookie($cookie);
 
-            $obj = $this->cookieRepository->findOneByName($cookie['name']);
-            if (null === $obj) {
-                try {
-                    $obj = $this->cookieFactory->createFromSample($cookie);
-                } catch (\InvalidArgumentException $e) {
-                    throw new BadRequestHttpException($e->getMessage(), $e);
-                }
+            try {
+                // Keyed by name, which also removes duplicates within the payload
+                $samples[$cookie['name']] = $this->cookieFactory->createFromSample($cookie);
+            } catch (\InvalidArgumentException $e) {
+                throw new BadRequestHttpException($e->getMessage(), $e);
             }
-
-            $obj->incrementSamples();
-            $obj->setLastSeenAt(new \DateTimeImmutable());
-
-            $this->cookieRepository->add($obj);
         }
+
+        $this->cookieRecorder->record($samples);
 
         return new Response(status: Response::HTTP_NO_CONTENT);
     }
