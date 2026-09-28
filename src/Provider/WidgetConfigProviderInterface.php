@@ -13,5 +13,5 @@ interface WidgetConfigProviderInterface
      * @param ChannelInterface|null $channel if null, the channel context will be used
      * @param string|null $locale if null, the locale context will be used
      */
-    public function getWidgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface;
+    public function getWidgetConfig(?ChannelInterface $channel = null, ?string $locale = null): WidgetConfigInterface;
 }

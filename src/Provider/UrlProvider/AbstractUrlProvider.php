@@ -39,6 +39,7 @@ abstract class AbstractUrlProvider implements UrlProviderInterface
         ;
 
         $channels = $qb->getQuery()->getResult();
+        Assert::isArray($channels);
         Assert::allIsInstanceOf($channels, ChannelInterface::class);
         Assert::notEmpty($channels, 'There must be at least one channel enabled with a default locale');
 

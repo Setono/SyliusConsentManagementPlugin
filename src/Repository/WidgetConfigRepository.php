@@ -23,7 +23,7 @@ class WidgetConfigRepository extends EntityRepository implements WidgetConfigRep
             ->getOneOrNullResult()
         ;
 
-        Assert::nullorIsInstanceOf($obj, WidgetConfigInterface::class);
+        Assert::nullOrIsInstanceOf($obj, WidgetConfigInterface::class);
 
         return $obj;
     }

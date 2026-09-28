@@ -128,6 +128,6 @@ class ServiceExampleFactory extends AbstractExampleFactory
             Assert::isInstanceOf($locale, LocaleInterface::class);
 
             return (string) $locale->getCode();
-        }, $this->localeRepository->findAll()));
+        }, $this->localeRepository->findAll()), static fn (string $code): bool => '' !== $code);
     }
 }

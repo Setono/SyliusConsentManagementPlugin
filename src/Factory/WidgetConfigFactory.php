@@ -31,7 +31,6 @@ final class WidgetConfigFactory implements WidgetConfigFactoryInterface
 
     public function createFromChannelAndLocale(ChannelInterface $channel, string $localeCode): WidgetConfigInterface
     {
-        /** @var LocaleInterface|object|null $locale */
         $locale = $this->localeRepository->findOneBy([
             'code' => $localeCode,
         ]);

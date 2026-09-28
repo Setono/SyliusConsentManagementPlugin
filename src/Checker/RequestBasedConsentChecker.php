@@ -34,7 +34,6 @@ final class RequestBasedConsentChecker implements ConsentCheckerInterface
             return $this->decorated->isGranted($consent);
         }
 
-        /** @var mixed $consentQuery */
         $consentQuery = $request->query->all()['_consent'] ?? [];
 
         if ([] === $consentQuery) {

@@ -48,7 +48,7 @@ class SessionCachedConsentCheckerTest extends TestCase
 
         $result = $this->checker->isGranted('category');
 
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -64,7 +64,7 @@ class SessionCachedConsentCheckerTest extends TestCase
 
         $result = $this->checker->isGranted('category');
 
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -87,7 +87,7 @@ class SessionCachedConsentCheckerTest extends TestCase
 
         $result = $this->checker->isGranted('category');
 
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -109,7 +109,7 @@ class SessionCachedConsentCheckerTest extends TestCase
 
         $result = $this->checker->isGranted('category');
 
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -167,7 +167,7 @@ class SessionCachedConsentCheckerTest extends TestCase
     {
         $events = SessionCachedConsentChecker::getSubscribedEvents();
 
-        $this->assertArrayHasKey(ConsentUpdated::class, $events);
-        $this->assertEquals('invalidate', $events[ConsentUpdated::class]);
+        self::assertArrayHasKey(ConsentUpdated::class, $events);
+        self::assertEquals('invalidate', $events[ConsentUpdated::class]);
     }
 }

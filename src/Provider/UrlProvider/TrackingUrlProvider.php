@@ -36,7 +36,6 @@ final class TrackingUrlProvider extends AbstractUrlProvider
             $locale = $channel->getDefaultLocale()?->getCode();
             Assert::notNull($locale);
 
-            /** @var mixed|ProductInterface $product */
             foreach ($this->productRepository->findLatestByChannel($channel, $locale, 1) as $product) {
                 Assert::isInstanceOf($product, ProductInterface::class);
 

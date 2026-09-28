@@ -14,5 +14,5 @@ interface WidgetStyleRendererInterface
      * @param WidgetConfigInterface|null $widgetConfig if null, the widget config provider will be used
      * @param bool $includeTag if true, the returned CSS will be wrapped in a <style> tag
      */
-    public function render(WidgetConfigInterface $widgetConfig = null, bool $includeTag = true): string;
+    public function render(?WidgetConfigInterface $widgetConfig = null, bool $includeTag = true): string;
 }

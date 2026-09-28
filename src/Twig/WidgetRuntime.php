@@ -31,7 +31,7 @@ final class WidgetRuntime implements RuntimeExtensionInterface
         return $twig->render('@SetonoSyliusConsentManagementPlugin/shop/resources.html.twig');
     }
 
-    public function shouldDisplayWidget(Request $request = null): bool
+    public function shouldDisplayWidget(?Request $request = null): bool
     {
         $request = $request ?? $this->requestStack->getMainRequest();
         if (null === $request) {
@@ -41,7 +41,7 @@ final class WidgetRuntime implements RuntimeExtensionInterface
         return $this->widgetDisplayDecider->display($request);
     }
 
-    public function widget(Request $request = null): string
+    public function widget(?Request $request = null): string
     {
         $request = $request ?? $this->requestStack->getMainRequest();
         if (null === $request) {
@@ -55,7 +55,7 @@ final class WidgetRuntime implements RuntimeExtensionInterface
         return $this->widgetRenderer->render();
     }
 
-    public function widgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface
+    public function widgetConfig(?ChannelInterface $channel = null, ?string $locale = null): WidgetConfigInterface
     {
         return $this->widgetConfigProvider->getWidgetConfig($channel, $locale);
     }

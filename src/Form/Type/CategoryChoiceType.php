@@ -32,30 +32,37 @@ final class CategoryChoiceType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
+        // FormView::$vars is untyped in Symfony, hence the local @var tags in this class
+        /** @var array{choices: array<ChoiceView>} $vars */
+        $vars = $view->vars;
+
         $necessary = [];
 
-        /** @var ChoiceView $choice */
-        foreach ($view->vars['choices'] as $choice) {
+        foreach ($vars['choices'] as $choice) {
             if ($choice->data instanceof Category && $choice->data->isNecessary()) {
                 $necessary[] = $choice->data->getCode();
             }
         }
 
-        $view->vars['necessary'] = $necessary;
+        $vars['necessary'] = $necessary;
+        $view->vars = $vars;
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        /** @var list<string> $necessary */
-        $necessary = $view->vars['necessary'] ?? [];
+        /** @var array{necessary?: list<string>} $vars */
+        $vars = $view->vars;
+        $necessary = $vars['necessary'] ?? [];
 
         foreach ($view->children as $child) {
-            if (!in_array($child->vars['value'], $necessary, true)) {
+            /** @var array{value?: mixed} $childVars */
+            $childVars = $child->vars;
+            if (!in_array($childVars['value'] ?? null, $necessary, true)) {
                 continue;
             }
 
-            /** @psalm-suppress InvalidPropertyAssignmentValue */
-            $child->vars['disabled'] = true;
+            $childVars['disabled'] = true;
+            $child->vars = $childVars;
         }
     }
 
