@@ -17,7 +17,10 @@
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            body: JSON.stringify(cookies),
+            // Only the names and expiry are needed. The values may contain personal data and are never sent
+            body: JSON.stringify(cookies.map((cookie) => ({ name: cookie.name, expires: cookie.expires }))),
+        }).catch((error) => {
+            console.error('The cookies could not be sampled', error);
         });
     })();
 </script>
