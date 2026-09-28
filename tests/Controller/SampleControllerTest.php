@@ -73,11 +73,42 @@ final class SampleControllerTest extends TestCase
     }
 
     /**
+     * @test
+     *
+     * @dataProvider provideInvalidBodies
+     */
+    public function it_rejects_bodies_that_are_not_a_json_list(string $body): void
+    {
+        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        ($this->controller)(self::createRequestWithBody($body));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideInvalidBodies(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'malformed' => ['[{"name": "_ga"'];
+        yield 'object' => ['{"name": "_ga", "expires": null}'];
+    }
+
+    /**
      * @param list<array<string, mixed>> $samples
      */
     private static function createRequest(array $samples): Request
     {
-        // On Sylius 1.x FOSRestBundle's body listener decodes the JSON body into the request parameters
-        return Request::create('/en_US/ajax/sample-cookies', 'POST', $samples);
+        return self::createRequestWithBody(json_encode($samples, \JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Like the sampling script, and without any listener decoding the body into the request parameters
+     */
+    private static function createRequestWithBody(string $body): Request
+    {
+        return Request::create('/en_US/ajax/sample-cookies', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: $body);
     }
 }
