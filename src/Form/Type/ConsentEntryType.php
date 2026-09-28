@@ -10,7 +10,6 @@ use Setono\SyliusConsentManagementPlugin\Provider\CategoryProviderInterface;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Event\PreSubmitEvent;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Webmozart\Assert\Assert;
@@ -47,7 +46,6 @@ final class ConsentEntryType extends AbstractResourceType
         };
 
         $builder
-            ->add('url', HiddenType::class)
             ->add('consentedCategories', CategoryChoiceType::class, [
                 'required' => false,
                 'multiple' => true,
