@@ -28,3 +28,7 @@ parameters:
         - identifier: doctrine.columnType
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
+        # Twig 2 (still supported) types TwigFunction::$callable as callable|null, which rejects [RuntimeClass::class, 'method'] arrays
+        -
+            message: '#^Parameter \#2 \$callable of class Twig\\TwigFunction constructor expects#'
+            path: src/Twig/*Extension.php
