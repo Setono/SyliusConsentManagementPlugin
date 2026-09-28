@@ -11,7 +11,7 @@
             return;
         }
 
-        await fetch("{{ path('setono_sylius_consent_management_shop_sample') }}", {
+        await fetch("{{ path('setono_sylius_consent_management_shop_sample', { '_sample_token': token })|e('js') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

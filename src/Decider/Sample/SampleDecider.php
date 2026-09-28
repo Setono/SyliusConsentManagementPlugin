@@ -16,17 +16,22 @@ final class SampleDecider implements SampleDeciderInterface
         private readonly FirewallMapInterface $firewallMap,
         private readonly array $firewalls,
         private readonly float $sampleRate,
+        private readonly bool $debug = false,
     ) {
     }
 
     public function sample(Request $request, string $context): bool
     {
         if ($request->query->has(self::SAMPLE_QUERY_PARAMETER)) {
+            // Disabling sampling is always allowed (the crawler does it, because it saves the cookies it finds itself)
             if (in_array((string) $request->query->get(self::SAMPLE_QUERY_PARAMETER), ['false', '0', 'no', 'n', 'off'], true)) {
                 return false;
             }
 
-            return true;
+            // Forcing sampling is for development. Otherwise anybody could make the store record arbitrary cookie names
+            if ($this->debug) {
+                return true;
+            }
         }
 
         $sampleRateResult = random_int(1, mt_getrandmax()) / mt_getrandmax() <= $this->sampleRate;
