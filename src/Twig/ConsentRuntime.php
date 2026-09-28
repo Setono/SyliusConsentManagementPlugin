@@ -47,22 +47,27 @@ final class ConsentRuntime implements RuntimeExtensionInterface, LoggerAwareInte
     {
         foreach ($consents as $consent) {
             if (!$this->consentChecker->isGranted($consent)) {
-                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', implode(',', $consents), $src);
+                return sprintf('<script type="text/plain" data-sscm-consent="%s" data-sscm-src="%s"></script>', self::escape(implode(',', $consents)), self::escape($src));
             }
         }
 
-        return sprintf('<script src="%s"></script>', $src);
+        return sprintf('<script src="%s"></script>', self::escape($src));
     }
 
     public function scriptTagAttributes(string ...$consents): string
     {
         foreach ($consents as $consent) {
             if (!$this->consentChecker->isGranted($consent)) {
-                return sprintf(' type="text/plain" data-sscm-consent="%s"', implode(',', $consents));
+                return sprintf(' type="text/plain" data-sscm-consent="%s"', self::escape(implode(',', $consents)));
             }
         }
 
         return '';
+    }
+
+    private static function escape(string $value): string
+    {
+        return htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
