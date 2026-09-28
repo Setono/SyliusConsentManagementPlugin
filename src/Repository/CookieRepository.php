@@ -21,6 +21,28 @@ class CookieRepository extends EntityRepository implements CookieRepositoryInter
         return $obj;
     }
 
+    public function findByNames(array $names): array
+    {
+        if ([] === $names) {
+            return [];
+        }
+
+        $objs = $this->createQueryBuilder('o', 'o.name')
+            ->andWhere('o.name IN (:names)')
+            ->setParameter('names', $names)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        Assert::isArray($objs);
+        Assert::allIsInstanceOf($objs, CookieInterface::class);
+
+        /** @var array<string, CookieInterface> $cookies */
+        $cookies = $objs;
+
+        return $cookies;
+    }
+
     public function findStaleCookies(string $staleThreshold): array
     {
         $objs = $this->createQueryBuilder('o')

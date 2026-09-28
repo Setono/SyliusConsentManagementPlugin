@@ -6,7 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler;
 
 use Setono\SyliusConsentManagementPlugin\Event\Crawled;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -16,7 +16,7 @@ final class SaveCookiesSubscriber implements EventSubscriberInterface, ResetInte
     private array $discoveredCookies = [];
 
     public function __construct(
-        private readonly CookieRepositoryInterface $cookieRepository,
+        private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
     ) {
     }
@@ -30,23 +30,18 @@ final class SaveCookiesSubscriber implements EventSubscriberInterface, ResetInte
 
     public function save(Crawled $event): void
     {
+        $cookies = [];
         foreach ($event->client->getCookieJar()->all() as $cookie) {
+            // The browser keeps its cookies between the crawled pages, so each cookie is only recorded once per crawl
             if (isset($this->discoveredCookies[$cookie->getName()])) {
                 continue;
             }
 
-            $obj = $this->cookieRepository->findOneByName($cookie->getName());
-            if (null === $obj) {
-                $obj = $this->cookieFactory->createFromBrowserKitCookie($cookie, $event->url);
-            }
-
-            $obj->incrementSamples();
-            $obj->setLastSeenAt(new \DateTimeImmutable());
-
-            $this->cookieRepository->add($obj);
-
+            $cookies[$cookie->getName()] = $this->cookieFactory->createFromBrowserKitCookie($cookie, $event->url);
             $this->discoveredCookies[$cookie->getName()] = true;
         }
+
+        $this->cookieRecorder->record($cookies);
     }
 
     public function reset(): void
