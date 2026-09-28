@@ -28,7 +28,8 @@ export default class ConsentWidget {
      * @param {ConsentWidgetOptions} options
      */
     constructor(options = {}) {
-        this.#options = Object.assign({
+        // Merged deeply, so e.g. overriding one callback keeps the other default callbacks
+        this.#options = ConsentWidget.#merge({
                 allowedActions: ['acceptAll', 'acceptSelected'],
                 selector: {
                     backdrop: '.sscm-backdrop',
@@ -77,7 +78,8 @@ export default class ConsentWidget {
         this.#widget.querySelector('form').addEventListener('submit', (event) => {
             event.preventDefault();
 
-            const action = event.submitter.dataset.action;
+            // There is no submitter when the form is submitted otherwise, e.g. with the enter key
+            const action = event.submitter?.dataset.action ?? 'acceptSelected';
 
             if(!this.#options.allowedActions.includes(action)) {
                 throw new Error('Invalid action. Allowed actions are: ' + this.#options.allowedActions.join(', '));
@@ -109,12 +111,41 @@ export default class ConsentWidget {
                     },
                 }));
             }).catch((error) => {
-                console.error(error);
+                console.error('The consent could not be saved', error);
+
+                // Show the widget again, so the visitor can retry instead of believing their choice was saved
+                this.#show();
             });
 
-            this.#widget.style.display = 'none';
-            this.#backdrop.style.display = 'none';
+            this.#hide();
         });
+    }
+
+    #show() {
+        this.#widget.style.display = '';
+        this.#backdrop.style.display = '';
+    }
+
+    #hide() {
+        this.#widget.style.display = 'none';
+        this.#backdrop.style.display = 'none';
+    }
+
+    /**
+     * @param {Object} defaults
+     * @param {Object} options
+     * @returns {Object}
+     */
+    static #merge(defaults, options) {
+        const merged = { ...defaults };
+
+        Object.entries(options).forEach(([key, value]) => {
+            const isObject = (candidate) => null !== candidate && 'object' === typeof candidate && !Array.isArray(candidate);
+
+            merged[key] = isObject(value) && isObject(defaults[key]) ? ConsentWidget.#merge(defaults[key], value) : value;
+        });
+
+        return merged;
     }
 
     #checkAll() {
