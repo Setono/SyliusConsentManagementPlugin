@@ -30,6 +30,8 @@
 
         <!-- Crawler -->
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler\ModifyUrlSubscriber">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface"/>
+
             <tag name="kernel.event_subscriber"/>
         </service>
 
