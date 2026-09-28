@@ -7,6 +7,11 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\Routing;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Boots the whole application to test the routing configuration, so it shouldn't count towards code coverage
+ *
+ * @coversNothing
+ */
 final class AdminRoutesTest extends KernelTestCase
 {
     private const ADMIN_PATH_NAME = 'backoffice';
@@ -29,9 +34,9 @@ final class AdminRoutesTest extends KernelTestCase
     public function it_mounts_the_admin_routes_under_the_configured_sylius_admin_path(): void
     {
         // A dedicated environment gets its own cache directory, so the router is compiled with the custom admin path
-        self::bootKernel(['environment' => 'test_admin_path', 'debug' => false]);
+        $kernel = self::bootKernel(['environment' => 'test_admin_path', 'debug' => false]);
 
-        $router = self::$kernel?->getContainer()->get('router');
+        $router = $kernel->getContainer()->get('router');
         self::assertInstanceOf(RouterInterface::class, $router);
 
         $adminRoutes = 0;
