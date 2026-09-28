@@ -22,6 +22,8 @@
                  decorates="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\WidgetDisplayDeciderInterface"
                  decoration-priority="64">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CachedWidgetDisplayDecider.inner"/>
+
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CookieBasedWidgetDisplayDecider">

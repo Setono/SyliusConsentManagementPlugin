@@ -26,6 +26,8 @@
         <service id="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker"
                  decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="100">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker.inner"/>
+
+            <tag name="kernel.reset" method="reset"/>
         </service>
     </services>
 </container>
