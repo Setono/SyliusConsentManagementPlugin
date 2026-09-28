@@ -55,6 +55,7 @@ abstract class AbstractUrlProvider implements UrlProviderInterface
             return $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        return sprintf('https://%s/%s', $hostname, $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH));
+        // ABSOLUTE_PATH already starts with a slash
+        return sprintf('https://%s%s', $hostname, $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH));
     }
 }
