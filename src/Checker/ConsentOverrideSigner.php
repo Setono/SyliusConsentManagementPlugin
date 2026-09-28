@@ -39,7 +39,7 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
         $expires = $query[self::EXPIRES_QUERY_PARAM] ?? null;
         $signature = $query[self::SIGNATURE_QUERY_PARAM] ?? null;
 
-        if (!(is_string($consent) || is_array($consent)) || !is_string($expires) || !ctype_digit($expires) || !is_string($signature)) {
+        if (!(is_string($consent) || is_array($consent)) || !is_string($expires) || 1 !== preg_match('/^\d+$/', $expires) || !is_string($signature)) {
             return false;
         }
 
