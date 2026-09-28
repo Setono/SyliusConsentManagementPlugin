@@ -9,6 +9,8 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Setono\SyliusConsentManagementPlugin\Controller\SampleController;
+use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManager;
+use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
@@ -18,6 +20,7 @@ use Sylius\Resource\Factory\Factory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class SampleControllerTest extends TestCase
@@ -36,6 +39,7 @@ final class SampleControllerTest extends TestCase
         $this->controller = new SampleController(
             $this->cookieRecorder->reveal(),
             new CookieFactory(new Factory(Cookie::class), new CompositeChannelContext(), new RequestStack()),
+            new SampleTokenManager('secret'),
         );
     }
 
@@ -75,6 +79,59 @@ final class SampleControllerTest extends TestCase
     /**
      * @test
      *
+     * @dataProvider provideInvalidTokens
+     */
+    public function it_rejects_samples_without_a_valid_token(?string $token): void
+    {
+        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedHttpException::class);
+
+        ($this->controller)(self::createRequestWithBody('[{"name": "_ga", "expires": null}]', $token));
+    }
+
+    /**
+     * @return iterable<string, array{string|null}>
+     */
+    public static function provideInvalidTokens(): iterable
+    {
+        yield 'missing' => [null];
+        yield 'another secret' => [(new SampleTokenManager('another secret'))->create()];
+        yield 'expired' => [(new SampleTokenManager('secret', -1))->create()];
+    }
+
+    /**
+     * @test
+     */
+    public function it_skips_names_that_cannot_be_cookie_names(): void
+    {
+        $this->cookieRecorder->record(Argument::that(static fn (array $cookies): bool => ['_ga'] === array_keys($cookies)))->shouldBeCalledOnce();
+
+        ($this->controller)(self::createRequest([
+            ['name' => '_ga', 'expires' => null],
+            ['name' => 'VISIT evil.example TO VERIFY YOUR STORE', 'expires' => null],
+            ['name' => '<script>', 'expires' => null],
+        ]));
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_too_many_cookies(): void
+    {
+        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        ($this->controller)(self::createRequest(array_map(
+            static fn (int $i): array => ['name' => 'cookie' . $i, 'expires' => null],
+            range(1, SampleController::MAX_COOKIES + 1),
+        )));
+    }
+
+    /**
+     * @test
+     *
      * @dataProvider provideInvalidBodies
      */
     public function it_rejects_bodies_that_are_not_a_json_list(string $body): void
@@ -107,8 +164,13 @@ final class SampleControllerTest extends TestCase
     /**
      * Like the sampling script, and without any listener decoding the body into the request parameters
      */
-    private static function createRequestWithBody(string $body): Request
+    private static function createRequestWithBody(string $body, ?string $token = 'valid'): Request
     {
-        return Request::create('/en_US/ajax/sample-cookies', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: $body);
+        $query = [];
+        if (null !== $token) {
+            $query[SampleTokenManagerInterface::QUERY_PARAMETER] = 'valid' === $token ? (new SampleTokenManager('secret'))->create() : $token;
+        }
+
+        return Request::create('/en_US/ajax/sample-cookies?' . http_build_query($query), 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: $body);
     }
 }
