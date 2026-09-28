@@ -14,11 +14,10 @@ final class WidgetStyleRenderer implements WidgetStyleRendererInterface
     {
     }
 
-    public function render(WidgetConfigInterface $widgetConfig = null, bool $includeTag = true): string
+    public function render(?WidgetConfigInterface $widgetConfig = null, bool $includeTag = true): string
     {
         $widgetConfig = $widgetConfig ?? $this->widgetConfigProvider->getWidgetConfig();
 
-        /** @var array<string, scalar> $layout */
         $layout = array_filter($widgetConfig->getLayout(), static function (mixed $value, mixed $key): bool {
             return is_string($key) && is_scalar($value) && '' !== $value;
         }, \ARRAY_FILTER_USE_BOTH);

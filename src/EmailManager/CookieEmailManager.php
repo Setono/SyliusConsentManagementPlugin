@@ -33,7 +33,6 @@ final class CookieEmailManager implements CookieEmailManagerInterface, LoggerAwa
             return;
         }
 
-        /** @psalm-suppress DeprecatedMethod */
         $this->emailSender->send(Emails::NEW_COOKIES, $emails, [
             'cookies' => $cookies,
         ]);
@@ -48,7 +47,6 @@ final class CookieEmailManager implements CookieEmailManagerInterface, LoggerAwa
             return;
         }
 
-        /** @psalm-suppress DeprecatedMethod */
         $this->emailSender->send(Emails::STALE_COOKIES, $emails, [
             'cookies' => $cookies,
         ]);

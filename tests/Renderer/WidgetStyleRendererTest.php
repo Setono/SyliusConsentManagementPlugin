@@ -36,7 +36,7 @@ final class WidgetStyleRendererTest extends TestCase
 
         $result = $this->widgetStyleRenderer->render($widgetConfig->reveal());
 
-        $this->assertSame('', $result);
+        self::assertSame('', $result);
     }
 
     /**
@@ -53,7 +53,7 @@ final class WidgetStyleRendererTest extends TestCase
 
         $result = $this->widgetStyleRenderer->render($widgetConfig->reveal());
 
-        $this->assertSame('<style>.sscm-widget {--sscm-widget-background-color: #fff;--sscm-widget-font-size: 14px;--sscm-widget-show-border: true;}</style>', $result);
+        self::assertSame('<style>.sscm-widget {--sscm-widget-background-color: #fff;--sscm-widget-font-size: 14px;--sscm-widget-show-border: true;}</style>', $result);
     }
 
     /**
@@ -71,6 +71,6 @@ final class WidgetStyleRendererTest extends TestCase
 
         $result = $this->widgetStyleRenderer->render();
 
-        $this->assertSame('<style>.sscm-widget {--sscm-widget-color: red;}</style>', $result);
+        self::assertSame('<style>.sscm-widget {--sscm-widget-color: red;}</style>', $result);
     }
 }

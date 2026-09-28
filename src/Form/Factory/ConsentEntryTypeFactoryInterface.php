@@ -16,5 +16,5 @@ interface ConsentEntryTypeFactoryInterface
      *
      * @throws \InvalidArgumentException if no request is given or available from the request stack
      */
-    public function createNew(Request $request = null): FormInterface;
+    public function createNew(?Request $request = null): FormInterface;
 }

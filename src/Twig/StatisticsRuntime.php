@@ -28,7 +28,7 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
         $this->managerRegistry = $managerRegistry;
     }
 
-    public function consentEntryCount(string $timeThreshold = null): int
+    public function consentEntryCount(?string $timeThreshold = null): int
     {
         $qb = $this->getManager($this->consentEntryClass)
             ->createQueryBuilder()
@@ -48,7 +48,7 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
         ;
     }
 
-    public function consentedCount(string $timeThreshold = null): int
+    public function consentedCount(?string $timeThreshold = null): int
     {
         $qb = $this->getManager($this->consentEntryClass)
             ->createQueryBuilder()

@@ -21,7 +21,7 @@ final class WidgetConfigProvider implements WidgetConfigProviderInterface
     ) {
     }
 
-    public function getWidgetConfig(ChannelInterface $channel = null, string $locale = null): WidgetConfigInterface
+    public function getWidgetConfig(?ChannelInterface $channel = null, ?string $locale = null): WidgetConfigInterface
     {
         $channel = $channel ?? $this->channelContext->getChannel();
         $locale = $locale ?? $this->localeContext->getLocaleCode();

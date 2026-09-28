@@ -77,9 +77,8 @@ final class ConsentEntryType extends AbstractResourceType
         $builder->get('consentedCategories')
             ->addModelTransformer(new CallbackTransformer(
                 function (?array $categories) use ($necessaryCategories, $findOneByCode): array {
-                    if (null === $categories) {
-                        $categories = [];
-                    }
+                    /** @var list<CategoryInterface|string> $categories */
+                    $categories = $categories ?? [];
 
                     foreach ($necessaryCategories as $necessaryCategory) {
                         if (!in_array((string) $necessaryCategory->getCode(), $categories, true)) {

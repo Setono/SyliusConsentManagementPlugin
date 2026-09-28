@@ -41,8 +41,10 @@ final class Crawler implements CrawlerInterface, LoggerAwareInterface
             ->setAllowedTypes('wait_for_document_ready', 'int')
         ;
 
-        /** @psalm-suppress MixedPropertyTypeCoercion */
-        $this->options = $resolver->resolve($options);
+        /** @var array{request_delay: int, wait_for_document_ready: int} $resolvedOptions */
+        $resolvedOptions = $resolver->resolve($options);
+
+        $this->options = $resolvedOptions;
     }
 
     public function start(): void

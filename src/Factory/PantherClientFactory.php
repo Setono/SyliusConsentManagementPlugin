@@ -7,6 +7,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 use Composer\InstalledVersions;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Process\ExecutableFinder;
+use Webmozart\Assert\Assert;
 
 final class PantherClientFactory implements PantherClientFactoryInterface
 {
@@ -27,7 +28,10 @@ final class PantherClientFactory implements PantherClientFactoryInterface
             return $driver;
         }
 
-        $vendorDir = dirname((new \ReflectionClass(InstalledVersions::class))->getFileName(), 2);
+        $installedVersionsFile = (new \ReflectionClass(InstalledVersions::class))->getFileName();
+        Assert::string($installedVersionsFile);
+
+        $vendorDir = dirname($installedVersionsFile, 2);
         exec(sprintf('%s/bin/bdi detect %s', $vendorDir, $this->driverDirectory));
 
         $driver = (new ExecutableFinder())->find('chromedriver', null, [$this->driverDirectory]);

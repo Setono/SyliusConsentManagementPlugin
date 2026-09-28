@@ -37,7 +37,7 @@ interface ServiceInterface extends ResourceInterface, ChannelsAwareInterface, Ti
      *
      * @return Collection<array-key, CookieInterface>
      */
-    public function getCookies(ChannelInterface $channel = null): Collection;
+    public function getCookies(?ChannelInterface $channel = null): Collection;
 
     public function addCookie(CookieInterface $cookie): void;
 

@@ -102,7 +102,7 @@ final class SampleDeciderTest extends TestCase
         self::assertFalse($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
-    private function createDecider(float $sampleRate, FirewallMapInterface $firewallMap = null): SampleDecider
+    private function createDecider(float $sampleRate, ?FirewallMapInterface $firewallMap = null): SampleDecider
     {
         $firewallMap ??= $this->firewallMap->reveal();
 
@@ -112,7 +112,7 @@ final class SampleDeciderTest extends TestCase
     /**
      * @return \Generator<array-key, array<array-key, string>>
      */
-    private static function provideFalsySampleParameters(): \Generator
+    public static function provideFalsySampleParameters(): \Generator
     {
         yield ['0'];
         yield ['false'];
@@ -124,7 +124,7 @@ final class SampleDeciderTest extends TestCase
     /**
      * @return \Generator<array-key, array<array-key, string>>
      */
-    private static function provideTruthySampleParameters(): \Generator
+    public static function provideTruthySampleParameters(): \Generator
     {
         yield ['1'];
         yield ['true'];

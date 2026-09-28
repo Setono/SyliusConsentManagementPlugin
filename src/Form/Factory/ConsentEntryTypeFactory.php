@@ -25,7 +25,7 @@ final class ConsentEntryTypeFactory implements ConsentEntryTypeFactoryInterface
     ) {
     }
 
-    public function createNew(Request $request = null): FormInterface
+    public function createNew(?Request $request = null): FormInterface
     {
         $request = $request ?? $this->requestStack->getMainRequest();
         Assert::notNull($request);

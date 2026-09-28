@@ -29,8 +29,6 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
          *     notify: list<string>,
          *     resources: array<string, mixed>
          * } $config
-         *
-         * @psalm-suppress PossiblyNullArgument
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -93,7 +91,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
             'aff_id' => '123456789',
             // General tracking parameter
             'ref' => 'google',
-        ], $config['url_provider']['tracking_url_patterns']));
+        ], $config['url_provider']['tracking_url_patterns']), static fn (mixed $value): bool => null !== $value && '' !== $value);
 
         $container->setParameter('setono_sylius_consent_management.crawler.options', $config['options']);
         $container->setParameter('setono_sylius_consent_management.crawler.url_provider.tracking_url_patterns', $config['url_provider']['tracking_url_patterns']);
@@ -451,8 +449,8 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
                     'blocks' => [
                         'styles' => [
                             'template' => '@SetonoSyliusConsentManagementPlugin/admin/consent_entry/styles.html.twig',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'setono_sylius_consent_management.admin.consent_entry.index' => [
                     'blocks' => [

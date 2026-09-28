@@ -11,7 +11,6 @@ final class WidgetExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {
-        /** @psalm-suppress InvalidArgument  */
         return [
             new TwigFunction('sscm_resources', [WidgetRuntime::class, 'resources'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('sscm_should_display_widget', [WidgetRuntime::class, 'shouldDisplayWidget']),

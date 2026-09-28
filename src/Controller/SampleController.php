@@ -29,7 +29,6 @@ final class SampleController
             throw new BadRequestHttpException();
         }
 
-        /** @var mixed $cookie */
         foreach ($cookies as $cookie) {
             $cookie = self::assertCookie($cookie);
 

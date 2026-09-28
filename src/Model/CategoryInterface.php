@@ -35,7 +35,7 @@ interface CategoryInterface extends ResourceInterface, TranslatableInterface, Co
      *
      * @return Collection<array-key, ServiceInterface>
      */
-    public function getServices(ChannelInterface $channel = null): Collection;
+    public function getServices(?ChannelInterface $channel = null): Collection;
 
     public function addService(ServiceInterface $service): void;
 
