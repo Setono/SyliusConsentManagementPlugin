@@ -55,6 +55,22 @@ abstract class AbstractUrlProvider implements UrlProviderInterface
             return $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        return sprintf('https://%s/%s', $hostname, $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH));
+        // Generate an https URL on the channel's hostname instead of the request context's host, scheme and port
+        $context = $this->urlGenerator->getContext();
+        $host = $context->getHost();
+        $scheme = $context->getScheme();
+        $httpsPort = $context->getHttpsPort();
+
+        $context->setHost($hostname);
+        $context->setScheme('https');
+        $context->setHttpsPort(443);
+
+        try {
+            return $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        } finally {
+            $context->setHost($host);
+            $context->setScheme($scheme);
+            $context->setHttpsPort($httpsPort);
+        }
     }
 }
