@@ -4,13 +4,13 @@
 {% endblock %}
 
 {% block body %}
-    <p>Hi</p>
-    <p>New cookies has been discovered in your store:</p>
+    <p>{{ 'setono_sylius_consent_management.email.new_cookies.greeting'|trans() }}</p>
+    <p>{{ 'setono_sylius_consent_management.email.new_cookies.intro'|trans() }}</p>
     <ul>
     {% for cookie in cookies %}
-        <li><a href="{{ url('setono_sylius_consent_management_admin_cookie_update', { 'id': cookie.id }) }}">{{ cookie.name }}</li>
+        <li><a href="{{ url('setono_sylius_consent_management_admin_cookie_update', { 'id': cookie.id }) }}">{{ cookie.name }}</a></li>
     {% endfor %}
     </ul>
-    <p>It's important to add these cookies to relevant services to be GDPR-compliant.</p>
-    <p>This email was sent automatically by the Sylius Consent Management Plugin</p>
+    <p>{{ 'setono_sylius_consent_management.email.new_cookies.instructions'|trans() }}</p>
+    <p>{{ 'setono_sylius_consent_management.email.new_cookies.footer'|trans() }}</p>
 {% endblock %}

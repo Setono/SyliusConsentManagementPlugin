@@ -1,6 +1,10 @@
 setono_sylius_consent_management:
     email:
         new_cookies:
+            footer: This email was sent automatically by the Sylius Consent Management Plugin
+            greeting: Hi
+            instructions: It's important to add these cookies to relevant services to be GDPR-compliant.
+            intro: "New cookies have been discovered in your store:"
             subject: "IMPORTANT: New cookies discovered in your store"
         stale_cookies:
             subject: "There are stale cookies in your store"
