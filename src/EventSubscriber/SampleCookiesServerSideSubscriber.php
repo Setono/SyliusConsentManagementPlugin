@@ -6,15 +6,24 @@ namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
-use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\Service\ResetInterface;
 
-final class SampleCookiesServerSideSubscriber implements EventSubscriberInterface
+/**
+ * Samples the cookies of the request, but saves them when the kernel terminates, i.e. after the response has been
+ * sent (with PHP-FPM), so that sampling never delays or breaks the visitor's page
+ */
+final class SampleCookiesServerSideSubscriber implements EventSubscriberInterface, ResetInterface
 {
+    /** @var array<string, CookieInterface> */
+    private array $cookies = [];
+
     public function __construct(
-        private readonly CookieRepositoryInterface $cookieRepository,
+        private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly SampleDeciderInterface $sampleDecider,
     ) {
@@ -24,6 +33,8 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
     {
         return [
             KernelEvents::REQUEST => 'sample',
+            // Before NotifyAboutCookiesSubscriber::notify() (priority 0) emails about the cookies that recording confirms
+            KernelEvents::TERMINATE => ['record', 10],
         ];
     }
 
@@ -32,21 +43,30 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         if (!$event->isMainRequest()) {
             return;
         }
+
         $request = $event->getRequest();
 
         if (!$this->sampleDecider->sample($request, SampleDeciderInterface::CONTEXT_SERVER_SIDE)) {
             return;
         }
 
+        // The new cookies are created while the request is still available, because the factory resolves their URL from it
         foreach ($request->cookies->all() as $name => $_) {
-            $cookie = $this->cookieRepository->findOneByName((string) $name);
-            if (null === $cookie) {
-                $cookie = $this->cookieFactory->createWithName((string) $name);
-            }
-            $cookie->incrementSamples();
-            $cookie->setLastSeenAt(new \DateTimeImmutable());
-
-            $this->cookieRepository->add($cookie);
+            $name = (string) $name;
+            $this->cookies[$name] = $this->cookieFactory->createWithName($name);
         }
+    }
+
+    public function record(): void
+    {
+        $cookies = $this->cookies;
+        $this->reset();
+
+        $this->cookieRecorder->record($cookies);
+    }
+
+    public function reset(): void
+    {
+        $this->cookies = [];
     }
 }

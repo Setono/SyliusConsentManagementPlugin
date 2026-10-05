@@ -14,11 +14,12 @@
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
 
             <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <!-- Workflow -->
@@ -35,7 +36,7 @@
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler\SaveCookiesSubscriber">
-            <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
 
             <tag name="kernel.event_subscriber"/>
