@@ -33,7 +33,8 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
     {
         return [
             KernelEvents::REQUEST => 'sample',
-            KernelEvents::TERMINATE => 'record',
+            // Before NotifyAboutCookiesSubscriber::notify() (priority 0) emails about the cookies that recording confirms
+            KernelEvents::TERMINATE => ['record', 10],
         ];
     }
 
