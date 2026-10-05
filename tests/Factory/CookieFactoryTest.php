@@ -34,13 +34,25 @@ final class CookieFactoryTest extends TestCase
     /**
      * @test
      */
-    public function it_stores_the_request_url_without_query_string_and_fragment(): void
+    public function it_stores_the_request_url_without_query_string(): void
     {
-        $request = Request::create('https://shop.example.com:8443/en_US/products/mug?fbclid=' . str_repeat('x', 300) . '#reviews');
+        $request = Request::create('https://shop.example.com:8443/en_US/products/mug?fbclid=' . str_repeat('x', 300));
 
         $cookie = self::getFactory($request)->createWithName('_fbp');
 
         self::assertSame('https://shop.example.com:8443/en_US/products/mug', $cookie->getUrl());
+    }
+
+    /**
+     * @test
+     */
+    public function it_truncates_a_long_request_url_to_the_column_length(): void
+    {
+        $url = 'https://shop.example.com/en_US/products/' . str_repeat('x', 300);
+
+        $cookie = self::getFactory(Request::create($url))->createWithName('_fbp');
+
+        self::assertSame(substr($url, 0, 255), $cookie->getUrl());
     }
 
     /**
@@ -56,6 +68,21 @@ final class CookieFactoryTest extends TestCase
         $cookie = self::getFactory($request)->createWithName('_ga');
 
         self::assertSame('https://shop.example.com/en_US/', $cookie->getUrl());
+    }
+
+    /**
+     * @test
+     */
+    public function it_ignores_referers_from_another_host_for_ajax_requests(): void
+    {
+        $request = Request::create('https://shop.example.com/en_US/ajax/sample-cookies', 'POST', server: [
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_REFERER' => 'https://evil.example/admin-login',
+        ]);
+
+        $cookie = self::getFactory($request)->createWithName('_ga');
+
+        self::assertNull($cookie->getUrl());
     }
 
     /**

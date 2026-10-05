@@ -107,7 +107,13 @@ final class CookieFactory implements CookieFactoryInterface
             return null;
         }
 
-        return self::normalizeRequestUrl($request->isXmlHttpRequest() ? $request->headers->get('referer') : $request->getUri());
+        if (!$request->isXmlHttpRequest()) {
+            return self::normalizeRequestUrl($request->getUri());
+        }
+
+        // Anyone can post to the sample endpoint with any Referer, and the URL is rendered as a link in the admin.
+        // The sampling script always requests the shop itself, so a Referer from another host is ignored
+        return self::normalizeRequestUrl($request->headers->get('referer'), $request->getHost());
     }
 
     /**
@@ -115,7 +121,7 @@ final class CookieFactory implements CookieFactoryInterface
      * string and fragment are removed. They may contain the visitor's tracking ids, and they easily make the URL
      * longer than the database column
      */
-    private static function normalizeRequestUrl(?string $url): ?string
+    private static function normalizeRequestUrl(?string $url, ?string $requiredHost = null): ?string
     {
         if (null === $url) {
             return null;
@@ -123,6 +129,10 @@ final class CookieFactory implements CookieFactoryInterface
 
         $parts = parse_url($url);
         if (false === $parts || !isset($parts['scheme'], $parts['host']) || !in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+            return null;
+        }
+
+        if (null !== $requiredHost && strtolower($parts['host']) !== $requiredHost) {
             return null;
         }
 
