@@ -9,7 +9,9 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Setono\SyliusConsentManagementPlugin\Factory\WidgetConfigFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\WidgetConfig;
 use Setono\SyliusConsentManagementPlugin\Provider\WidgetConfigProvider;
@@ -22,20 +24,39 @@ final class WidgetConfigProviderTest extends TestCase
 {
     use ProphecyTrait;
 
+    private ChannelInterface $channel;
+
+    /** @var ObjectProphecy<WidgetConfigRepositoryInterface> */
+    private ObjectProphecy $repository;
+
+    /** @var ObjectProphecy<WidgetConfigFactoryInterface> */
+    private ObjectProphecy $factory;
+
+    /** @var ObjectProphecy<ManagerRegistry> */
+    private ObjectProphecy $managerRegistry;
+
+    protected function setUp(): void
+    {
+        $this->channel = $this->prophesize(ChannelInterface::class)->reveal();
+        $this->repository = $this->prophesize(WidgetConfigRepositoryInterface::class);
+        $this->factory = $this->prophesize(WidgetConfigFactoryInterface::class);
+
+        $entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
+        $this->managerRegistry->getManagerForClass(WidgetConfig::class)->willReturn($entityManager);
+        $this->managerRegistry->getManagers()->willReturn(['default' => $entityManager]);
+    }
+
     /**
      * @test
      */
     public function it_returns_the_existing_config(): void
     {
-        $channel = $this->prophesize(ChannelInterface::class)->reveal();
         $existingConfig = new WidgetConfig();
 
-        $repository = $this->prophesize(WidgetConfigRepositoryInterface::class);
-        $repository->findOneByChannelAndLocale($channel, 'en_US')->willReturn($existingConfig);
+        $this->repository->findOneByChannelAndLocale($this->channel, 'en_US')->willReturn($existingConfig);
 
-        $provider = $this->createProvider($repository->reveal(), $this->prophesize(WidgetConfigFactoryInterface::class)->reveal());
-
-        self::assertSame($existingConfig, $provider->getWidgetConfig($channel, 'en_US'));
+        self::assertSame($existingConfig, $this->createProvider()->getWidgetConfig($this->channel, 'en_US'));
     }
 
     /**
@@ -43,17 +64,13 @@ final class WidgetConfigProviderTest extends TestCase
      */
     public function it_creates_the_config_when_none_exists(): void
     {
-        $channel = $this->prophesize(ChannelInterface::class)->reveal();
         $newConfig = new WidgetConfig();
 
-        $repository = $this->prophesize(WidgetConfigRepositoryInterface::class);
-        $repository->findOneByChannelAndLocale($channel, 'en_US')->willReturn(null);
-        $repository->add($newConfig)->shouldBeCalledOnce();
+        $this->repository->findOneByChannelAndLocale($this->channel, 'en_US')->willReturn(null);
+        $this->repository->add($newConfig)->shouldBeCalledOnce();
+        $this->factory->createFromChannelAndLocale($this->channel, 'en_US')->willReturn($newConfig);
 
-        $factory = $this->prophesize(WidgetConfigFactoryInterface::class);
-        $factory->createFromChannelAndLocale($channel, 'en_US')->willReturn($newConfig);
-
-        self::assertSame($newConfig, $this->createProvider($repository->reveal(), $factory->reveal())->getWidgetConfig($channel, 'en_US'));
+        self::assertSame($newConfig, $this->createProvider()->getWidgetConfig($this->channel, 'en_US'));
     }
 
     /**
@@ -61,40 +78,68 @@ final class WidgetConfigProviderTest extends TestCase
      */
     public function it_returns_the_config_created_by_a_concurrent_request(): void
     {
-        $channel = $this->prophesize(ChannelInterface::class)->reveal();
         $newConfig = new WidgetConfig();
         $concurrentlyCreatedConfig = new WidgetConfig();
 
-        $repository = $this->prophesize(WidgetConfigRepositoryInterface::class);
-        $repository->findOneByChannelAndLocale($channel, 'en_US')->willReturn(null, $concurrentlyCreatedConfig);
-        $repository->add($newConfig)->willThrow(new UniqueConstraintViolationException(new class('Duplicate entry') extends AbstractException {
-        }, null));
+        $this->repository->findOneByChannelAndLocale($this->channel, 'en_US')->willReturn(null, $concurrentlyCreatedConfig);
+        $this->repository->add($newConfig)->willThrow(self::createUniqueConstraintViolationException());
+        $this->factory->createFromChannelAndLocale($this->channel, 'en_US')->willReturn($newConfig);
+        $this->managerRegistry->resetManager('default')->shouldBeCalledOnce();
 
-        $factory = $this->prophesize(WidgetConfigFactoryInterface::class);
-        $factory->createFromChannelAndLocale($channel, 'en_US')->willReturn($newConfig);
-
-        $entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
-        $managerRegistry = $this->prophesize(ManagerRegistry::class);
-        $managerRegistry->getManagerForClass(WidgetConfig::class)->willReturn($entityManager);
-        $managerRegistry->getManagers()->willReturn(['default' => $entityManager]);
-        $managerRegistry->resetManager('default')->shouldBeCalledOnce()->willReturn($entityManager);
-
-        $provider = $this->createProvider($repository->reveal(), $factory->reveal(), $managerRegistry->reveal());
-
-        self::assertSame($concurrentlyCreatedConfig, $provider->getWidgetConfig($channel, 'en_US'));
+        self::assertSame($concurrentlyCreatedConfig, $this->createProvider()->getWidgetConfig($this->channel, 'en_US'));
     }
 
-    private function createProvider(
-        WidgetConfigRepositoryInterface $repository,
-        WidgetConfigFactoryInterface $factory,
-        ?ManagerRegistry $managerRegistry = null,
-    ): WidgetConfigProvider {
+    /**
+     * @test
+     */
+    public function it_rethrows_when_no_config_created_by_a_concurrent_request_is_found(): void
+    {
+        $newConfig = new WidgetConfig();
+        $exception = self::createUniqueConstraintViolationException();
+
+        $this->repository->findOneByChannelAndLocale($this->channel, 'en_US')->willReturn(null);
+        $this->repository->add($newConfig)->willThrow($exception);
+        $this->factory->createFromChannelAndLocale($this->channel, 'en_US')->willReturn($newConfig);
+        $this->managerRegistry->resetManager('default')->shouldBeCalledOnce();
+
+        $this->expectExceptionObject($exception);
+
+        $this->createProvider()->getWidgetConfig($this->channel, 'en_US');
+    }
+
+    /**
+     * @test
+     */
+    public function it_rethrows_when_the_manager_cannot_be_reset(): void
+    {
+        $newConfig = new WidgetConfig();
+        $exception = self::createUniqueConstraintViolationException();
+
+        $this->repository->findOneByChannelAndLocale($this->channel, 'en_US')->shouldBeCalledOnce()->willReturn(null);
+        $this->repository->add($newConfig)->willThrow($exception);
+        $this->factory->createFromChannelAndLocale($this->channel, 'en_US')->willReturn($newConfig);
+        $this->managerRegistry->getManagers()->willReturn([]);
+        $this->managerRegistry->resetManager(Argument::any())->shouldNotBeCalled();
+
+        $this->expectExceptionObject($exception);
+
+        $this->createProvider()->getWidgetConfig($this->channel, 'en_US');
+    }
+
+    private function createProvider(): WidgetConfigProvider
+    {
         return new WidgetConfigProvider(
-            $repository,
-            $factory,
+            $this->repository->reveal(),
+            $this->factory->reveal(),
             $this->prophesize(ChannelContextInterface::class)->reveal(),
             $this->prophesize(LocaleContextInterface::class)->reveal(),
-            $managerRegistry,
+            $this->managerRegistry->reveal(),
         );
+    }
+
+    private static function createUniqueConstraintViolationException(): UniqueConstraintViolationException
+    {
+        return new UniqueConstraintViolationException(new class('Duplicate entry') extends AbstractException {
+        }, null);
     }
 }

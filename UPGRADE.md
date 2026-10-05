@@ -12,3 +12,5 @@ php bin/console doctrine:migrations:migrate
 
 - Deleting a service no longer deletes the cookies assigned to it. The cookies become unassigned instead
   (`setono_sylius_consent_management__cookie.service_id` is now `ON DELETE SET NULL`).
+- `CategoryProvider` and `WidgetConfigProvider` take a `Doctrine\Persistence\ManagerRegistry` as a new, required, last
+  constructor argument.

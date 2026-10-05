@@ -30,6 +30,12 @@ final class CategoryProviderTest extends TestCase
     /** @var ObjectProphecy<CategoryFactoryInterface> */
     private ObjectProphecy $categoryFactory;
 
+    /** @var ObjectProphecy<EntityManagerInterface> */
+    private ObjectProphecy $entityManager;
+
+    /** @var ObjectProphecy<ManagerRegistry> */
+    private ObjectProphecy $managerRegistry;
+
     protected function setUp(): void
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
@@ -47,15 +53,24 @@ final class CategoryProviderTest extends TestCase
                 return $category;
             },
         );
+
+        $this->entityManager = $this->prophesize(EntityManagerInterface::class);
+        $this->entityManager->persist(Argument::type(Category::class))->willReturn();
+
+        $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
+        $this->managerRegistry->getManagerForClass(Category::class)->willReturn($this->entityManager->reveal());
+        $this->managerRegistry->getManagers()->willReturn(['default' => $this->entityManager->reveal()]);
     }
 
     /**
      * @test
      */
-    public function it_creates_the_default_categories_when_none_exist(): void
+    public function it_creates_the_default_categories_in_a_single_flush(): void
     {
         $this->categoryRepository->findAll()->willReturn([]);
-        $this->categoryRepository->add(Argument::type(Category::class))->shouldBeCalledTimes(4);
+        $this->categoryRepository->add(Argument::any())->shouldNotBeCalled();
+        $this->entityManager->persist(Argument::type(Category::class))->shouldBeCalledTimes(4);
+        $this->entityManager->flush()->shouldBeCalledOnce();
 
         $codes = array_map(static fn (CategoryInterface $category): ?string => $category->getCode(), $this->createProvider()->getCategories());
 
@@ -70,19 +85,46 @@ final class CategoryProviderTest extends TestCase
         $concurrentlyCreatedCategories = [new Category(), new Category()];
 
         $this->categoryRepository->findAll()->willReturn([], $concurrentlyCreatedCategories);
-        $this->categoryRepository->add(Argument::type(Category::class))->willThrow(new UniqueConstraintViolationException(new class('Duplicate entry') extends AbstractException {
-        }, null));
+        $this->entityManager->flush()->willThrow(self::createUniqueConstraintViolationException());
+        $this->managerRegistry->resetManager('default')->shouldBeCalledOnce()->willReturn($this->entityManager->reveal());
 
-        $entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
-        $managerRegistry = $this->prophesize(ManagerRegistry::class);
-        $managerRegistry->getManagerForClass(Category::class)->willReturn($entityManager);
-        $managerRegistry->getManagers()->willReturn(['default' => $entityManager]);
-        $managerRegistry->resetManager('default')->shouldBeCalledOnce()->willReturn($entityManager);
-
-        self::assertSame($concurrentlyCreatedCategories, $this->createProvider($managerRegistry->reveal())->getCategories());
+        self::assertSame($concurrentlyCreatedCategories, $this->createProvider()->getCategories());
     }
 
-    private function createProvider(?ManagerRegistry $managerRegistry = null): CategoryProvider
+    /**
+     * @test
+     */
+    public function it_rethrows_when_no_categories_created_by_a_concurrent_request_are_found(): void
+    {
+        $exception = self::createUniqueConstraintViolationException();
+
+        $this->categoryRepository->findAll()->willReturn([]);
+        $this->entityManager->flush()->willThrow($exception);
+        $this->managerRegistry->resetManager('default')->shouldBeCalledOnce()->willReturn($this->entityManager->reveal());
+
+        $this->expectExceptionObject($exception);
+
+        $this->createProvider()->getCategories();
+    }
+
+    /**
+     * @test
+     */
+    public function it_rethrows_when_the_manager_cannot_be_reset(): void
+    {
+        $exception = self::createUniqueConstraintViolationException();
+
+        $this->categoryRepository->findAll()->shouldBeCalledOnce()->willReturn([]);
+        $this->entityManager->flush()->willThrow($exception);
+        $this->managerRegistry->getManagers()->willReturn([]);
+        $this->managerRegistry->resetManager(Argument::any())->shouldNotBeCalled();
+
+        $this->expectExceptionObject($exception);
+
+        $this->createProvider()->getCategories();
+    }
+
+    private function createProvider(): CategoryProvider
     {
         $localeRepository = $this->prophesize(RepositoryInterface::class);
         $localeRepository->findAll()->willReturn([]);
@@ -92,7 +134,13 @@ final class CategoryProviderTest extends TestCase
             $this->categoryFactory->reveal(),
             $localeRepository->reveal(),
             $this->prophesize(TranslatorInterface::class)->reveal(),
-            $managerRegistry,
+            $this->managerRegistry->reveal(),
         );
+    }
+
+    private static function createUniqueConstraintViolationException(): UniqueConstraintViolationException
+    {
+        return new UniqueConstraintViolationException(new class('Duplicate entry') extends AbstractException {
+        }, null);
     }
 }

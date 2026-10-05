@@ -15,13 +15,16 @@ use Sylius\Component\Locale\Context\LocaleContextInterface;
 
 final class WidgetConfigProvider implements WidgetConfigProviderInterface
 {
+    use RecoversFromConcurrentCreationTrait;
+
     public function __construct(
         private readonly WidgetConfigRepositoryInterface $widgetConfigRepository,
         private readonly WidgetConfigFactoryInterface $widgetConfigFactory,
         private readonly ChannelContextInterface $channelContext,
         private readonly LocaleContextInterface $localeContext,
-        private readonly ?ManagerRegistry $managerRegistry = null,
+        ManagerRegistry $managerRegistry,
     ) {
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function getWidgetConfig(?ChannelInterface $channel = null, ?string $locale = null): WidgetConfigInterface
@@ -39,34 +42,14 @@ final class WidgetConfigProvider implements WidgetConfigProviderInterface
         try {
             $this->widgetConfigRepository->add($widgetConfig);
         } catch (UniqueConstraintViolationException $e) {
-            // A concurrent request (typically right after installing or adding a locale) created the config first.
-            // The failed flush closed the entity manager, so it is reset before the config created by the other request is read
-            $existingWidgetConfig = $this->resetManagerFor($widgetConfig) ? $this->widgetConfigRepository->findOneByChannelAndLocale($channel, $locale) : null;
-            if (null === $existingWidgetConfig) {
-                throw $e;
-            }
-
-            return $existingWidgetConfig;
+            // A concurrent request (typically right after installing or adding a locale) created the config first
+            return $this->recoverFromConcurrentCreation(
+                $e,
+                $widgetConfig::class,
+                fn (): ?WidgetConfigInterface => $this->widgetConfigRepository->findOneByChannelAndLocale($channel, $locale),
+            );
         }
 
         return $widgetConfig;
-    }
-
-    private function resetManagerFor(object $object): bool
-    {
-        if (null === $this->managerRegistry) {
-            return false;
-        }
-
-        $manager = $this->managerRegistry->getManagerForClass($object::class);
-        foreach ($this->managerRegistry->getManagers() as $name => $registeredManager) {
-            if (null !== $manager && $registeredManager === $manager) {
-                $this->managerRegistry->resetManager($name);
-
-                return true;
-            }
-        }
-
-        return false;
     }
 }

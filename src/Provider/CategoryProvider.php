@@ -16,13 +16,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryProvider implements CategoryProviderInterface
 {
+    use RecoversFromConcurrentCreationTrait;
+
     public function __construct(
         private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly CategoryFactoryInterface $categoryFactory,
         private readonly RepositoryInterface $localeRepository,
         private readonly TranslatorInterface $translator,
-        private readonly ?ManagerRegistry $managerRegistry = null,
+        ManagerRegistry $managerRegistry,
     ) {
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function getCategories(): array
@@ -35,22 +38,23 @@ final class CategoryProvider implements CategoryProviderInterface
         try {
             return $this->createDefaultCategories();
         } catch (UniqueConstraintViolationException $e) {
-            // A concurrent request (typically right after installing the plugin) created the categories first.
-            // The failed flush closed the entity manager, so it is reset before the categories created by the other request are read
-            $categories = $this->resetManager() ? $this->categoryRepository->findAll() : [];
-            if ([] === $categories) {
-                throw $e;
-            }
+            // A concurrent request (typically right after installing the plugin) created the categories first
+            return $this->recoverFromConcurrentCreation($e, $this->categoryRepository->getClassName(), function (): ?array {
+                $categories = $this->categoryRepository->findAll();
 
-            return $categories;
+                return [] === $categories ? null : $categories;
+            });
         }
     }
 
     /**
+     * The categories are flushed together, so a concurrent request never reads only some of them
+     *
      * @return non-empty-list<CategoryInterface>
      */
     private function createDefaultCategories(): array
     {
+        $manager = $this->getManager($this->categoryRepository->getClassName());
         $categories = [];
 
         $defaultConsents = array_merge(DefaultConsents::all(), ['necessary']);
@@ -79,29 +83,13 @@ final class CategoryProvider implements CategoryProviderInterface
             }
 
             $category = $this->categoryFactory->createWithData($defaultConsent, $translations, 'necessary' === $defaultConsent);
-            $this->categoryRepository->add($category);
+            $manager->persist($category);
 
             $categories[] = $category;
         }
 
+        $manager->flush();
+
         return $categories;
-    }
-
-    private function resetManager(): bool
-    {
-        if (null === $this->managerRegistry) {
-            return false;
-        }
-
-        $manager = $this->managerRegistry->getManagerForClass($this->categoryRepository->getClassName());
-        foreach ($this->managerRegistry->getManagers() as $name => $registeredManager) {
-            if (null !== $manager && $registeredManager === $manager) {
-                $this->managerRegistry->resetManager($name);
-
-                return true;
-            }
-        }
-
-        return false;
     }
 }
