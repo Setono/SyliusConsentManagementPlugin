@@ -39,19 +39,13 @@ final class TrackingUrlProvider extends AbstractUrlProvider
             foreach ($this->productRepository->findLatestByChannel($channel, $locale, 1) as $product) {
                 Assert::isInstanceOf($product, ProductInterface::class);
 
-                // The product route can't be generated without a slug in the channel's default locale
-                $slug = $product->getTranslation($locale)->getSlug();
-                if (null === $slug || '' === $slug) {
-                    continue;
-                }
-
                 foreach ($this->trackingUrlPatterns as $parameter => $value) {
                     yield new Url(
                         $this->generateUrl(
                             $channel,
                             $locale,
                             'sylius_shop_product_show',
-                            ['slug' => $slug, $parameter => $value],
+                            ['slug' => $product->getTranslation($locale)->getSlug(), $parameter => $value],
                         ),
                         $channel,
                         $locale,
