@@ -16,8 +16,17 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
 
     public const SIGNATURE_QUERY_PARAM = '_consent_signature';
 
-    public function __construct(private readonly string $secret)
+    private readonly string $key;
+
+    public function __construct(#[\SensitiveParameter] string $secret)
     {
+        if ('' === $secret) {
+            throw new \InvalidArgumentException('A non-empty secret is required.');
+        }
+
+        // Derive a key of our own, so that other HMAC-SHA256 signers keyed with the same secret, like Symfony's
+        // uri_signer, can't be used to forge consent overrides
+        $this->key = hash_hmac('sha256', 'setono_sylius_consent_management.consent_override', $secret);
     }
 
     public function sign(string|array $consent, \DateTimeInterface $expiresAt): array
@@ -55,6 +64,6 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
         return hash_hmac('sha256', http_build_query([
             RequestBasedConsentChecker::CONSENT_QUERY_PARAM => $consent,
             self::EXPIRES_QUERY_PARAM => $expires,
-        ]), $this->secret);
+        ], '', '&'), $this->key);
     }
 }

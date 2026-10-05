@@ -30,10 +30,11 @@ final class ModifyUrlSubscriber implements EventSubscriberInterface
      */
     public function modify(WillCrawl $event): void
     {
-        // The URL is requested right after this event, so the signature only needs to be valid for a short while
-        $query = $this->consentOverrideSigner->sign('1', new \DateTimeImmutable('+1 hour'));
+        // The URL is requested right after this event, so the signature only needs to be valid for a short while.
+        // Keep it short, because the signed URL ends up with every tracker on the page and in the cookies' URL
+        $query = $this->consentOverrideSigner->sign('1', new \DateTimeImmutable('+5 minutes'));
         $query[SampleDecider::SAMPLE_QUERY_PARAMETER] = '0';
 
-        $event->url->value = Uri::createFromUri(UriModifier::appendQuery($event->url->value, http_build_query($query)));
+        $event->url->value = Uri::createFromUri(UriModifier::appendQuery($event->url->value, http_build_query($query, '', '&')));
     }
 }
