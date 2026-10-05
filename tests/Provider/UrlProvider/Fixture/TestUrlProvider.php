@@ -24,8 +24,8 @@ final class TestUrlProvider extends AbstractUrlProvider
         return [];
     }
 
-    public function generate(ChannelInterface $channel, string $locale, string $route): string
+    public function generate(ChannelInterface $channel, string $locale, string $route, array $parameters = []): string
     {
-        return $this->generateUrl($channel, $locale, $route);
+        return $this->generateUrl($channel, $locale, $route, $parameters);
     }
 }
