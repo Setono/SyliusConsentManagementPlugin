@@ -79,7 +79,7 @@ vendor/bin/phpunit --testsuite functional
 The plugin decorates `Setono\Consent\ConsentCheckerInterface` from setono/consent-bundle, whose base implementation is `StaticConsentChecker` with configured defaults. The decorators are set up in `services/checker.xml`, and the effective call order, outermost first, is:
 
 1. `CachedConsentChecker`: in-memory cache.
-2. `RequestBasedConsentChecker`: the `?_consent=1|0` or `?_consent[marketing]=0` query parameter overrides consent. This is handy for manual testing.
+2. `RequestBasedConsentChecker`: the `?_consent=1|0` or `?_consent[marketing]=0` query parameter overrides consent. Denials always apply. Grants only apply in debug mode or when signed by `ConsentOverrideSigner` (`_consent_expires` plus `_consent_signature`, an HMAC with a key derived from `kernel.secret`). The crawler signs its URLs, and `setono:sylius-consent-management:sign-consent-url` prints a signed URL for manual testing in production.
 3. `SessionCachedConsentChecker`: caches in the session and is invalidated on the `ConsentUpdated` event.
 4. `ORMBasedConsentChecker`: looks up the client's latest `ConsentEntry`.
 5. The consent bundle's static defaults.

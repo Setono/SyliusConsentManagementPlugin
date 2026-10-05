@@ -19,8 +19,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * and lastly you can do the opposite: ?_consent=0 which will deny consent for all categories
  *
  * Denying consent always works. Granting consent only works in debug mode or when the override is signed
- * (see ConsentOverrideSignerInterface, which the crawler uses). Otherwise, anybody could link a visitor to
- * the store with ?_consent=1 and make tracking scripts load without the visitor's consent
+ * (see ConsentOverrideSignerInterface, which the crawler and the setono:sylius-consent-management:sign-consent-url
+ * command use). Otherwise, anybody could link a visitor to the store with ?_consent=1 and make tracking scripts
+ * load without the visitor's consent
  */
 final class RequestBasedConsentChecker implements ConsentCheckerInterface
 {
