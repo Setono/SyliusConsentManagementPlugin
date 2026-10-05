@@ -26,7 +26,13 @@ export default class ConsentManager {
         }, options);
 
         this.#consentedCategories = [...this.#options.consentedCategories];
+    }
 
+    /**
+     * Loads the widget and dispatches the consent events, which activates the consent-gated scripts.
+     * Call it after assigning the manager to window.sscmManager, so those scripts can use it
+     */
+    init() {
         if(this.#options.displayWidget) {
             import(this.#options.widgetScriptUrl ?? './consent-widget.js').then((module) => {
                 window.sscmWidget = new module.default(window.sscmWidgetOptions || {});
@@ -48,6 +54,9 @@ export default class ConsentManager {
         });
 
         this.#dispatchEvents(this.#options.consentedCategories);
+
+        // Lets scripts that run before the manager exists wait for it
+        document.dispatchEvent(new CustomEvent('sscm:ready', { bubbles: true }));
     }
 
     /**
@@ -140,14 +149,15 @@ export default class ConsentManager {
             elm.nonce = script.nonce;
 
             if (script.dataset.sscmSrc) {
-                // Inserted scripts run asynchronously by default, which would break the order of scripts that depend on each other
-                if (!script.hasAttribute('async')) {
-                    elm.async = false;
-                }
-
                 elm.src = script.dataset.sscmSrc;
             } else {
                 elm.textContent = script.textContent;
+            }
+
+            // Inserted scripts run asynchronously by default, which would break the order of scripts that depend on each other.
+            // The src is either data-sscm-src or a copied src attribute
+            if (elm.hasAttribute('src') && !script.hasAttribute('async')) {
+                elm.async = false;
             }
 
             script.replaceWith(elm);
