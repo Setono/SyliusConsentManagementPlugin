@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Twig;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +55,8 @@ final class StatisticsRuntimeTest extends TestCase
 
     private function createRuntime(): StatisticsRuntime
     {
-        $query = $this->prophesize(Query::class);
+        // Doctrine\ORM\Query is final in older doctrine/orm versions, so its abstract parent is doubled
+        $query = $this->prophesize(AbstractQuery::class);
         $query->enableResultCache(60)->willReturn($query);
         $query->getSingleScalarResult()->willReturn(3);
         $query->getScalarResult()->willReturn([['code' => 'necessary'], ['code' => 'marketing']]);
