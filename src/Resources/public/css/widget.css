@@ -94,6 +94,11 @@
     padding-left: 20px;
 }
 
+.sscm-error {
+    margin: 20px;
+    color: #b91c1c;
+}
+
 .sscm-buttons {
     display: flex;
     justify-content: center;

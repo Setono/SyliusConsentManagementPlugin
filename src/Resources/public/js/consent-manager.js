@@ -2,6 +2,7 @@
  * @typedef {object} ConsentManagerOptions
  * @property {boolean} displayWidget
  * @property {string[]} consentedCategories
+ * @property {string|null} widgetScriptUrl - The URL of consent-widget.js. Pass the versioned asset URL, so browsers don't use a stale widget after an upgrade
  */
 export default class ConsentManager {
     /**
@@ -10,17 +11,33 @@ export default class ConsentManager {
     #options;
 
     /**
+     * @type {string[]}
+     */
+    #consentedCategories;
+
+    /**
      * @param {ConsentManagerOptions} options
      */
     constructor(options = {}) {
         this.#options = Object.assign({
             displayWidget: false,
             consentedCategories: [],
+            widgetScriptUrl: null,
         }, options);
 
+        this.#consentedCategories = [...this.#options.consentedCategories];
+    }
+
+    /**
+     * Loads the widget and dispatches the consent events, which activates the consent-gated scripts.
+     * Call it after assigning the manager to window.sscmManager, so those scripts can use it
+     */
+    init() {
         if(this.#options.displayWidget) {
-            import('./consent-widget.js').then((module) => {
+            import(this.#options.widgetScriptUrl ?? './consent-widget.js').then((module) => {
                 window.sscmWidget = new module.default(window.sscmWidgetOptions || {});
+            }).catch((error) => {
+                console.error('The consent widget could not be loaded', error);
             });
         }
 
@@ -28,6 +45,7 @@ export default class ConsentManager {
          * This is the event dispatched inside the widget.js when a user posts the widget form
          */
         document.addEventListener('sscm:consent:updated', (event) => {
+            this.#consentedCategories = [...event.detail.categories];
             this.#dispatchEvents(event.detail.categories);
         });
 
@@ -36,6 +54,42 @@ export default class ConsentManager {
         });
 
         this.#dispatchEvents(this.#options.consentedCategories);
+
+        // Lets scripts that run before the manager exists wait for it
+        document.dispatchEvent(new CustomEvent('sscm:ready', { bubbles: true }));
+    }
+
+    /**
+     * @returns {string[]} The categories the visitor has consented to
+     */
+    getConsentedCategories() {
+        return [...this.#consentedCategories];
+    }
+
+    /**
+     * @param {string} category
+     * @returns {boolean}
+     */
+    isGranted(category) {
+        return this.#consentedCategories.includes(category);
+    }
+
+    /**
+     * Calls the callback right away if the visitor has consented to the category, and otherwise when they do.
+     * Unlike listening for the sscm:consent:<category>:granted event, this also works for scripts that run after
+     * the events have been dispatched
+     *
+     * @param {string} category
+     * @param {Function} callback
+     */
+    whenGranted(category, callback) {
+        if (this.isGranted(category)) {
+            callback();
+
+            return;
+        }
+
+        document.addEventListener(`sscm:consent:${category}:granted`, () => callback(), { once: true });
     }
 
     /**
@@ -60,9 +114,9 @@ export default class ConsentManager {
      * @param {string[]} categories
      */
     #dispatchDatalayerEvents(categories) {
-        if (undefined === window.dataLayer) {
-            return;
-        }
+        // A tag manager may define the data layer after this script has run. Creating it, like the GTM snippet does,
+        // keeps the events, so the tag manager can process them when it loads
+        window.dataLayer = window.dataLayer || [];
 
         categories.forEach((category) => {
             window.dataLayer.push({ event: `sscm:consent:${category}:granted` });
@@ -81,10 +135,29 @@ export default class ConsentManager {
             }
 
             const elm = document.createElement('script');
+
+            // Keep attributes like async, defer, integrity and crossorigin
+            for (const attribute of script.attributes) {
+                if ('type' === attribute.name || attribute.name.startsWith('data-sscm-')) {
+                    continue;
+                }
+
+                elm.setAttribute(attribute.name, attribute.value);
+            }
+
+            // Browsers hide the nonce attribute's value, but keep it in the property. Without it, a CSP would block the script
+            elm.nonce = script.nonce;
+
             if (script.dataset.sscmSrc) {
-                elm.setAttribute('src', script.dataset.sscmSrc);
+                elm.src = script.dataset.sscmSrc;
             } else {
-                elm.innerHTML = script.innerHTML;
+                elm.textContent = script.textContent;
+            }
+
+            // Inserted scripts run asynchronously by default, which would break the order of scripts that depend on each other.
+            // The src is either data-sscm-src or a copied src attribute
+            if (elm.hasAttribute('src') && !script.hasAttribute('async')) {
+                elm.async = false;
             }
 
             script.replaceWith(elm);
