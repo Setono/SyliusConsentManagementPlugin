@@ -13,6 +13,8 @@ interface CookieRecorderInterface
 {
     /**
      * The keys are the cookie names and the values are the cookies to save if no cookie with that name exists yet.
+     * Names that can't be cookie names are skipped, and the number of cookies recorded per call is limited, because
+     * the names can come from untrusted input (a request's Cookie header or the sample endpoint).
      *
      * Recording never throws. Failures are logged, so that recording cookies can't break the caller. It also doesn't
      * save any other changes the caller has made to entities

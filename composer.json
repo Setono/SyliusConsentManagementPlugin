@@ -23,6 +23,7 @@
         "league/uri-components": "^2.4",
         "league/uri-interfaces": "^2.3",
         "php-webdriver/webdriver": "^1.15",
+        "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/event-dispatcher": "^1.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "setono/bot-detection-bundle": "^1.13",

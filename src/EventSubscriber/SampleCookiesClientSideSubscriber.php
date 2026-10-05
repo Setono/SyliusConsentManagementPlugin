@@ -60,6 +60,10 @@ final class SampleCookiesClientSideSubscriber implements EventSubscriberInterfac
             ]) . "\n";
             $content = substr($content, 0, $pos) . $sample . substr($content, $pos);
             $response->setContent($content);
+
+            // The token can only be used once and expires, so no cache may serve this page to anybody else or again
+            $response->setPrivate();
+            $response->headers->addCacheControlDirective('no-store');
         }
     }
 }

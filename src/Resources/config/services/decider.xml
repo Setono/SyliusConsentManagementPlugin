@@ -7,6 +7,7 @@
 
         <service id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManager">
             <argument>%kernel.secret%</argument>
+            <argument type="service" id="cache.app"/>
         </service>
 
         <!-- Sample -->

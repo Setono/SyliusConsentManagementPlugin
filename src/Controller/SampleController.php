@@ -14,20 +14,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Receives the cookies sampled in the visitor's browser (see SampleCookiesClientSideSubscriber)
+ * Receives the cookies sampled in the visitor's browser (see SampleCookiesClientSideSubscriber). The recorder skips
+ * names that can't be cookie names and limits how many cookies are recorded
  */
 final class SampleController
 {
-    /**
-     * A page rarely sets more cookies than this. Larger payloads aren't samples from a browser
-     */
-    public const MAX_COOKIES = 50;
-
-    /**
-     * The characters allowed in a cookie name (a 'token' in RFC 6265). Anything else can't be a cookie a browser has stored
-     */
-    private const NAME_PATTERN = '/^[!#$%&\'*+\-.^_`|~0-9A-Za-z]+$/';
-
     public function __construct(
         private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
@@ -41,10 +32,10 @@ final class SampleController
             throw new BadRequestHttpException();
         }
 
-        // Only pages that were chosen for client-side sampling get a (short-lived) token
+        // Only pages that were chosen for client-side sampling get a (short-lived, single-use) token
         $token = $request->query->get(SampleTokenManagerInterface::QUERY_PARAMETER);
-        if (!is_string($token) || !$this->sampleTokenManager->isValid($token)) {
-            throw new AccessDeniedHttpException('Invalid or expired sample token');
+        if (!is_string($token) || !$this->sampleTokenManager->consume($token)) {
+            throw new AccessDeniedHttpException('Invalid, expired or used sample token');
         }
 
         // The sampling script posts JSON. Reading the body directly means this doesn't depend on FOSRestBundle's body listener
@@ -58,15 +49,12 @@ final class SampleController
             throw new BadRequestHttpException('The request body must be a JSON array of cookies');
         }
 
-        if (count($cookies) > self::MAX_COOKIES) {
-            throw new BadRequestHttpException(sprintf('At most %d cookies can be sampled at a time', self::MAX_COOKIES));
-        }
-
         $samples = [];
         foreach ($cookies as $cookie) {
             $cookie = self::assertCookie($cookie);
 
-            if (1 !== preg_match(self::NAME_PATTERN, $cookie['name'])) {
+            // A browser can store a cookie without a name, e.g. after document.cookie = 'value'
+            if ('' === $cookie['name']) {
                 continue;
             }
 
@@ -84,7 +72,7 @@ final class SampleController
     }
 
     /**
-     * @return array{name: non-empty-string, ...<array-key, mixed>}
+     * @return array{name: string, ...<array-key, mixed>}
      */
     private static function assertCookie(mixed $cookie): array
     {
@@ -92,7 +80,7 @@ final class SampleController
             throw new BadRequestHttpException();
         }
 
-        if (!array_key_exists('name', $cookie) || !is_string($cookie['name']) || '' === $cookie['name']) {
+        if (!array_key_exists('name', $cookie) || !is_string($cookie['name'])) {
             throw new BadRequestHttpException();
         }
 

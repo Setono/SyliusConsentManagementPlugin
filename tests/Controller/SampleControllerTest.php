@@ -17,6 +17,7 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Sylius\Component\Channel\Context\CompositeChannelContext;
 use Sylius\Resource\Factory\Factory;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,16 +31,19 @@ final class SampleControllerTest extends TestCase
     /** @var ObjectProphecy<CookieRecorderInterface> */
     private ObjectProphecy $cookieRecorder;
 
+    private SampleTokenManager $sampleTokenManager;
+
     private SampleController $controller;
 
     protected function setUp(): void
     {
         $this->cookieRecorder = $this->prophesize(CookieRecorderInterface::class);
+        $this->sampleTokenManager = new SampleTokenManager('secret', new ArrayAdapter());
 
         $this->controller = new SampleController(
             $this->cookieRecorder->reveal(),
             new CookieFactory(new Factory(Cookie::class), new CompositeChannelContext(), new RequestStack()),
-            new SampleTokenManager('secret'),
+            $this->sampleTokenManager,
         );
     }
 
@@ -55,9 +59,24 @@ final class SampleControllerTest extends TestCase
             return ['_ga', '_fbp'] === array_keys($cookies) && ['_ga', '_fbp'] === $names;
         }))->shouldBeCalledOnce();
 
-        $response = ($this->controller)(self::createRequest([
+        $response = ($this->controller)($this->createRequest([
             ['name' => '_ga', 'expires' => null],
             ['name' => '_fbp', 'expires' => 1790000000000],
+            ['name' => '_ga', 'expires' => null],
+        ]));
+
+        self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function it_skips_cookies_without_a_name(): void
+    {
+        $this->cookieRecorder->record(Argument::that(static fn (array $cookies): bool => ['_ga'] === array_keys($cookies)))->shouldBeCalledOnce();
+
+        $response = ($this->controller)($this->createRequest([
+            ['name' => '', 'expires' => null],
             ['name' => '_ga', 'expires' => null],
         ]));
 
@@ -73,7 +92,7 @@ final class SampleControllerTest extends TestCase
 
         $this->expectException(BadRequestHttpException::class);
 
-        ($this->controller)(self::createRequest([['name' => '_ga', 'expires' => 'tomorrow']]));
+        ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => 'tomorrow']]));
     }
 
     /**
@@ -87,7 +106,7 @@ final class SampleControllerTest extends TestCase
 
         $this->expectException(AccessDeniedHttpException::class);
 
-        ($this->controller)(self::createRequestWithBody('[{"name": "_ga", "expires": null}]', $token));
+        ($this->controller)($this->createRequestWithBody('[{"name": "_ga", "expires": null}]', $token));
     }
 
     /**
@@ -96,37 +115,24 @@ final class SampleControllerTest extends TestCase
     public static function provideInvalidTokens(): iterable
     {
         yield 'missing' => [null];
-        yield 'another secret' => [(new SampleTokenManager('another secret'))->create()];
-        yield 'expired' => [(new SampleTokenManager('secret', -1))->create()];
+        yield 'another secret' => [(new SampleTokenManager('another secret', new ArrayAdapter()))->create()];
+        yield 'expired' => [(new SampleTokenManager('secret', new ArrayAdapter(), -1))->create()];
     }
 
     /**
      * @test
      */
-    public function it_skips_names_that_cannot_be_cookie_names(): void
+    public function it_rejects_a_token_that_was_used_before(): void
     {
-        $this->cookieRecorder->record(Argument::that(static fn (array $cookies): bool => ['_ga'] === array_keys($cookies)))->shouldBeCalledOnce();
+        $this->cookieRecorder->record(Argument::any())->shouldBeCalledOnce();
 
-        ($this->controller)(self::createRequest([
-            ['name' => '_ga', 'expires' => null],
-            ['name' => 'VISIT evil.example TO VERIFY YOUR STORE', 'expires' => null],
-            ['name' => '<script>', 'expires' => null],
-        ]));
-    }
+        $token = $this->sampleTokenManager->create();
 
-    /**
-     * @test
-     */
-    public function it_rejects_too_many_cookies(): void
-    {
-        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+        ($this->controller)($this->createRequestWithBody('[{"name": "_ga", "expires": null}]', $token));
 
-        $this->expectException(BadRequestHttpException::class);
+        $this->expectException(AccessDeniedHttpException::class);
 
-        ($this->controller)(self::createRequest(array_map(
-            static fn (int $i): array => ['name' => 'cookie' . $i, 'expires' => null],
-            range(1, SampleController::MAX_COOKIES + 1),
-        )));
+        ($this->controller)($this->createRequestWithBody('[{"name": "_ga", "expires": null}]', $token));
     }
 
     /**
@@ -140,7 +146,7 @@ final class SampleControllerTest extends TestCase
 
         $this->expectException(BadRequestHttpException::class);
 
-        ($this->controller)(self::createRequestWithBody($body));
+        ($this->controller)($this->createRequestWithBody($body));
     }
 
     /**
@@ -156,19 +162,19 @@ final class SampleControllerTest extends TestCase
     /**
      * @param list<array<string, mixed>> $samples
      */
-    private static function createRequest(array $samples): Request
+    private function createRequest(array $samples): Request
     {
-        return self::createRequestWithBody(json_encode($samples, \JSON_THROW_ON_ERROR));
+        return $this->createRequestWithBody(json_encode($samples, \JSON_THROW_ON_ERROR));
     }
 
     /**
      * Like the sampling script, and without any listener decoding the body into the request parameters
      */
-    private static function createRequestWithBody(string $body, ?string $token = 'valid'): Request
+    private function createRequestWithBody(string $body, ?string $token = 'valid'): Request
     {
         $query = [];
         if (null !== $token) {
-            $query[SampleTokenManagerInterface::QUERY_PARAMETER] = 'valid' === $token ? (new SampleTokenManager('secret'))->create() : $token;
+            $query[SampleTokenManagerInterface::QUERY_PARAMETER] = 'valid' === $token ? $this->sampleTokenManager->create() : $token;
         }
 
         return Request::create('/en_US/ajax/sample-cookies?' . http_build_query($query), 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: $body);

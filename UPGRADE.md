@@ -17,3 +17,10 @@ php bin/console doctrine:migrations:migrate
     `kernel.request`.
   - All sources record cookies through the new `CookieRecorderInterface`, which saves them with an entity manager of
     its own. Doctrine listeners for cookies get that entity manager in their event arguments, not the default one.
+  - Names that aren't valid cookie names (RFC 6265 tokens, e.g. names with spaces) are no longer recorded, and at most
+    50 cookies are recorded per request.
+  - `/{_locale}/ajax/sample-cookies` answers 403 without the single-use token that
+    `@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig` adds to its URL. If you override that
+    template, pass the token like the plugin's template does:
+    `path('setono_sylius_consent_management_shop_sample', { '_sample_token': token })`.
+  - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.

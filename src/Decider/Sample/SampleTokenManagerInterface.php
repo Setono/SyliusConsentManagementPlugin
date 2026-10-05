@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Decider\Sample;
 
 /**
- * Tokens that allow a page, which was chosen for client-side sampling, to post its cookies for a limited time.
- * Without them, anybody could post arbitrary cookie names to the sample endpoint
+ * Single-use tokens that allow a page, which was chosen for client-side sampling, to post its cookies once within a
+ * limited time. Without them, anybody could post arbitrary cookie names to the sample endpoint
  */
 interface SampleTokenManagerInterface
 {
@@ -14,5 +14,8 @@ interface SampleTokenManagerInterface
 
     public function create(): string;
 
-    public function isValid(string $token): bool;
+    /**
+     * Returns true if the token is valid and hasn't been used before, and marks it as used
+     */
+    public function consume(string $token): bool;
 }
