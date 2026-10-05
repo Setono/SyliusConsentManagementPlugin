@@ -32,4 +32,22 @@ final class CachedConsentCheckerTest extends TestCase
             $cachedConsentContext->isGranted(DefaultConsents::CONSENT_FUNCTIONAL),
         );
     }
+
+    /**
+     * @test
+     */
+    public function it_does_not_reuse_the_cache_after_a_reset(): void
+    {
+        // E.g. a worker runtime where the next request comes from another visitor
+        $consentChecker = $this->prophesize(ConsentCheckerInterface::class);
+        $consentChecker->isGranted(DefaultConsents::CONSENT_MARKETING)->willReturn(true, false);
+
+        $cachedConsentChecker = new CachedConsentChecker($consentChecker->reveal());
+
+        self::assertTrue($cachedConsentChecker->isGranted(DefaultConsents::CONSENT_MARKETING));
+
+        $cachedConsentChecker->reset();
+
+        self::assertFalse($cachedConsentChecker->isGranted(DefaultConsents::CONSENT_MARKETING));
+    }
 }

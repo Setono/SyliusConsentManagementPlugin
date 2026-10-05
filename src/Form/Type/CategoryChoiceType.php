@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Form\Type;
 
-use Setono\SyliusConsentManagementPlugin\Model\Category;
+use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
@@ -39,7 +39,7 @@ final class CategoryChoiceType extends AbstractType
         $necessary = [];
 
         foreach ($vars['choices'] as $choice) {
-            if ($choice->data instanceof Category && $choice->data->isNecessary()) {
+            if ($choice->data instanceof CategoryInterface && $choice->data->isNecessary()) {
                 $necessary[] = $choice->data->getCode();
             }
         }

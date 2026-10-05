@@ -11,9 +11,10 @@ use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Workflow\Event\Event;
+use Symfony\Contracts\Service\ResetInterface;
 use Webmozart\Assert\Assert;
 
-final class NotifyAboutCookiesSubscriber implements EventSubscriberInterface
+final class NotifyAboutCookiesSubscriber implements EventSubscriberInterface, ResetInterface
 {
     /** @var list<CookieInterface> */
     private array $cookies = [];
@@ -47,6 +48,11 @@ final class NotifyAboutCookiesSubscriber implements EventSubscriberInterface
 
         $this->cookieEmailManager->sendNewCookiesEmail($this->cookies);
 
+        $this->cookies = [];
+    }
+
+    public function reset(): void
+    {
         $this->cookies = [];
     }
 }
