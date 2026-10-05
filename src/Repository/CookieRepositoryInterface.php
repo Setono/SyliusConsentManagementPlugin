@@ -12,13 +12,6 @@ interface CookieRepositoryInterface extends RepositoryInterface
     public function findOneByName(string $name): ?CookieInterface;
 
     /**
-     * @param list<string> $names
-     *
-     * @return array<string, CookieInterface> the cookies with the given names, indexed by name
-     */
-    public function findByNames(array $names): array;
-
-    /**
      * @return list<CookieInterface>
      */
     public function findStaleCookies(string $staleThreshold): array;
