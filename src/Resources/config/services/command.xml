@@ -14,6 +14,12 @@
             <tag name="console.command"/>
         </service>
 
+        <service id="Setono\SyliusConsentManagementPlugin\Command\SignConsentUrlCommand">
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface"/>
+
+            <tag name="console.command"/>
+        </service>
+
         <service id="Setono\SyliusConsentManagementPlugin\Command\StaleCookiesCommand">
             <argument type="service" id="setono_sylius_consent_management.repository.cookie"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManagerInterface"/>
