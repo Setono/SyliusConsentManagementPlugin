@@ -82,6 +82,7 @@
         "symfony/intl": "^6.4 || ^7.0",
         "symfony/property-info": "^6.4 || ^7.0",
         "symfony/serializer": "^6.4 || ^7.0",
+        "symfony/translation": "^6.4.3 || ^7.0.3",
         "symfony/web-profiler-bundle": "^6.4 || ^7.0",
         "symfony/webpack-encore-bundle": "^1.17.2",
         "willdurand/negotiation": "^3.1"
