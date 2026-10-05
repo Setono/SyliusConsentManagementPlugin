@@ -67,18 +67,23 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
     {
         $header = $request->headers->get('Cookie');
         if (null === $header || '' === trim($header)) {
-            return array_map('strval', array_keys($request->cookies->all()));
+            return array_map(strval(...), array_keys($request->cookies->all()));
         }
 
         $names = [];
         foreach (explode(';', $header) as $cookie) {
+            // Browsers send a cookie without a name as just its value. Skipping it keeps cookie values out of the list
+            if (!str_contains($cookie, '=')) {
+                continue;
+            }
+
             $name = trim(explode('=', $cookie, 2)[0]);
             if ('' !== $name) {
                 $names[$name] = true;
             }
         }
 
-        return array_map('strval', array_keys($names));
+        return array_map(strval(...), array_keys($names));
     }
 
     public function record(): void
