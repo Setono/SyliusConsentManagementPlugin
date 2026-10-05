@@ -18,7 +18,7 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
 
     private readonly string $key;
 
-    public function __construct(#[\SensitiveParameter] string $secret)
+    public function __construct(string $secret)
     {
         if ('' === $secret) {
             throw new \InvalidArgumentException('A non-empty secret is required.');
