@@ -68,7 +68,7 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
     {
         self::assertSame([
             KernelEvents::REQUEST => 'sample',
-            KernelEvents::TERMINATE => 'record',
+            KernelEvents::TERMINATE => ['record', 10],
         ], SampleCookiesServerSideSubscriber::getSubscribedEvents());
     }
 

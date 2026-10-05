@@ -14,7 +14,8 @@ interface CookieRecorderInterface
     /**
      * The keys are the cookie names and the values are the cookies to save if no cookie with that name exists yet.
      *
-     * Recording never throws. Failures are logged, so that recording cookies can't break the caller
+     * Recording never throws. Failures are logged, so that recording cookies can't break the caller. It also doesn't
+     * save any other changes the caller has made to entities
      *
      * @param array<string, CookieInterface> $cookies
      */
