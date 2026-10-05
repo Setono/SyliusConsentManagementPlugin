@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Crawler;
 
+use Facebook\WebDriver\Exception\Internal\WebDriverCurlException;
+use Facebook\WebDriver\Exception\InvalidSessionIdException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\JavaScriptExecutor;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -50,22 +52,26 @@ final class Crawler implements CrawlerInterface, LoggerAwareInterface
         $this->options = $resolvedOptions;
     }
 
-    public function start(): void
+    public function start(): CrawlResult
     {
         $client = $this->pantherClientFactory->create();
 
         try {
-            $this->crawl($client);
+            // Panther starts the browser lazily on the first request. Starting it here makes a browser that won't
+            // start abort the crawl, instead of failing every URL
+            $client->start();
+
+            return $this->crawl($client);
         } finally {
             try {
                 $client->quit();
-            } catch (WebDriverException) {
+            } catch (WebDriverException|WebDriverCurlException) {
                 // The browser is already gone
             }
         }
     }
 
-    private function crawl(Client $client): void
+    private function crawl(Client $client): CrawlResult
     {
         $this->eventDispatcher->dispatch(new CrawlStarted($this, $client));
 
@@ -75,29 +81,11 @@ final class Crawler implements CrawlerInterface, LoggerAwareInterface
             $willCrawl = new WillCrawl($this, $client, $url);
             $this->eventDispatcher->dispatch($willCrawl);
 
-            $this->logger->info('Crawling {url}', ['url' => (string) $willCrawl->url]);
-
-            // A single failing URL (e.g. a 404 or a timeout waiting for the document) must not abort the whole crawl
-            try {
-                $client->request('GET', (string) $willCrawl->url);
-
-                if ($this->options['wait_for_document_ready'] > 0) {
-                    $this->logger->info('Will wait a maximum of {delay} seconds document ready', ['delay' => $this->options['wait_for_document_ready']]);
-
-                    $client->wait($this->options['wait_for_document_ready'])->until(fn (JavaScriptExecutor $webDriver): mixed => $webDriver->executeScript(
-                        'return document.readyState === "complete";',
-                    ));
-                }
-
+            if ($this->load($client, (string) $willCrawl->url)) {
                 ++$crawled;
                 $this->eventDispatcher->dispatch(new Crawled($this, $client, $willCrawl->url));
-            } catch (\Throwable $e) {
+            } else {
                 ++$failed;
-                $this->logger->error('Failed to crawl {url}. Error was: {error}', [
-                    'url' => (string) $willCrawl->url,
-                    'error' => $e->getMessage(),
-                    'exception' => $e,
-                ]);
             }
 
             if ($this->options['request_delay'] > 0) {
@@ -110,6 +98,42 @@ final class Crawler implements CrawlerInterface, LoggerAwareInterface
             'crawled' => $crawled,
             'failed' => $failed,
         ]);
+
+        return new CrawlResult($crawled, $failed);
+    }
+
+    /**
+     * Returns false if the URL failed to load, e.g. because the page timed out. That must not abort the whole crawl
+     */
+    private function load(Client $client, string $url): bool
+    {
+        $this->logger->info('Crawling {url}', ['url' => $url]);
+
+        try {
+            $client->request('GET', $url);
+
+            if ($this->options['wait_for_document_ready'] > 0) {
+                $this->logger->info('Will wait a maximum of {delay} seconds document ready', ['delay' => $this->options['wait_for_document_ready']]);
+
+                $client->wait($this->options['wait_for_document_ready'])->until(
+                    fn (JavaScriptExecutor $webDriver): mixed => $webDriver->executeScript('return document.readyState === "complete";'),
+                    sprintf('The document was not ready after %d seconds', $this->options['wait_for_document_ready']),
+                );
+            }
+        } catch (InvalidSessionIdException|WebDriverCurlException $e) {
+            // Without a browser session every following URL would fail too
+            throw new \RuntimeException(sprintf('Aborted the crawl, because the browser session was lost while crawling %s. Error was: %s', $url, $e->getMessage()), 0, $e);
+        } catch (WebDriverException $e) {
+            $this->logger->error('Failed to crawl {url}. Error was: {error}', [
+                'url' => $url,
+                'error' => $e->getMessage(),
+                'exception' => $e,
+            ]);
+
+            return false;
+        }
+
+        return true;
     }
 
     public function setLogger(LoggerInterface $logger): void

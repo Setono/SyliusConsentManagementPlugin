@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusConsentManagementPlugin\Crawler;
 
+use Facebook\WebDriver\Exception\Internal\WebDriverCurlException;
+use Facebook\WebDriver\Exception\InvalidSessionIdException;
+use Facebook\WebDriver\Exception\SessionNotCreatedException;
+use Facebook\WebDriver\Exception\UnknownErrorException;
 use Facebook\WebDriver\JavaScriptExecutor;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverWait;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\AbstractLogger;
+use Prophecy\Prophecy\ObjectProphecy;
 use Setono\SyliusConsentManagementPlugin\Crawler\Crawler;
 use Setono\SyliusConsentManagementPlugin\Event\Crawled;
 use Setono\SyliusConsentManagementPlugin\Event\CrawlStarted;
@@ -21,103 +25,259 @@ use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\UrlProviderInterfa
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\ProcessManager\BrowserManagerInterface;
+use Tests\Setono\SyliusConsentManagementPlugin\Crawler\Fixture\TestLogger;
 
 final class CrawlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function it_continues_crawling_when_a_url_fails_and_quits_the_browser(): void
-    {
-        // Panther's Client is final, so a real client is used with a test double of the underlying WebDriver
-        $webDriver = $this->prophesize(WebDriver::class);
-        $webDriver->willImplement(JavaScriptExecutor::class);
-        $webDriver->get('https://shop.example.com/en_US/')->willReturn($webDriver);
-        $webDriver->get('https://shop.example.com/broken')->willThrow(new \RuntimeException('net::ERR_CONNECTION_REFUSED'));
-        $webDriver->get('https://shop.example.com/en_US/products/mug')->willReturn($webDriver);
-        $webDriver->getPageSource()->willReturn('<html></html>');
-        $webDriver->findElements(Argument::any())->willReturn([]);
-        $webDriver->getCurrentURL()->willReturn('https://shop.example.com/');
-        // Waiting for the document to be ready executes this script
-        $webDriver->executeScript('return document.readyState === "complete";', Argument::cetera())->willReturn(true)->shouldBeCalledTimes(2);
-        $webDriver->wait(Argument::cetera())->will(static fn (): WebDriverWait => new WebDriverWait($webDriver->reveal(), 1));
-        $webDriver->quit()->shouldBeCalled();
+    private const DOCUMENT_READY_SCRIPT = 'return document.readyState === "complete";';
 
-        $browserManager = $this->prophesize(BrowserManagerInterface::class);
-        $browserManager->start()->willReturn($webDriver);
-        $browserManager->quit()->shouldBeCalled();
+    /** @var ObjectProphecy<WebDriver> */
+    private ObjectProphecy $webDriver;
+
+    /** @var ObjectProphecy<BrowserManagerInterface> */
+    private ObjectProphecy $browserManager;
+
+    /** @var ObjectProphecy<UrlProviderInterface> */
+    private ObjectProphecy $urlProvider;
+
+    private EventDispatcher $eventDispatcher;
+
+    /** @var list<string> */
+    private array $events = [];
+
+    private TestLogger $logger;
+
+    private Crawler $crawler;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Panther's Client is final, so a real client is used with a test double of the underlying WebDriver
+        $webDriver = $this->webDriver = $this->prophesize(WebDriver::class);
+        $this->webDriver->willImplement(JavaScriptExecutor::class);
+        $this->webDriver->get(Argument::type('string'))->willReturn($this->webDriver);
+        $this->webDriver->getPageSource()->willReturn('<html></html>');
+        $this->webDriver->findElements(Argument::any())->willReturn([]);
+        $this->webDriver->getCurrentURL()->willReturn('https://shop.example.com/');
+        $this->webDriver->executeScript(self::DOCUMENT_READY_SCRIPT, Argument::cetera())->willReturn(true);
+        $this->webDriver->wait(Argument::cetera())->will(static fn (): WebDriverWait => new WebDriverWait($webDriver->reveal(), 1));
+        $this->webDriver->quit()->willReturn(null);
+
+        $this->browserManager = $this->prophesize(BrowserManagerInterface::class);
+        $this->browserManager->start()->willReturn($this->webDriver);
+        $this->browserManager->quit()->will(static function (): void {
+        });
 
         $clientFactory = $this->prophesize(PantherClientFactoryInterface::class);
-        $clientFactory->create()->willReturn(new Client($browserManager->reveal()));
+        $clientFactory->create()->willReturn(new Client($this->browserManager->reveal()));
 
-        $urlProvider = $this->prophesize(UrlProviderInterface::class);
-        $urlProvider->getUrls()->willReturn([
+        $this->urlProvider = $this->prophesize(UrlProviderInterface::class);
+        $this->urlProvider->getUrls()->willReturn([
             new Url('https://shop.example.com/en_US/'),
-            new Url('https://shop.example.com/broken'),
+            new Url('https://shop.example.com/en_US/products/cap'),
             new Url('https://shop.example.com/en_US/products/mug'),
         ]);
 
-        $crawledUrls = $willCrawlUrls = [];
-        $crawlStarted = false;
-        $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addListener(CrawlStarted::class, static function () use (&$crawlStarted): void {
-            $crawlStarted = true;
+        $this->events = [];
+        $this->eventDispatcher = new EventDispatcher();
+        $this->eventDispatcher->addListener(CrawlStarted::class, function (): void {
+            $this->events[] = 'crawl started';
         });
-        $eventDispatcher->addListener(WillCrawl::class, static function (WillCrawl $event) use (&$willCrawlUrls): void {
-            $willCrawlUrls[] = (string) $event->url;
+        $this->eventDispatcher->addListener(WillCrawl::class, function (WillCrawl $event): void {
+            $this->events[] = 'will crawl ' . (string) $event->url;
         });
-        $eventDispatcher->addListener(Crawled::class, static function (Crawled $event) use (&$crawledUrls): void {
-            $crawledUrls[] = (string) $event->url;
+        $this->eventDispatcher->addListener(Crawled::class, function (Crawled $event): void {
+            $this->events[] = 'crawled ' . (string) $event->url;
         });
 
-        $logger = new class() extends AbstractLogger {
-            /** @var list<string> */
-            public array $logs = [];
+        $this->logger = new TestLogger();
 
-            public function log($level, \Stringable|string $message, array $context = []): void
-            {
-                $replacements = [];
-                foreach ($context as $key => $value) {
-                    if (is_string($value) || is_int($value)) {
-                        $replacements['{' . $key . '}'] = (string) $value;
-                    }
-                }
-
-                $this->logs[] = sprintf('%s: %s', is_string($level) ? $level : 'unknown', strtr((string) $message, $replacements));
-            }
-
-            /**
-             * @return list<string>
-             */
-            public function errors(): array
-            {
-                return array_values(array_filter($this->logs, static fn (string $log): bool => str_starts_with($log, 'error: ')));
-            }
-        };
-
-        $crawler = new Crawler($clientFactory->reveal(), $eventDispatcher, $urlProvider->reveal(), [
+        $this->crawler = new Crawler($clientFactory->reveal(), $this->eventDispatcher, $this->urlProvider->reveal(), [
             'request_delay' => 0,
             'wait_for_document_ready' => 1,
         ]);
-        $crawler->setLogger($logger);
-        $crawler->start();
+        $this->crawler->setLogger($this->logger);
+    }
 
-        self::assertTrue($crawlStarted);
-        self::assertSame([
-            'https://shop.example.com/en_US/',
-            'https://shop.example.com/broken',
-            'https://shop.example.com/en_US/products/mug',
-        ], $willCrawlUrls);
-        self::assertSame([
-            'https://shop.example.com/en_US/',
-            'https://shop.example.com/en_US/products/mug',
-        ], $crawledUrls, implode("\n", $logger->logs));
+    /**
+     * @test
+     */
+    public function it_crawls_every_url_and_quits_the_browser(): void
+    {
+        $this->webDriver->executeScript(self::DOCUMENT_READY_SCRIPT, Argument::cetera())->willReturn(true)->shouldBeCalledTimes(3);
+        $this->webDriver->quit()->shouldBeCalled();
+        $this->browserManager->quit()->shouldBeCalled();
 
-        self::assertSame(['error: Failed to crawl https://shop.example.com/broken. Error was: net::ERR_CONNECTION_REFUSED'], $logger->errors());
-        self::assertContains('info: Crawling https://shop.example.com/broken', $logger->logs);
-        self::assertContains('info: Will wait a maximum of 1 seconds document ready', $logger->logs);
-        self::assertSame('warning: Crawled 2 URL(s), 1 failed', $logger->logs[array_key_last($logger->logs)]);
+        $result = $this->crawler->start();
+
+        self::assertSame(3, $result->crawled);
+        self::assertSame(0, $result->failed);
+        self::assertSame([
+            'crawl started',
+            'will crawl https://shop.example.com/en_US/',
+            'crawled https://shop.example.com/en_US/',
+            'will crawl https://shop.example.com/en_US/products/cap',
+            'crawled https://shop.example.com/en_US/products/cap',
+            'will crawl https://shop.example.com/en_US/products/mug',
+            'crawled https://shop.example.com/en_US/products/mug',
+        ], $this->events);
+        self::assertSame([], $this->logger->errors());
+        self::assertContains('info: Crawling https://shop.example.com/en_US/products/cap', $this->logger->logs);
+        self::assertContains('info: Will wait a maximum of 1 seconds document ready', $this->logger->logs);
+        self::assertSame('info: Crawled 3 URL(s), 0 failed', $this->logger->lastLog());
+    }
+
+    /**
+     * @test
+     */
+    public function it_continues_crawling_when_a_url_fails_to_load(): void
+    {
+        // This is how Chrome reports e.g. a refused connection
+        $this->webDriver->get('https://shop.example.com/en_US/products/cap')->willThrow(new UnknownErrorException('unknown error: net::ERR_CONNECTION_REFUSED'));
+        $this->webDriver->quit()->shouldBeCalled();
+        $this->browserManager->quit()->shouldBeCalled();
+
+        $result = $this->crawler->start();
+
+        self::assertSame(2, $result->crawled);
+        self::assertSame(1, $result->failed);
+        self::assertSame([
+            'crawl started',
+            'will crawl https://shop.example.com/en_US/',
+            'crawled https://shop.example.com/en_US/',
+            'will crawl https://shop.example.com/en_US/products/cap',
+            'will crawl https://shop.example.com/en_US/products/mug',
+            'crawled https://shop.example.com/en_US/products/mug',
+        ], $this->events);
+        self::assertSame(['error: Failed to crawl https://shop.example.com/en_US/products/cap. Error was: unknown error: net::ERR_CONNECTION_REFUSED'], $this->logger->errors());
+        self::assertSame('warning: Crawled 2 URL(s), 1 failed', $this->logger->lastLog());
+    }
+
+    /**
+     * @test
+     */
+    public function it_continues_crawling_when_the_document_is_not_ready_in_time(): void
+    {
+        $webDriver = $this->webDriver->reveal();
+
+        // A wait without any time left times out right away, like a document that never gets ready
+        $this->webDriver->wait(Argument::cetera())->willReturn(
+            new WebDriverWait($webDriver, 1),
+            new WebDriverWait($webDriver, 0),
+            new WebDriverWait($webDriver, 1),
+        );
+        $this->webDriver->executeScript(self::DOCUMENT_READY_SCRIPT, Argument::cetera())->willReturn(true)->shouldBeCalledTimes(2);
+
+        $result = $this->crawler->start();
+
+        self::assertSame(2, $result->crawled);
+        self::assertSame(1, $result->failed);
+        self::assertSame([
+            'crawl started',
+            'will crawl https://shop.example.com/en_US/',
+            'crawled https://shop.example.com/en_US/',
+            'will crawl https://shop.example.com/en_US/products/cap',
+            'will crawl https://shop.example.com/en_US/products/mug',
+            'crawled https://shop.example.com/en_US/products/mug',
+        ], $this->events);
+        self::assertSame(['error: Failed to crawl https://shop.example.com/en_US/products/cap. Error was: The document was not ready after 1 seconds'], $this->logger->errors());
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideBrowserSessionErrors
+     */
+    public function it_aborts_the_crawl_when_the_browser_session_is_lost(\Throwable $error): void
+    {
+        $this->webDriver->get('https://shop.example.com/en_US/products/cap')->willThrow($error);
+        $this->webDriver->get('https://shop.example.com/en_US/products/mug')->shouldNotBeCalled();
+
+        // Quitting a browser that is gone fails too, which must not hide why the crawl was aborted
+        $quitCalls = 0;
+        $this->webDriver->quit()->will(static function () use (&$quitCalls, $error): void {
+            if (1 === ++$quitCalls) {
+                throw $error;
+            }
+        });
+
+        $exception = $this->startUntilAborted();
+
+        self::assertInstanceOf(\RuntimeException::class, $exception);
+        self::assertSame(sprintf(
+            'Aborted the crawl, because the browser session was lost while crawling https://shop.example.com/en_US/products/cap. Error was: %s',
+            $error->getMessage(),
+        ), $exception->getMessage());
+        self::assertSame($error, $exception->getPrevious());
+        self::assertSame(1, $quitCalls);
+        self::assertSame([
+            'crawl started',
+            'will crawl https://shop.example.com/en_US/',
+            'crawled https://shop.example.com/en_US/',
+            'will crawl https://shop.example.com/en_US/products/cap',
+        ], $this->events);
+        self::assertSame([], $this->logger->errors());
+    }
+
+    /**
+     * @return iterable<string, array{\Throwable}>
+     */
+    public static function provideBrowserSessionErrors(): iterable
+    {
+        yield 'the browser closed the session' => [new InvalidSessionIdException('invalid session id: session deleted as the browser has closed the connection')];
+        yield 'chromedriver is gone' => [new WebDriverCurlException('Curl error thrown for http GET to /session/abc/url')];
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_catch_exceptions_from_crawled_listeners(): void
+    {
+        $exception = new \RuntimeException('The EntityManager is closed.');
+        $this->eventDispatcher->addListener(Crawled::class, static function () use ($exception): void {
+            throw $exception;
+        });
+        $this->webDriver->get('https://shop.example.com/en_US/products/cap')->shouldNotBeCalled();
+        $this->webDriver->quit()->shouldBeCalled();
+        $this->browserManager->quit()->shouldBeCalled();
+
+        self::assertSame($exception, $this->startUntilAborted());
+        self::assertSame([
+            'crawl started',
+            'will crawl https://shop.example.com/en_US/',
+            'crawled https://shop.example.com/en_US/',
+        ], $this->events);
+        self::assertSame([], $this->logger->errors());
+    }
+
+    /**
+     * @test
+     */
+    public function it_aborts_the_crawl_when_the_browser_does_not_start(): void
+    {
+        $exception = new SessionNotCreatedException('session not created: This version of ChromeDriver only supports Chrome version 120');
+        $this->browserManager->start()->willThrow($exception);
+        $this->browserManager->quit()->shouldBeCalled();
+        $this->urlProvider->getUrls()->shouldNotBeCalled();
+
+        self::assertSame($exception, $this->startUntilAborted());
+        self::assertSame([], $this->events);
+    }
+
+    /**
+     * Returns the exception that aborted the crawl
+     */
+    private function startUntilAborted(): \Throwable
+    {
+        try {
+            $result = $this->crawler->start();
+        } catch (\Throwable $e) {
+            return $e;
+        }
+
+        self::fail(sprintf('The crawl was not aborted. %d URL(s) were crawled and %d failed', $result->crawled, $result->failed));
     }
 }
