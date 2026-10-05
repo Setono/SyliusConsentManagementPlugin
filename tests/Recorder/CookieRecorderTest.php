@@ -15,11 +15,20 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber;
+use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorder;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Resource\Factory\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Workflow\Event\CompletedEvent;
 
 /**
@@ -304,6 +313,38 @@ final class CookieRecorderTest extends KernelTestCase
         $recordedNames = array_column($this->getCookies(), 'name');
         self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
         self::assertSame('cookie001', $recordedNames[0]);
+        self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_record_forged_names_from_a_sampled_cookie_header(): void
+    {
+        $header = ['VISIT evil.example TO VERIFY YOUR STORE=1'];
+        foreach (range(1, CookieRecorder::MAX_COOKIES + 10) as $i) {
+            $header[] = sprintf('cookie%03d=1', $i);
+        }
+
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
+        $channelContext->getChannel()->willReturn($this->channel);
+
+        $sampleDecider = $this->prophesize(SampleDeciderInterface::class);
+        $sampleDecider->sample(Argument::cetera())->willReturn(true);
+
+        $subscriber = new SampleCookiesServerSideSubscriber(
+            $this->recorder,
+            new CookieFactory(new Factory($this->getCookieClass()), $channelContext->reveal(), new RequestStack()),
+            $sampleDecider->reveal(),
+        );
+
+        $request = Request::create('/', server: ['HTTP_COOKIE' => implode('; ', $header)]);
+        $subscriber->sample(new RequestEvent($this->prophesize(HttpKernelInterface::class)->reveal(), $request, HttpKernelInterface::MAIN_REQUEST));
+        $subscriber->record();
+
+        $recordedNames = array_column($this->getCookies(), 'name');
+        self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
+        self::assertNotContains('VISIT evil.example TO VERIFY YOUR STORE', $recordedNames);
         self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
     }
 

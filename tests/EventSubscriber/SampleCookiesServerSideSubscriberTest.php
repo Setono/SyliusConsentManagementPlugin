@@ -99,6 +99,40 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
     /**
      * @test
      */
+    public function it_reads_the_real_cookie_names_from_the_cookie_header(): void
+    {
+        // PHP would have turned these into 'ai_session_v1', 'my_cookie' and 'x' in $_COOKIE
+        $request = Request::create('/', server: ['HTTP_COOKIE' => 'ai_session.v1=a; my cookie=b; x[y]=c; _ga=GA1.1.1; _ga=duplicate']);
+        $request->cookies->replace(['ai_session_v1' => 'a', 'my_cookie' => 'b', 'x' => ['y' => 'c'], '_ga' => 'GA1.1.1']);
+        $this->requestEvent->getRequest()->willReturn($request);
+
+        // The recorder skips the names that aren't valid cookie names, see CookieRecorderTest
+        $this->cookieRecorder->record(Argument::that(
+            static fn (array $cookies): bool => ['ai_session.v1', 'my cookie', 'x[y]', '_ga'] === array_keys($cookies),
+        ))->shouldBeCalledOnce();
+
+        $this->subscriber->sample($this->requestEvent->reveal());
+        $this->subscriber->record();
+    }
+
+    /**
+     * @test
+     */
+    public function it_skips_cookie_header_parts_without_a_name(): void
+    {
+        // A browser sends a cookie without a name as just its value
+        $request = Request::create('/', server: ['HTTP_COOKIE' => 'abc123; _ga=GA1.1.1; =value']);
+        $this->requestEvent->getRequest()->willReturn($request);
+
+        $this->cookieRecorder->record(Argument::that(static fn (array $cookies): bool => ['_ga'] === array_keys($cookies)))->shouldBeCalledOnce();
+
+        $this->subscriber->sample($this->requestEvent->reveal());
+        $this->subscriber->record();
+    }
+
+    /**
+     * @test
+     */
     public function it_does_not_sample_on_sub_request(): void
     {
         $this->requestEvent->isMainRequest()->willReturn(false);

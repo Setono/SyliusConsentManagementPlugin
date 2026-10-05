@@ -9,6 +9,7 @@ use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Service\ResetInterface;
@@ -51,10 +52,38 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         }
 
         // The new cookies are created while the request is still available, because the factory resolves their URL from it
-        foreach ($request->cookies->all() as $name => $_) {
-            $name = (string) $name;
+        foreach (self::getCookieNames($request) as $name) {
             $this->cookies[$name] = $this->cookieFactory->createWithName($name);
         }
+    }
+
+    /**
+     * PHP changes cookie names when it populates $_COOKIE (and thereby $request->cookies): dots and spaces become
+     * underscores and 'x[y]' becomes an array under 'x'. The real names are read from the Cookie header instead
+     *
+     * @return list<string>
+     */
+    private static function getCookieNames(Request $request): array
+    {
+        $header = $request->headers->get('Cookie');
+        if (null === $header || '' === trim($header)) {
+            return array_map(strval(...), array_keys($request->cookies->all()));
+        }
+
+        $names = [];
+        foreach (explode(';', $header) as $cookie) {
+            // Browsers send a cookie without a name as just its value. Skipping it keeps cookie values out of the list
+            if (!str_contains($cookie, '=')) {
+                continue;
+            }
+
+            $name = trim(explode('=', $cookie, 2)[0]);
+            if ('' !== $name) {
+                $names[$name] = true;
+            }
+        }
+
+        return array_map(strval(...), array_keys($names));
     }
 
     public function record(): void

@@ -98,7 +98,7 @@ The plugin decorates `Setono\Consent\ConsentCheckerInterface` from setono/consen
 
 New `Cookie` entities start in the `pending` state. They are created from three sources:
 
-- **Server-side sampling**: `SampleCookiesServerSideSubscriber` collects the request cookies on `kernel.request` and records them on `kernel.terminate`, after the response has been sent.
+- **Server-side sampling**: `SampleCookiesServerSideSubscriber` collects the request cookies on `kernel.request` and records them on `kernel.terminate`, after the response has been sent. It reads the names from the raw `Cookie` header, because PHP mangles them in `$_COOKIE`.
 - **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`), with a single-use, short-lived token from `SampleTokenManager` (used tokens are kept in `cache.app`). The page that gets the script is marked `private, no-store`.
 - **Crawler**: `setono:sylius-consent-management:crawl` runs a headless Chrome through Panther over URLs from `CompositeUrlProvider` (the homepage, plus each channel's latest product page with tracking parameters like `gclid` and `fbclid` appended). It dispatches `CrawlStarted`, `WillCrawl` and `Crawled`, and `SaveCookiesSubscriber` persists what it finds.
 
