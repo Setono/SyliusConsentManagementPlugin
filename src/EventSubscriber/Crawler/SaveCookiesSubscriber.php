@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler;
 
 use Setono\SyliusConsentManagementPlugin\Event\Crawled;
+use Setono\SyliusConsentManagementPlugin\Event\CrawlStarted;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CookieRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,6 +25,7 @@ final class SaveCookiesSubscriber implements EventSubscriberInterface, ResetInte
     public static function getSubscribedEvents(): array
     {
         return [
+            CrawlStarted::class => 'reset',
             Crawled::class => 'save',
         ];
     }

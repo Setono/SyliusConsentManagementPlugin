@@ -20,7 +20,7 @@
         <field name="lastSeenAt" type="datetime"/>
 
         <many-to-one target-entity="Setono\SyliusConsentManagementPlugin\Model\ServiceInterface" field="service" inversed-by="cookies">
-            <join-column name="service_id" referenced-column-name="id" on-delete="CASCADE" />
+            <join-column name="service_id" referenced-column-name="id" on-delete="SET NULL" />
         </many-to-one>
 
         <many-to-many field="channels" target-entity="Sylius\Component\Channel\Model\ChannelInterface">

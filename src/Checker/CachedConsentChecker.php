@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\Checker;
 
 use Setono\Consent\ConsentCheckerInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * This class will cache the consent for the request life cycle directly in memory
+ * This class will cache the consent for the request life cycle directly in memory.
+ * The cache is reset between requests (kernel.reset), which matters when the kernel handles several
+ * requests, e.g. with FrankenPHP's worker mode or RoadRunner
  */
-final class CachedConsentChecker implements ConsentCheckerInterface
+final class CachedConsentChecker implements ConsentCheckerInterface, ResetInterface
 {
     /** @var array<string, bool> */
     private array $consents = [];
@@ -25,5 +28,10 @@ final class CachedConsentChecker implements ConsentCheckerInterface
         }
 
         return $this->consents[$consent];
+    }
+
+    public function reset(): void
+    {
+        $this->consents = [];
     }
 }
