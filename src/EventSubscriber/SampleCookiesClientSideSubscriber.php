@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
+use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -15,6 +16,7 @@ final class SampleCookiesClientSideSubscriber implements EventSubscriberInterfac
     public function __construct(
         private readonly Environment $twig,
         private readonly SampleDeciderInterface $sampleDecider,
+        private readonly SampleTokenManagerInterface $sampleTokenManager,
     ) {
     }
 
@@ -53,9 +55,15 @@ final class SampleCookiesClientSideSubscriber implements EventSubscriberInterfac
         $pos = strripos($content, '</body>');
 
         if (false !== $pos) {
-            $sample = "\n" . $this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig') . "\n";
+            $sample = "\n" . $this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig', [
+                'token' => $this->sampleTokenManager->create(),
+            ]) . "\n";
             $content = substr($content, 0, $pos) . $sample . substr($content, $pos);
             $response->setContent($content);
+
+            // The token can only be used once and expires, so no cache may serve this page to anybody else or again
+            $response->setPrivate();
+            $response->headers->addCacheControlDirective('no-store');
         }
     }
 }

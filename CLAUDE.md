@@ -99,12 +99,12 @@ The plugin decorates `Setono\Consent\ConsentCheckerInterface` from setono/consen
 New `Cookie` entities start in the `pending` state. They are created from three sources:
 
 - **Server-side sampling**: `SampleCookiesServerSideSubscriber` collects the request cookies on `kernel.request` and records them on `kernel.terminate`, after the response has been sent.
-- **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`).
+- **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`), with a single-use, short-lived token from `SampleTokenManager` (used tokens are kept in `cache.app`). The page that gets the script is marked `private, no-store`.
 - **Crawler**: `setono:sylius-consent-management:crawl` runs a headless Chrome through Panther over URLs from `CompositeUrlProvider` (the homepage, plus each channel's latest product page with tracking parameters like `gclid` and `fbclid` appended). It dispatches `CrawlStarted`, `WillCrawl` and `Crawled`, and `SaveCookiesSubscriber` persists what it finds.
 
-All three record through `CookieRecorder`, which never throws. It saves with an entity manager of its own that shares the default one's connection, configuration and event manager, so it never flushes the request's pending changes, and Doctrine listeners still fire.
+All three record through `CookieRecorder`, which never throws. It skips names that aren't RFC 6265 tokens (e.g. names with spaces), records at most 50 cookies per call, and saves with an entity manager of its own that shares the default one's connection, configuration and event manager, so it never flushes the request's pending changes, and Doctrine listeners still fire.
 
-`SampleDecider` gates both sampling paths: the `?_sample=1|0` query parameter forces sampling on or off, and otherwise the `sampling.rate` and `sampling.firewalls` config apply (the default firewall is `shop`).
+`SampleDecider` gates both sampling paths: `?_sample=0` turns sampling off everywhere, `?_sample=1` forces it on only in debug (`kernel.debug`), and otherwise the `sampling.rate` and `sampling.firewalls` config apply (the default firewall is `shop`).
 
 `CookieWorkflow` is a Symfony Workflow state machine named `setono_sylius_consent_management__cookie` with one transition, `pending → confirmed` (`confirm`). A cookie is confirmed automatically in two cases:
 

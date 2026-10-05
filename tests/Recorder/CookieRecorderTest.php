@@ -267,6 +267,49 @@ final class CookieRecorderTest extends KernelTestCase
     /**
      * @test
      */
+    public function it_skips_names_that_cannot_be_cookie_names(): void
+    {
+        $this->recorder->record([
+            '_ga' => $this->createCookie('_ga'),
+            'ai_session.v1' => $this->createCookie('ai_session.v1'),
+            'VISIT evil.example TO VERIFY YOUR STORE' => $this->createCookie('VISIT evil.example TO VERIFY YOUR STORE'),
+            '<script>' => $this->createCookie('<script>'),
+            '' => $this->createCookie(''),
+        ]);
+
+        self::assertSame([
+            ['name' => '_ga', 'samples' => 1, 'state' => 'pending'],
+            ['name' => 'ai_session.v1', 'samples' => 1, 'state' => 'pending'],
+        ], $this->getCookies());
+    }
+
+    /**
+     * @test
+     */
+    public function it_records_a_limited_number_of_cookies_per_call(): void
+    {
+        // Skipped names don't count
+        $names = ['VISIT evil.example', 'TO VERIFY', 'YOUR STORE'];
+        foreach (range(1, CookieRecorder::MAX_COOKIES + 10) as $i) {
+            $names[] = sprintf('cookie%03d', $i);
+        }
+
+        $cookies = [];
+        foreach ($names as $name) {
+            $cookies[$name] = $this->createCookie($name);
+        }
+
+        $this->recorder->record($cookies);
+
+        $recordedNames = array_column($this->getCookies(), 'name');
+        self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
+        self::assertSame('cookie001', $recordedNames[0]);
+        self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
+    }
+
+    /**
+     * @test
+     */
     public function it_handles_numeric_cookie_names(): void
     {
         // PHP turns the numeric string key into an integer, which is exactly what this test is about
