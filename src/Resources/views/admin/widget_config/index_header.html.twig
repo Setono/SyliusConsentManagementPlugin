@@ -2,6 +2,6 @@
     <i class="info circle icon"></i>
     <div class="content">
         <div class="header">{{ 'setono_sylius_consent_management.ui.widget_config_information.heading'|trans }}</div>
-        {{ 'setono_sylius_consent_management.ui.widget_config_information.body'|trans({ '%channel%': sylius.channel.name, '%locale%': sylius.localeCode })|raw }}
+        {{ 'setono_sylius_consent_management.ui.widget_config_information.body'|trans({ '%channel%': sylius.channel.name|e, '%locale%': sylius.localeCode|e })|raw }}
     </div>
 </div>
