@@ -45,9 +45,13 @@ final class ConsentController
         }
 
         $form = $consentEntryTypeFactory->createNew($request);
-        $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        // The form is submitted even when the body doesn't contain it. That happens when no category is ticked, because
+        // the necessary categories are rendered disabled, and browsers don't post disabled checkboxes. A non-array value
+        // throws a BadRequestException, which Symfony turns into a 400
+        $form->submit($request->request->all($form->getName()));
+
+        if (!$form->isValid()) {
             throw new BadRequestHttpException(sprintf('Form is not valid: %s', $form->getErrors(true)));
         }
 
@@ -66,15 +70,26 @@ final class ConsentController
     }
 
     /**
-     * Browsers send the Sec-Fetch-Site header (and the Origin header) when a page on another site submits a form to
-     * this endpoint, while the widget's own requests are same-origin. Requests without either header can't be forged
-     * by another site in a modern browser
+     * The widget's own requests are same-origin, so a request from another site is forged, e.g. by a form on another
+     * site that sets the consent in the visitor's browser. The checks, in order:
+     *
+     * 1. Sec-Fetch-Site, which browsers send from secure contexts. It says exactly where the request came from
+     * 2. Without it (plain HTTP or older browsers), X-Requested-With, which the widget sends. A form on another site
+     *    can't set it. A fetch() or XMLHttpRequest from another site can only send it after a CORS preflight, which
+     *    fails unless the store's CORS config allows that site, and a no-cors fetch() drops the header. This check
+     *    comes before the Origin check, because a proxy can misreport the request's host
+     * 3. Origin, whose host must match the request's host. Requests without Sec-Fetch-Site and Origin can't be forged
+     *    by another site in a modern browser
      */
     private static function isSameOriginRequest(Request $request): bool
     {
         $fetchSite = $request->headers->get('Sec-Fetch-Site');
         if (null !== $fetchSite) {
             return 'same-origin' === $fetchSite;
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return true;
         }
 
         $origin = $request->headers->get('Origin');

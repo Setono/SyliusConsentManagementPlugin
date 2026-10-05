@@ -12,7 +12,7 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
-use Webmozart\Assert\Assert;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * TODO: This form could most likely be improved, but I am Symfony Form newb. If you see this and you're a Symfony Form oracle, please create a PR <3
@@ -53,14 +53,17 @@ final class ConsentEntryType extends AbstractResourceType
                 'choices' => $categories,
             ])
             ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) use ($categories) {
+                // Malformed data is left as is: the form rejects it on submit, so the endpoint answers with a 400
                 /** @var mixed $data */
                 $data = $event->getData();
-                Assert::isArray($data);
-
-                if (!isset($data['consentedCategories'])) {
-                    $data['consentedCategories'] = [];
+                if (!is_array($data)) {
+                    return;
                 }
-                Assert::isArray($data['consentedCategories']);
+
+                $data['consentedCategories'] ??= [];
+                if (!is_array($data['consentedCategories'])) {
+                    return;
+                }
 
                 foreach ($categories as $category) {
                     if ($category->isNecessary() && !in_array((string) $category->getCode(), $data['consentedCategories'], true)) {
@@ -91,6 +94,15 @@ final class ConsentEntryType extends AbstractResourceType
                 },
             ))
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        // Pages rendered before the url field was removed (e.g. cached by a reverse proxy, or left open in a tab) still
+        // post it. Extra fields aren't mapped, so they are ignored instead of making the form invalid
+        $resolver->setDefault('allow_extra_fields', true);
     }
 
     public function getBlockPrefix(): string

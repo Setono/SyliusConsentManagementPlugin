@@ -17,14 +17,25 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\SyliusConsentManagementPlugin\Controller\ConsentController;
 use Setono\SyliusConsentManagementPlugin\Cookie\WidgetCookieManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Form\Factory\ConsentEntryTypeFactoryInterface;
+use Setono\SyliusConsentManagementPlugin\Form\Type\CategoryChoiceType;
+use Setono\SyliusConsentManagementPlugin\Form\Type\ConsentEntryType;
+use Setono\SyliusConsentManagementPlugin\Model\Category;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntry;
-use Symfony\Component\Form\FormInterface;
+use Setono\SyliusConsentManagementPlugin\Provider\CategoryProviderInterface;
+use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Validation;
 
 final class ConsentControllerTest extends TestCase
 {
     use ProphecyTrait;
+
+    private const XHR = ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'];
 
     /** @var ObjectProphecy<EntityManagerInterface> */
     private ObjectProphecy $entityManager;
@@ -52,7 +63,7 @@ final class ConsentControllerTest extends TestCase
     {
         $this->expectException(AccessDeniedHttpException::class);
 
-        $this->update($this->createRequest($headers), $this->createConsentEntry(['functional', 'marketing']));
+        $this->update($this->createRequest($headers, ['functional', 'marketing']), new ConsentEntry());
     }
 
     /**
@@ -60,9 +71,9 @@ final class ConsentControllerTest extends TestCase
      */
     public static function provideCrossSiteHeaders(): iterable
     {
-        yield 'cross-site fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'cross-site']];
-        yield 'same-site fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'same-site']];
-        yield 'foreign origin' => [['HTTP_ORIGIN' => 'https://evil.example']];
+        yield 'cross-site fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'cross-site'] + self::XHR];
+        yield 'same-site fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'same-site'] + self::XHR];
+        yield 'foreign origin without fetch metadata' => [['HTTP_ORIGIN' => 'https://evil.example']];
     }
 
     /**
@@ -74,14 +85,14 @@ final class ConsentControllerTest extends TestCase
      */
     public function it_saves_the_consent_for_same_origin_requests(array $headers): void
     {
-        $consentEntry = $this->createConsentEntry(['functional', 'marketing']);
+        $consentEntry = new ConsentEntry();
 
         $this->entityManager->persist($consentEntry)->shouldBeCalledOnce();
         $this->entityManager->flush()->shouldBeCalledOnce();
 
-        $response = $this->update($this->createRequest($headers), $consentEntry);
+        $response = $this->update($this->createRequest($headers, ['functional', 'marketing']), $consentEntry);
 
-        self::assertSame('["functional","marketing"]', $response);
+        self::assertSame('["necessary","functional","marketing"]', $response);
     }
 
     /**
@@ -89,9 +100,66 @@ final class ConsentControllerTest extends TestCase
      */
     public static function provideSameOriginHeaders(): iterable
     {
-        yield 'same-origin fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'same-origin', 'HTTP_ORIGIN' => 'https://shop.example.com']];
+        yield 'same-origin fetch metadata' => [['HTTP_SEC_FETCH_SITE' => 'same-origin', 'HTTP_ORIGIN' => 'https://shop.example.com'] + self::XHR];
+        yield 'XHR without fetch metadata, with an origin host that a proxy misreports' => [['HTTP_ORIGIN' => 'https://www.shop.example.com'] + self::XHR];
         yield 'same origin without fetch metadata' => [['HTTP_ORIGIN' => 'https://shop.example.com']];
         yield 'no fetch metadata or origin' => [[]];
+    }
+
+    /**
+     * Browsers don't post disabled checkboxes, and the necessary categories are rendered disabled
+     *
+     * @test
+     *
+     * @dataProvider provideEmptyBodies
+     *
+     * @param list<string> $optionalCategories
+     */
+    public function it_saves_the_necessary_categories_when_the_body_is_empty(array $optionalCategories): void
+    {
+        $consentEntry = new ConsentEntry();
+
+        $this->entityManager->persist($consentEntry)->shouldBeCalledOnce();
+        $this->entityManager->flush()->shouldBeCalledOnce();
+
+        $response = $this->update($this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR), $consentEntry, $optionalCategories);
+
+        self::assertSame('["necessary"]', $response);
+    }
+
+    /**
+     * @return iterable<string, array{list<string>}>
+     */
+    public static function provideEmptyBodies(): iterable
+    {
+        yield '"Accept selected" with nothing ticked' => [['functional', 'marketing']];
+        yield '"Accept all" when only necessary categories exist' => [[]];
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_categories_that_are_not_a_list(): void
+    {
+        $this->expectException(BadRequestHttpException::class);
+
+        $request = $this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR, 'marketing');
+
+        $this->update($request, new ConsentEntry());
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_a_form_that_is_not_an_array(): void
+    {
+        // The HttpKernel turns a BadRequestException into a 400 response
+        $this->expectException(BadRequestException::class);
+
+        $request = $this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR);
+        $request->request->set('setono_sylius_consent_management_consent_entry', 'marketing');
+
+        $this->update($request, new ConsentEntry());
     }
 
     /**
@@ -99,8 +167,12 @@ final class ConsentControllerTest extends TestCase
      */
     public function it_updates_the_existing_entry_when_a_concurrent_request_created_it_first(): void
     {
-        $consentEntry = $this->createConsentEntry(['functional', 'marketing']);
-        $existingEntry = $this->createConsentEntry(['functional']);
+        $consentEntry = new ConsentEntry();
+        $consentEntry->setClientId('client-id');
+
+        $existingEntry = new ConsentEntry();
+        $existingEntry->setClientId('client-id');
+        $existingEntry->setConsentedCategories(['necessary']);
 
         $flushes = 0;
         $this->entityManager->persist($consentEntry)->shouldBeCalledOnce();
@@ -116,43 +188,53 @@ final class ConsentControllerTest extends TestCase
         $this->entityManager->getRepository(ConsentEntry::class)->willReturn($repository);
         $this->managerRegistry->resetManager('default')->shouldBeCalledOnce()->willReturn($this->entityManager);
 
-        $response = $this->update($this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin']), $consentEntry);
+        $response = $this->update($this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR, ['functional', 'marketing']), $consentEntry);
 
-        self::assertSame('["functional","marketing"]', $response);
-        self::assertSame(['functional', 'marketing'], $existingEntry->getConsentedCategories());
+        self::assertSame('["necessary","functional","marketing"]', $response);
+        self::assertSame(['necessary', 'functional', 'marketing'], $existingEntry->getConsentedCategories());
         self::assertSame(2, $flushes);
     }
 
     /**
      * @param array<string, string> $headers
+     * @param list<string>|string|null $consentedCategories null for an empty body
      */
-    private function createRequest(array $headers): Request
+    private function createRequest(array $headers, array|string|null $consentedCategories = null): Request
     {
-        return Request::create('https://shop.example.com/en_US/ajax/update-consent', 'POST', server: $headers + ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $parameters = null === $consentedCategories ? [] : [
+            'setono_sylius_consent_management_consent_entry' => ['consentedCategories' => $consentedCategories],
+        ];
+
+        return Request::create('https://shop.example.com/en_US/ajax/update-consent', 'POST', $parameters, server: $headers);
     }
 
     /**
-     * @param list<string> $categories
+     * @param list<string> $optionalCategories
      */
-    private function createConsentEntry(array $categories): ConsentEntry
+    private function update(Request $request, ConsentEntry $consentEntry, array $optionalCategories = ['functional', 'marketing']): string
     {
-        $consentEntry = new ConsentEntry();
-        $consentEntry->setClientId('client-id');
-        $consentEntry->setConsentedCategories($categories);
+        $categories = [self::createCategory('necessary', true)];
+        foreach ($optionalCategories as $optionalCategory) {
+            $categories[] = self::createCategory($optionalCategory, false);
+        }
 
-        return $consentEntry;
-    }
+        $categoryProvider = $this->prophesize(CategoryProviderInterface::class);
+        $categoryProvider->getCategories()->willReturn($categories);
 
-    private function update(Request $request, ConsentEntry $submittedEntry): string
-    {
-        $form = $this->prophesize(FormInterface::class);
-        $form->handleRequest($request)->willReturn($form);
-        $form->isSubmitted()->willReturn(true);
-        $form->isValid()->willReturn(true);
-        $form->getData()->willReturn($submittedEntry);
+        $categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
+        $categoryRepository->findAll()->willReturn($categories);
+
+        $formFactory = Forms::createFormFactoryBuilder()
+            ->addTypes([
+                new ConsentEntryType($categoryProvider->reveal(), ConsentEntry::class),
+                new CategoryChoiceType($categoryRepository->reveal()),
+            ])
+            ->addExtension(new ValidatorExtension(Validation::createValidator()))
+            ->getFormFactory()
+        ;
 
         $consentEntryTypeFactory = $this->prophesize(ConsentEntryTypeFactoryInterface::class);
-        $consentEntryTypeFactory->createNew($request)->willReturn($form);
+        $consentEntryTypeFactory->createNew($request)->willReturn($formFactory->create(ConsentEntryType::class, $consentEntry));
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(Argument::any())->willReturnArgument(0);
@@ -165,5 +247,17 @@ final class ConsentControllerTest extends TestCase
             $consentEntryTypeFactory->reveal(),
             $eventDispatcher->reveal(),
         )->getContent();
+    }
+
+    private static function createCategory(string $code, bool $necessary): Category
+    {
+        $category = new Category();
+        $category->setCurrentLocale('en_US');
+        $category->setFallbackLocale('en_US');
+        $category->setCode($code);
+        $category->setName(ucfirst($code));
+        $category->setNecessary($necessary);
+
+        return $category;
     }
 }

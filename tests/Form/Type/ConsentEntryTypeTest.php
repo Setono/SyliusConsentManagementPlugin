@@ -40,7 +40,7 @@ final class ConsentEntryTypeTest extends TypeTestCase
     /**
      * @test
      */
-    public function it_does_not_let_the_client_set_the_url(): void
+    public function it_ignores_the_url_posted_by_pages_rendered_before_it_was_removed(): void
     {
         $consentEntry = new ConsentEntry();
         $consentEntry->setUrl('https://shop.example.com/en_US/');
@@ -49,8 +49,32 @@ final class ConsentEntryTypeTest extends TypeTestCase
         $form->submit(['consentedCategories' => ['marketing'], 'url' => 'https://evil.example']);
 
         self::assertFalse($form->has('url'));
-        self::assertFalse($form->isValid());
+        self::assertTrue($form->isValid(), (string) $form->getErrors(true));
         self::assertSame('https://shop.example.com/en_US/', $consentEntry->getUrl());
+        self::assertEqualsCanonicalizing(['necessary', 'marketing'], $consentEntry->getConsentedCategories());
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideMalformedData
+     */
+    public function it_is_invalid_when_the_submitted_data_is_malformed(array|string $data): void
+    {
+        $form = $this->factory->create(ConsentEntryType::class, new ConsentEntry());
+        $form->submit($data);
+
+        self::assertTrue($form->isSubmitted());
+        self::assertFalse($form->isValid());
+    }
+
+    /**
+     * @return iterable<string, array{array|string}>
+     */
+    public static function provideMalformedData(): iterable
+    {
+        yield 'a string instead of the form' => ['marketing'];
+        yield 'a string instead of the categories' => [['consentedCategories' => 'marketing']];
     }
 
     protected function getExtensions(): array
