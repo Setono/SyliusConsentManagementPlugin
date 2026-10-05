@@ -23,9 +23,21 @@ use Webmozart\Assert\Assert;
 final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterface
 {
     /**
+     * A page rarely sets more cookies than this. It limits how much one request, e.g. with a forged Cookie header or
+     * sample payload, can record
+     */
+    public const MAX_COOKIES = 50;
+
+    /**
      * The length of the name column, see Resources/config/doctrine/model/Cookie.orm.xml
      */
     private const NAME_MAX_LENGTH = 255;
+
+    /**
+     * The characters allowed in a cookie name (a 'token' in RFC 6265). Other names, e.g. with spaces, are skipped, so that
+     * text like 'VISIT evil.example TO VERIFY YOUR STORE' can't reach the cookie list or the notification email
+     */
+    private const NAME_PATTERN = '/^[!#$%&\'*+\-.^_`|~0-9A-Za-z]+$/';
 
     private LoggerInterface $logger;
 
@@ -46,9 +58,15 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         $cookies = array_filter(
             $cookies,
             // PHP turns numeric array keys, e.g. a cookie named "123", into integers
-            static fn (int|string $name): bool => '' !== (string) $name && strlen((string) $name) <= self::NAME_MAX_LENGTH,
+            static fn (int|string $name): bool => strlen((string) $name) <= self::NAME_MAX_LENGTH && 1 === preg_match(self::NAME_PATTERN, (string) $name),
             \ARRAY_FILTER_USE_KEY,
         );
+
+        if (count($cookies) > self::MAX_COOKIES) {
+            $this->logger->debug('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
+
+            $cookies = array_slice($cookies, 0, self::MAX_COOKIES, true);
+        }
 
         if ([] === $cookies) {
             return;
