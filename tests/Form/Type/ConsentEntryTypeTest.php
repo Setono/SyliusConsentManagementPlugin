@@ -75,6 +75,7 @@ final class ConsentEntryTypeTest extends TypeTestCase
     {
         yield 'a string instead of the form' => ['marketing'];
         yield 'a string instead of the categories' => [['consentedCategories' => 'marketing']];
+        yield 'a nested array among the categories' => [['consentedCategories' => ['marketing', ['functional']]]];
     }
 
     protected function getExtensions(): array

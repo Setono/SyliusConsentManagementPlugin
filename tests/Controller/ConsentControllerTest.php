@@ -138,14 +138,25 @@ final class ConsentControllerTest extends TestCase
 
     /**
      * @test
+     *
+     * @dataProvider provideMalformedCategories
      */
-    public function it_rejects_categories_that_are_not_a_list(): void
+    public function it_rejects_categories_that_are_not_a_list_of_strings(array|string $consentedCategories): void
     {
         $this->expectException(BadRequestHttpException::class);
 
-        $request = $this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR, 'marketing');
+        $request = $this->createRequest(['HTTP_SEC_FETCH_SITE' => 'same-origin'] + self::XHR, $consentedCategories);
 
         $this->update($request, new ConsentEntry());
+    }
+
+    /**
+     * @return iterable<string, array{array|string}>
+     */
+    public static function provideMalformedCategories(): iterable
+    {
+        yield 'a string' => ['marketing'];
+        yield 'a nested array' => [['marketing', ['functional']]];
     }
 
     /**
@@ -197,7 +208,7 @@ final class ConsentControllerTest extends TestCase
 
     /**
      * @param array<string, string> $headers
-     * @param list<string>|string|null $consentedCategories null for an empty body
+     * @param array|string|null $consentedCategories null for an empty body
      */
     private function createRequest(array $headers, array|string|null $consentedCategories = null): Request
     {
