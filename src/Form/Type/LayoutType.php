@@ -23,11 +23,11 @@ final class LayoutType extends AbstractType
     {
         // The values are rendered inside a <style> tag in the shop, see \Setono\SyliusConsentManagementPlugin\Renderer\WidgetStyleRenderer
         $constraints = [
-            new Regex([
-                'pattern' => WidgetStyleRenderer::SAFE_VALUE_PATTERN,
-                'message' => 'setono_sylius_consent_management.widget_config.layout.invalid_value',
-                'groups' => ['setono_sylius_consent_management'],
-            ]),
+            new Regex(
+                pattern: WidgetStyleRenderer::SAFE_VALUE_PATTERN,
+                message: 'setono_sylius_consent_management.widget_config.layout.invalid_value',
+                groups: ['setono_sylius_consent_management'],
+            ),
         ];
 
         $builder
