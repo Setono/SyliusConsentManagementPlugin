@@ -34,7 +34,8 @@ final class SampleDeciderTest extends TestCase
      */
     public function it_does_not_sample_if_sample_parameter_is_falsy(string $sampleParameter): void
     {
-        self::assertFalse($this->createDecider(0)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        // Also in production and with a sample rate of 100%, because the crawler disables sampling this way
+        self::assertFalse($this->createDecider(1)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -42,9 +43,19 @@ final class SampleDeciderTest extends TestCase
      *
      * @dataProvider provideTruthySampleParameters
      */
-    public function it_samples_if_sample_parameter_is_truthy(string $sampleParameter): void
+    public function it_samples_if_sample_parameter_is_truthy_in_debug_mode(string $sampleParameter): void
     {
-        self::assertTrue($this->createDecider(0)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+        self::assertTrue($this->createDecider(0, debug: true)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideTruthySampleParameters
+     */
+    public function it_ignores_a_truthy_sample_parameter_in_production(string $sampleParameter): void
+    {
+        self::assertFalse($this->createDecider(0)->sample(Request::create('/?_sample=' . $sampleParameter), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
     /**
@@ -102,11 +113,11 @@ final class SampleDeciderTest extends TestCase
         self::assertFalse($this->createDecider(1)->sample(Request::create('/'), SampleDeciderInterface::CONTEXT_SERVER_SIDE));
     }
 
-    private function createDecider(float $sampleRate, ?FirewallMapInterface $firewallMap = null): SampleDecider
+    private function createDecider(float $sampleRate, ?FirewallMapInterface $firewallMap = null, bool $debug = false): SampleDecider
     {
         $firewallMap ??= $this->firewallMap->reveal();
 
-        return new SampleDecider($firewallMap, ['shop'], $sampleRate);
+        return new SampleDecider($firewallMap, ['shop'], $sampleRate, $debug);
     }
 
     /**

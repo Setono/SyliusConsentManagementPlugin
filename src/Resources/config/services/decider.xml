@@ -10,6 +10,7 @@
             <argument type="service" id="security.firewall.map"/>
             <argument>%setono_sylius_consent_management.sampling.firewalls%</argument>
             <argument>%setono_sylius_consent_management.sampling.rate%</argument>
+            <argument>%kernel.debug%</argument>
         </service>
 
         <!-- Widget display -->

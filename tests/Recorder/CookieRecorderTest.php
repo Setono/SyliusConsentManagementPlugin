@@ -22,6 +22,9 @@ use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorder;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\RateLimiter\LimiterInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 use Symfony\Component\Workflow\Event\CompletedEvent;
 
 /**
@@ -136,32 +139,7 @@ final class CookieRecorderTest extends KernelTestCase
      */
     public function it_updates_the_cookie_a_concurrent_request_saved_first_and_saves_the_other_new_cookies(): void
     {
-        // The concurrent request saves '_fbp' after this request looked it up, but before it saved it
-        $concurrentRequest = new class($this->connection) {
-            private bool $done = false;
-
-            public function __construct(private readonly Connection $connection)
-            {
-            }
-
-            public function preFlush(): void
-            {
-                if ($this->done) {
-                    return;
-                }
-
-                $this->done = true;
-                $this->connection->insert('setono_sylius_consent_management__cookie', [
-                    'name' => '_fbp',
-                    'state' => 'pending',
-                    'samples' => 1,
-                    'session' => 0,
-                    'lastSeenAt' => '2024-01-01 00:00:00',
-                    'createdAt' => '2024-01-01 00:00:00',
-                ]);
-            }
-        };
-        $this->entityManager->getEventManager()->addEventListener([Events::preFlush], $concurrentRequest);
+        $this->insertConcurrentlyBeforeTheFirstFlush('_fbp');
 
         $this->logger->error(Argument::cetera())->shouldNotBeCalled();
 
@@ -182,6 +160,65 @@ final class CookieRecorderTest extends KernelTestCase
         $this->recorder->record([$this->createCookie('_gcl_au')]);
 
         self::assertSame(['_gcl_au', '_gid'], $this->getCookiesInChannel());
+    }
+
+    /**
+     * @test
+     */
+    public function it_saves_only_as_many_new_cookies_as_the_limiter_allows(): void
+    {
+        $this->createExistingCookie('_ga', 0);
+        $limiter = self::createNewCookieLimiter(2);
+
+        $this->logger
+            ->info('Skipped {count} new cookies, because the client has introduced too many new cookies recently', ['count' => 1, 'names' => ['_gcl_au']])
+            ->shouldBeCalledTimes(2)
+        ;
+
+        // '_fbp' and '_FBP' are one new cookie
+        $this->recorder->record([
+            $this->createCookie('_ga'),
+            $this->createCookie('_fbp'),
+            $this->createCookie('_FBP'),
+            $this->createCookie('_gid'),
+            $this->createCookie('_gcl_au'),
+        ], $limiter);
+
+        self::assertSame([
+            ['name' => '_fbp', 'samples' => 1, 'state' => 'pending'],
+            ['name' => '_ga', 'samples' => 1, 'state' => 'pending'],
+            ['name' => '_gid', 'samples' => 1, 'state' => 'pending'],
+        ], $this->getCookies());
+
+        // With the limit used up, existing cookies are still recorded
+        $this->recorder->record([$this->createCookie('_ga'), $this->createCookie('_fbp'), $this->createCookie('_gcl_au')], $limiter);
+
+        self::assertSame([
+            ['name' => '_fbp', 'samples' => 2, 'state' => 'pending'],
+            ['name' => '_ga', 'samples' => 2, 'state' => 'pending'],
+            ['name' => '_gid', 'samples' => 1, 'state' => 'pending'],
+        ], $this->getCookies());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_consume_the_limiter_again_when_it_retries(): void
+    {
+        $this->insertConcurrentlyBeforeTheFirstFlush('_fbp');
+        $limiter = self::createNewCookieLimiter(2);
+
+        $this->logger->info(Argument::cetera())->shouldNotBeCalled();
+        $this->logger->error(Argument::cetera())->shouldNotBeCalled();
+
+        // The first attempt admits both new cookies and fails on '_fbp'. The retry must still save '_gid'
+        $this->recorder->record([$this->createCookie('_gid'), $this->createCookie('_fbp')], $limiter);
+
+        self::assertSame([
+            ['name' => '_fbp', 'samples' => 2, 'state' => 'pending'],
+            ['name' => '_gid', 'samples' => 1, 'state' => 'pending'],
+        ], $this->getCookies());
+        self::assertSame(0, $limiter->consume(0)->getRemainingTokens());
     }
 
     /**
@@ -322,6 +359,55 @@ final class CookieRecorderTest extends KernelTestCase
     /**
      * @test
      */
+    public function it_skips_and_logs_names_that_cannot_be_cookie_names(): void
+    {
+        // E.g. so that a store notices its own cookies with such names aren't recorded by the crawler
+        $this->logger->info('Skipped {count} cookies with invalid names', [
+            'count' => 3,
+            'names' => ['VISIT evil.example TO VERIFY YOUR STORE', '<script>', ''],
+        ])->shouldBeCalledOnce();
+
+        $this->recorder->record([
+            $this->createCookie('_ga'),
+            $this->createCookie('ai_session.v1'),
+            $this->createCookie('VISIT evil.example TO VERIFY YOUR STORE'),
+            $this->createCookie('<script>'),
+            $this->createCookie(''),
+        ]);
+
+        self::assertSame([
+            ['name' => '_ga', 'samples' => 1, 'state' => 'pending'],
+            ['name' => 'ai_session.v1', 'samples' => 1, 'state' => 'pending'],
+        ], $this->getCookies());
+    }
+
+    /**
+     * @test
+     */
+    public function it_records_a_limited_number_of_cookies_per_call(): void
+    {
+        // Skipped names don't count
+        $names = ['VISIT evil.example', 'TO VERIFY', 'YOUR STORE'];
+        foreach (range(1, CookieRecorder::MAX_COOKIES + 10) as $i) {
+            $names[] = sprintf('cookie%03d', $i);
+        }
+
+        $cookies = [];
+        foreach ($names as $name) {
+            $cookies[] = $this->createCookie($name);
+        }
+
+        $this->recorder->record($cookies);
+
+        $recordedNames = array_column($this->getCookies(), 'name');
+        self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
+        self::assertSame('cookie001', $recordedNames[0]);
+        self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
+    }
+
+    /**
+     * @test
+     */
     public function it_handles_numeric_cookie_names(): void
     {
         // The recorder looks cookies up by name, and PHP turns numeric names into integer array keys
@@ -376,6 +462,43 @@ final class CookieRecorderTest extends KernelTestCase
         );
 
         return $names;
+    }
+
+    /**
+     * A concurrent request saves the cookie after this request looked it up, but before it saved it
+     */
+    private function insertConcurrentlyBeforeTheFirstFlush(string $name): void
+    {
+        $concurrentRequest = new class($this->connection, $name) {
+            private bool $done = false;
+
+            public function __construct(private readonly Connection $connection, private readonly string $name)
+            {
+            }
+
+            public function preFlush(): void
+            {
+                if ($this->done) {
+                    return;
+                }
+
+                $this->done = true;
+                $this->connection->insert('setono_sylius_consent_management__cookie', [
+                    'name' => $this->name,
+                    'state' => 'pending',
+                    'samples' => 1,
+                    'session' => 0,
+                    'lastSeenAt' => '2024-01-01 00:00:00',
+                    'createdAt' => '2024-01-01 00:00:00',
+                ]);
+            }
+        };
+        $this->entityManager->getEventManager()->addEventListener([Events::preFlush], $concurrentRequest);
+    }
+
+    private static function createNewCookieLimiter(int $limit): LimiterInterface
+    {
+        return (new RateLimiterFactory(['id' => 'new_cookies', 'policy' => 'sliding_window', 'limit' => $limit, 'interval' => '1 day'], new InMemoryStorage()))->create('192.0.2.1');
     }
 
     private function createExistingCookie(string $name, int $samples): void

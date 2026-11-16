@@ -8,8 +8,10 @@ use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -26,6 +28,7 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly SampleDeciderInterface $sampleDecider,
+        private readonly SamplingRateLimiterInterface $samplingRateLimiter,
     ) {
     }
 
@@ -57,12 +60,22 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         }
     }
 
-    public function record(): void
+    public function record(TerminateEvent $event): void
     {
         $cookies = $this->cookies;
         $this->reset();
 
-        $this->cookieRecorder->record($cookies);
+        if ([] === $cookies) {
+            return;
+        }
+
+        // A client that has recorded too often recently is skipped silently, because sampling must never affect the visitor
+        $request = $event->getRequest();
+        if (!$this->samplingRateLimiter->consumeRecording($request)->isAccepted()) {
+            return;
+        }
+
+        $this->cookieRecorder->record($cookies, $this->samplingRateLimiter->createNewCookieLimiter($request));
     }
 
     public function reset(): void

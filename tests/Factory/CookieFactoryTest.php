@@ -28,6 +28,27 @@ final class CookieFactoryTest extends TestCase
         self::assertSame('name', $cookie->getName());
     }
 
+    /**
+     * @test
+     */
+    public function it_creates_from_a_sample(): void
+    {
+        $cookie = self::getFactory()->createFromSample(['name' => '_ga', 'expires' => null]);
+
+        self::assertSame('_ga', $cookie->getName());
+        self::assertTrue($cookie->isSession());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_create_from_a_sample_with_an_invalid_name(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        self::getFactory()->createFromSample(['name' => 'VISIT evil.example TO VERIFY YOUR STORE', 'expires' => null]);
+    }
+
     private static function getFactory(): CookieFactoryInterface
     {
         return new CookieFactory(

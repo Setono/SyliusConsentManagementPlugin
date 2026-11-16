@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManager"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManager">
+            <argument>%kernel.secret%</argument>
+            <argument type="service" id="cache.app"/>
+        </service>
+
+        <!-- Rate limiting -->
+        <service id="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiter"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiter">
+            <argument type="service" id="setono_sylius_consent_management.sampling.rate_limiter.recordings"/>
+            <argument type="service" id="setono_sylius_consent_management.sampling.rate_limiter.new_cookies"/>
+        </service>
+
+        <!-- The limiters are defined here and keep their state in cache.app, so that an install needs neither
+             framework.rate_limiter configuration nor symfony/lock. Without a lock factory, the limits are best-effort -->
+        <service id="setono_sylius_consent_management.sampling.rate_limiter.storage"
+                 class="Symfony\Component\RateLimiter\Storage\CacheStorage">
+            <argument type="service" id="cache.app"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.sampling.rate_limiter.recordings"
+                 class="Symfony\Component\RateLimiter\RateLimiterFactory">
+            <argument>%setono_sylius_consent_management.sampling.rate_limit.recordings%</argument>
+            <argument type="service" id="setono_sylius_consent_management.sampling.rate_limiter.storage"/>
+        </service>
+
+        <service id="setono_sylius_consent_management.sampling.rate_limiter.new_cookies"
+                 class="Symfony\Component\RateLimiter\RateLimiterFactory">
+            <argument>%setono_sylius_consent_management.sampling.rate_limit.new_cookies%</argument>
+            <argument type="service" id="setono_sylius_consent_management.sampling.rate_limiter.storage"/>
+        </service>
+    </services>
+</container>
