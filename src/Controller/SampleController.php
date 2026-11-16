@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Controller;
 
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -24,9 +25,15 @@ final class SampleController
             throw new BadRequestHttpException();
         }
 
-        $cookies = $request->request->all();
+        // The sampling script posts JSON. Reading the body directly means this doesn't depend on FOSRestBundle's body listener
+        try {
+            $cookies = $request->toArray();
+        } catch (JsonException $e) {
+            throw new BadRequestHttpException($e->getMessage(), $e);
+        }
+
         if (!array_is_list($cookies)) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException('The request body must be a JSON array of cookies');
         }
 
         $samples = [];
