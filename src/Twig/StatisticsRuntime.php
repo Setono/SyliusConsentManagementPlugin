@@ -38,7 +38,7 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
 
         if (null !== $timeThreshold) {
             $qb->andWhere('o.createdAt >= :timeThreshold')
-                ->setParameter('timeThreshold', new \DateTimeImmutable($timeThreshold))
+                ->setParameter('timeThreshold', self::createTimeThreshold($timeThreshold))
             ;
         }
 
@@ -60,7 +60,7 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
 
         if (null !== $timeThreshold) {
             $qb->andWhere('o.createdAt >= :timeThreshold')
-                ->setParameter('timeThreshold', new \DateTimeImmutable($timeThreshold))
+                ->setParameter('timeThreshold', self::createTimeThreshold($timeThreshold))
             ;
         }
 
@@ -68,6 +68,18 @@ final class StatisticsRuntime implements RuntimeExtensionInterface
             ->enableResultCache(60)
             ->getSingleScalarResult()
         ;
+    }
+
+    /**
+     * The threshold is truncated to the hour. Otherwise the query parameter, and with it the result cache key,
+     * would change on every call and the result cache would never be hit. Truncating to the hour rather than the
+     * minute also means an expired cache item is overwritten under the same key instead of being left behind
+     */
+    private static function createTimeThreshold(string $timeThreshold): \DateTimeImmutable
+    {
+        $threshold = new \DateTimeImmutable($timeThreshold);
+
+        return $threshold->setTime((int) $threshold->format('G'), 0);
     }
 
     /**
