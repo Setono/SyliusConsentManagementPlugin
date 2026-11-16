@@ -39,7 +39,7 @@ final class SaveCookiesSubscriber implements EventSubscriberInterface, ResetInte
                 continue;
             }
 
-            $cookies[$cookie->getName()] = $this->cookieFactory->createFromBrowserKitCookie($cookie, $event->url);
+            $cookies[] = $this->cookieFactory->createFromBrowserKitCookie($cookie, $event->url);
             $this->discoveredCookies[$cookie->getName()] = true;
         }
 
