@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker;
+use Setono\SyliusConsentManagementPlugin\Decider\WidgetDisplay\CachedWidgetDisplayDecider;
 use Setono\SyliusConsentManagementPlugin\DependencyInjection\SetonoSyliusConsentManagementExtension;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler\SaveCookiesSubscriber;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\Workflow\NotifyAboutCookiesSubscriber;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyDependencyInjectionTest
@@ -48,5 +52,22 @@ final class SetonoSyliusConsentManagementExtensionTest extends AbstractExtension
         self::assertArrayHasKey('setono_sylius_consent_management.cookie', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service', $resources);
         self::assertArrayHasKey('setono_sylius_consent_management.service_translation', $resources);
+    }
+
+    /**
+     * @test
+     */
+    public function it_resets_services_with_request_scoped_state_between_requests(): void
+    {
+        $this->load();
+
+        foreach ([
+            CachedConsentChecker::class,
+            CachedWidgetDisplayDecider::class,
+            NotifyAboutCookiesSubscriber::class,
+            SaveCookiesSubscriber::class,
+        ] as $id) {
+            $this->assertContainerBuilderHasServiceDefinitionWithTag($id, 'kernel.reset', ['method' => 'reset']);
+        }
     }
 }
