@@ -6,6 +6,7 @@ namespace Setono\SyliusConsentManagementPlugin\Factory;
 
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\Url;
+use Setono\SyliusConsentManagementPlugin\Url\UrlSanitizer;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Sylius\Resource\Factory\FactoryInterface;
@@ -107,47 +108,12 @@ final class CookieFactory implements CookieFactoryInterface
             return null;
         }
 
-        if (!$request->isXmlHttpRequest()) {
-            return self::truncateUrl(self::normalizeRequestUrl($request->getUri()));
-        }
-
-        // Anyone can post to the sample endpoint with any Referer, and the URL is rendered as a link in the admin.
-        // The sampling script always requests the shop itself, so a Referer from another host is ignored
-        return self::truncateUrl(self::normalizeRequestUrl($request->headers->get('referer'), $request->getHost()));
+        return self::truncateUrl(UrlSanitizer::sanitizePageUrl($request));
     }
 
     private static function truncateUrl(?string $url): ?string
     {
         return null === $url ? null : mb_substr($url, 0, self::URL_MAX_LENGTH);
-    }
-
-    /**
-     * The URL comes from a visitor's request (or its Referer header), so only http(s) URLs are kept, and the query
-     * string and fragment are removed. They may contain the visitor's tracking ids, and they easily make the URL
-     * longer than the database column
-     */
-    private static function normalizeRequestUrl(?string $url, ?string $requiredHost = null): ?string
-    {
-        if (null === $url) {
-            return null;
-        }
-
-        $parts = parse_url($url);
-        if (false === $parts || !isset($parts['scheme'], $parts['host']) || !in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
-            return null;
-        }
-
-        if (null !== $requiredHost && strtolower($parts['host']) !== $requiredHost) {
-            return null;
-        }
-
-        return sprintf(
-            '%s://%s%s%s',
-            strtolower($parts['scheme']),
-            $parts['host'],
-            isset($parts['port']) ? ':' . $parts['port'] : '',
-            $parts['path'] ?? '/',
-        );
     }
 
     private static function timestampToInterval(int $timestamp): \DateInterval

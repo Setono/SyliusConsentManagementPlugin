@@ -8,6 +8,7 @@ use Setono\ClientBundle\Context\ClientContextInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CategoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\ConsentEntryInterface;
 use Setono\SyliusConsentManagementPlugin\Repository\CategoryRepositoryInterface;
+use Setono\SyliusConsentManagementPlugin\Url\UrlSanitizer;
 use Sylius\Resource\Factory\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Webmozart\Assert\Assert;
@@ -47,14 +48,8 @@ final class ConsentEntryFactory implements ConsentEntryFactoryInterface
 
         $obj->setIp((string) $request->getClientIp());
 
-        $url = $request->getUri();
-        if ($request->isXmlHttpRequest() && $request->headers->has('referer')) {
-            $referrer = $request->headers->get('referer');
-            if (is_string($referrer)) {
-                $url = $referrer;
-            }
-        }
-        $obj->setUrl($url);
+        // The url column isn't nullable, so an empty string means the page couldn't be determined
+        $obj->setUrl(UrlSanitizer::sanitizePageUrl($request) ?? '');
 
         $userAgent = $request->headers->get('user-agent');
         if (is_string($userAgent)) {

@@ -58,6 +58,16 @@ final class CookieFactoryTest extends TestCase
     /**
      * @test
      */
+    public function it_percent_encodes_invalid_utf8_in_the_request_url(): void
+    {
+        $cookie = self::getFactory(Request::create("https://shop.example.com/en_US/caf\xE9"))->createWithName('_fbp');
+
+        self::assertSame('https://shop.example.com/en_US/caf%E9', $cookie->getUrl());
+    }
+
+    /**
+     * @test
+     */
     public function it_uses_the_referer_for_ajax_requests(): void
     {
         $request = Request::create('https://shop.example.com/en_US/ajax/sample-cookies', 'POST', server: [
