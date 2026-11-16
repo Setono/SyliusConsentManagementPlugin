@@ -9,7 +9,7 @@
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesClientSideSubscriber">
             <argument type="service" id="twig"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>

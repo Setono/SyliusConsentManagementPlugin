@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

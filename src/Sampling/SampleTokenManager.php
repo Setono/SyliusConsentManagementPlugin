@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Decider\Sample;
+namespace Setono\SyliusConsentManagementPlugin\Sampling;
 
 use Psr\Cache\CacheItemPoolInterface;
 

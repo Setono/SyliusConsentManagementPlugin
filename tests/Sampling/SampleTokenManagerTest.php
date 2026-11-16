@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusConsentManagementPlugin\Decider\Sample;
+namespace Tests\Setono\SyliusConsentManagementPlugin\Sampling;
 
 use PHPUnit\Framework\TestCase;
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManager;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManager;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 final class SampleTokenManagerTest extends TestCase

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

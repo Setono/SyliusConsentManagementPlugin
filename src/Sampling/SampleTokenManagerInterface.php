@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusConsentManagementPlugin\Decider\Sample;
+namespace Setono\SyliusConsentManagementPlugin\Sampling;
 
 /**
  * Single-use tokens that allow a page, which was chosen for client-side sampling, to post its cookies once within a
