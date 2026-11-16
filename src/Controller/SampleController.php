@@ -23,6 +23,16 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 final class SampleController implements LoggerAwareInterface
 {
+    /**
+     * Chrome stores at most 180 cookies per domain, so a real sample has fewer cookies than this
+     */
+    public const MAX_SAMPLES = 200;
+
+    /**
+     * Enough for MAX_SAMPLES cookies of 4 KiB each (the most a browser stores per cookie) and their other fields
+     */
+    public const MAX_BODY_SIZE = 1024 * 1024;
+
     private LoggerInterface $logger;
 
     public function __construct(
@@ -45,6 +55,11 @@ final class SampleController implements LoggerAwareInterface
             throw new AccessDeniedHttpException('Invalid, expired or used sample token');
         }
 
+        // Oversized payloads are rejected before they're decoded, and before any cookie is built from them
+        if (strlen($request->getContent()) > self::MAX_BODY_SIZE) {
+            throw new BadRequestHttpException(sprintf('The request body must be at most %d bytes', self::MAX_BODY_SIZE));
+        }
+
         // The sampling script posts JSON. Reading the body directly means this doesn't depend on FOSRestBundle's body listener
         try {
             $cookies = $request->toArray();
@@ -54,6 +69,10 @@ final class SampleController implements LoggerAwareInterface
 
         if (!array_is_list($cookies)) {
             throw new BadRequestHttpException('The request body must be a JSON array of cookies');
+        }
+
+        if (count($cookies) > self::MAX_SAMPLES) {
+            throw new BadRequestHttpException(sprintf('The request body must contain at most %d cookies', self::MAX_SAMPLES));
         }
 
         $samples = $invalidNames = [];

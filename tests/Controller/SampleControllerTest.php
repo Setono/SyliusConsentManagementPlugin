@@ -175,6 +175,51 @@ final class SampleControllerTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_records_the_most_cookies_a_browser_can_have(): void
+    {
+        $this->cookieRecorder->record(Argument::size(SampleController::MAX_SAMPLES))->shouldBeCalledOnce();
+
+        $response = ($this->controller)($this->createRequest(self::createSamples(SampleController::MAX_SAMPLES)));
+
+        self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_payloads_with_too_many_cookies(): void
+    {
+        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        ($this->controller)($this->createRequest(self::createSamples(SampleController::MAX_SAMPLES + 1)));
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_payloads_that_are_too_large(): void
+    {
+        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        // A single cookie, but with a huge value
+        ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null, 'value' => str_repeat('x', SampleController::MAX_BODY_SIZE)]]));
+    }
+
+    /**
+     * @return list<array{name: string, expires: null}>
+     */
+    private static function createSamples(int $count): array
+    {
+        return array_map(static fn (int $i): array => ['name' => sprintf('cookie%03d', $i), 'expires' => null], range(1, $count));
+    }
+
+    /**
      * @param list<array<string, mixed>> $samples
      */
     private function createRequest(array $samples): Request

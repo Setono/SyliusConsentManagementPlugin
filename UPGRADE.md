@@ -27,6 +27,7 @@ php bin/console doctrine:migrations:migrate
     so parallel requests can reuse a token, and with a cache per server a token can be used once per server. If you
     override that template, post to its new `sample_url` variable, which includes the token, instead of generating the
     URL with `path()`.
+  - The sample endpoint answers 400 for a body over 1 MiB or with more than 200 cookies, before it builds any cookie.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
   - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
     `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
