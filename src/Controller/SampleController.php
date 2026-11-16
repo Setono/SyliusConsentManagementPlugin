@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Controller;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
@@ -14,16 +18,19 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Receives the cookies sampled in the visitor's browser (see SampleCookiesClientSideSubscriber). The recorder skips
- * names that can't be cookie names and limits how many cookies are recorded
+ * Receives the cookies sampled in the visitor's browser (see SampleCookiesClientSideSubscriber). Cookies with invalid
+ * names are skipped, and the recorder limits how many cookies are recorded
  */
-final class SampleController
+final class SampleController implements LoggerAwareInterface
 {
+    private LoggerInterface $logger;
+
     public function __construct(
         private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly SampleTokenManagerInterface $sampleTokenManager,
     ) {
+        $this->logger = new NullLogger();
     }
 
     public function __invoke(Request $request): Response
@@ -49,12 +56,15 @@ final class SampleController
             throw new BadRequestHttpException('The request body must be a JSON array of cookies');
         }
 
-        $samples = [];
+        $samples = $invalidNames = [];
         foreach ($cookies as $cookie) {
             $cookie = self::assertCookie($cookie);
 
-            // A browser can store a cookie without a name, e.g. after document.cookie = 'value'
-            if ('' === $cookie['name']) {
+            // Skipped instead of rejecting the whole payload, because browsers store such cookies too, e.g. a cookie
+            // without a name after document.cookie = 'value'
+            if (!CookieName::isValid($cookie['name'])) {
+                $invalidNames[] = $cookie['name'];
+
                 continue;
             }
 
@@ -66,9 +76,18 @@ final class SampleController
             }
         }
 
+        if ([] !== $invalidNames) {
+            $this->logger->info('Skipped {count} sampled cookies with invalid names', ['count' => count($invalidNames), 'names' => $invalidNames]);
+        }
+
         $this->cookieRecorder->record($samples);
 
         return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 
     /**

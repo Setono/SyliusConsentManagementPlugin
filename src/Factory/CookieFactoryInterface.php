@@ -16,7 +16,7 @@ interface CookieFactoryInterface extends FactoryInterface
     public function createWithName(string $name): CookieInterface;
 
     /**
-     * @throws \InvalidArgumentException if the $sample is not the expected shape
+     * @throws \InvalidArgumentException if the $sample is not the expected shape, or its name isn't a valid cookie name (see CookieName)
      */
     public function createFromSample(mixed $sample): CookieInterface;
 

@@ -17,8 +17,10 @@ php bin/console doctrine:migrations:migrate
     `kernel.request`.
   - All sources record cookies through the new `CookieRecorderInterface`, which saves them with an entity manager of
     its own. Doctrine listeners for cookies get that entity manager in their event arguments, not the default one.
-  - Names that aren't valid cookie names (RFC 6265 tokens, e.g. names with spaces) are no longer recorded, and at most
-    50 cookies are recorded per request.
+  - Names that aren't valid cookie names (RFC 6265 tokens of at most 255 characters, see `CookieName`), e.g. names with
+    spaces, are no longer recorded, and at most 50 cookies are recorded per call to the recorder: per sampled request,
+    per post to the sample endpoint and per crawled page. Both are logged at `info` level.
+    `CookieFactoryInterface::createFromSample()` throws for such names, where it only threw for empty names before.
   - `/{_locale}/ajax/sample-cookies` answers 403 without a valid sample token, which
     `@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig` adds to its URL. A token expires after 10
     minutes and is meant to be used once. That's best-effort: the used tokens are kept in `cache.app` without a lock,

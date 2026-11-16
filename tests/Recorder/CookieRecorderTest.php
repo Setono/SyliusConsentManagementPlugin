@@ -322,8 +322,14 @@ final class CookieRecorderTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_skips_names_that_cannot_be_cookie_names(): void
+    public function it_skips_and_logs_names_that_cannot_be_cookie_names(): void
     {
+        // E.g. so that a store notices its own cookies with such names aren't recorded by the crawler
+        $this->logger->info('Skipped {count} cookies with invalid names', [
+            'count' => 3,
+            'names' => ['VISIT evil.example TO VERIFY YOUR STORE', '<script>', ''],
+        ])->shouldBeCalledOnce();
+
         $this->recorder->record([
             $this->createCookie('_ga'),
             $this->createCookie('ai_session.v1'),

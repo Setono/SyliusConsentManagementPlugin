@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Webmozart\Assert\Assert;
 
@@ -27,17 +28,6 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
      * sample payload, can record
      */
     public const MAX_COOKIES = 50;
-
-    /**
-     * The length of the name column, see Resources/config/doctrine/model/Cookie.orm.xml
-     */
-    private const NAME_MAX_LENGTH = 255;
-
-    /**
-     * The characters allowed in a cookie name (a 'token' in RFC 6265). Other names, e.g. with spaces, are skipped, so that
-     * text like 'VISIT evil.example TO VERIFY YOUR STORE' can't reach the cookie list or the notification email
-     */
-    private const NAME_PATTERN = '/^[!#$%&\'*+\-.^_`|~0-9A-Za-z]+$/';
 
     /**
      * The first attempt, and one retry if a concurrent request saved one of the new cookies first
@@ -60,10 +50,10 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
 
     public function record(iterable $cookies): void
     {
-        $cookies = self::filter($cookies);
+        $cookies = $this->filter($cookies);
 
         if (count($cookies) > self::MAX_COOKIES) {
-            $this->logger->debug('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
+            $this->logger->info('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
 
             $cookies = array_slice($cookies, 0, self::MAX_COOKIES);
         }
@@ -99,25 +89,36 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
     }
 
     /**
-     * Removes the cookies with a name that can't be a cookie name or doesn't fit the database column, and all but the
-     * first cookie with each name
+     * Removes the cookies with a name that isn't a valid cookie name (see CookieName), and all but the first cookie with
+     * each name
      *
      * @param iterable<CookieInterface> $cookies
      *
      * @return list<array{name: non-empty-string, cookie: CookieInterface}>
      */
-    private static function filter(iterable $cookies): array
+    private function filter(iterable $cookies): array
     {
-        $filtered = $seenNames = [];
+        $filtered = $seenNames = $invalidNames = [];
 
         foreach ($cookies as $cookie) {
-            $name = $cookie->getName();
-            if (null === $name || '' === $name || strlen($name) > self::NAME_MAX_LENGTH || 1 !== preg_match(self::NAME_PATTERN, $name) || isset($seenNames[$name])) {
+            $name = $cookie->getName() ?? '';
+            if (!CookieName::isValid($name)) {
+                $invalidNames[] = $name;
+
+                continue;
+            }
+
+            if (isset($seenNames[$name])) {
                 continue;
             }
 
             $seenNames[$name] = true;
             $filtered[] = ['name' => $name, 'cookie' => $cookie];
+        }
+
+        if ([] !== $invalidNames) {
+            // A store's own cookies can have such names too, so this makes it possible to notice they aren't recorded
+            $this->logger->info('Skipped {count} cookies with invalid names', ['count' => count($invalidNames), 'names' => $invalidNames]);
         }
 
         return $filtered;

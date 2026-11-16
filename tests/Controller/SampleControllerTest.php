@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Setono\SyliusConsentManagementPlugin\Controller\SampleController;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
@@ -31,6 +32,9 @@ final class SampleControllerTest extends TestCase
     /** @var ObjectProphecy<CookieRecorderInterface> */
     private ObjectProphecy $cookieRecorder;
 
+    /** @var ObjectProphecy<LoggerInterface> */
+    private ObjectProphecy $logger;
+
     private SampleTokenManager $sampleTokenManager;
 
     private SampleController $controller;
@@ -38,6 +42,7 @@ final class SampleControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->cookieRecorder = $this->prophesize(CookieRecorderInterface::class);
+        $this->logger = $this->prophesize(LoggerInterface::class);
         $this->sampleTokenManager = new SampleTokenManager('secret', new ArrayAdapter());
 
         $this->controller = new SampleController(
@@ -45,6 +50,7 @@ final class SampleControllerTest extends TestCase
             new CookieFactory(new Factory(Cookie::class), new CompositeChannelContext(), new RequestStack()),
             $this->sampleTokenManager,
         );
+        $this->controller->setLogger($this->logger->reveal());
     }
 
     /**
@@ -71,18 +77,23 @@ final class SampleControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_skips_cookies_without_a_name(): void
+    public function it_skips_and_logs_cookies_with_invalid_names(): void
     {
+        $invalidNames = ['', 'VISIT evil.example TO VERIFY YOUR STORE', '<script>', 'x[y]', str_repeat('x', 256)];
+
+        $this->logger->info('Skipped {count} sampled cookies with invalid names', ['count' => 5, 'names' => $invalidNames])->shouldBeCalledOnce();
+
         $this->cookieRecorder->record(Argument::that(static function (array $cookies): bool {
             $names = array_map(static fn (mixed $cookie): ?string => $cookie instanceof CookieInterface ? $cookie->getName() : null, $cookies);
 
-            return ['_ga'] === $names;
+            return ['_ga', 'ai_session.v1'] === $names;
         }))->shouldBeCalledOnce();
 
-        $response = ($this->controller)($this->createRequest([
-            ['name' => '', 'expires' => null],
-            ['name' => '_ga', 'expires' => null],
-        ]));
+        $samples = array_map(static fn (string $name): array => ['name' => $name, 'expires' => null], $invalidNames);
+        $samples[] = ['name' => '_ga', 'expires' => null];
+        $samples[] = ['name' => 'ai_session.v1', 'expires' => null];
+
+        $response = ($this->controller)($this->createRequest($samples));
 
         self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }

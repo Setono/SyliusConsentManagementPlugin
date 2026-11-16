@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Factory;
 
+use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Provider\UrlProvider\Url;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -53,8 +54,8 @@ final class CookieFactory implements CookieFactoryInterface
             throw new \InvalidArgumentException('The sample must contain the keys "name" and "expires"');
         }
 
-        if (!is_string($sample['name']) || '' === $sample['name']) {
-            throw new \InvalidArgumentException('The sample key "name" must be a non-empty string');
+        if (!is_string($sample['name']) || !CookieName::isValid($sample['name'])) {
+            throw new \InvalidArgumentException('The sample key "name" must be a valid cookie name');
         }
 
         if (null !== $sample['expires'] && !is_numeric($sample['expires'])) {
