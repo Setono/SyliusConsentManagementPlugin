@@ -68,4 +68,27 @@ final class SampleTokenManagerTest extends TestCase
         self::assertFalse($tokenManager->consume('abc.' . $nonce . '.' . $signature));
         self::assertFalse($tokenManager->consume(sprintf('%d.%s', time() + 60, $signature)), 'Without a nonce');
     }
+
+    /**
+     * @test
+     */
+    public function it_rejects_tokens_signed_with_the_secret_itself(): void
+    {
+        // E.g. by another HMAC-SHA256 signer keyed with the same secret, like Symfony's uri_signer
+        $expires = time() + 60;
+        $nonce = str_repeat('a', 32);
+        $signature = hash_hmac('sha256', sprintf('%d.%s', $expires, $nonce), 'secret');
+
+        self::assertFalse((new SampleTokenManager('secret', new ArrayAdapter()))->consume(sprintf('%d.%s.%s', $expires, $nonce, $signature)));
+    }
+
+    /**
+     * @test
+     */
+    public function it_requires_a_secret(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new SampleTokenManager('', new ArrayAdapter());
+    }
 }
