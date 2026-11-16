@@ -5,3 +5,6 @@ setono_sylius_consent_management:
             regex: Service code can only be comprised of letters, numbers, dashes and underscores.
         category:
             not_blank: Please enter category.
+    widget_config:
+        layout:
+            invalid_value: 'The value may only contain letters, numbers, spaces and the characters # % . , ( ) + - * /'

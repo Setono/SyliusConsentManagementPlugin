@@ -1,0 +1,12 @@
+--TEST--
+"sscm_script_tag" and "sscm_script_tag_attributes" functions escape their arguments
+--TEMPLATE--
+{{ sscm_script_tag('js/a.js?x=1&y="2"><script>alert(1)</script>', 'marketing') }}
+{{ sscm_script_tag('js/a.js?x=1&y="2"><script>alert(1)</script>', 'functional') }}
+<script{{ sscm_script_tag_attributes('marketing', '"><script>alert(1)</script>') }}>
+--DATA--
+return []
+--EXPECT--
+<script type="text/plain" data-sscm-consent="marketing" data-sscm-src="js/a.js?x=1&amp;y=&quot;2&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;"></script>
+<script src="js/a.js?x=1&amp;y=&quot;2&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;"></script>
+<script type="text/plain" data-sscm-consent="marketing,&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;">

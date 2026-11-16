@@ -59,6 +59,26 @@ final class WidgetStyleRendererTest extends TestCase
     /**
      * @test
      */
+    public function it_skips_values_and_keys_that_could_break_out_of_the_style_tag(): void
+    {
+        $widgetConfig = $this->prophesize(WidgetConfigInterface::class);
+        $widgetConfig->getLayout()->willReturn([
+            'backgroundColor' => '#fff;}</style><script>alert(1)</script>',
+            'buttonPadding' => 'calc(100% - 20px) 10px',
+            'borderRadius' => '4px; color: red',
+            'maxWidth' => "url('https://evil.example')",
+            'color}</style><script>' => 'red',
+            'buttonAcceptAllColor' => 'rgba(0, 0, 0, 0.5)',
+        ]);
+
+        $result = $this->widgetStyleRenderer->render($widgetConfig->reveal());
+
+        self::assertSame('<style>.sscm-widget {--sscm-widget-button-padding: calc(100% - 20px) 10px;--sscm-widget-button-accept-all-color: rgba(0, 0, 0, 0.5);}</style>', $result);
+    }
+
+    /**
+     * @test
+     */
     public function it_handles_null_widget_config_and_uses_provider(): void
     {
         $widgetConfig = $this->prophesize(WidgetConfigInterface::class);

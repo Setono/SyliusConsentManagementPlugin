@@ -1,1 +1,2 @@
-{{ data }} <a href="{{ data }}" target="_blank" title="{{ 'setono_sylius_consent_management.ui.open_in_new_tab'|trans }}"><i class="external alternate icon"></i></a>
+{# The URL can originate from a visitor's request (e.g. the Referer header), so only http(s) URLs are rendered as links #}
+{{ data }}{% if data matches '{^https?://}i' %} <a href="{{ data }}" target="_blank" rel="noopener noreferrer" title="{{ 'setono_sylius_consent_management.ui.open_in_new_tab'|trans }}"><i class="external alternate icon"></i></a>{% endif %}
