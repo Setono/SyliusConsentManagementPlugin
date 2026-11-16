@@ -10,6 +10,7 @@
             <argument type="service" id="twig"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface"/>
+            <argument type="service" id="router"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>

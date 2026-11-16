@@ -23,8 +23,8 @@ php bin/console doctrine:migrations:migrate
     `@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig` adds to its URL. A token expires after 10
     minutes and is meant to be used once. That's best-effort: the used tokens are kept in `cache.app` without a lock,
     so parallel requests can reuse a token, and with a cache per server a token can be used once per server. If you
-    override that template, pass the token like the plugin's template does:
-    `path('setono_sylius_consent_management_shop_sample', { '_sample_token': token })`.
+    override that template, post to its new `sample_url` variable, which includes the token, instead of generating the
+    URL with `path()`.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
   - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
     `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
