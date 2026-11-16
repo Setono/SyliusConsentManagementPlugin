@@ -10,6 +10,7 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -54,10 +55,36 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         }
 
         // The new cookies are created while the request is still available, because the factory resolves their URL from it
-        foreach ($request->cookies->keys() as $name) {
-            // PHP turns numeric cookie names into integer keys
-            $this->cookies[] = $this->cookieFactory->createWithName((string) $name);
+        foreach (self::getCookieNames($request) as $name) {
+            $this->cookies[] = $this->cookieFactory->createWithName($name);
         }
+    }
+
+    /**
+     * PHP changes cookie names when it populates $_COOKIE (and thereby $request->cookies): dots and spaces become
+     * underscores and 'x[y]' becomes an array under 'x'. The real names are read from the Cookie header instead.
+     *
+     * The recorder skips names that aren't valid cookie names (see CookieName) and records duplicates once
+     *
+     * @return list<string>
+     */
+    private static function getCookieNames(Request $request): array
+    {
+        $header = $request->headers->get('Cookie');
+        if (null === $header || '' === trim($header)) {
+            // PHP turns numeric cookie names into integer keys
+            return array_map(strval(...), $request->cookies->keys());
+        }
+
+        $names = [];
+        foreach (explode(';', $header) as $cookie) {
+            // Browsers send a cookie without a name as just its value. Skipping it keeps cookie values out of the list
+            if (str_contains($cookie, '=')) {
+                $names[] = trim(explode('=', $cookie, 2)[0]);
+            }
+        }
+
+        return $names;
     }
 
     public function record(TerminateEvent $event): void

@@ -17,11 +17,23 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
+use Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesServerSideSubscriber;
+use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorder;
+use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiter;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Resource\Factory\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
@@ -403,6 +415,83 @@ final class CookieRecorderTest extends KernelTestCase
         self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
         self::assertSame('cookie001', $recordedNames[0]);
         self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_record_forged_names_from_a_sampled_cookie_header(): void
+    {
+        $header = ['VISIT evil.example TO VERIFY YOUR STORE=1'];
+        foreach (range(1, CookieRecorder::MAX_COOKIES + 10) as $i) {
+            $header[] = sprintf('cookie%03d=1', $i);
+        }
+
+        // Without rate limits, to show the name rule and the cap
+        $subscriber = $this->createServerSideSubscriber(['policy' => 'no_limit'], ['policy' => 'no_limit']);
+
+        $this->sampleServerSide($subscriber, implode('; ', $header), '192.0.2.1');
+
+        $recordedNames = array_column($this->getCookies(), 'name');
+        self::assertCount(CookieRecorder::MAX_COOKIES, $recordedNames);
+        self::assertNotContains('VISIT evil.example TO VERIFY YOUR STORE', $recordedNames);
+        self::assertSame(sprintf('cookie%03d', CookieRecorder::MAX_COOKIES), $recordedNames[CookieRecorder::MAX_COOKIES - 1]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_bounds_the_new_names_that_forged_cookie_headers_can_introduce(): void
+    {
+        // The default limits
+        $subscriber = $this->createServerSideSubscriber(
+            ['policy' => 'sliding_window', 'limit' => 10, 'interval' => '1 hour'],
+            ['policy' => 'sliding_window', 'limit' => 10, 'interval' => '1 day'],
+        );
+
+        foreach (range(0, 4) as $request) {
+            $header = array_map(static fn (int $i): string => sprintf('forged%03d=1', $request * 50 + $i), range(1, 50));
+            $this->sampleServerSide($subscriber, implode('; ', $header), '192.0.2.1');
+        }
+
+        self::assertCount(10, $this->getCookies());
+
+        // Another client
+        $this->sampleServerSide($subscriber, 'other1=1; other2=1', '192.0.2.2');
+
+        self::assertCount(12, $this->getCookies());
+    }
+
+    /**
+     * @param array<string, mixed> $recordingsLimit
+     * @param array<string, mixed> $newCookiesLimit
+     */
+    private function createServerSideSubscriber(array $recordingsLimit, array $newCookiesLimit): SampleCookiesServerSideSubscriber
+    {
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
+        $channelContext->getChannel()->willReturn($this->channel);
+
+        $sampleDecider = $this->prophesize(SampleDeciderInterface::class);
+        $sampleDecider->sample(Argument::cetera())->willReturn(true);
+
+        return new SampleCookiesServerSideSubscriber(
+            $this->recorder,
+            new CookieFactory(new Factory($this->getCookieClass()), $channelContext->reveal(), new RequestStack()),
+            $sampleDecider->reveal(),
+            new SamplingRateLimiter(
+                new RateLimiterFactory(['id' => 'recordings'] + $recordingsLimit, new InMemoryStorage()),
+                new RateLimiterFactory(['id' => 'new_cookies'] + $newCookiesLimit, new InMemoryStorage()),
+            ),
+        );
+    }
+
+    private function sampleServerSide(SampleCookiesServerSideSubscriber $subscriber, string $cookieHeader, string $clientIp): void
+    {
+        $kernel = $this->prophesize(HttpKernelInterface::class)->reveal();
+        $request = Request::create('/', server: ['HTTP_COOKIE' => $cookieHeader, 'REMOTE_ADDR' => $clientIp]);
+
+        $subscriber->sample(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+        $subscriber->record(new TerminateEvent($kernel, $request, new Response()));
     }
 
     /**

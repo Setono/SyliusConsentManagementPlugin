@@ -29,6 +29,9 @@ php bin/console doctrine:migrations:migrate
     URL with `path()`.
   - The sample endpoint answers 400 for a body over 1 MiB or with more than 200 cookies, before it builds any cookie.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
+  - Server-side sampling reads the cookie names from the `Cookie` header, so PHP no longer mangles them. Existing
+    cookies with mangled names (dots and spaces turned into underscores, e.g. `ai_session_v1` for `ai_session.v1`)
+    won't be seen again and go stale, while the real names are recorded as new cookies.
   - Sampling is rate limited per client, configured under `setono_sylius_consent_management.sampling.rate_limit`. By
     default, one client's cookies are recorded at most 10 times per hour (beyond that, server-side sampling skips the
     client and the sample endpoint answers 429), and one client can introduce at most 10 new cookie names per day
