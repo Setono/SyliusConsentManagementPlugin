@@ -15,3 +15,11 @@ php bin/console doctrine:migrations:migrate
 - Sampled cookies and consent entries no longer store the query string or fragment of the page URL, since it may contain
   the visitor's tracking ids. Only http(s) URLs on the shop's own host are stored; otherwise a cookie gets no URL and a
   consent entry an empty one. Cookie URLs are cut to 255 characters, and crawled cookie URLs keep their query string.
+
+  URLs stored before upgrading aren't rewritten and may still contain tracking ids. On MySQL/MariaDB, this strips the
+  query string and fragment from them (crawled cookie URLs included):
+
+  ```sql
+  UPDATE setono_sylius_consent_management__cookie SET url = SUBSTRING_INDEX(SUBSTRING_INDEX(url, '#', 1), '?', 1);
+  UPDATE setono_sylius_consent_management__consent_entry SET url = SUBSTRING_INDEX(SUBSTRING_INDEX(url, '#', 1), '?', 1);
+  ```
