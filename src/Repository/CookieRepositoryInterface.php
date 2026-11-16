@@ -9,6 +9,10 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 interface CookieRepositoryInterface extends RepositoryInterface
 {
+    /**
+     * @deprecated The plugin doesn't use this method anymore, and it will be removed in the next major version. Use
+     *             findOneBy(['name' => $name]) instead
+     */
     public function findOneByName(string $name): ?CookieInterface;
 
     /**

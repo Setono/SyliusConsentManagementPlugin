@@ -42,13 +42,13 @@ final class SampleControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_records_the_sampled_cookies_once_per_name(): void
+    public function it_records_the_sampled_cookies(): void
     {
+        // The recorder records the duplicate '_ga' once
         $this->cookieRecorder->record(Argument::that(static function (array $cookies): bool {
-            /** @var array<string, CookieInterface> $cookies */
-            $names = array_map(static fn (CookieInterface $cookie): ?string => $cookie->getName(), array_values($cookies));
+            $names = array_map(static fn (mixed $cookie): ?string => $cookie instanceof CookieInterface ? $cookie->getName() : null, $cookies);
 
-            return ['_ga', '_fbp'] === array_keys($cookies) && ['_ga', '_fbp'] === $names;
+            return ['_ga', '_fbp', '_ga'] === $names;
         }))->shouldBeCalledOnce();
 
         $response = ($this->controller)(self::createRequest([

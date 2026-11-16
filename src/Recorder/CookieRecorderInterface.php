@@ -12,12 +12,13 @@ use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 interface CookieRecorderInterface
 {
     /**
-     * The keys are the cookie names and the values are the cookies to save if no cookie with that name exists yet.
+     * Each cookie is identified by its name, and is saved if no cookie with that name exists yet. Cookies with the same
+     * name are recorded once, as the first of them.
      *
      * Recording never throws. Failures are logged, so that recording cookies can't break the caller. It also doesn't
      * save any other changes the caller has made to entities
      *
-     * @param array<string, CookieInterface> $cookies
+     * @param iterable<CookieInterface> $cookies
      */
-    public function record(array $cookies): void;
+    public function record(iterable $cookies): void;
 }

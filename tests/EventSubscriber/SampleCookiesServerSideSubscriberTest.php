@@ -80,9 +80,9 @@ final class SampleCookiesServerSideSubscriberTest extends TestCase
         /** @var \ArrayObject<int, list<string|null>> $recordedNames */
         $recordedNames = new \ArrayObject();
         $this->cookieRecorder->record(Argument::type('array'))->will(static function (array $arguments) use ($recordedNames): void {
-            /** @var array<string, CookieInterface> $cookies */
+            /** @var list<CookieInterface> $cookies */
             $cookies = $arguments[0];
-            $recordedNames[] = array_map(static fn (CookieInterface $cookie): ?string => $cookie->getName(), array_values($cookies));
+            $recordedNames[] = array_map(static fn (CookieInterface $cookie): ?string => $cookie->getName(), $cookies);
         });
 
         $this->subscriber->sample($this->requestEvent->reveal());
