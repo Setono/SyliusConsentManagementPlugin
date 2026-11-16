@@ -25,7 +25,7 @@ use Webmozart\Assert\Assert;
 final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterface
 {
     /**
-     * A page rarely sets more cookies than this. It limits how much one request, e.g. with a forged Cookie header or
+     * A page rarely sets more cookies than this. It limits how much one call, e.g. with a forged Cookie header or
      * sample payload, can record
      */
     public const MAX_COOKIES = 50;
