@@ -52,7 +52,7 @@ final class SampleController implements LoggerAwareInterface
             throw new BadRequestHttpException();
         }
 
-        // Only pages that were chosen for client-side sampling get a (short-lived, single-use) token
+        // Only pages that were chosen for client-side sampling get a token. It expires, and is meant to be used once (best-effort)
         $token = $request->query->get(SampleTokenManagerInterface::QUERY_PARAMETER);
         if (!is_string($token) || !$this->sampleTokenManager->consume($token)) {
             throw new AccessDeniedHttpException('Invalid, expired or used sample token');
