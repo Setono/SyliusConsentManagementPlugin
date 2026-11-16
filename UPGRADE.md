@@ -29,6 +29,21 @@ php bin/console doctrine:migrations:migrate
     URL with `path()`.
   - The sample endpoint answers 400 for a body over 1 MiB or with more than 200 cookies, before it builds any cookie.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
+  - Sampling is rate limited per client, configured under `setono_sylius_consent_management.sampling.rate_limit`. By
+    default, one client's cookies are recorded at most 10 times per hour (beyond that, server-side sampling skips the
+    client and the sample endpoint answers 429), and one client can introduce at most 10 new cookie names per day
+    (beyond that, its new names are skipped, while its existing cookies are still recorded). The crawler isn't limited.
+    The limiters keep their state in `cache.app`, so they need neither `framework.rate_limiter` configuration nor
+    `symfony/lock`, which also makes them best-effort under concurrency. Set `rate_limit: false` to turn them off.
+    `symfony/rate-limiter` is a new dependency.
+  - A client is its IP address from `Request::getClientIp()` (an IPv6 address counts as its /64 network). If the store
+    is behind a proxy or load balancer, configure it in `framework.trusted_proxies` and `framework.trusted_headers`.
+    Otherwise every visitor has the proxy's IP address and they all share one limit, so much less gets sampled.
+  - New constructor arguments: `SampleController` takes a `SampleTokenManagerInterface` and a
+    `SamplingRateLimiterInterface`, `SampleCookiesServerSideSubscriber` a `SamplingRateLimiterInterface`, and
+    `SampleCookiesClientSideSubscriber` a `SampleTokenManagerInterface` and the router.
+    `SampleCookiesServerSideSubscriber::record()` takes the `TerminateEvent`, and `CookieRecorderInterface::record()`
+    takes an optional limiter for new cookies.
   - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
     `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
     redefine any of these services, pass the `CookieRecorderInterface` service as the first argument.

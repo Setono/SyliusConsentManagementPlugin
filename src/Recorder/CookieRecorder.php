@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Symfony\Component\RateLimiter\LimiterInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -48,7 +49,7 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         $this->logger = new NullLogger();
     }
 
-    public function record(iterable $cookies): void
+    public function record(iterable $cookies, ?LimiterInterface $newCookieLimiter = null): void
     {
         $cookies = $this->filter($cookies);
 
@@ -64,11 +65,15 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
 
         $attempts = 0;
 
+        // Whether the limiter admitted each new cookie (by lowercase name). Kept between attempts, so that a retry
+        // doesn't consume the limiter's tokens again
+        $newCookieAdmissions = [];
+
         do {
             ++$attempts;
 
             try {
-                $this->attemptToRecord($cookies);
+                $this->attemptToRecord($cookies, $newCookieLimiter, $newCookieAdmissions);
 
                 return;
             } catch (\Throwable $e) {
@@ -128,8 +133,9 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
      * Records the cookies with one flush. If it throws, the entity manager can't be used anymore
      *
      * @param non-empty-list<array{name: non-empty-string, cookie: CookieInterface}> $cookies
+     * @param array<string, bool> $newCookieAdmissions
      */
-    private function attemptToRecord(array $cookies): void
+    private function attemptToRecord(array $cookies, ?LimiterInterface $newCookieLimiter, array &$newCookieAdmissions): void
     {
         $manager = $this->getManager();
 
@@ -138,6 +144,10 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
             $name = (string) $existingCookie->getName();
             $existingCookies[$name] = $existingCookie;
             $existingCookiesByLowercaseName[strtolower($name)] ??= $existingCookie;
+        }
+
+        if (null !== $newCookieLimiter) {
+            $this->admitNewCookies($cookies, $existingCookiesByLowercaseName, $newCookieLimiter, $newCookieAdmissions);
         }
 
         $now = new \DateTimeImmutable();
@@ -152,6 +162,10 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
             $cookie = $existingCookies[$name] ?? $existingCookiesByLowercaseName[strtolower($name)] ?? null;
 
             if (null === $cookie) {
+                if (false === ($newCookieAdmissions[strtolower($name)] ?? true)) {
+                    continue;
+                }
+
                 $cookie = $newCookie;
 
                 // Set (instead of incremented) so that a retry doesn't count the sample twice
@@ -175,6 +189,56 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         } finally {
             // The next call loads the cookies again instead of working with what may be outdated by then
             $manager->clear();
+        }
+    }
+
+    /**
+     * Decides which new cookies to save: as many as the limiter has tokens for, in the given order. Names that only
+     * differ in case are one cookie, like when they're saved
+     *
+     * @param non-empty-list<array{name: non-empty-string, cookie: CookieInterface}> $cookies
+     * @param array<string, CookieInterface> $existingCookiesByLowercaseName
+     * @param array<string, bool> $newCookieAdmissions
+     */
+    private function admitNewCookies(
+        array $cookies,
+        array $existingCookiesByLowercaseName,
+        LimiterInterface $newCookieLimiter,
+        array &$newCookieAdmissions,
+    ): void {
+        $undecidedNames = [];
+        foreach ($cookies as ['name' => $name]) {
+            $key = strtolower($name);
+            if (!isset($existingCookiesByLowercaseName[$key]) && !isset($newCookieAdmissions[$key])) {
+                $undecidedNames[$key] ??= $name;
+            }
+        }
+
+        if ([] === $undecidedNames) {
+            return;
+        }
+
+        // Checking and consuming isn't atomic, so concurrent requests from the same client can get a few more new
+        // cookies through. The limit is a bound on abuse, not an exact count
+        $admitted = min(count($undecidedNames), max(0, $newCookieLimiter->consume(0)->getRemainingTokens()));
+        if ($admitted > 0 && !$newCookieLimiter->consume($admitted)->isAccepted()) {
+            $admitted = 0;
+        }
+
+        $skippedNames = [];
+        foreach ($undecidedNames as $key => $name) {
+            $newCookieAdmissions[$key] = $admitted-- > 0;
+
+            if (!$newCookieAdmissions[$key]) {
+                $skippedNames[] = $name;
+            }
+        }
+
+        if ([] !== $skippedNames) {
+            $this->logger->info('Skipped {count} new cookies, because the client has introduced too many new cookies recently', [
+                'count' => count($skippedNames),
+                'names' => $skippedNames,
+            ]);
         }
     }
 

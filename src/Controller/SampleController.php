@@ -11,11 +11,13 @@ use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
 use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
  * Receives the cookies sampled in the visitor's browser (see SampleCookiesClientSideSubscriber). Cookies with invalid
@@ -39,6 +41,7 @@ final class SampleController implements LoggerAwareInterface
         private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly SampleTokenManagerInterface $sampleTokenManager,
+        private readonly SamplingRateLimiterInterface $samplingRateLimiter,
     ) {
         $this->logger = new NullLogger();
     }
@@ -53,6 +56,11 @@ final class SampleController implements LoggerAwareInterface
         $token = $request->query->get(SampleTokenManagerInterface::QUERY_PARAMETER);
         if (!is_string($token) || !$this->sampleTokenManager->consume($token)) {
             throw new AccessDeniedHttpException('Invalid, expired or used sample token');
+        }
+
+        $rateLimit = $this->samplingRateLimiter->consumeRecording($request);
+        if (!$rateLimit->isAccepted()) {
+            throw new TooManyRequestsHttpException(max(0, $rateLimit->getRetryAfter()->getTimestamp() - time()), 'Too many samples from this client');
         }
 
         // Oversized payloads are rejected before they're decoded, and before any cookie is built from them
@@ -99,7 +107,7 @@ final class SampleController implements LoggerAwareInterface
             $this->logger->info('Skipped {count} sampled cookies with invalid names', ['count' => count($invalidNames), 'names' => $invalidNames]);
         }
 
-        $this->cookieRecorder->record($samples);
+        $this->cookieRecorder->record($samples, $this->samplingRateLimiter->createNewCookieLimiter($request));
 
         return new Response(status: Response::HTTP_NO_CONTENT);
     }

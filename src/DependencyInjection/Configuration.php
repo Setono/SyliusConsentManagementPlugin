@@ -91,11 +91,59 @@ final class Configuration implements ConfigurationInterface
                             ->defaultValue(['shop'])
                             ->info("A list of firewalls to sample. The default is to only sample the 'shop' firewall. This means you won't sample API requests and admin requests by default.")
                             ->scalarPrototype()->end()
+                        ->end()
+                        ->arrayNode('rate_limit')
+                            ->info("Limits how much one client can make the store record through sampling (server-side sampling and the sample endpoint), so that forged samples can only create a few cookies, and cause a few notification emails, per client. The crawler isn't limited. A client is identified by its IP address (an IPv6 address by its /64 network), as returned by Request::getClientIp(). Behind a proxy or load balancer, configure framework.trusted_proxies, or else all visitors share the proxy's IP address and thereby one limit.")
+                            ->canBeDisabled()
+                            ->children()
+                                ->append(self::createRateLimitNode('recordings', 10, '1 hour', 'How often the cookies of one client can be recorded. Beyond that, server-side sampling skips the client silently, and the sample endpoint answers 429.'))
+                                ->append(self::createRateLimitNode('new_cookies', 10, '1 day', 'How many new cookie names one client can introduce. Beyond that, new names from the client are skipped, while its existing cookies are still recorded. This is what bounds the cookies one client can get confirmed, and thereby the notification emails.'))
+                            ->end()
+                        ->end()
         ;
 
         $this->addResourcesSection($rootNode);
 
         return $treeBuilder;
+    }
+
+    private static function createRateLimitNode(string $name, int $limit, string $interval, string $info): ArrayNodeDefinition
+    {
+        $node = new ArrayNodeDefinition($name);
+        $node
+            ->info($info)
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->integerNode('limit')
+                    ->defaultValue($limit)
+                    ->min(1)
+                ->end()
+                ->scalarNode('interval')
+                    ->info('A relative time, like "1 hour" or "30 minutes", see https://php.net/datetime.formats.relative')
+                    ->defaultValue($interval)
+                    ->validate()
+                        ->ifTrue(static fn (mixed $value): bool => !self::isInterval($value))
+                        ->thenInvalid('%s is not a valid interval. Use a relative time like "1 hour"')
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+
+    /**
+     * The rate limiter adds the interval to the current time, see Symfony\Component\RateLimiter\RateLimiterFactory
+     */
+    private static function isInterval(mixed $value): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $seconds = strtotime('+' . $value, 0);
+
+        return false !== $seconds && $seconds > 0;
     }
 
     private function addResourcesSection(ArrayNodeDefinition $node): void

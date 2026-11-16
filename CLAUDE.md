@@ -106,6 +106,13 @@ All three record through `CookieRecorder`, which never throws. It skips names th
 
 `SampleDecider` gates both sampling paths: `?_sample=0` turns sampling off everywhere, `?_sample=1` forces it on only in debug (`kernel.debug`), and otherwise the `sampling.rate` and `sampling.firewalls` config apply (the default firewall is `shop`).
 
+`SamplingRateLimiter` limits both sampling paths per client IP (`Request::getClientIp()`, so it depends on trusted proxies; IPv6 by /64), configured under `sampling.rate_limit`:
+
+- **Recordings** (default 10 per hour): beyond that, server-side sampling skips the client silently on `kernel.terminate`, and `SampleController` answers 429.
+- **New cookies** (default 10 per day): the callers pass this limiter to `CookieRecorder::record()`, which consumes a token per new name and skips new names beyond the limit, while still updating existing cookies. This is what bounds how many cookies, and thereby owner emails, one client can cause.
+- The crawler passes no limiter, so it isn't limited.
+- The two `RateLimiterFactory` services are defined in `sampling.xml` over a `CacheStorage` on `cache.app`, without a lock factory, so installs need no `framework.rate_limiter` config and no `symfony/lock`. `sampling.rate_limit: false` switches them to the `no_limit` policy.
+
 `CookieWorkflow` is a Symfony Workflow state machine named `setono_sylius_consent_management__cookie` with one transition, `pending → confirmed` (`confirm`). A cookie is confirmed automatically in two cases:
 
 - `ConfirmCookieListener` confirms it once it has at least 3 samples.

@@ -19,6 +19,7 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface"/>
 
             <tag name="kernel.event_subscriber"/>
             <tag name="kernel.reset" method="reset"/>

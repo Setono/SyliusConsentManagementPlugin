@@ -25,7 +25,11 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
          * @var array{
          *     widget: array{cookie_name: string, cookie_value: string},
          *     crawler: array{options: array, url_provider: array{tracking_url_patterns: array<string, string>}},
-         *     sampling: array{rate: float, firewalls: list<string>},
+         *     sampling: array{
+         *         rate: float,
+         *         firewalls: list<string>,
+         *         rate_limit: array{enabled: bool, recordings: array{limit: int, interval: string}, new_cookies: array{limit: int, interval: string}}
+         *     },
          *     notify: list<string>,
          *     resources: array<string, mixed>
          * } $config
@@ -38,6 +42,7 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
 
         $container->setParameter('setono_sylius_consent_management.sampling.rate', $config['sampling']['rate']);
         $container->setParameter('setono_sylius_consent_management.sampling.firewalls', $config['sampling']['firewalls']);
+        self::configureSamplingRateLimit($container, $config['sampling']['rate_limit']);
         $container->setParameter('setono_sylius_consent_management.notify', $config['notify']);
 
         $container
@@ -53,6 +58,24 @@ final class SetonoSyliusConsentManagementExtension extends AbstractResourceExten
         );
 
         $loader->load('services.xml');
+    }
+
+    /**
+     * The configurations of the RateLimiterFactory services in sampling.xml
+     *
+     * @param array{enabled: bool, recordings: array{limit: int, interval: string}, new_cookies: array{limit: int, interval: string}} $config
+     */
+    private static function configureSamplingRateLimit(ContainerBuilder $container, array $config): void
+    {
+        foreach (['recordings', 'new_cookies'] as $limit) {
+            $container->setParameter(sprintf('setono_sylius_consent_management.sampling.rate_limit.%s', $limit), [
+                'id' => sprintf('setono_sylius_consent_management_sampling_%s', $limit),
+                // When the rate limit is disabled, the limiters accept everything
+                'policy' => $config['enabled'] ? 'sliding_window' : 'no_limit',
+                'limit' => $config[$limit]['limit'],
+                'interval' => $config[$limit]['interval'],
+            ]);
+        }
     }
 
     /**

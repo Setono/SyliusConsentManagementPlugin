@@ -57,6 +57,7 @@
         "symfony/options-resolver": "^6.4 || ^7.0",
         "symfony/panther": "^2.2",
         "symfony/process": "^6.4 || ^7.0",
+        "symfony/rate-limiter": "^6.4 || ^7.0",
         "symfony/routing": "^6.4 || ^7.0",
         "symfony/security-bundle": "^6.4 || ^7.0",
         "symfony/security-http": "^6.4 || ^7.0",
