@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Checker;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
- * Signs consent overrides (the _consent query parameter, see RequestBasedConsentChecker) so that only trusted
- * callers, like the crawler, can grant consent through the URL
+ * Signs consent overrides so that only trusted callers, like the crawler, can grant consent through the URL
  */
 interface ConsentOverrideSignerInterface
 {
@@ -20,7 +17,7 @@ interface ConsentOverrideSignerInterface
     public function signUrl(string $url, string|array $consent, \DateTimeInterface $expiresAt): string;
 
     /**
-     * Returns true if the consent override in the request has a valid signature that hasn't expired
+     * Returns true if the override has a valid signature that hasn't expired
      */
-    public function isSigned(Request $request): bool;
+    public function verify(ConsentOverride $override): bool;
 }

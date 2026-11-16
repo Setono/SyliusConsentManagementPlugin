@@ -6,6 +6,7 @@ namespace Tests\Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverride;
 use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner;
 use Setono\SyliusConsentManagementPlugin\Crawler\CrawlerInterface;
 use Setono\SyliusConsentManagementPlugin\Event\WillCrawl;
@@ -35,7 +36,7 @@ final class ModifyUrlSubscriberTest extends TestCase
         self::assertSame('abc', $request->query->get('gclid'));
         self::assertSame('1', $request->query->get('_consent'));
         self::assertSame('0', $request->query->get('_sample'));
-        self::assertTrue($signer->isSigned($request));
+        self::assertTrue($signer->verify(self::createOverride($request)));
     }
 
     /**
@@ -71,7 +72,7 @@ final class ModifyUrlSubscriberTest extends TestCase
         $request = Request::create((string) $event->url);
 
         self::assertSame('0', $request->query->get('_sample'));
-        self::assertTrue($signer->isSigned($request));
+        self::assertTrue($signer->verify(self::createOverride($request)));
     }
 
     private function createEvent(): WillCrawl
@@ -81,5 +82,13 @@ final class ModifyUrlSubscriberTest extends TestCase
             new Client($this->prophesize(BrowserManagerInterface::class)->reveal()),
             new Url('https://shop.example.com/en_US/products/mug?gclid=abc'),
         );
+    }
+
+    private static function createOverride(Request $request): ConsentOverride
+    {
+        $override = ConsentOverride::fromRequest($request);
+        self::assertNotNull($override);
+
+        return $override;
     }
 }

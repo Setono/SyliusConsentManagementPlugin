@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Command;
 
 use PHPUnit\Framework\TestCase;
+use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverride;
 use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner;
 use Setono\SyliusConsentManagementPlugin\Command\SignConsentUrlCommand;
 use Symfony\Component\Console\Command\Command;
@@ -98,8 +99,16 @@ final class SignConsentUrlCommandTest extends TestCase
     private function getSignedRequest(): Request
     {
         $request = Request::create(trim($this->commandTester->getDisplay()));
-        self::assertTrue($this->signer->isSigned($request));
+        self::assertTrue($this->signer->verify(self::createOverride($request)));
 
         return $request;
+    }
+
+    private static function createOverride(Request $request): ConsentOverride
+    {
+        $override = ConsentOverride::fromRequest($request);
+        self::assertNotNull($override);
+
+        return $override;
     }
 }

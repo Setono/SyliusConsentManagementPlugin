@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusConsentManagementPlugin\Checker;
 
 use PHPUnit\Framework\TestCase;
+use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverride;
 use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -20,8 +21,8 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertTrue($signer->isSigned(Request::create($signer->signUrl(self::URL, '1', new \DateTimeImmutable('+1 hour')))));
-        self::assertTrue($signer->isSigned(Request::create($signer->signUrl(self::URL, ['marketing' => '1', 'statistical' => '0'], new \DateTimeImmutable('+1 hour')))));
+        self::assertTrue($signer->verify(self::createOverride($signer->signUrl(self::URL, '1', new \DateTimeImmutable('+1 hour')))));
+        self::assertTrue($signer->verify(self::createOverride($signer->signUrl(self::URL, ['marketing' => '1', 'statistical' => '0'], new \DateTimeImmutable('+1 hour')))));
     }
 
     /**
@@ -46,7 +47,7 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertFalse($signer->isSigned(Request::create($signer->signUrl(self::URL, '1', new \DateTimeImmutable('-1 second')))));
+        self::assertFalse($signer->verify(self::createOverride($signer->signUrl(self::URL, '1', new \DateTimeImmutable('-1 second')))));
     }
 
     /**
@@ -57,10 +58,10 @@ final class ConsentOverrideSignerTest extends TestCase
         $signer = new ConsentOverrideSigner('secret');
 
         $url = $signer->signUrl(self::URL, ['statistical' => '1'], new \DateTimeImmutable('+1 hour'));
-        self::assertFalse($signer->isSigned(Request::create($url . '&_consent[marketing]=1')));
+        self::assertFalse($signer->verify(self::createOverride($url . '&_consent[marketing]=1')));
 
         $url = $signer->signUrl(self::URL, '1', new \DateTimeImmutable('+1 hour'));
-        self::assertFalse($signer->isSigned(Request::create((string) preg_replace('/_consent_expires=\d+/', '_consent_expires=' . strtotime('+1 year'), $url))));
+        self::assertFalse($signer->verify(self::createOverride((string) preg_replace('/_consent_expires=\d+/', '_consent_expires=' . strtotime('+1 year'), $url))));
     }
 
     /**
@@ -70,8 +71,8 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertFalse($signer->isSigned(Request::create(self::URL . '&_consent=1')));
-        self::assertFalse($signer->isSigned(Request::create(self::URL . '&_consent=1&_consent_expires=' . strtotime('+1 hour'))));
+        self::assertFalse($signer->verify(new ConsentOverride('1')));
+        self::assertFalse($signer->verify(new ConsentOverride('1', (int) strtotime('+1 hour'))));
     }
 
     /**
@@ -79,7 +80,7 @@ final class ConsentOverrideSignerTest extends TestCase
      */
     public function it_rejects_signatures_made_by_the_uri_signer_with_the_same_secret(): void
     {
-        $expires = (string) strtotime('+1 hour');
+        $expires = (int) strtotime('+1 hour');
 
         // Asked to sign this message as a URI, the uri_signer appends ?_hash=<base64 HMAC-SHA256 of the message>,
         // keyed with the same secret (kernel.secret) the consent overrides are signed with
@@ -87,12 +88,7 @@ final class ConsentOverrideSignerTest extends TestCase
         $signedUri = (new UriSigner('secret'))->sign($message);
         self::assertStringStartsWith($message . '?_hash=', $signedUri);
 
-        self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(Request::create(sprintf(
-            '%s&%s&_consent_signature=%s',
-            self::URL,
-            $message,
-            bin2hex(self::getUriSignerHash($signedUri)),
-        ))));
+        self::assertFalse((new ConsentOverrideSigner('secret'))->verify(new ConsentOverride('1', $expires, bin2hex(self::getUriSignerHash($signedUri)))));
     }
 
     /**
@@ -104,15 +100,11 @@ final class ConsentOverrideSignerTest extends TestCase
         // That must not be the key the consent overrides are signed with
         $revealedKey = self::getUriSignerHash((new UriSigner('secret'))->sign('setono_sylius_consent_management.consent_override'));
 
-        $message = '_consent=1&_consent_expires=' . strtotime('+1 hour');
+        $expires = (int) strtotime('+1 hour');
+        $message = '_consent=1&_consent_expires=' . $expires;
 
         foreach ([$revealedKey, bin2hex($revealedKey)] as $key) {
-            self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(Request::create(sprintf(
-                '%s&%s&_consent_signature=%s',
-                self::URL,
-                $message,
-                hash_hmac('sha256', $message, $key),
-            ))));
+            self::assertFalse((new ConsentOverrideSigner('secret'))->verify(new ConsentOverride('1', $expires, hash_hmac('sha256', $message, $key))));
         }
     }
 
@@ -130,13 +122,13 @@ final class ConsentOverrideSignerTest extends TestCase
 
         try {
             $signedWithAmp = $signer->signUrl(self::URL, $consent, new \DateTimeImmutable('+1 hour'));
-            self::assertTrue($signer->isSigned(Request::create($signedWithTheDefault)));
+            self::assertTrue($signer->verify(self::createOverride($signedWithTheDefault)));
         } finally {
             ini_set('arg_separator.output', (string) $argSeparator);
         }
 
         self::assertStringNotContainsString('&amp;', $signedWithAmp);
-        self::assertTrue($signer->isSigned(Request::create($signedWithAmp)));
+        self::assertTrue($signer->verify(self::createOverride($signedWithAmp)));
     }
 
     /**
@@ -147,6 +139,14 @@ final class ConsentOverrideSignerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         new ConsentOverrideSigner('');
+    }
+
+    private static function createOverride(string $url): ConsentOverride
+    {
+        $override = ConsentOverride::fromRequest(Request::create($url));
+        self::assertNotNull($override);
+
+        return $override;
     }
 
     /**
