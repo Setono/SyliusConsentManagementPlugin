@@ -14,10 +14,14 @@ _Avoid_: Essential category, required category
 The categories a visitor is treated as having consented to before making a choice. There are none unless the store configures some.
 _Avoid_: Implicit consent, preset consent
 
+**Consent override**:
+Consent granted or denied for a single request through the `_consent` query parameter, e.g. for QA or a crawl. Outside debug mode, a grant only applies when it's signed.
+_Avoid_: Forced consent, URL consent
+
 ### Cookies
 
 **Crawl**:
-A visit to the store's pages by a browser that has given no consent, made to discover the cookies the store sets.
+A visit to the store's pages by a browser, made to discover the cookies the store sets. It covers two scenarios: without consent, to find pre-consent cookies, and with all consent granted, to catalogue every cookie.
 _Avoid_: Scan, audit
 
 **Pre-consent cookie**:

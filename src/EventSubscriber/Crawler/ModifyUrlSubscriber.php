@@ -25,8 +25,11 @@ final class ModifyUrlSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Grants all consents (so all consent-gated scripts run and set their cookies) and disables sampling,
-     * because the crawler saves the cookies it finds itself
+     * Grants all consent through a signed consent override (so all consent-gated scripts run and set their cookies)
+     * and disables sampling, because the crawler saves the cookies it finds itself.
+     *
+     * This is the crawl with all consent granted, which catalogues every cookie. The crawl without consent, which finds
+     * pre-consent cookies, is tracked in https://github.com/Setono/SyliusConsentManagementPlugin/issues/223
      */
     public function modify(WillCrawl $event): void
     {
