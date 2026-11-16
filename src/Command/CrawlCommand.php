@@ -29,8 +29,9 @@ final class CrawlCommand extends Command
             $this->crawler->setLogger(new ConsoleLogger($output));
         }
 
-        $this->crawler->start();
+        // An aborted crawl throws, which also fails the command
+        $result = $this->crawler->start();
 
-        return 0;
+        return 0 === $result->failed ? Command::SUCCESS : Command::FAILURE;
     }
 }
