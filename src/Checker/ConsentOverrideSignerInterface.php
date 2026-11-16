@@ -13,13 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface ConsentOverrideSignerInterface
 {
     /**
-     * Returns the query parameters that grant the given consent override until $expiresAt
+     * Returns the URL with a consent override appended that grants the given consent until $expiresAt
      *
      * @param string|array<string, string> $consent the value of the _consent query parameter, e.g. '1' or ['marketing' => '1']
-     *
-     * @return array<string, mixed>
      */
-    public function sign(string|array $consent, \DateTimeInterface $expiresAt): array;
+    public function signUrl(string $url, string|array $consent, \DateTimeInterface $expiresAt): string;
 
     /**
      * Returns true if the consent override in the request has a valid signature that hasn't expired

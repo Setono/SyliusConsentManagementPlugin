@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\UriSigner;
 
 final class ConsentOverrideSignerTest extends TestCase
 {
+    private const URL = 'https://shop.example.com/en_US/products/mug?gclid=abc';
+
     /**
      * @test
      */
@@ -18,8 +20,23 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertTrue($signer->isSigned(self::createRequest($signer->sign('1', new \DateTimeImmutable('+1 hour')))));
-        self::assertTrue($signer->isSigned(self::createRequest($signer->sign(['marketing' => '1', 'statistical' => '0'], new \DateTimeImmutable('+1 hour')))));
+        self::assertTrue($signer->isSigned(Request::create($signer->signUrl(self::URL, '1', new \DateTimeImmutable('+1 hour')))));
+        self::assertTrue($signer->isSigned(Request::create($signer->signUrl(self::URL, ['marketing' => '1', 'statistical' => '0'], new \DateTimeImmutable('+1 hour')))));
+    }
+
+    /**
+     * @test
+     */
+    public function it_appends_the_signed_override_to_the_url(): void
+    {
+        $expiresAt = new \DateTimeImmutable('+1 hour');
+        $request = Request::create((new ConsentOverrideSigner('secret'))->signUrl(self::URL, ['marketing' => '1'], $expiresAt));
+
+        self::assertSame('/en_US/products/mug', $request->getPathInfo());
+        self::assertSame('abc', $request->query->get('gclid'));
+        self::assertSame(['marketing' => '1'], $request->query->all('_consent'));
+        self::assertSame((string) $expiresAt->getTimestamp(), $request->query->get('_consent_expires'));
+        self::assertMatchesRegularExpression('/^[0-9a-f]{64}$/', (string) $request->query->get('_consent_signature'));
     }
 
     /**
@@ -29,7 +46,7 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertFalse($signer->isSigned(self::createRequest($signer->sign('1', new \DateTimeImmutable('-1 second')))));
+        self::assertFalse($signer->isSigned(Request::create($signer->signUrl(self::URL, '1', new \DateTimeImmutable('-1 second')))));
     }
 
     /**
@@ -39,13 +56,11 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        $query = $signer->sign(['statistical' => '1'], new \DateTimeImmutable('+1 hour'));
-        $query['_consent'] = ['statistical' => '1', 'marketing' => '1'];
-        self::assertFalse($signer->isSigned(self::createRequest($query)));
+        $url = $signer->signUrl(self::URL, ['statistical' => '1'], new \DateTimeImmutable('+1 hour'));
+        self::assertFalse($signer->isSigned(Request::create($url . '&_consent[marketing]=1')));
 
-        $query = $signer->sign('1', new \DateTimeImmutable('+1 hour'));
-        $query['_consent_expires'] = (string) strtotime('+1 year');
-        self::assertFalse($signer->isSigned(self::createRequest($query)));
+        $url = $signer->signUrl(self::URL, '1', new \DateTimeImmutable('+1 hour'));
+        self::assertFalse($signer->isSigned(Request::create((string) preg_replace('/_consent_expires=\d+/', '_consent_expires=' . strtotime('+1 year'), $url))));
     }
 
     /**
@@ -55,8 +70,8 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         $signer = new ConsentOverrideSigner('secret');
 
-        self::assertFalse($signer->isSigned(self::createRequest(['_consent' => '1'])));
-        self::assertFalse($signer->isSigned(self::createRequest(['_consent' => '1', '_consent_expires' => (string) strtotime('+1 hour')])));
+        self::assertFalse($signer->isSigned(Request::create(self::URL . '&_consent=1')));
+        self::assertFalse($signer->isSigned(Request::create(self::URL . '&_consent=1&_consent_expires=' . strtotime('+1 hour'))));
     }
 
     /**
@@ -72,17 +87,12 @@ final class ConsentOverrideSignerTest extends TestCase
         $signedUri = (new UriSigner('secret'))->sign($message);
         self::assertStringStartsWith($message . '?_hash=', $signedUri);
 
-        parse_str((string) parse_url($signedUri, \PHP_URL_QUERY), $params);
-        $hash = $params['_hash'] ?? null;
-        self::assertIsString($hash);
-        $hmac = base64_decode(strtr($hash, '-_', '+/'), true);
-        self::assertIsString($hmac);
-
-        self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(self::createRequest([
-            '_consent' => '1',
-            '_consent_expires' => $expires,
-            '_consent_signature' => bin2hex($hmac),
-        ])));
+        self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(Request::create(sprintf(
+            '%s&%s&_consent_signature=%s',
+            self::URL,
+            $message,
+            bin2hex(self::getUriSignerHash($signedUri)),
+        ))));
     }
 
     /**
@@ -92,22 +102,17 @@ final class ConsentOverrideSignerTest extends TestCase
     {
         // Asked to sign the key's label, the uri_signer returns the HMAC-SHA256 of the label, keyed with the secret.
         // That must not be the key the consent overrides are signed with
-        $signedUri = (new UriSigner('secret'))->sign('setono_sylius_consent_management.consent_override');
-        parse_str((string) parse_url($signedUri, \PHP_URL_QUERY), $params);
-        $hash = $params['_hash'] ?? null;
-        self::assertIsString($hash);
-        $revealedKey = base64_decode(strtr($hash, '-_', '+/'), true);
-        self::assertIsString($revealedKey);
+        $revealedKey = self::getUriSignerHash((new UriSigner('secret'))->sign('setono_sylius_consent_management.consent_override'));
 
-        $expires = (string) strtotime('+1 hour');
-        $message = '_consent=1&_consent_expires=' . $expires;
+        $message = '_consent=1&_consent_expires=' . strtotime('+1 hour');
 
         foreach ([$revealedKey, bin2hex($revealedKey)] as $key) {
-            self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(self::createRequest([
-                '_consent' => '1',
-                '_consent_expires' => $expires,
-                '_consent_signature' => hash_hmac('sha256', $message, $key),
-            ])));
+            self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(Request::create(sprintf(
+                '%s&%s&_consent_signature=%s',
+                self::URL,
+                $message,
+                hash_hmac('sha256', $message, $key),
+            ))));
         }
     }
 
@@ -117,16 +122,21 @@ final class ConsentOverrideSignerTest extends TestCase
     public function it_ignores_the_arg_separator_output_setting(): void
     {
         $signer = new ConsentOverrideSigner('secret');
-        $request = self::createRequest($signer->sign('1', new \DateTimeImmutable('+1 hour')));
+        $consent = ['marketing' => '1', 'statistical' => '1'];
 
         // The crawler signs on the CLI and the shop verifies on FPM, and their ini settings can differ
+        $signedWithTheDefault = $signer->signUrl(self::URL, $consent, new \DateTimeImmutable('+1 hour'));
         $argSeparator = ini_set('arg_separator.output', '&amp;');
 
         try {
-            self::assertTrue($signer->isSigned($request));
+            $signedWithAmp = $signer->signUrl(self::URL, $consent, new \DateTimeImmutable('+1 hour'));
+            self::assertTrue($signer->isSigned(Request::create($signedWithTheDefault)));
         } finally {
             ini_set('arg_separator.output', (string) $argSeparator);
         }
+
+        self::assertStringNotContainsString('&amp;', $signedWithAmp);
+        self::assertTrue($signer->isSigned(Request::create($signedWithAmp)));
     }
 
     /**
@@ -140,11 +150,17 @@ final class ConsentOverrideSignerTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $query
+     * Returns the raw HMAC from a URI signed by the uri_signer
      */
-    private static function createRequest(array $query): Request
+    private static function getUriSignerHash(string $signedUri): string
     {
-        // Build the request from the URL, like a real request, so the query values are strings
-        return Request::create('https://shop.example.com/en_US/?' . http_build_query($query, '', '&'));
+        parse_str((string) parse_url($signedUri, \PHP_URL_QUERY), $params);
+        $hash = $params['_hash'] ?? null;
+        self::assertIsString($hash);
+
+        $hmac = base64_decode(strtr($hash, '-_', '+/'), true);
+        self::assertIsString($hmac);
+
+        return $hmac;
     }
 }

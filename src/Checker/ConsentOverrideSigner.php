@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Checker;
 
+use League\Uri\Uri;
+use League\Uri\UriModifier;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,15 +32,14 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
         $this->key = hash_hkdf('sha256', $secret, 32, 'setono_sylius_consent_management.consent_override');
     }
 
-    public function sign(string|array $consent, \DateTimeInterface $expiresAt): array
+    public function signUrl(string $url, string|array $consent, \DateTimeInterface $expiresAt): string
     {
-        $expires = $expiresAt->getTimestamp();
+        $message = self::buildMessage($consent, $expiresAt->getTimestamp());
 
-        return [
-            RequestBasedConsentChecker::CONSENT_QUERY_PARAM => $consent,
-            self::EXPIRES_QUERY_PARAM => $expires,
-            self::SIGNATURE_QUERY_PARAM => $this->computeSignature($consent, $expires),
-        ];
+        return (string) UriModifier::appendQuery(
+            Uri::createFromString($url),
+            sprintf('%s&%s=%s', $message, self::SIGNATURE_QUERY_PARAM, $this->computeSignature($message)),
+        );
     }
 
     public function isSigned(Request $request): bool
@@ -57,14 +58,24 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
             return false;
         }
 
-        return hash_equals($this->computeSignature($consent, (int) $expires), $signature);
+        return hash_equals($this->computeSignature(self::buildMessage($consent, (int) $expires)), $signature);
     }
 
-    private function computeSignature(string|array $consent, int $expires): string
+    /**
+     * The signed message is the query string of the override and its expiry, e.g. _consent=1&_consent_expires=1790000000.
+     * It's built with an explicit '&' separator, so it doesn't depend on the arg_separator.output ini setting, which can
+     * differ between the CLI (where the crawler signs) and FPM (where the shop verifies)
+     */
+    private static function buildMessage(string|array $consent, int $expires): string
     {
-        return hash_hmac('sha256', http_build_query([
+        return http_build_query([
             RequestBasedConsentChecker::CONSENT_QUERY_PARAM => $consent,
             self::EXPIRES_QUERY_PARAM => $expires,
-        ], '', '&'), $this->key);
+        ], '', '&');
+    }
+
+    private function computeSignature(string $message): string
+    {
+        return hash_hmac('sha256', $message, $this->key);
     }
 }

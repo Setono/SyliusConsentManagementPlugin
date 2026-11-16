@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusConsentManagementPlugin\Command;
 
-use League\Uri\Uri;
-use League\Uri\UriModifier;
 use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -62,9 +60,7 @@ final class SignConsentUrlCommand extends Command
             return Command::INVALID;
         }
 
-        $query = $this->consentOverrideSigner->sign([] === $categories ? '1' : array_fill_keys($categories, '1'), $expiresAt);
-
-        $output->writeln((string) UriModifier::appendQuery(Uri::createFromString($url), http_build_query($query, '', '&')));
+        $output->writeln($this->consentOverrideSigner->signUrl($url, [] === $categories ? '1' : array_fill_keys($categories, '1'), $expiresAt));
 
         return Command::SUCCESS;
     }

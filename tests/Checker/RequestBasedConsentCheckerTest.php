@@ -100,8 +100,7 @@ final class RequestBasedConsentCheckerTest extends TestCase
      */
     public function it_honours_signed_grants_in_production(): void
     {
-        $query = (new ConsentOverrideSigner('secret'))->sign('1', new \DateTimeImmutable('+1 hour'));
-        $this->requestStack->push(Request::create('https://example.com/?' . http_build_query($query, '', '&')));
+        $this->requestStack->push(Request::create((new ConsentOverrideSigner('secret'))->signUrl('https://example.com/', '1', new \DateTimeImmutable('+1 hour'))));
         $this->decoratedChecker->isGranted('marketing')->willReturn(false);
 
         self::assertTrue($this->createProductionChecker()->isGranted('marketing'));
@@ -112,8 +111,7 @@ final class RequestBasedConsentCheckerTest extends TestCase
      */
     public function it_ignores_grants_signed_with_another_secret_in_production(): void
     {
-        $query = (new ConsentOverrideSigner('another secret'))->sign('1', new \DateTimeImmutable('+1 hour'));
-        $this->requestStack->push(Request::create('https://example.com/?' . http_build_query($query, '', '&')));
+        $this->requestStack->push(Request::create((new ConsentOverrideSigner('another secret'))->signUrl('https://example.com/', '1', new \DateTimeImmutable('+1 hour'))));
         $this->decoratedChecker->isGranted('marketing')->willReturn(false);
 
         self::assertFalse($this->createProductionChecker()->isGranted('marketing'));
