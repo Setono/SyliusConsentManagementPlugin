@@ -12,7 +12,6 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "dbrekelmans/bdi": "^1.4",
         "doctrine/collections": "^1.6",
         "doctrine/orm": "^2.15",
@@ -55,6 +54,7 @@
         "symfony/http-kernel": "^6.4 || ^7.0",
         "symfony/options-resolver": "^6.4 || ^7.0",
         "symfony/panther": "^2.2",
+        "symfony/polyfill-mbstring": "^1.0",
         "symfony/process": "^6.4 || ^7.0",
         "symfony/routing": "^6.4 || ^7.0",
         "symfony/security-bundle": "^6.4 || ^7.0",
