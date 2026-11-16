@@ -96,6 +96,47 @@ final class SignConsentUrlCommandTest extends TestCase
         yield 'in the past' => ['-1 minute'];
     }
 
+    /**
+     * @test
+     */
+    public function it_accepts_an_expiry_24_hours_from_now(): void
+    {
+        $this->commandTester->execute([
+            'url' => 'https://shop.example.com/',
+            '--expires' => '+24 hours',
+        ]);
+
+        $this->commandTester->assertCommandIsSuccessful();
+
+        self::assertEqualsWithDelta(time() + 86400, (int) $this->getSignedRequest()->query->get('_consent_expires'), 5);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideTooDistantExpiries
+     */
+    public function it_rejects_expiries_more_than_24_hours_from_now(string $expires): void
+    {
+        $this->commandTester->execute([
+            'url' => 'https://shop.example.com/',
+            '--expires' => $expires,
+        ]);
+
+        self::assertSame(Command::INVALID, $this->commandTester->getStatusCode());
+        self::assertStringContainsString(sprintf('The expiry "%s" is more than 24 hours from now', $expires), $this->commandTester->getDisplay());
+        self::assertStringNotContainsString('_consent_signature', $this->commandTester->getDisplay());
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideTooDistantExpiries(): iterable
+    {
+        yield 'a day and a minute' => ['+1 day +1 minute'];
+        yield 'ten years' => ['+10 years'];
+    }
+
     private function getSignedRequest(): Request
     {
         $request = Request::create(trim($this->commandTester->getDisplay()));

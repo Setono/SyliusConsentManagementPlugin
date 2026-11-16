@@ -15,7 +15,8 @@ use League\Uri\UriModifier;
  * - The scheme, host and percent-encoding of the URL the crawler's browser requests can differ from the URL the
  *   application sees, e.g. behind a TLS-terminating proxy. That would break signatures over them
  *
- * The expiry bounds the exposure of a leaked URL instead. The crawler's signatures are valid for 5 minutes
+ * The expiry bounds the exposure of a leaked URL instead. The crawler's signatures are valid for 5 minutes, and the
+ * setono:sylius-consent-management:sign-consent-url command's for at most 24 hours
  */
 final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
 {

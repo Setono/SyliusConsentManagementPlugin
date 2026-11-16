@@ -16,4 +16,5 @@ php bin/console doctrine:migrations:migrate
   when the override is signed. Denying consent (`?_consent=0`) still works. If you use `?_consent=1` for QA or tag
   audits in production, get a signed URL with
   `php bin/console setono:sylius-consent-management:sign-consent-url https://example.com/` instead (see `--help` for
-  granting single categories and setting the expiry).
+  granting single categories and setting the expiry). A signed URL is valid for an hour by default and for at most
+  24 hours, because it can't be revoked short of changing the kernel secret.
