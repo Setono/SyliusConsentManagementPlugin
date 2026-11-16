@@ -6,13 +6,17 @@ namespace Setono\SyliusConsentManagementPlugin\EventSubscriber\Crawler;
 
 use League\Uri\Uri;
 use League\Uri\UriModifier;
-use Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker;
+use Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface;
 use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDecider;
 use Setono\SyliusConsentManagementPlugin\Event\WillCrawl;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class ModifyUrlSubscriber implements EventSubscriberInterface
 {
+    public function __construct(private readonly ConsentOverrideSignerInterface $consentOverrideSigner)
+    {
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -20,12 +24,19 @@ final class ModifyUrlSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Grants all consent through a signed consent override (so all consent-gated scripts run and set their cookies)
+     * and disables sampling, because the crawler saves the cookies it finds itself.
+     *
+     * This is the crawl with all consent granted, which catalogues every cookie. The crawl without consent, which finds
+     * pre-consent cookies, is tracked in https://github.com/Setono/SyliusConsentManagementPlugin/issues/223
+     */
     public function modify(WillCrawl $event): void
     {
-        $event->url->value = Uri::createFromUri(UriModifier::appendQuery($event->url->value, sprintf(
-            '%s=1&%s=0',
-            RequestBasedConsentChecker::CONSENT_QUERY_PARAM,
-            SampleDecider::SAMPLE_QUERY_PARAMETER,
-        )));
+        $url = UriModifier::appendQuery($event->url->value, SampleDecider::SAMPLE_QUERY_PARAMETER . '=0');
+
+        // The URL is requested right after this event, so the signature only needs to be valid for a short while.
+        // Keep it short, because the signed URL ends up with every tracker on the page and in the cookies' URL
+        $event->url->value = Uri::createFromString($this->consentOverrideSigner->signUrl((string) $url, '1', new \DateTimeImmutable('+5 minutes')));
     }
 }

@@ -79,7 +79,7 @@ vendor/bin/phpunit --testsuite functional
 The plugin decorates `Setono\Consent\ConsentCheckerInterface` from setono/consent-bundle, whose base implementation is `StaticConsentChecker` with configured defaults. The decorators are set up in `services/checker.xml`, and the effective call order, outermost first, is:
 
 1. `CachedConsentChecker`: in-memory cache.
-2. `RequestBasedConsentChecker`: the `?_consent=1|0` or `?_consent[marketing]=0` query parameter overrides consent. This is handy for manual testing.
+2. `RequestBasedConsentChecker`: applies a consent override, the `?_consent=1|0` or `?_consent[marketing]=0` query parameter, which `ConsentOverride` parses. Denials always apply. Grants only apply in debug mode or when `ConsentOverrideSigner` verifies their signature (`_consent_expires` plus `_consent_signature`, an HMAC with a key derived from `kernel.secret` through HKDF). The crawler signs its URLs, and `setono:sylius-consent-management:sign-consent-url` prints a signed URL, valid for at most 24 hours, for manual testing in production.
 3. `SessionCachedConsentChecker`: caches in the session and is invalidated on the `ConsentUpdated` event.
 4. `ORMBasedConsentChecker`: looks up the client's latest `ConsentEntry`.
 5. The consent bundle's static defaults.
@@ -100,7 +100,7 @@ New `Cookie` entities start in the `pending` state. They are created from three 
 
 - **Server-side sampling**: `SampleCookiesServerSideSubscriber` records request cookies on `kernel.request`.
 - **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`).
-- **Crawler**: `setono:sylius-consent-management:crawl` runs a headless Chrome through Panther over URLs from `CompositeUrlProvider` (the homepage, plus each channel's latest product page with tracking parameters like `gclid` and `fbclid` appended). It dispatches `CrawlStarted`, `WillCrawl` and `Crawled`, and `SaveCookiesSubscriber` persists what it finds.
+- **Crawler**: `setono:sylius-consent-management:crawl` runs a headless Chrome through Panther over URLs from `CompositeUrlProvider` (the homepage, plus each channel's latest product page with tracking parameters like `gclid` and `fbclid` appended). It dispatches `CrawlStarted`, `WillCrawl` and `Crawled`, and `SaveCookiesSubscriber` persists what it finds. It crawls with all consent granted, through a signed consent override that `ModifyUrlSubscriber` appends, to catalogue every cookie. Crawling without consent, to find pre-consent cookies, is tracked in #223.
 
 `SampleDecider` gates both sampling paths: the `?_sample=1|0` query parameter forces sampling on or off, and otherwise the `sampling.rate` and `sampling.firewalls` config apply (the default firewall is `shop`).
 

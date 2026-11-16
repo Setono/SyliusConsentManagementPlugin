@@ -2,6 +2,13 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface"
+                 alias="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner"/>
+
+        <service id="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSigner">
+            <argument>%kernel.secret%</argument>
+        </service>
+
         <service id="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker"
                  decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="400">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\ORMBasedConsentChecker.inner"/>
@@ -21,6 +28,8 @@
                  decorates="Setono\Consent\ConsentCheckerInterface" decoration-priority="200">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\RequestBasedConsentChecker.inner"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Checker\ConsentOverrideSignerInterface"/>
+            <argument>%kernel.debug%</argument>
         </service>
 
         <service id="Setono\SyliusConsentManagementPlugin\Checker\CachedConsentChecker"
