@@ -19,7 +19,7 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 final class SampleCookiesServerSideSubscriber implements EventSubscriberInterface, ResetInterface
 {
-    /** @var array<string, CookieInterface> */
+    /** @var list<CookieInterface> */
     private array $cookies = [];
 
     public function __construct(
@@ -51,9 +51,9 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
         }
 
         // The new cookies are created while the request is still available, because the factory resolves their URL from it
-        foreach ($request->cookies->all() as $name => $_) {
-            $name = (string) $name;
-            $this->cookies[$name] = $this->cookieFactory->createWithName($name);
+        foreach ($request->cookies->keys() as $name) {
+            // PHP turns numeric cookie names into integer keys
+            $this->cookies[] = $this->cookieFactory->createWithName((string) $name);
         }
     }
 

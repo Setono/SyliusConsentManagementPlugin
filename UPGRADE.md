@@ -24,3 +24,8 @@ php bin/console doctrine:migrations:migrate
     template, pass the token like the plugin's template does:
     `path('setono_sylius_consent_management_shop_sample', { '_sample_token': token })`.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
+  - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
+    `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
+    redefine any of these services, pass the `CookieRecorderInterface` service as the first argument.
+- `CookieRepositoryInterface::findOneByName()` is deprecated, because the plugin doesn't use it anymore, and will be
+  removed in the next major version. Use `findOneBy(['name' => $name])` instead.

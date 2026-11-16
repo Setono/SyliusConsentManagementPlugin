@@ -39,6 +39,11 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
      */
     private const NAME_PATTERN = '/^[!#$%&\'*+\-.^_`|~0-9A-Za-z]+$/';
 
+    /**
+     * The first attempt, and one retry if a concurrent request saved one of the new cookies first
+     */
+    private const MAX_ATTEMPTS = 2;
+
     private LoggerInterface $logger;
 
     private ?EntityManagerInterface $manager = null;
@@ -53,51 +58,82 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         $this->logger = new NullLogger();
     }
 
-    public function record(array $cookies): void
+    public function record(iterable $cookies): void
     {
-        $cookies = array_filter(
-            $cookies,
-            // PHP turns numeric array keys, e.g. a cookie named "123", into integers
-            static fn (int|string $name): bool => strlen((string) $name) <= self::NAME_MAX_LENGTH && 1 === preg_match(self::NAME_PATTERN, (string) $name),
-            \ARRAY_FILTER_USE_KEY,
-        );
+        $cookies = self::filter($cookies);
 
         if (count($cookies) > self::MAX_COOKIES) {
             $this->logger->debug('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
 
-            $cookies = array_slice($cookies, 0, self::MAX_COOKIES, true);
+            $cookies = array_slice($cookies, 0, self::MAX_COOKIES);
         }
 
         if ([] === $cookies) {
             return;
         }
 
-        try {
-            $this->doRecord($cookies);
-        } catch (UniqueConstraintViolationException) {
-            // A concurrent request saved one of the new cookies first. With a new entity manager (the failed flush
-            // closed this one), the cookie exists and is updated instead
-            $this->manager = null;
+        $attempts = 0;
+
+        do {
+            ++$attempts;
 
             try {
-                $this->doRecord($cookies);
+                $this->attemptToRecord($cookies);
+
+                return;
             } catch (\Throwable $e) {
-                $this->handleFailure($e);
+                // The failed entity manager is closed, or still holds the cookies that couldn't be saved, and would
+                // fail every later attempt and call in the same process, e.g. the rest of a crawl. They get a new one
+                $this->manager = null;
+
+                // A concurrent request saved one of the new cookies first. With a new entity manager, the next attempt
+                // finds that cookie and updates it instead
+                $retry = $e instanceof UniqueConstraintViolationException && $attempts < self::MAX_ATTEMPTS;
             }
-        } catch (\Throwable $e) {
-            $this->handleFailure($e);
-        }
+        } while ($retry);
+
+        $this->logger->error('Could not record cookies: {message}', [
+            'message' => $e->getMessage(),
+            'exception' => $e,
+        ]);
     }
 
     /**
-     * @param non-empty-array<string, CookieInterface> $cookies
+     * Removes the cookies with a name that can't be a cookie name or doesn't fit the database column, and all but the
+     * first cookie with each name
+     *
+     * @param iterable<CookieInterface> $cookies
+     *
+     * @return list<array{name: non-empty-string, cookie: CookieInterface}>
      */
-    private function doRecord(array $cookies): void
+    private static function filter(iterable $cookies): array
+    {
+        $filtered = $seenNames = [];
+
+        foreach ($cookies as $cookie) {
+            $name = $cookie->getName();
+            if (null === $name || '' === $name || strlen($name) > self::NAME_MAX_LENGTH || 1 !== preg_match(self::NAME_PATTERN, $name) || isset($seenNames[$name])) {
+                continue;
+            }
+
+            $seenNames[$name] = true;
+            $filtered[] = ['name' => $name, 'cookie' => $cookie];
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * Records the cookies with one flush. If it throws, the entity manager can't be used anymore
+     *
+     * @param non-empty-list<array{name: non-empty-string, cookie: CookieInterface}> $cookies
+     */
+    private function attemptToRecord(array $cookies): void
     {
         $manager = $this->getManager();
 
         $existingCookies = $existingCookiesByLowercaseName = [];
-        foreach ($this->findCookies($manager, array_map(strval(...), array_keys($cookies))) as $existingCookie) {
+        foreach ($this->findCookies($manager, array_column($cookies, 'name')) as $existingCookie) {
             $name = (string) $existingCookie->getName();
             $existingCookies[$name] = $existingCookie;
             $existingCookiesByLowercaseName[strtolower($name)] ??= $existingCookie;
@@ -108,9 +144,7 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         /** @var array<int, true> $recordedCookies */
         $recordedCookies = [];
 
-        foreach ($cookies as $name => $newCookie) {
-            $name = (string) $name;
-
+        foreach ($cookies as ['name' => $name, 'cookie' => $newCookie]) {
             // MySQL compares names case-insensitively by default. Then the query also finds the existing 'foo' for 'FOO',
             // and the unique index doesn't allow saving 'FOO' as a new cookie. Exact matches go first, because other
             // databases can have both
@@ -196,18 +230,6 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         Assert::notNull($reference);
 
         return $reference;
-    }
-
-    private function handleFailure(\Throwable $e): void
-    {
-        $this->logger->error('Could not record cookies: {message}', [
-            'message' => $e->getMessage(),
-            'exception' => $e,
-        ]);
-
-        // The failed entity manager is closed, or still holds the cookies that couldn't be saved, and would fail every
-        // later call in the same process, e.g. the rest of a crawl. The next call gets a new one
-        $this->manager = null;
     }
 
     private function getManager(): EntityManagerInterface

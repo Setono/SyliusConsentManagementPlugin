@@ -112,3 +112,19 @@ All three record through `CookieRecorder`, which never throws. It skips names th
 - `AutomaticallyConfirmCookieSubscriber` confirms it when an admin creates it.
 
 On confirm, `NotifyAboutCookiesSubscriber` collects the cookies and emails the `notify` addresses, or, if none are configured, the first enabled channel's contact email. The email goes out on kernel or console terminate. The other commands are `setono:sylius-consent-management:stale-cookies` (emails about stale cookies) and `setono:sylius-consent-management:prune-cookies`.
+
+## Agent skills
+
+- When grilling (`/mattpocock-skills:grilling`, `/mattpocock-skills:grill-me`, `/mattpocock-skills:grill-with-docs`, and grilling inside other skills), ask via the `AskUserQuestion` tool instead of as plain chat text. The skills ask in chat on purpose and leave this to the project's CLAUDE.md ([mattpocock/skills: native question tool](https://github.com/mattpocock/skills/blob/main/.out-of-scope/native-question-tool.md)).
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for Setono/SyliusConsentManagementPlugin, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default triage labels, each named after its role (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root, created as needed. See `docs/agents/domain.md`.

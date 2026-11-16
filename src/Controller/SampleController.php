@@ -59,8 +59,8 @@ final class SampleController
             }
 
             try {
-                // Keyed by name, which also removes duplicates within the payload
-                $samples[$cookie['name']] = $this->cookieFactory->createFromSample($cookie);
+                // The recorder records duplicate names once
+                $samples[] = $this->cookieFactory->createFromSample($cookie);
             } catch (\InvalidArgumentException $e) {
                 throw new BadRequestHttpException($e->getMessage(), $e);
             }
