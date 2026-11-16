@@ -88,6 +88,32 @@ final class ConsentOverrideSignerTest extends TestCase
     /**
      * @test
      */
+    public function it_derives_a_key_the_uri_signer_cannot_reveal(): void
+    {
+        // Asked to sign the key's label, the uri_signer returns the HMAC-SHA256 of the label, keyed with the secret.
+        // That must not be the key the consent overrides are signed with
+        $signedUri = (new UriSigner('secret'))->sign('setono_sylius_consent_management.consent_override');
+        parse_str((string) parse_url($signedUri, \PHP_URL_QUERY), $params);
+        $hash = $params['_hash'] ?? null;
+        self::assertIsString($hash);
+        $revealedKey = base64_decode(strtr($hash, '-_', '+/'), true);
+        self::assertIsString($revealedKey);
+
+        $expires = (string) strtotime('+1 hour');
+        $message = '_consent=1&_consent_expires=' . $expires;
+
+        foreach ([$revealedKey, bin2hex($revealedKey)] as $key) {
+            self::assertFalse((new ConsentOverrideSigner('secret'))->isSigned(self::createRequest([
+                '_consent' => '1',
+                '_consent_expires' => $expires,
+                '_consent_signature' => hash_hmac('sha256', $message, $key),
+            ])));
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_ignores_the_arg_separator_output_setting(): void
     {
         $signer = new ConsentOverrideSigner('secret');

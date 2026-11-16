@@ -25,8 +25,9 @@ final class ConsentOverrideSigner implements ConsentOverrideSignerInterface
         }
 
         // Derive a key of our own, so that other HMAC-SHA256 signers keyed with the same secret, like Symfony's
-        // uri_signer, can't be used to forge consent overrides
-        $this->key = hash_hmac('sha256', 'setono_sylius_consent_management.consent_override', $secret);
+        // uri_signer, can't be used to forge consent overrides. A plain HMAC of a label would not do, because it's
+        // exactly what the uri_signer returns when asked to sign that label
+        $this->key = hash_hkdf('sha256', $secret, 32, 'setono_sylius_consent_management.consent_override');
     }
 
     public function sign(string|array $consent, \DateTimeInterface $expiresAt): array
