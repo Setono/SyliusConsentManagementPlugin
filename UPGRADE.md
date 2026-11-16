@@ -17,3 +17,8 @@ php bin/console doctrine:migrations:migrate
     `kernel.request`.
   - All sources record cookies through the new `CookieRecorderInterface`, which saves them with an entity manager of
     its own. Doctrine listeners for cookies get that entity manager in their event arguments, not the default one.
+  - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
+    `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
+    redefine any of these services, pass the `CookieRecorderInterface` service as the first argument.
+- `CookieRepositoryInterface::findOneByName()` is deprecated, because the plugin doesn't use it anymore, and will be
+  removed in the next major version. Use `findOneBy(['name' => $name])` instead.
