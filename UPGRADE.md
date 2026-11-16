@@ -17,13 +17,38 @@ php bin/console doctrine:migrations:migrate
     `kernel.request`.
   - All sources record cookies through the new `CookieRecorderInterface`, which saves them with an entity manager of
     its own. Doctrine listeners for cookies get that entity manager in their event arguments, not the default one.
-  - Names that aren't valid cookie names (RFC 6265 tokens, e.g. names with spaces) are no longer recorded, and at most
-    50 cookies are recorded per request.
-  - `/{_locale}/ajax/sample-cookies` answers 403 without the single-use token that
-    `@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig` adds to its URL. If you override that
-    template, pass the token like the plugin's template does:
-    `path('setono_sylius_consent_management_shop_sample', { '_sample_token': token })`.
+  - Names that aren't valid cookie names (RFC 6265 tokens of at most 255 characters, see `CookieName`), e.g. names with
+    spaces, are no longer recorded, and at most 50 cookies are recorded per call to the recorder: per sampled request,
+    per post to the sample endpoint and per crawled page. Both are logged at `info` level.
+    `CookieFactoryInterface::createFromSample()` throws for such names, where it only threw for empty names before.
+  - `/{_locale}/ajax/sample-cookies` answers 403 without a valid sample token, which
+    `@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig` adds to its URL. A token expires after 10
+    minutes and is meant to be used once. That's best-effort: the used tokens are kept in `cache.app` without a lock,
+    so parallel requests can reuse a token, and with a cache per server a token can be used once per server. If you
+    override that template, post to its new `sample_url` variable, which includes the token, instead of generating the
+    URL with `path()`.
+  - The sample endpoint answers 400 for a body over 1 MiB or with more than 200 cookies, before it builds any cookie.
   - `?_sample=1` only forces sampling in debug mode. `?_sample=0` still turns sampling off everywhere.
   - Server-side sampling reads the cookie names from the `Cookie` header, so PHP no longer mangles them. Existing
     cookies with mangled names (dots and spaces turned into underscores, e.g. `ai_session_v1` for `ai_session.v1`)
     won't be seen again and go stale, while the real names are recorded as new cookies.
+  - Sampling is rate limited per client, configured under `setono_sylius_consent_management.sampling.rate_limit`. By
+    default, one client's cookies are recorded at most 10 times per hour (beyond that, server-side sampling skips the
+    client and the sample endpoint answers 429), and one client can introduce at most 10 new cookie names per day
+    (beyond that, its new names are skipped, while its existing cookies are still recorded). The crawler isn't limited.
+    The limiters keep their state in `cache.app`, so they need neither `framework.rate_limiter` configuration nor
+    `symfony/lock`, which also makes them best-effort under concurrency. Set `rate_limit: false` to turn them off.
+    `symfony/rate-limiter` is a new dependency.
+  - A client is its IP address from `Request::getClientIp()` (an IPv6 address counts as its /64 network). If the store
+    is behind a proxy or load balancer, configure it in `framework.trusted_proxies` and `framework.trusted_headers`.
+    Otherwise every visitor has the proxy's IP address and they all share one limit, so much less gets sampled.
+  - New constructor arguments: `SampleController` takes a `SampleTokenManagerInterface` and a
+    `SamplingRateLimiterInterface`, `SampleCookiesServerSideSubscriber` a `SamplingRateLimiterInterface`, and
+    `SampleCookiesClientSideSubscriber` a `SampleTokenManagerInterface` and the router.
+    `SampleCookiesServerSideSubscriber::record()` takes the `TerminateEvent`, and `CookieRecorderInterface::record()`
+    takes an optional limiter for new cookies.
+  - BC break: the first constructor argument of `SampleController`, `SaveCookiesSubscriber` and
+    `SampleCookiesServerSideSubscriber` changed from `CookieRepositoryInterface` to `CookieRecorderInterface`. If you
+    redefine any of these services, pass the `CookieRecorderInterface` service as the first argument.
+- `CookieRepositoryInterface::findOneByName()` is deprecated, because the plugin doesn't use it anymore, and will be
+  removed in the next major version. Use `findOneBy(['name' => $name])` instead.

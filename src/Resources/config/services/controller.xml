@@ -21,7 +21,12 @@
         <service id="Setono\SyliusConsentManagementPlugin\Controller\SampleController">
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface"/>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
         </service>
     </services>
 </container>

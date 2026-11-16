@@ -8,9 +8,11 @@ use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactoryInterface;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -20,13 +22,14 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 final class SampleCookiesServerSideSubscriber implements EventSubscriberInterface, ResetInterface
 {
-    /** @var array<string, CookieInterface> */
+    /** @var list<CookieInterface> */
     private array $cookies = [];
 
     public function __construct(
         private readonly CookieRecorderInterface $cookieRecorder,
         private readonly CookieFactoryInterface $cookieFactory,
         private readonly SampleDeciderInterface $sampleDecider,
+        private readonly SamplingRateLimiterInterface $samplingRateLimiter,
     ) {
     }
 
@@ -53,13 +56,15 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
 
         // The new cookies are created while the request is still available, because the factory resolves their URL from it
         foreach (self::getCookieNames($request) as $name) {
-            $this->cookies[$name] = $this->cookieFactory->createWithName($name);
+            $this->cookies[] = $this->cookieFactory->createWithName($name);
         }
     }
 
     /**
      * PHP changes cookie names when it populates $_COOKIE (and thereby $request->cookies): dots and spaces become
-     * underscores and 'x[y]' becomes an array under 'x'. The real names are read from the Cookie header instead
+     * underscores and 'x[y]' becomes an array under 'x'. The real names are read from the Cookie header instead.
+     *
+     * The recorder skips names that aren't valid cookie names (see CookieName) and records duplicates once
      *
      * @return list<string>
      */
@@ -67,31 +72,37 @@ final class SampleCookiesServerSideSubscriber implements EventSubscriberInterfac
     {
         $header = $request->headers->get('Cookie');
         if (null === $header || '' === trim($header)) {
-            return array_map(strval(...), array_keys($request->cookies->all()));
+            // PHP turns numeric cookie names into integer keys
+            return array_map(strval(...), $request->cookies->keys());
         }
 
         $names = [];
         foreach (explode(';', $header) as $cookie) {
             // Browsers send a cookie without a name as just its value. Skipping it keeps cookie values out of the list
-            if (!str_contains($cookie, '=')) {
-                continue;
-            }
-
-            $name = trim(explode('=', $cookie, 2)[0]);
-            if ('' !== $name) {
-                $names[$name] = true;
+            if (str_contains($cookie, '=')) {
+                $names[] = trim(explode('=', $cookie, 2)[0]);
             }
         }
 
-        return array_map(strval(...), array_keys($names));
+        return $names;
     }
 
-    public function record(): void
+    public function record(TerminateEvent $event): void
     {
         $cookies = $this->cookies;
         $this->reset();
 
-        $this->cookieRecorder->record($cookies);
+        if ([] === $cookies) {
+            return;
+        }
+
+        // A client that has recorded too often recently is skipped silently, because sampling must never affect the visitor
+        $request = $event->getRequest();
+        if (!$this->samplingRateLimiter->consumeRecording($request)->isAccepted()) {
+            return;
+        }
+
+        $this->cookieRecorder->record($cookies, $this->samplingRateLimiter->createNewCookieLimiter($request));
     }
 
     public function reset(): void

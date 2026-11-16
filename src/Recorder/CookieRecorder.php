@@ -11,7 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Setono\SyliusConsentManagementPlugin\Cookie\CookieName;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
+use Symfony\Component\RateLimiter\LimiterInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -29,15 +31,9 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
     public const MAX_COOKIES = 50;
 
     /**
-     * The length of the name column, see Resources/config/doctrine/model/Cookie.orm.xml
+     * The first attempt, and one retry if a concurrent request saved one of the new cookies first
      */
-    private const NAME_MAX_LENGTH = 255;
-
-    /**
-     * The characters allowed in a cookie name (a 'token' in RFC 6265). Other names, e.g. with spaces, are skipped, so that
-     * text like 'VISIT evil.example TO VERIFY YOUR STORE' can't reach the cookie list or the notification email
-     */
-    private const NAME_PATTERN = '/^[!#$%&\'*+\-.^_`|~0-9A-Za-z]+$/';
+    private const MAX_ATTEMPTS = 2;
 
     private LoggerInterface $logger;
 
@@ -53,54 +49,105 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         $this->logger = new NullLogger();
     }
 
-    public function record(array $cookies): void
+    public function record(iterable $cookies, ?LimiterInterface $newCookieLimiter = null): void
     {
-        $cookies = array_filter(
-            $cookies,
-            // PHP turns numeric array keys, e.g. a cookie named "123", into integers
-            static fn (int|string $name): bool => strlen((string) $name) <= self::NAME_MAX_LENGTH && 1 === preg_match(self::NAME_PATTERN, (string) $name),
-            \ARRAY_FILTER_USE_KEY,
-        );
+        $cookies = $this->filter($cookies);
 
         if (count($cookies) > self::MAX_COOKIES) {
-            $this->logger->debug('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
+            $this->logger->info('Recording only {max} of {count} cookies', ['max' => self::MAX_COOKIES, 'count' => count($cookies)]);
 
-            $cookies = array_slice($cookies, 0, self::MAX_COOKIES, true);
+            $cookies = array_slice($cookies, 0, self::MAX_COOKIES);
         }
 
         if ([] === $cookies) {
             return;
         }
 
-        try {
-            $this->doRecord($cookies);
-        } catch (UniqueConstraintViolationException) {
-            // A concurrent request saved one of the new cookies first. With a new entity manager (the failed flush
-            // closed this one), the cookie exists and is updated instead
-            $this->manager = null;
+        $attempts = 0;
+
+        // Whether the limiter admitted each new cookie (by lowercase name). Kept between attempts, so that a retry
+        // doesn't consume the limiter's tokens again
+        $newCookieAdmissions = [];
+
+        do {
+            ++$attempts;
 
             try {
-                $this->doRecord($cookies);
+                $this->attemptToRecord($cookies, $newCookieLimiter, $newCookieAdmissions);
+
+                return;
             } catch (\Throwable $e) {
-                $this->handleFailure($e);
+                // The failed entity manager is closed, or still holds the cookies that couldn't be saved, and would
+                // fail every later attempt and call in the same process, e.g. the rest of a crawl. They get a new one
+                $this->manager = null;
+
+                // A concurrent request saved one of the new cookies first. With a new entity manager, the next attempt
+                // finds that cookie and updates it instead
+                $retry = $e instanceof UniqueConstraintViolationException && $attempts < self::MAX_ATTEMPTS;
             }
-        } catch (\Throwable $e) {
-            $this->handleFailure($e);
-        }
+        } while ($retry);
+
+        $this->logger->error('Could not record cookies: {message}', [
+            'message' => $e->getMessage(),
+            'exception' => $e,
+        ]);
     }
 
     /**
-     * @param non-empty-array<string, CookieInterface> $cookies
+     * Removes the cookies with a name that isn't a valid cookie name (see CookieName), and all but the first cookie with
+     * each name
+     *
+     * @param iterable<CookieInterface> $cookies
+     *
+     * @return list<array{name: non-empty-string, cookie: CookieInterface}>
      */
-    private function doRecord(array $cookies): void
+    private function filter(iterable $cookies): array
+    {
+        $filtered = $seenNames = $invalidNames = [];
+
+        foreach ($cookies as $cookie) {
+            $name = $cookie->getName() ?? '';
+            if (!CookieName::isValid($name)) {
+                $invalidNames[] = $name;
+
+                continue;
+            }
+
+            if (isset($seenNames[$name])) {
+                continue;
+            }
+
+            $seenNames[$name] = true;
+            $filtered[] = ['name' => $name, 'cookie' => $cookie];
+        }
+
+        if ([] !== $invalidNames) {
+            // A store's own cookies can have such names too, so this makes it possible to notice they aren't recorded
+            $this->logger->info('Skipped {count} cookies with invalid names', ['count' => count($invalidNames), 'names' => $invalidNames]);
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * Records the cookies with one flush. If it throws, the entity manager can't be used anymore
+     *
+     * @param non-empty-list<array{name: non-empty-string, cookie: CookieInterface}> $cookies
+     * @param array<string, bool> $newCookieAdmissions
+     */
+    private function attemptToRecord(array $cookies, ?LimiterInterface $newCookieLimiter, array &$newCookieAdmissions): void
     {
         $manager = $this->getManager();
 
         $existingCookies = $existingCookiesByLowercaseName = [];
-        foreach ($this->findCookies($manager, array_map(strval(...), array_keys($cookies))) as $existingCookie) {
+        foreach ($this->findCookies($manager, array_column($cookies, 'name')) as $existingCookie) {
             $name = (string) $existingCookie->getName();
             $existingCookies[$name] = $existingCookie;
             $existingCookiesByLowercaseName[strtolower($name)] ??= $existingCookie;
+        }
+
+        if (null !== $newCookieLimiter) {
+            $this->admitNewCookies($cookies, $existingCookiesByLowercaseName, $newCookieLimiter, $newCookieAdmissions);
         }
 
         $now = new \DateTimeImmutable();
@@ -108,15 +155,17 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         /** @var array<int, true> $recordedCookies */
         $recordedCookies = [];
 
-        foreach ($cookies as $name => $newCookie) {
-            $name = (string) $name;
-
+        foreach ($cookies as ['name' => $name, 'cookie' => $newCookie]) {
             // MySQL compares names case-insensitively by default. Then the query also finds the existing 'foo' for 'FOO',
             // and the unique index doesn't allow saving 'FOO' as a new cookie. Exact matches go first, because other
             // databases can have both
             $cookie = $existingCookies[$name] ?? $existingCookiesByLowercaseName[strtolower($name)] ?? null;
 
             if (null === $cookie) {
+                if (false === ($newCookieAdmissions[strtolower($name)] ?? true)) {
+                    continue;
+                }
+
                 $cookie = $newCookie;
 
                 // Set (instead of incremented) so that a retry doesn't count the sample twice
@@ -140,6 +189,56 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         } finally {
             // The next call loads the cookies again instead of working with what may be outdated by then
             $manager->clear();
+        }
+    }
+
+    /**
+     * Decides which new cookies to save: as many as the limiter has tokens for, in the given order. Names that only
+     * differ in case are one cookie, like when they're saved
+     *
+     * @param non-empty-list<array{name: non-empty-string, cookie: CookieInterface}> $cookies
+     * @param array<string, CookieInterface> $existingCookiesByLowercaseName
+     * @param array<string, bool> $newCookieAdmissions
+     */
+    private function admitNewCookies(
+        array $cookies,
+        array $existingCookiesByLowercaseName,
+        LimiterInterface $newCookieLimiter,
+        array &$newCookieAdmissions,
+    ): void {
+        $undecidedNames = [];
+        foreach ($cookies as ['name' => $name]) {
+            $key = strtolower($name);
+            if (!isset($existingCookiesByLowercaseName[$key]) && !isset($newCookieAdmissions[$key])) {
+                $undecidedNames[$key] ??= $name;
+            }
+        }
+
+        if ([] === $undecidedNames) {
+            return;
+        }
+
+        // Checking and consuming isn't atomic, so concurrent requests from the same client can get a few more new
+        // cookies through. The limit is a bound on abuse, not an exact count
+        $admitted = min(count($undecidedNames), max(0, $newCookieLimiter->consume(0)->getRemainingTokens()));
+        if ($admitted > 0 && !$newCookieLimiter->consume($admitted)->isAccepted()) {
+            $admitted = 0;
+        }
+
+        $skippedNames = [];
+        foreach ($undecidedNames as $key => $name) {
+            $newCookieAdmissions[$key] = $admitted-- > 0;
+
+            if (!$newCookieAdmissions[$key]) {
+                $skippedNames[] = $name;
+            }
+        }
+
+        if ([] !== $skippedNames) {
+            $this->logger->info('Skipped {count} new cookies, because the client has introduced too many new cookies recently', [
+                'count' => count($skippedNames),
+                'names' => $skippedNames,
+            ]);
         }
     }
 
@@ -196,18 +295,6 @@ final class CookieRecorder implements CookieRecorderInterface, LoggerAwareInterf
         Assert::notNull($reference);
 
         return $reference;
-    }
-
-    private function handleFailure(\Throwable $e): void
-    {
-        $this->logger->error('Could not record cookies: {message}', [
-            'message' => $e->getMessage(),
-            'exception' => $e,
-        ]);
-
-        // The failed entity manager is closed, or still holds the cookies that couldn't be saved, and would fail every
-        // later call in the same process, e.g. the rest of a crawl. The next call gets a new one
-        $this->manager = null;
     }
 
     private function getManager(): EntityManagerInterface

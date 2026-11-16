@@ -9,7 +9,8 @@
         <service id="Setono\SyliusConsentManagementPlugin\EventSubscriber\SampleCookiesClientSideSubscriber">
             <argument type="service" id="twig"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
-            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface"/>
+            <argument type="service" id="router"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
@@ -18,6 +19,7 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface"/>
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface"/>
+            <argument type="service" id="Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiterInterface"/>
 
             <tag name="kernel.event_subscriber"/>
             <tag name="kernel.reset" method="reset"/>
@@ -28,6 +30,7 @@
             <argument type="service" id="Setono\SyliusConsentManagementPlugin\EmailManager\CookieEmailManagerInterface"/>
 
             <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <!-- Crawler -->
@@ -40,6 +43,7 @@
             <argument type="service" id="setono_sylius_consent_management.factory.cookie"/>
 
             <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
     </services>
 </container>

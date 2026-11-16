@@ -99,12 +99,19 @@ The plugin decorates `Setono\Consent\ConsentCheckerInterface` from setono/consen
 New `Cookie` entities start in the `pending` state. They are created from three sources:
 
 - **Server-side sampling**: `SampleCookiesServerSideSubscriber` collects the request cookies on `kernel.request` and records them on `kernel.terminate`, after the response has been sent. It reads the names from the raw `Cookie` header, because PHP mangles them in `$_COOKIE`.
-- **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`), with a single-use, short-lived token from `SampleTokenManager` (used tokens are kept in `cache.app`). The page that gets the script is marked `private, no-store`.
+- **Client-side sampling**: `SampleCookiesClientSideSubscriber` injects a script into Chrome responses. The script POSTs `document.cookie` to `/ajax/sample-cookies` (`SampleController`), with a short-lived token from `SampleTokenManager`. Tokens are single-use on a best-effort basis: used tokens are kept in `cache.app` without a lock. The page that gets the script is marked `private, no-store`.
 - **Crawler**: `setono:sylius-consent-management:crawl` runs a headless Chrome through Panther over URLs from `CompositeUrlProvider` (the homepage, plus each channel's latest product page with tracking parameters like `gclid` and `fbclid` appended). It dispatches `CrawlStarted`, `WillCrawl` and `Crawled`, and `SaveCookiesSubscriber` persists what it finds.
 
-All three record through `CookieRecorder`, which never throws. It skips names that aren't RFC 6265 tokens (e.g. names with spaces), records at most 50 cookies per call, and saves with an entity manager of its own that shares the default one's connection, configuration and event manager, so it never flushes the request's pending changes, and Doctrine listeners still fire.
+All three record through `CookieRecorder`, which never throws. It skips names that `CookieName::isValid()` rejects (not an RFC 6265 token, or longer than the column), records at most 50 cookies per call (both logged at `info`), and saves with an entity manager of its own that shares the default one's connection, configuration and event manager, so it never flushes the request's pending changes, and Doctrine listeners still fire.
 
 `SampleDecider` gates both sampling paths: `?_sample=0` turns sampling off everywhere, `?_sample=1` forces it on only in debug (`kernel.debug`), and otherwise the `sampling.rate` and `sampling.firewalls` config apply (the default firewall is `shop`).
+
+`SamplingRateLimiter` limits both sampling paths per client IP (`Request::getClientIp()`, so it depends on trusted proxies; IPv6 by /64), configured under `sampling.rate_limit`:
+
+- **Recordings** (default 10 per hour): beyond that, server-side sampling skips the client silently on `kernel.terminate`, and `SampleController` answers 429.
+- **New cookies** (default 10 per day): the callers pass this limiter to `CookieRecorder::record()`, which consumes a token per new name and skips new names beyond the limit, while still updating existing cookies. This is what bounds how many cookies, and thereby owner emails, one client can cause.
+- The crawler passes no limiter, so it isn't limited.
+- The two `RateLimiterFactory` services are defined in `sampling.xml` over a `CacheStorage` on `cache.app`, without a lock factory, so installs need no `framework.rate_limiter` config and no `symfony/lock`. `sampling.rate_limit: false` switches them to the `no_limit` policy.
 
 `CookieWorkflow` is a Symfony Workflow state machine named `setono_sylius_consent_management__cookie` with one transition, `pending → confirmed` (`confirm`). A cookie is confirmed automatically in two cases:
 
@@ -112,3 +119,19 @@ All three record through `CookieRecorder`, which never throws. It skips names th
 - `AutomaticallyConfirmCookieSubscriber` confirms it when an admin creates it.
 
 On confirm, `NotifyAboutCookiesSubscriber` collects the cookies and emails the `notify` addresses, or, if none are configured, the first enabled channel's contact email. The email goes out on kernel or console terminate. The other commands are `setono:sylius-consent-management:stale-cookies` (emails about stale cookies) and `setono:sylius-consent-management:prune-cookies`.
+
+## Agent skills
+
+- When grilling (`/mattpocock-skills:grilling`, `/mattpocock-skills:grill-me`, `/mattpocock-skills:grill-with-docs`, and grilling inside other skills), ask via the `AskUserQuestion` tool instead of as plain chat text. The skills ask in chat on purpose and leave this to the project's CLAUDE.md ([mattpocock/skills: native question tool](https://github.com/mattpocock/skills/blob/main/.out-of-scope/native-question-tool.md)).
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for Setono/SyliusConsentManagementPlugin, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default triage labels, each named after its role (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root, created as needed. See `docs/agents/domain.md`.

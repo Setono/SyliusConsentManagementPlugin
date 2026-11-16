@@ -8,13 +8,15 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Setono\SyliusConsentManagementPlugin\Controller\SampleController;
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManager;
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
 use Setono\SyliusConsentManagementPlugin\Factory\CookieFactory;
 use Setono\SyliusConsentManagementPlugin\Model\Cookie;
 use Setono\SyliusConsentManagementPlugin\Model\CookieInterface;
 use Setono\SyliusConsentManagementPlugin\Recorder\CookieRecorderInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManager;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SamplingRateLimiter;
 use Sylius\Component\Channel\Context\CompositeChannelContext;
 use Sylius\Resource\Factory\Factory;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -23,6 +25,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\LimiterInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 
 final class SampleControllerTest extends TestCase
 {
@@ -31,6 +37,9 @@ final class SampleControllerTest extends TestCase
     /** @var ObjectProphecy<CookieRecorderInterface> */
     private ObjectProphecy $cookieRecorder;
 
+    /** @var ObjectProphecy<LoggerInterface> */
+    private ObjectProphecy $logger;
+
     private SampleTokenManager $sampleTokenManager;
 
     private SampleController $controller;
@@ -38,26 +47,33 @@ final class SampleControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->cookieRecorder = $this->prophesize(CookieRecorderInterface::class);
+        $this->logger = $this->prophesize(LoggerInterface::class);
         $this->sampleTokenManager = new SampleTokenManager('secret', new ArrayAdapter());
+        $samplingRateLimiter = new SamplingRateLimiter(
+            new RateLimiterFactory(['id' => 'recordings', 'policy' => 'sliding_window', 'limit' => 3, 'interval' => '1 hour'], new InMemoryStorage()),
+            new RateLimiterFactory(['id' => 'new_cookies', 'policy' => 'sliding_window', 'limit' => 10, 'interval' => '1 day'], new InMemoryStorage()),
+        );
 
         $this->controller = new SampleController(
             $this->cookieRecorder->reveal(),
             new CookieFactory(new Factory(Cookie::class), new CompositeChannelContext(), new RequestStack()),
             $this->sampleTokenManager,
+            $samplingRateLimiter,
         );
+        $this->controller->setLogger($this->logger->reveal());
     }
 
     /**
      * @test
      */
-    public function it_records_the_sampled_cookies_once_per_name(): void
+    public function it_records_the_sampled_cookies(): void
     {
+        // The recorder records the duplicate '_ga' once
         $this->cookieRecorder->record(Argument::that(static function (array $cookies): bool {
-            /** @var array<string, CookieInterface> $cookies */
-            $names = array_map(static fn (CookieInterface $cookie): ?string => $cookie->getName(), array_values($cookies));
+            $names = array_map(static fn (mixed $cookie): ?string => $cookie instanceof CookieInterface ? $cookie->getName() : null, $cookies);
 
-            return ['_ga', '_fbp'] === array_keys($cookies) && ['_ga', '_fbp'] === $names;
-        }))->shouldBeCalledOnce();
+            return ['_ga', '_fbp', '_ga'] === $names;
+        }), Argument::type(LimiterInterface::class))->shouldBeCalledOnce();
 
         $response = ($this->controller)($this->createRequest([
             ['name' => '_ga', 'expires' => null],
@@ -71,14 +87,23 @@ final class SampleControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_skips_cookies_without_a_name(): void
+    public function it_skips_and_logs_cookies_with_invalid_names(): void
     {
-        $this->cookieRecorder->record(Argument::that(static fn (array $cookies): bool => ['_ga'] === array_keys($cookies)))->shouldBeCalledOnce();
+        $invalidNames = ['', 'VISIT evil.example TO VERIFY YOUR STORE', '<script>', 'x[y]', str_repeat('x', 256)];
 
-        $response = ($this->controller)($this->createRequest([
-            ['name' => '', 'expires' => null],
-            ['name' => '_ga', 'expires' => null],
-        ]));
+        $this->logger->info('Skipped {count} sampled cookies with invalid names', ['count' => 5, 'names' => $invalidNames])->shouldBeCalledOnce();
+
+        $this->cookieRecorder->record(Argument::that(static function (array $cookies): bool {
+            $names = array_map(static fn (mixed $cookie): ?string => $cookie instanceof CookieInterface ? $cookie->getName() : null, $cookies);
+
+            return ['_ga', 'ai_session.v1'] === $names;
+        }), Argument::type(LimiterInterface::class))->shouldBeCalledOnce();
+
+        $samples = array_map(static fn (string $name): array => ['name' => $name, 'expires' => null], $invalidNames);
+        $samples[] = ['name' => '_ga', 'expires' => null];
+        $samples[] = ['name' => 'ai_session.v1', 'expires' => null];
+
+        $response = ($this->controller)($this->createRequest($samples));
 
         self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
@@ -88,7 +113,7 @@ final class SampleControllerTest extends TestCase
      */
     public function it_rejects_invalid_samples(): void
     {
-        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+        $this->cookieRecorder->record(Argument::cetera())->shouldNotBeCalled();
 
         $this->expectException(BadRequestHttpException::class);
 
@@ -102,7 +127,7 @@ final class SampleControllerTest extends TestCase
      */
     public function it_rejects_samples_without_a_valid_token(?string $token): void
     {
-        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+        $this->cookieRecorder->record(Argument::cetera())->shouldNotBeCalled();
 
         $this->expectException(AccessDeniedHttpException::class);
 
@@ -124,7 +149,7 @@ final class SampleControllerTest extends TestCase
      */
     public function it_rejects_a_token_that_was_used_before(): void
     {
-        $this->cookieRecorder->record(Argument::any())->shouldBeCalledOnce();
+        $this->cookieRecorder->record(Argument::cetera())->shouldBeCalledOnce();
 
         $token = $this->sampleTokenManager->create();
 
@@ -142,7 +167,7 @@ final class SampleControllerTest extends TestCase
      */
     public function it_rejects_bodies_that_are_not_a_json_list(string $body): void
     {
-        $this->cookieRecorder->record(Argument::any())->shouldNotBeCalled();
+        $this->cookieRecorder->record(Argument::cetera())->shouldNotBeCalled();
 
         $this->expectException(BadRequestHttpException::class);
 
@@ -160,23 +185,101 @@ final class SampleControllerTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_answers_429_when_the_client_has_posted_samples_too_often(): void
+    {
+        // The limit is 3 recordings per client
+        $this->cookieRecorder->record(Argument::cetera())->shouldBeCalledTimes(4);
+
+        foreach (range(1, 3) as $_) {
+            ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null]]));
+        }
+
+        try {
+            ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null]]));
+            self::fail('The client was not limited');
+        } catch (TooManyRequestsHttpException $e) {
+            self::assertArrayHasKey('Retry-After', $e->getHeaders());
+        }
+
+        $response = ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null]], '192.0.2.2'));
+        self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode(), 'Another client');
+    }
+
+    /**
+     * @test
+     */
+    public function it_limits_the_new_cookies_of_the_client(): void
+    {
+        $this->cookieRecorder->record(Argument::type('array'), Argument::type(LimiterInterface::class))->shouldBeCalledOnce();
+
+        ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null]]));
+    }
+
+    /**
+     * @test
+     */
+    public function it_records_the_most_cookies_a_browser_can_have(): void
+    {
+        $this->cookieRecorder->record(Argument::size(SampleController::MAX_SAMPLES), Argument::type(LimiterInterface::class))->shouldBeCalledOnce();
+
+        $response = ($this->controller)($this->createRequest(self::createSamples(SampleController::MAX_SAMPLES)));
+
+        self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_payloads_with_too_many_cookies(): void
+    {
+        $this->cookieRecorder->record(Argument::cetera())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        ($this->controller)($this->createRequest(self::createSamples(SampleController::MAX_SAMPLES + 1)));
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_payloads_that_are_too_large(): void
+    {
+        $this->cookieRecorder->record(Argument::cetera())->shouldNotBeCalled();
+
+        $this->expectException(BadRequestHttpException::class);
+
+        // A single cookie, but with a huge value
+        ($this->controller)($this->createRequest([['name' => '_ga', 'expires' => null, 'value' => str_repeat('x', SampleController::MAX_BODY_SIZE)]]));
+    }
+
+    /**
+     * @return list<array{name: string, expires: null}>
+     */
+    private static function createSamples(int $count): array
+    {
+        return array_map(static fn (int $i): array => ['name' => sprintf('cookie%03d', $i), 'expires' => null], range(1, $count));
+    }
+
+    /**
      * @param list<array<string, mixed>> $samples
      */
-    private function createRequest(array $samples): Request
+    private function createRequest(array $samples, string $clientIp = '192.0.2.1'): Request
     {
-        return $this->createRequestWithBody(json_encode($samples, \JSON_THROW_ON_ERROR));
+        return $this->createRequestWithBody(json_encode($samples, \JSON_THROW_ON_ERROR), clientIp: $clientIp);
     }
 
     /**
      * Like the sampling script, and without any listener decoding the body into the request parameters
      */
-    private function createRequestWithBody(string $body, ?string $token = 'valid'): Request
+    private function createRequestWithBody(string $body, ?string $token = 'valid', string $clientIp = '192.0.2.1'): Request
     {
         $query = [];
         if (null !== $token) {
             $query[SampleTokenManagerInterface::QUERY_PARAMETER] = 'valid' === $token ? $this->sampleTokenManager->create() : $token;
         }
 
-        return Request::create('/en_US/ajax/sample-cookies?' . http_build_query($query), 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: $body);
+        return Request::create('/en_US/ajax/sample-cookies?' . http_build_query($query), 'POST', server: ['CONTENT_TYPE' => 'application/json', 'REMOTE_ADDR' => $clientIp], content: $body);
     }
 }

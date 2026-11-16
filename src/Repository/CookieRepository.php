@@ -10,6 +10,10 @@ use Webmozart\Assert\Assert;
 
 class CookieRepository extends EntityRepository implements CookieRepositoryInterface
 {
+    /**
+     * @deprecated The plugin doesn't use this method anymore, and it will be removed in the next major version. Use
+     *             findOneBy(['name' => $name]) instead
+     */
     public function findOneByName(string $name): ?CookieInterface
     {
         $obj = $this->findOneBy([

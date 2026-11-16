@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Setono\SyliusConsentManagementPlugin\EventSubscriber;
 
 use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleDeciderInterface;
-use Setono\SyliusConsentManagementPlugin\Decider\Sample\SampleTokenManagerInterface;
+use Setono\SyliusConsentManagementPlugin\Sampling\SampleTokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 final class SampleCookiesClientSideSubscriber implements EventSubscriberInterface
@@ -17,6 +18,7 @@ final class SampleCookiesClientSideSubscriber implements EventSubscriberInterfac
         private readonly Environment $twig,
         private readonly SampleDeciderInterface $sampleDecider,
         private readonly SampleTokenManagerInterface $sampleTokenManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -56,7 +58,10 @@ final class SampleCookiesClientSideSubscriber implements EventSubscriberInterfac
 
         if (false !== $pos) {
             $sample = "\n" . $this->twig->render('@SetonoSyliusConsentManagementPlugin/shop/javascripts/sample.html.twig', [
-                'token' => $this->sampleTokenManager->create(),
+                // The URL to post the samples to, including the token
+                'sample_url' => $this->urlGenerator->generate('setono_sylius_consent_management_shop_sample', [
+                    SampleTokenManagerInterface::QUERY_PARAMETER => $this->sampleTokenManager->create(),
+                ]),
             ]) . "\n";
             $content = substr($content, 0, $pos) . $sample . substr($content, $pos);
             $response->setContent($content);
