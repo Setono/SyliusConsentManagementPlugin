@@ -5,8 +5,8 @@
  * @property {string} selector.backdrop - Selector for the backdrop element
  * @property {string} selector.widget - Selector for the widget container
  * @property {Object} callback
- * @property {Function} callback.acceptAll - Callback function to call when the 'Accept all' button is clicked. The first argument is the consent widget object
- * @property {Function} callback.acceptSelected - Callback function to call when the 'Accept selected' button is clicked. The first argument is the consent widget object
+ * @property {Function} callback.acceptAll - Called with the consent widget as `this` when the 'Accept all' button is clicked
+ * @property {Function} callback.acceptSelected - Called with the consent widget as `this` when the 'Accept selected' button is clicked
  */
 export default class ConsentWidget {
     /**
@@ -28,7 +28,8 @@ export default class ConsentWidget {
      * @param {ConsentWidgetOptions} options
      */
     constructor(options = {}) {
-        this.#options = Object.assign({
+        // Merged deeply, so e.g. overriding one callback keeps the other default callbacks
+        this.#options = ConsentWidget.#merge({
                 allowedActions: ['acceptAll', 'acceptSelected'],
                 selector: {
                     backdrop: '.sscm-backdrop',
@@ -77,7 +78,8 @@ export default class ConsentWidget {
         this.#widget.querySelector('form').addEventListener('submit', (event) => {
             event.preventDefault();
 
-            const action = event.submitter.dataset.action;
+            // There is no submitter when the form is submitted otherwise, e.g. with the enter key
+            const action = event.submitter?.dataset.action ?? 'acceptSelected';
 
             if(!this.#options.allowedActions.includes(action)) {
                 throw new Error('Invalid action. Allowed actions are: ' + this.#options.allowedActions.join(', '));
@@ -87,7 +89,14 @@ export default class ConsentWidget {
                 throw new Error('Callback function not found for action: ' + action);
             }
 
+            // The callback may change the checkboxes, e.g. 'Accept all' checks them all. They are restored if saving fails,
+            // so a retry with 'Accept selected' doesn't grant more than the visitor selected
+            const checkboxes = [...this.#widget.querySelectorAll('input[type="checkbox"]')];
+            const checked = checkboxes.map((checkbox) => checkbox.checked);
+
             this.#options.callback[action].bind(this)();
+
+            this.#toggleError(false);
 
             fetch(event.target.action, {
                 method: 'POST',
@@ -109,12 +118,59 @@ export default class ConsentWidget {
                     },
                 }));
             }).catch((error) => {
-                console.error(error);
+                console.error('The consent could not be saved', error);
+
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = checked[index];
+                });
+
+                // Show the widget again, so the visitor can retry instead of believing their choice was saved
+                this.#show();
+                this.#toggleError(true);
+                this.#widget.querySelector('button[data-action]')?.focus();
             });
 
-            this.#widget.style.display = 'none';
-            this.#backdrop.style.display = 'none';
+            this.#hide();
         });
+    }
+
+    #show() {
+        this.#widget.style.display = '';
+        this.#backdrop.style.display = '';
+    }
+
+    #hide() {
+        this.#widget.style.display = 'none';
+        this.#backdrop.style.display = 'none';
+    }
+
+    /**
+     * The error element has role="alert", so screen readers announce it when it's shown
+     *
+     * @param {boolean} visible
+     */
+    #toggleError(visible) {
+        const error = this.#widget.querySelector('.sscm-error');
+        if (null !== error) {
+            error.hidden = !visible;
+        }
+    }
+
+    /**
+     * @param {Object} defaults
+     * @param {Object} options
+     * @returns {Object}
+     */
+    static #merge(defaults, options) {
+        const merged = { ...defaults };
+
+        Object.entries(options).forEach(([key, value]) => {
+            const isObject = (candidate) => null !== candidate && 'object' === typeof candidate && !Array.isArray(candidate);
+
+            merged[key] = isObject(value) && isObject(defaults[key]) ? ConsentWidget.#merge(defaults[key], value) : value;
+        });
+
+        return merged;
     }
 
     #checkAll() {

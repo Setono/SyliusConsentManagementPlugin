@@ -127,7 +127,7 @@ setono_sylius_consent_management:
         widget:
             accept: Accept
             close: Close
-            error_encountered: An error was encountered while saving your choices. Try to reload the page.
+            error_encountered: An error was encountered while saving your choices. Please try again.
             is_saving: Saving your choice of cookies. Please wait.'
             more_information: More information
             must_reload: The page must be reloaded before all changes take effect.

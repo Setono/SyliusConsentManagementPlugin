@@ -64,6 +64,9 @@
             {{ sscm_script_tag(asset('js/marketing.js'), 'marketing') }}
             {{ sscm_script_tag(asset('js/statistical.js'), 'statistical') }}
 
+            {# The src comes from the attribute here, not from data-sscm-src. The activated script must keep the attributes #}
+            <script id="script-with-attributes" src="{{ asset('js/script-with-attributes.js') }}" crossorigin="anonymous" data-test="kept"{{ sscm_script_tag_attributes('marketing') }}></script>
+
             <script{{ sscm_script_tag_attributes('functional') }}>
                 console.info('Inline script: Functional granted');
             </script>
@@ -72,6 +75,17 @@
             </script>
             <script{{ sscm_script_tag_attributes('statistical') }}>
                 console.info('Inline script: Statistical granted');
+            </script>
+
+            {# Runs before the consent manager exists, so it waits for the ready event #}
+            <script>
+                document.addEventListener('sscm:ready', () => {
+                    window.consentedCategoriesWhenReady = window.sscmManager.getConsentedCategories();
+                });
+            </script>
+            {# Activated by the consent manager on page load, like a consent-gated script on a cached page #}
+            <script type="text/plain" data-sscm-consent="necessary">
+                window.necessaryGrantedWhenActivated = window.sscmManager.isGranted('necessary');
             </script>
         {% endblock %}
 

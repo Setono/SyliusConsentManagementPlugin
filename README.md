@@ -64,6 +64,66 @@ necessary, so you don't have to worry about bloating your page with unused JS or
 The `sscm_widget()` will output the actual HTML needed to render the widget. It's also true for this function that it
 will only render what's necessary, so in this case if the user has already seen the widget, it will output an empty string.
 
+## JavaScript API
+
+`sscm_resources()` creates the consent manager as `window.sscmManager`:
+
+```js
+window.sscmManager.getConsentedCategories(); // e.g. ['necessary', 'statistical']
+window.sscmManager.isGranted('marketing'); // true or false
+
+// Calls back right away if the visitor has consented to marketing, and otherwise when they do
+window.sscmManager.whenGranted('marketing', () => {
+    // load your marketing script
+});
+```
+
+The manager dispatches these events on `document` on page load and whenever the visitor updates their consent:
+
+- `sscm:consent:granted`, with the consented categories in `event.detail.categories`
+- `sscm:consent:<category>:granted`, e.g. `sscm:consent:marketing:granted`. It's also pushed to the `dataLayer`
+
+Scripts that run after an event was dispatched miss it, so use `whenGranted()` instead.
+
+The manager is a module script, so it only runs after the HTML has been parsed. Scripts that run before it can wait for
+`sscm:ready`, which the manager dispatches on `document` once it's ready and has dispatched the events above:
+
+```js
+document.addEventListener('sscm:ready', () => {
+    window.sscmManager.whenGranted('marketing', () => {
+        // ...
+    });
+});
+```
+
+### Options
+
+Define the options before `sscm_resources()`:
+
+```html
+<script>
+    window.sscmManagerOptions = {
+        // The URL of the widget module. Defaults to the asset URL of the plugin's consent-widget.js
+        widgetScriptUrl: '/build/my-consent-widget.js',
+    };
+
+    // Merged deeply with the defaults, so this keeps the default widget selector and callbacks
+    window.sscmWidgetOptions = {
+        selector: {
+            backdrop: '.my-backdrop',
+        },
+    };
+</script>
+```
+
+The widget options are:
+
+- `allowedActions`: the `data-action` values the widget's buttons may have. Defaults to `['acceptAll', 'acceptSelected']`.
+  Arrays are replaced, not merged
+- `selector.backdrop` and `selector.widget`: default to `.sscm-backdrop` and `.sscm-widget-container`
+- `callback.<action>`: called with the widget as `this` before the consent is saved. By default, `acceptAll` checks
+  every category checkbox
+
 [ico-github-actions]: https://github.com/Setono/SyliusConsentManagementPlugin/workflows/build/badge.svg
 [ico-code-coverage]: https://codecov.io/gh/Setono/SyliusConsentManagementPlugin/graph/badge.svg?token=C19PGH2X31
 

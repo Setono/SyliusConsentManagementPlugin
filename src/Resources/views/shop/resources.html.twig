@@ -8,7 +8,9 @@
     const options = Object.assign({
         consentedCategories: {{ sscm_consented_categories_json() }},
         displayWidget: {{ sscm_should_display_widget() ? 'true' : 'false' }},
+        widgetScriptUrl: "{{ asset('bundles/setonosyliusconsentmanagementplugin/js/consent-widget.js')|e('js') }}",
     }, window.sscmManagerOptions || {});
 
     window.sscmManager = new ConsentManager(options);
+    window.sscmManager.init();
 </script>
